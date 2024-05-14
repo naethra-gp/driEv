@@ -1,0 +1,254 @@
+import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../app_config/app_constants.dart';
+import '../../../app_services/index.dart';
+import '../../../app_utils/app_widgets/app_button.dart';
+
+class LoginPage extends StatefulWidget {
+  final dynamic mobileNumber;
+  const LoginPage({super.key, required this.mobileNumber});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController mobileCtrl = TextEditingController();
+  OtpServices otpServices = OtpServices();
+  AlertServices alertServices = AlertServices();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.mobileNumber != null) {
+      setState(() {
+        mobileCtrl.text = widget.mobileNumber!;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    mobileCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Stack(
+          alignment: AlignmentDirectional.bottomStart,
+          children: <Widget>[
+            Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: Container(
+                height: height / 1.35,
+                alignment: Alignment.bottomCenter,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
+                  color: Color(0XFFF6F6F6),
+                ),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(padding: EdgeInsets.all(height / 12.5)),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Image.asset(
+                    Constants.appLogo,
+                    fit: BoxFit.cover,
+                    height: 96,
+                    width: 96,
+                  ),
+                ),
+                SizedBox(height: height / 40),
+                const Text(
+                  Constants.divein,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Text(
+                    Constants.popin,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0XFF6F6F6F),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Form(
+                  key: _formKey,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: TextFormField(
+                          keyboardType: TextInputType.phone,
+                          maxLength: 10,
+                          autofocus: true,
+                          controller: mobileCtrl,
+                          textAlignVertical: TextAlignVertical.center,
+                          style: const TextStyle(fontSize: 14),
+                          decoration: const InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            counterText: "",
+                            isDense: false,
+                            contentPadding: EdgeInsets.only(bottom: 4),
+                            hintText: "Enter your mobile number",
+                            hintStyle: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                              letterSpacing: 0,
+                              color: Color(0xffDEDEDE),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Color(0xffDEDEDE),
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Color(0xffDEDEDE),
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            errorStyle: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                            prefixIcon: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '+91',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  // style: CustomTheme.headingStyle1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onChanged: (String value) {
+                            if (value.length == 10) {
+                              FocusScope.of(context).unfocus();
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: AppButtonWidget(
+                            title: 'Send OTP',
+                            onPressed: mobileCtrl.text.length != 10
+                                ? null
+                                : submitLogin,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                const TextSpan(
+                                  text: Constants.termCon1,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: Constants.termCon2,
+                                  style: const TextStyle(color: Colors.blue),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      // OPEN BROWSER
+                                      openBrowser();
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 50),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  openBrowser() async {
+    final Uri url = Uri.parse('https://driev.bike/termsandconditions');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      alertServices.errorToast("Could not launch $url");
+    }
+  }
+
+  void submitLogin() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      alertServices.showLoading();
+      String mobile = mobileCtrl.text.toString();
+      otpServices.generateOtp(mobile).then(
+        (response) async {
+          alertServices.hideLoading();
+          if (response['type'] == "success") {
+            alertServices.successToast("OTP sent to +91$mobile");
+            Navigator.pushNamed(context, "verify_otp",
+                arguments: mobileCtrl.text.toString());
+          } else {
+            alertServices.errorToast(response['message'].toString());
+          }
+        },
+      );
+    }
+  }
+}

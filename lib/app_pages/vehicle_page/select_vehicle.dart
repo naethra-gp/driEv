@@ -1,0 +1,320 @@
+import 'package:driev/app_services/index.dart';
+import 'package:driev/app_themes/app_colors.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
+
+import '../../app_config/app_constants.dart';
+import '../../app_storages/secure_storage.dart';
+import '../../app_utils/app_loading/alert_services.dart';
+
+class SelectVehiclePage extends StatefulWidget {
+  final List stationDetails;
+  const SelectVehiclePage({
+    super.key,
+    required this.stationDetails,
+  });
+
+  @override
+  State<SelectVehiclePage> createState() => _SelectVehicleState();
+}
+
+class _SelectVehicleState extends State<SelectVehiclePage> {
+  AlertServices alertServices = AlertServices();
+  SecureStorage secureStorage = SecureStorage();
+  VehicleService vehicleService = VehicleService();
+
+  List vehicleList = [];
+  List filterVehicleList = [];
+  String stationName = '';
+  String distance = '';
+  String distanceText = '';
+
+  @override
+  void initState() {
+    String sId = widget.stationDetails[0]['sId'];
+    String plan = widget.stationDetails[0]['plan'];
+    setState(() {
+      stationName = widget.stationDetails[0]['sName'];
+      distance = widget.stationDetails[0]['distance'];
+      distanceText = widget.stationDetails[0]['distanceText'];
+    });
+    getVehiclesByPlan(sId, plan);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  getVehiclesByPlan(String sId, String plan) async {
+    alertServices.showLoading();
+    vehicleService.getVehiclesByPlan(sId, plan).then((response) async {
+      alertServices.hideLoading();
+      vehicleList = response.where((i) => i['distanceRange'] != null).toList();
+      for (int i = 0; i < vehicleList.length; i++) {
+        List dis = vehicleList[i]['distanceRange'].toString().split("-");
+        // int a = int.parse(dis[0]);
+        int b = int.parse(dis[1]);
+        int c = int.parse(distance);
+        if (b <= c) {
+          filterVehicleList.add(vehicleList[i]);
+        }
+      }
+      filterVehicleList
+          .sort((a, b) => a['distanceRange'].compareTo(b['distanceRange']));
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Image.asset(Constants.backButton),
+          onPressed: () async {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: const Color(0xffF5F5F5),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.primary,
+                  width: 1.5,
+                ),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 1),
+                leading: Image.asset(
+                  "assets/app/no-img.png",
+                  height: 50,
+                  width: 50,
+                ),
+                title: stationName.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          "$stationName Campus",
+                          style: const TextStyle(
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : null,
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Image.asset("assets/img/scooter.png",
+                        height: 20, width: 20),
+                    Text(
+                      "${filterVehicleList.length} Rides Available",
+                      style: const TextStyle(
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: SizedBox(
+                  height: double.infinity,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Image.asset(
+                        "assets/img/slider_icon.png",
+                        height: 20,
+                        width: 20,
+                      ),
+                      Text(
+                        distanceText.toString(),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (filterVehicleList.isEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height / 3),
+                    const Text(
+                      'No DriEV Bike\'s found',
+                      style: TextStyle(
+                        // fontSize: 1,
+                        // letterSpacing: 1,
+                        color: Colors.grey,
+                        // fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+            const SizedBox(height: 16),
+            Expanded(
+              child: GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 8.0,
+                  mainAxisExtent: MediaQuery.of(context).size.height / 3.98,
+                ),
+                itemCount: filterVehicleList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: Card(
+                      surfaceTintColor: Colors.grey[200],
+                      color: const Color(0xffF5F5F5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      clipBehavior: Clip.none,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 5),
+                            Image.asset(
+                              "assets/img/bike.png",
+                              fit: BoxFit.fill,
+                            ),
+                            const SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.center,
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'dri',
+                                      style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.bold,
+                                        color: CupertinoColors.black,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    const TextSpan(
+                                      text: 'EV ',
+                                      style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primary,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          'Speed - ${filterVehicleList[index]['vehicleId']}',
+                                      style: const TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.bold,
+                                        color: CupertinoColors.black,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Estimated Range",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            // fontWeight: FontWeight.bold,
+                                            color: Color(0xff626262),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        filterVehicleList[index]
+                                                    ['distanceRange'] ==
+                                                null
+                                            ? "-"
+                                            : "${filterVehicleList[index]['distanceRange']} KM",
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  const Column(
+                                    children: [
+                                      Icon(LineAwesome.battery_full_solid),
+                                      Text(
+                                        "100%",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w700,
+                                          fontFamily: "Poppins",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
