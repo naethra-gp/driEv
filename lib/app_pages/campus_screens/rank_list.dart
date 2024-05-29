@@ -54,6 +54,10 @@ class _RankListState extends State<RankList> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+        ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 25),
           child: Column(

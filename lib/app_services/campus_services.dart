@@ -2,12 +2,6 @@ import '../app_config/app_end_points.dart';
 import 'connection.dart';
 
 class CampusServices {
-  // generateToken( request) async {
-  //   Connection connection = Connection();
-  //   var url = '${EndPoints.baseApi1}/${EndPoints.generatedToken}';
-  //   var response = await connection.postWithoutToken(url, request);
-  //   return response;
-  // }
   getAllCampus( ) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.getAllCampus}';
@@ -26,10 +20,10 @@ class CampusServices {
     var response = await connection.getWithToken(url);
     return response;
   }
-  voteColleges(String collegeId) async {
+  voteCollege(dynamic params, [error]) async {
     Connection connection = Connection();
-    var url = '${EndPoints.baseApi}/${EndPoints.voteCollege}/$collegeId';
-    var response = await connection.getWithToken(url);
+    var url = '${EndPoints.baseApi}/${EndPoints.voteCollege}';
+    var response = await connection.postWithToken(url, params, error);
     return response;
   }
   uploadImage(String mobileNo, filePath) async {

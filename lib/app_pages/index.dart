@@ -6,6 +6,7 @@ export 'users/verify_otp/success_page.dart';
 export 'campus_screens/choose_your_campus.dart';
 export 'campus_screens/vote_for_your_campus.dart';
 export 'campus_screens/vote_success_screen.dart';
+export 'campus_screens/vote_error_screen.dart';
 export 'registration_page/registration_page.dart';
 export 'users/verify_otp/error_page.dart';
 export 'campus_screens/rank_list.dart';

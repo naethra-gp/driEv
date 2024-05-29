@@ -47,7 +47,7 @@ class Connection {
     }
   }
 
-  postWithToken(String url, request) async {
+  postWithToken(String url, request, [error]) async {
     SecureStorage secureStorage = SecureStorage();
     final header = {
       'Content-Type': 'application/json',
@@ -61,11 +61,16 @@ class Connection {
       );
       if (response.statusCode == 200) {
         return json.decode(response.body);
+      } else if (response.statusCode == 404) {
+        if (error != null) {
+          return json.decode(response.body);
+        } else {
+          var result = json.decode(response.body);
+          alertService.errorToast(result['message'].toString());
+        }
       } else {
         var result = json.decode(response.body);
-        alertService.errorToast(
-            "${response.statusCode}: ${result['message'].toString()}");
-        // print('Request failed with status: ${response.statusCode}');
+        alertService.errorToast(result['message'].toString());
       }
     } catch (e) {
       alertService.errorToast("Error: ${e.toString()}");
@@ -77,7 +82,7 @@ class Connection {
   getWithToken(String url, [error]) async {
     SecureStorage secureStorage = SecureStorage();
     final header = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
       'Authorization': "Bearer ${secureStorage.getToken().toString()}",
     };
     try {
@@ -86,7 +91,8 @@ class Connection {
         headers: header,
       );
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        return json
+            .decode(utf8.decode(response.bodyBytes, allowMalformed: true));
       } else if (response.statusCode == 401) {
         alertService.errorToast("Unauthorized");
         return null;
@@ -148,14 +154,11 @@ class Connection {
       request.files.add(
         await http.MultipartFile.fromPath('file', filePath.path),
       );
-      print("user $user");
       Map<String, String> fields = {
         'user': jsonEncode(user),
       };
       request.fields.addAll(fields);
       var response = await request.send();
-      print("Upload File Status Code: ${response.statusCode}");
-      // print("Upload File Status: ${response.stream.bytesToString()}");
       if (response.statusCode == 200) {
         return await response.stream.bytesToString();
       } else {

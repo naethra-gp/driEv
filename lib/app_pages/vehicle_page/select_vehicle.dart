@@ -73,6 +73,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         leading: IconButton(
           icon: Image.asset(Constants.backButton),
           onPressed: () async {
@@ -181,11 +182,12 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
             Expanded(
               child: GridView.builder(
                 physics: const BouncingScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 8.0,
                   crossAxisSpacing: 8.0,
-                  mainAxisExtent: MediaQuery.of(context).size.height / 3.98,
+                  mainAxisExtent: 220,
+                  // mainAxisExtent: MediaQuery.of(context).size.height / 3,
                 ),
                 itemCount: filterVehicleList.length,
                 itemBuilder: (context, index) {

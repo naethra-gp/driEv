@@ -147,7 +147,7 @@ class TextFormWidget extends StatelessWidget {
                   color: Colors.grey,
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Color(0xffD2D2D2)),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -158,6 +158,10 @@ class TextFormWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: AppColors.primary),
                 ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.redAccent),
+                ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Color(0xffD2D2D2)),
@@ -166,7 +170,6 @@ class TextFormWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Colors.redAccent),
                 ),
-
                 contentPadding: const EdgeInsets.only(left: 15),
                 isDense: false,
                 // prefixIcon: prefixIcon != null

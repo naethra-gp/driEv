@@ -36,10 +36,10 @@ class _SplashScreenState extends State<SplashScreen> {
   getRoute() async {
     bool isLogin = await secureStorage.get("isLogin") ?? false;
     if (isLogin) {
-      if (!mounted) return;
+      // if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     } else {
-      if (!mounted) return;
+      // if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(
           context, "landing_page", (route) => false);
     }

@@ -59,16 +59,9 @@ class _AadhaarOtpFormFieldState extends State<AadhaarOtpFormField> {
 
   Future<void> _initInteractor() async {
     otpInteractor = OTPInteractor();
-    final appSignature = await otpInteractor.getAppSignature();
-    if (kDebugMode) {
-      print('Your app signature: $appSignature');
-    }
-    otpCtrl = OTPTextEditController(
-      codeLength: 6,
-      onCodeReceive: (code) => print(
-          'OTP for Aadhaar (XX8755) is $code (valid for 10 mins). To update Aadhaar, Upload documents on myaadhaar.uidai.gov.in or visit Aadhaar Center. Call 1947 for info. -UIDAI'),
-      otpInteractor: otpInteractor,
-    )..startListenUserConsent(
+    await otpInteractor.getAppSignature();
+    otpCtrl = OTPTextEditController(codeLength: 6, otpInteractor: otpInteractor)
+      ..startListenUserConsent(
         (code) {
           final exp = RegExp(r'(\d{6})');
           return exp.stringMatch(code ?? '') ?? '';
@@ -78,33 +71,10 @@ class _AadhaarOtpFormFieldState extends State<AadhaarOtpFormField> {
 
   @override
   Widget build(BuildContext context) {
-    // var themeColor = Theme.of(context).primaryColor;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // widget.required
-        //     ? RichText(
-        //         text: TextSpan(
-        //           text: widget.title,
-        //           style: CustomTheme.formLabelStyle,
-        //           children: const [
-        //             TextSpan(
-        //               text: ' *',
-        //               style: TextStyle(
-        //                 color: Colors.redAccent,
-        //               ),
-        //             )
-        //           ],
-        //         ),
-        //       )
-        //     : RichText(
-        //         text: TextSpan(
-        //           text: widget.title,
-        //           style: CustomTheme.formLabelStyle,
-        //         ),
-        //       ),
-        // const SizedBox(height: 5),
         TextFormField(
           controller: otpCtrl,
           maxLength: widget.maxLength,
@@ -144,13 +114,12 @@ class _AadhaarOtpFormFieldState extends State<AadhaarOtpFormField> {
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: Colors.red),
             ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
             contentPadding: const EdgeInsets.only(left: 15),
             isDense: true,
-            // prefixIcon: Icon(
-            //   widget.prefixIcon,
-            //   color: themeColor,
-            //   size: 26,
-            // ),
             suffixIcon: TextButton(
               onPressed: () {
                 var request = {
@@ -178,10 +147,14 @@ class _AadhaarOtpFormFieldState extends State<AadhaarOtpFormField> {
     alertServices.showLoading();
     otpServices.aadhaarVerifyOtp(request).then((response) async {
       alertServices.hideLoading();
-      alertServices.successToast(response['message_code']);
-      aadhaar = [response];
-      widget.onConfirm(aadhaar);
-      setState(() {});
+      if (response != null) {
+        alertServices.successToast(response['message_code']);
+        aadhaar = [response];
+        widget.onConfirm(aadhaar);
+        setState(() {});
+      } else {
+        // alertServices.errorToast("Invalid OTP");
+      }
     });
   }
 }

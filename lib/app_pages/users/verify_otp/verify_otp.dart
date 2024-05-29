@@ -30,7 +30,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   SecureStorage secureStorage = SecureStorage();
 
   bool buttonEnabled = false;
-  int _otpExpireTime = 60;
+  int _otpExpireTime = 30;
   Timer? _timer;
   bool invalidOtp = false;
   bool enableResend = false;
@@ -109,7 +109,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 ),
                 const SizedBox(height: 10),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Text(
                     "Verify your Phone number to finish setting up your account",
                     textAlign: TextAlign.center,
@@ -389,7 +389,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         alertServices
             .successToast("OTP sent to +91${widget.mobileNumber.toString()}");
         setState(() {
-          _otpExpireTime = 60;
+          _otpExpireTime = 30;
         });
         startTimer();
       } else {

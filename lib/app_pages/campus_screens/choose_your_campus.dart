@@ -45,6 +45,7 @@ class _ChooseYourCampusState extends State<ChooseYourCampus> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         // leading: IconButton(
         //   icon: Image.asset(Constants.backButton),
         //   onPressed: () async {
@@ -132,7 +133,10 @@ class _ChooseYourCampusState extends State<ChooseYourCampus> {
                               ),
                               trailing: IconButton(
                                 icon: Image.asset(Constants.frwdArrow, height: 16, width: 16),
-                                onPressed: () {},
+                                onPressed: () {
+                                  
+                                  Navigator.pushNamed(context, "vote_your_campus");
+                                },
                               ),
                             ),
                           ),
@@ -190,7 +194,9 @@ class _ChooseYourCampusState extends State<ChooseYourCampus> {
             ),
             trailing: IconButton(
               icon:Image.asset(Constants.frwdArrow,height: 16,width: 16,),
-              onPressed: () {  },
+              onPressed: () {
+                Navigator.pushNamed(context, "registration", arguments: list['campusId'].toString());
+              },
             ),
           ),
         ),

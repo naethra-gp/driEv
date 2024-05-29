@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   CustomerService customerService = CustomerService();
   SecureStorage secureStorage = SecureStorage();
   List campusDetail = [];
+  List campusDocList = [];
   List aadhaarDetails = [];
 
   final _formKey = GlobalKey<FormState>();
@@ -51,6 +54,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   bool isPhotoTaken = false;
   bool isAadhaarVerified = false;
+  bool isAadhaarRequired = false;
   bool aadhaarOtpSent = false;
   bool aadhaarField = false;
   String clientId = "";
@@ -83,8 +87,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
     campusServices.getCampusById(widget.campusId).then((response) async {
       alertServices.hideLoading();
       campusDetail = [response];
+      campusDocList = campusDetail[0]['campusDocList'];
+      print("campusDocList $campusDocList");
+      var a =
+          campusDocList.where((e) => e['mandatory'].toString() == 'Y').toList();
+      var b = a
+          .where((e) =>
+              e['documentId'].toString().toLowerCase().contains("aadharproof"))
+          .toList();
+      print("a $a");
+      print("b $b");
+      isAadhaarRequired = b.isNotEmpty ? true : false;
       setState(() {});
-      for (var control in campusDetail[0]['campusDocList']) {
+      for (var control in campusDocList) {
         _controllers.add(TextEditingController());
       }
     });
@@ -94,6 +109,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Image.asset(Constants.backButton),
@@ -102,8 +118,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const ScrollPhysics(),
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -147,10 +162,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         fontSize: 10,
                       ),
                     ),
-                    // trailing: Icon(
-                    //   Icons.check_circle_outline,
-                    //   color: Theme.of(context).primaryColor,
-                    // ),
                   ),
                 ),
               ],
@@ -164,7 +175,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // const SizedBox(height: 2),
               const Text(
                 "Let's get to know better...",
                 textAlign: TextAlign.left,
@@ -175,371 +185,350 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
               const SizedBox(height: 25),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  physics: const ScrollPhysics(),
                   children: [
-                    TextFormWidget(
-                      title: 'Full Name',
-                      controller: nameCtrl,
-                      required: true,
-                      prefixIcon: Icons.account_circle_outlined,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                            RegExp('[a-z A-Z 0-9]'))
-                      ],
-                      validator: (value) {
-                        if (value.toString().trim().isEmpty) {
-                          return "Full Name is Mandatory!";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    // RichText(
-                    //   text: TextSpan(
-                    //     text: "Gender",
-                    //     style: CustomTheme.formLabelStyle,
-                    //     children: const [
-                    //       TextSpan(
-                    //         text: ' *',
-                    //         style: TextStyle(
-                    //           color: Colors.redAccent,
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   height: 5,
-                    // ),
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        // Customize the outline border
-                        inputDecorationTheme: InputDecorationTheme(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                              color: Color(0xffD2D2D2),
-                            ),
-                          ),
-                          errorStyle: const TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.redAccent, width: 1),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide(
-                              color: Color(0xffD2D2D2),
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.only(left: 5),
-                          isDense: false,
-                        ),
-                      ),
-                      child: DropdownButtonFormField<String>(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        alignment: Alignment.center,
-                        validator: (value) {
-                          if (value == null) {
-                            return "Gender is Mandatory!";
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Gender',
-                          contentPadding:
-                              const EdgeInsets.only(left: 15.0, right: 15),
-                          hintStyle: CustomTheme.formHintStyle,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide:
-                                const BorderSide(color: Color(0xffD2D2D2)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                const BorderSide(color: Color(0xffD2D2D2)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                const BorderSide(color: AppColors.primary),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                const BorderSide(color: Color(0xffD2D2D2)),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.red),
-                          ),
-                          // prefixIcon: const Icon(
-                          //   Icons.male_outlined,
-                          //   size: 26,
-                          //   color: AppColors.primary,
-                          // ),
-                        ),
-                        style: CustomTheme.formFieldStyle,
-                        isExpanded: false,
-                        items: <String>['Male', 'Female', 'Others']
-                            .map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: CustomTheme.formFieldStyle,
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            genderCtrl.text = value!;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    // TextFormWidget(
-                    //   title: 'Gender',
-                    //   controller: genderCtrl,
-                    //   required: true,
-                    //   prefixIcon: Icons.male_outlined,
-                    // ),
-                    // const SizedBox(height: 16),
-                    TextFormWidget(
-                      title: 'College Email ID',
-                      controller: emailCtrl,
-                      keyboardType: TextInputType.emailAddress,
-                      required: true,
-                      prefixIcon: Icons.alternate_email_outlined,
-                      textCapitalization: TextCapitalization.none,
-                      inputFormatters: [CustomTextInputFormatter()],
-                      validator: (value) {
-                        if (value.toString().trim().isEmpty) {
-                          return "Email ID is Mandatory!";
-                        } else if (!Validators.isValidEmail(value)) {
-                          return "Invalid Email ID!";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormWidget(
-                      title: 'Roll Number',
-                      controller: rollNoCtrl,
-                      required: true,
-                      prefixIcon: Icons.perm_identity,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                            RegExp('[a-z A-Z 0-9]'))
-                      ],
-                      validator: (value) {
-                        if (value.toString().trim().isEmpty) {
-                          return "Roll Number is Mandatory!";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormWidget(
-                      title: 'Contact Number',
-                      controller: contactCtrl,
-                      // keyboardType: TextInputType.phone,
-                      maxLength: 10,
-                      required: true,
-                      readOnly: true,
-                      // prefixIcon: Icons.phone_android_outlined,
-                      // inputFormatters: <TextInputFormatter>[
-                      //   FilteringTextInputFormatter.digitsOnly
-                      // ],
-                      // validator: (value) {
-                      //   if (value.toString().trim().isEmpty) {
-                      //     return "Contact is Mandatory!";
-                      //   } else if (value.toString().trim().length != 10) {
-                      //     return "Invalid Contact Number!";
-                      //   }
-                      //   return null;
-                      // },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormWidget(
-                      title: 'Alt Contact',
-                      controller: altContactCtrl,
-                      keyboardType: TextInputType.phone,
-                      maxLength: 10,
-                      required: false,
-                      prefixIcon: Icons.phone_iphone_outlined,
-                    ),
-                    const SizedBox(height: 16),
-                    AadhaarFormField(
-                        title: 'Aadhaar Number',
-                        required: true,
-                        readOnly: aadhaarField,
-                        controller: aadhaarCtrl,
-                        prefixIcon: Icons.person_pin_outlined,
-                        inputFormatters: [aadhaarMask],
-                        maxLength: 14,
-                        onChanged: (String value) {
-                          if (value.toString().trim().length == 14) {
-                            FocusScope.of(context).unfocus();
-                          }
-                        },
-                        validator: (value) {
-                          if (value.toString().trim().isEmpty) {
-                            return "Aadhaar Number Mandatory!";
-                          }
-                          if (value.toString().trim().length != 14) {
-                            return "Invalid aadhaar number!";
-                          }
-                          return null;
-                        },
-                        otpSent: (bool otpSent, String id) {
-                          print("Reg Page - Otp Sent $otpSent");
-                          setState(() {
-                            aadhaarOtpSent = otpSent;
-                            clientId = id;
-                          });
-                        }
-                        // verified: (bool verify, List ad) {
-                        //   setState(() {
-                        //     isAadhaarVerified = verify;
-                        //     aadhaarDetails = ad;
-                        //     print("Aadhaar details -> ${ad[0]}");
-                        //   });
-                        // },
-                        ),
-                    const SizedBox(height: 16),
-                    if (aadhaarOtpSent) ...[
-                      AadhaarOtpFormField(
-                        title: 'Verify OTP',
-                        required: true,
-                        clientId: clientId,
-                        prefixIcon: Icons.pin_outlined,
-                        maxLength: 14,
-                        onChanged: (String value) {
-                          if (value.toString().trim().length == 14) {
-                            FocusScope.of(context).unfocus();
-                          }
-                        },
-                        onConfirm: (List list) {
-                          print(list);
-                          if (list.isNotEmpty) {
-                            aadhaarOtpSent = false;
-                            aadhaarField = true;
-                            isAadhaarVerified = true;
-                            aadhaarDetails = list;
-                            setState(() {});
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                    if (campusDetail.isNotEmpty)
-                      for (int i = 0;
-                          i < campusDetail[0]['campusDocList'].length;
-                          i++) ...[
-                        FileUploadForm(
-                          controller: _controllers[i],
-                          documentId: campusDetail[0]['campusDocList'][i]
-                                  ['documentId']
-                              .toString(),
-                          title: campusDetail[0]['campusDocList'][i]
-                                  ['documentName']
-                              .toString(),
-                          required: campusDetail[0]['campusDocList'][i]
-                                  ['mandatory'] ==
-                              'Y',
-                          onDataReceived: (String url) {
-                            print("URL: $url");
-                            campusDetail[0]['campusDocList'][i]['url'] = url;
-                            setState(() {});
-                          },
-                          validator: (value) {
-                            if (campusDetail[0]['campusDocList'][i]
-                                    ['mandatory'] ==
-                                'Y') {
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextFormWidget(
+                            title: 'Full Name',
+                            controller: nameCtrl,
+                            required: true,
+                            prefixIcon: Icons.account_circle_outlined,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                RegExp('[a-z A-Z 0-9]'),
+                              ),
+                            ],
+                            validator: (value) {
                               if (value.toString().trim().isEmpty) {
-                                return "${campusDetail[0]['campusDocList'][i]['documentName']} Mandatory!";
+                                return "Full Name is Mandatory!";
                               }
-                            }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                                // inputDecorationTheme: InputDecorationTheme(
+                                //   border: OutlineInputBorder(
+                                //     borderRadius: BorderRadius.circular(10),
+                                //     borderSide: const BorderSide(
+                                //       color: Color(0xffD2D2D2),
+                                //     ),
+                                //   ),
+                                //   errorStyle: const TextStyle(
+                                //     color: Colors.redAccent,
+                                //     fontSize: 12,
+                                //     fontWeight: FontWeight.normal,
+                                //   ),
+                                //   errorBorder: OutlineInputBorder(
+                                //     borderRadius: BorderRadius.circular(10),
+                                //     borderSide: const BorderSide(
+                                //         color: Colors.redAccent, width: 1),
+                                //   ),
+                                //   focusedBorder: const OutlineInputBorder(
+                                //     borderRadius: BorderRadius.all(
+                                //       Radius.circular(10),
+                                //     ),
+                                //     borderSide: BorderSide(
+                                //       color: Color(0xffD2D2D2),
+                                //     ),
+                                //   ),
+                                //   // contentPadding: const EdgeInsets.only(left: 5),
+                                //   isDense: false,
+                                // ),g
+                                ),
+                            child: DropdownButtonFormField<String>(
+                              dropdownColor: Colors.white,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              alignment: Alignment.center,
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Gender is Mandatory!";
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Gender',
+                                alignLabelWithHint: true,
+                                // isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 0),
+                                hintStyle: CustomTheme.formHintStyle,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xffD2D2D2)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xffD2D2D2)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                      color: AppColors.primary),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xffD2D2D2)),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
+                                ),
+                              ),
+                              style: CustomTheme.formFieldStyle,
+                              isExpanded: false,
+                              items: <String>['Male', 'Female', 'Others']
+                                  .map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: CustomTheme.formFieldStyle,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  genderCtrl.text = value!;
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormWidget(
+                            title: 'College Email ID',
+                            controller: emailCtrl,
+                            keyboardType: TextInputType.emailAddress,
+                            required: true,
+                            prefixIcon: Icons.alternate_email_outlined,
+                            textCapitalization: TextCapitalization.none,
+                            inputFormatters: [CustomTextInputFormatter()],
+                            validator: (value) {
+                              if (value.toString().trim().isEmpty) {
+                                return "Email ID is Mandatory!";
+                              } else if (!Validators.isValidEmail(value)) {
+                                return "Invalid Email ID!";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormWidget(
+                            title: 'Roll Number',
+                            controller: rollNoCtrl,
+                            required: true,
+                            prefixIcon: Icons.perm_identity,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[a-z A-Z 0-9]')),
+                            ],
+                            validator: (value) {
+                              if (value.toString().trim().isEmpty) {
+                                return "Roll Number is Mandatory!";
+                              }
+                              if (value.toString().trim().length > 15) {
+                                return "Invalid Roll Number!";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormWidget(
+                            title: 'Contact Number',
+                            controller: contactCtrl,
+                            maxLength: 10,
+                            required: true,
+                            readOnly: true,
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormWidget(
+                            title: 'Alt Contact',
+                            controller: altContactCtrl,
+                            keyboardType: TextInputType.phone,
+                            maxLength: 10,
+                            required: false,
+                            prefixIcon: Icons.phone_iphone_outlined,
+                          ),
+                          const SizedBox(height: 16),
+                          AadhaarFormField(
+                              title: 'Aadhaar Number',
+                              required: true,
+                              readOnly: aadhaarField,
+                              controller: aadhaarCtrl,
+                              prefixIcon: Icons.person_pin_outlined,
+                              inputFormatters: [aadhaarMask],
+                              maxLength: 14,
+                              onChanged: (String value) {
+                                if (value.toString().trim().length == 14) {
+                                  FocusScope.of(context).unfocus();
+                                }
+                              },
+                              validator: (value) {
+                                if (isAadhaarRequired) {
+                                  if (value.toString().trim().isEmpty) {
+                                    return "Aadhaar Number is Mandatory!";
+                                  }
+                                  if (value.toString().trim().length != 14) {
+                                    return "Invalid aadhaar number!";
+                                  }
+                                }
+                                return null;
+                              },
+                              otpSent: (bool otpSent, String id) {
+                                setState(() {
+                                  aadhaarOtpSent = otpSent;
+                                  clientId = id;
+                                });
+                              }),
+                          const SizedBox(height: 16),
+                          if (aadhaarOtpSent) ...[
+                            AadhaarOtpFormField(
+                              title: 'Verify OTP',
+                              required: true,
+                              clientId: clientId,
+                              prefixIcon: Icons.pin_outlined,
+                              maxLength: 6,
+                              onChanged: (String value) {
+                                if (value.toString().trim().length == 6) {
+                                  FocusScope.of(context).unfocus();
+                                }
+                              },
+                              onConfirm: (List list) {
+                                if (list.isNotEmpty) {
+                                  aadhaarOtpSent = false;
+                                  aadhaarField = true;
+                                  isAadhaarVerified = true;
+                                  aadhaarDetails = list;
+                                  setState(() {});
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                          if (campusDetail.isNotEmpty)
+                            for (int i = 0; i < campusDocList.length; i++) ...[
+                              FileUploadForm(
+                                controller: _controllers[i],
+                                documentId:
+                                    campusDocList[i]['documentId'].toString(),
+                                title: getFileName(campusDocList[i]),
+                                required: campusDocList[i]['mandatory'] == 'Y',
+                                onDataReceived: (String url) {
+                                  campusDocList[i]['url'] = url;
+                                  setState(() {});
+                                },
+                                validator: (value) {
+                                  if (campusDocList[i]['mandatory'] == 'Y') {
+                                    if (value.toString().trim().isEmpty) {
+                                      return "${campusDocList[i]['documentName']} Mandatory!";
+                                    }
+                                  }
 
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    const SizedBox(height: 25),
-                    AppButtonWidget(
-                      title: "Proceed",
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          if (isAadhaarVerified) {
-                            List docList = campusDetail[0]['campusDocList'];
-                            List uploadArray = [];
-                            for (int d = 0; d < docList.length; d++) {
-                              // print("docList $docList");
-                              uploadArray.add({
-                                "name": docList[d]['documentName'],
-                                "id": docList[d]['documentId'],
-                                "storageUrl": docList[d]['url'],
-                              });
-                            }
-                            final request = {
-                              "name": nameCtrl.text,
-                              "gender": genderCtrl.text,
-                              "contact": contactCtrl.text,
-                              "altContact": altContactCtrl.text,
-                              "emailId": emailCtrl.text,
-                              "rollNo": rollNoCtrl.text,
-                              "aadharNo": aadhaarMask.getUnmaskedText(),
-                              "aadharVerificationStatus":
-                                  isAadhaarVerified ? "Y" : "N",
-                              "organization":
-                                  campusDetail[0]['campusName'].toString(),
-                              "documents": uploadArray,
-                              "aadharDetails": aadhaarDetails[0],
-                            };
-                            alertServices.showLoading();
-                            customerService
-                                .createCustomer(request)
-                                .then((response) async {
-                              alertServices.hideLoading();
-                              alertServices.successToast(response['status']);
-                              secureStorage.save("isLogin", true);
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, "home", (route) => false);
-                            });
-                          } else {
-                            Fluttertoast.cancel();
-                            alertServices
-                                .errorToast("Please verify aadhaar number!");
-                          }
-                        }
-                      },
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 25),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 25),
+              AppButtonWidget(
+                title: "Proceed",
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    if (isAadhaarRequired) {
+                      if (isAadhaarVerified) {
+                        submitForm();
+                      } else {
+                        Fluttertoast.cancel();
+                        alertServices
+                            .errorToast("Please verify aadhaar number!");
+                      }
+                    } else {
+                      submitForm();
+                    }
+                  }
+                },
+              ),
+              const SizedBox(height: 25),
             ],
           ),
         ),
       ),
     );
+  }
+
+  getGender(String gender) {
+    // 'Male', 'Female', 'Others'
+    if (gender == "Male") {
+      return "M";
+    } else if (gender == "Female") {
+      return "F";
+    } else {
+      return "Others";
+    }
+  }
+
+  submitForm() {
+    List docList = campusDocList;
+    List uploadArray = [];
+    for (int d = 0; d < docList.length; d++) {
+      uploadArray.add({
+        "name": docList[d]['documentName'],
+        "id": docList[d]['documentId'],
+        "storageUrl": docList[d]['url'],
+      });
+    }
+    final request = {
+      "name": nameCtrl.text,
+      "gender": getGender(genderCtrl.text),
+      "contact": contactCtrl.text,
+      "altContact": altContactCtrl.text,
+      "emailId": emailCtrl.text,
+      "rollNo": rollNoCtrl.text,
+      "aadharNo": aadhaarMask.getUnmaskedText(),
+      "aadharVerificationStatus": isAadhaarVerified ? "Y" : "N",
+      "organization": campusDetail[0]['campusName'].toString(),
+      "documents": uploadArray,
+      "aadharDetails": isAadhaarRequired ? aadhaarDetails[0] : {},
+    };
+    alertServices.showLoading();
+    print(jsonEncode(request));
+    customerService.createCustomer(request).then((response) async {
+      alertServices.hideLoading();
+      alertServices.successToast(response['status']);
+      secureStorage.save("isLogin", true);
+      Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+    });
+  }
+
+  getFileName(details) {
+    String name = details['documentName'].toString();
+    bool required = details['mandatory'] == 'Y';
+    if (required) {
+      return "$name *";
+    }
+    return name;
   }
 }
 

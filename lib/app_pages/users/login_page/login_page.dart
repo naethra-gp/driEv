@@ -1,3 +1,4 @@
+import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -120,30 +121,6 @@ class _LoginPageState extends State<LoginPage> {
                               letterSpacing: 0,
                               color: Color(0xffDEDEDE),
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Color(0xffDEDEDE),
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Color(0xffDEDEDE),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Colors.redAccent,
-                              ),
-                            ),
                             errorStyle: TextStyle(
                               color: Colors.redAccent,
                             ),
@@ -161,6 +138,46 @@ class _LoginPageState extends State<LoginPage> {
                                   // style: CustomTheme.headingStyle1,
                                 ),
                               ],
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Color(0xFFDEDEDE),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Color(0xFFDEDEDE),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(25)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(4)),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.redAccent,
+                              ),
                             ),
                           ),
                           onChanged: (String value) {

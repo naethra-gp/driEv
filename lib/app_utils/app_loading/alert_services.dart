@@ -61,9 +61,12 @@ class AlertServices {
 
   _showBackDialog(context) {
     return showDialog<bool>(
+      barrierColor: Colors.black.withOpacity(0.5),
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
           title: const Text('Exit App'),
           content: const Text(
             'Are you sure you want to exit app?',
@@ -105,6 +108,7 @@ class AlertServices {
         borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
       ),
       isDismissible: false,
+      enableDrag: false,
       backgroundColor: Colors.white,
       barrierColor: Colors.black.withOpacity(.75),
       builder: (context) {
@@ -158,8 +162,11 @@ class AlertServices {
         borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
       ),
       isDismissible: false,
+      isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.white,
       barrierColor: Colors.black.withOpacity(.75),
+      enableDrag: false,
       builder: (context) {
         return PopScope(
           canPop: false,
@@ -174,51 +181,64 @@ class AlertServices {
           },
           child: SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height * .45,
+            height: 400,
+            // height: MediaQuery.of(context).size.height * .60,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height * .050,),
-                  Image.asset("assets/img/kyc_reject.png",
-                      height: 100, width: 100),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "KYC Rejected.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff020B01),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 25,
+                      // height: MediaQuery.of(context).size.height * .050,
                     ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .020,),
-                  const Text(
-                    "Looks like your Aadhaar card image is a bit blurry!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 14,
+                    Image.asset("assets/img/kyc_reject.png",
+                        height: 100, width: 100),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "KYC Rejected.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff020B01),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .020,),
-                  const Text(
-                    "Please visit your profile page to try recapturing a clearer image",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .020,
                     ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .020,),
-                  AppButtonWidget(title: "Go to Profile", onPressed: (){
-                    Navigator.pushNamed(context, "profile");
-                  },),
-                ],
-              )
-            ),
+                    const Text(
+                      "Looks like the documents you uploaded has some issue.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .020,
+                    ),
+                    const Text(
+                      "Please visit your profile page to try recapturing a clearer image",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .030,
+                    ),
+                    AppButtonWidget(
+                      title: "Go to Profile",
+                      onPressed: () {
+                        Navigator.pushNamed(context, "profile");
+                      },
+                    ),
+                  ],
+                )),
           ),
         );
       },
@@ -232,8 +252,11 @@ class AlertServices {
         borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
       ),
       isDismissible: false,
+      isScrollControlled: true,
+      useSafeArea: true,
+      enableDrag: false,
       backgroundColor: Colors.white,
-      barrierColor: Colors.black.withOpacity(.75),
+      barrierColor: Colors.black.withOpacity(.2),
       builder: (context) {
         return PopScope(
           canPop: false,
@@ -248,7 +271,8 @@ class AlertServices {
           },
           child: SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height * .45,
+            height: 400,
+            // height: MediaQuery.of(context).size.height * .50,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Column(
@@ -263,21 +287,11 @@ class AlertServices {
                     height: 100,
                     width: 100,
                   ),
-                  // const SizedBox(height: 10),
-                  // const Text(
-                  //   "BLOCKED",
-                  //   textAlign: TextAlign.center,
-                  //   style: TextStyle(
-                  //     fontSize: 20,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Colors.redAccent,
-                  //   ),
-                  // ),
                   const SizedBox(height: 16),
-                  Text(
-                    reason,
+                  const Text(
+                    "Uh-oh! Looks like we've spotted some irregular activity on your account. Hang tight while we sort it out! ",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),

@@ -35,6 +35,9 @@ class AppRoute {
           return const VoteForYourCampus();
         case "vote_campus_success":
           return const VoteSuccessPage();
+        case "vote_campus_error":
+          Map args = settings.arguments as Map;
+          return VoteErrorScreen(params: args['params']);
         case "rank_list":
           return const RankList();
         case "select_vehicle":

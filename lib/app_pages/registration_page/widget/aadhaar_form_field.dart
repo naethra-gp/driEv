@@ -129,6 +129,10 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: Colors.red),
             ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
             contentPadding: const EdgeInsets.only(left: 15.0),
             isDense: false,
             // prefixIcon: Icon(

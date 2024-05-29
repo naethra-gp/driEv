@@ -20,8 +20,8 @@ dependencies:
   hive: ^2.2.3
   mask_text_input_formatter: ^2.9.0
   icons_plus: ^5.0.0
-  image_picker: ^1.0.7
-  permission_handler: ^11.2.0
+  image_picker: ^1.1.1
+  permission_handler: ^11.3.1
   flutter_image_compress: ^2.1.0
   image_cropper: ^1.5.1
   path: ^1.9.0

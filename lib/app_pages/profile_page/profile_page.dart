@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 20,
                     // width: 20,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   Text(
                     "Unlock \n ${rewards[index]} hrs",
                     textAlign: TextAlign.center,
@@ -107,6 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         leading: userBlock
             ? null
             : IconButton(
@@ -377,53 +378,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ],
                 ],
-                // if (!userVerified) ...[
-                //   Container(
-                //     margin: const EdgeInsets.only(right: 10),
-                //     padding: const EdgeInsets.all(10),
-                //     decoration: CustomTheme.fillGrey
-                //         .copyWith(borderRadius: BorderRadius.circular(10)),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         Image.asset(
-                //           "assets/img/error_alert_logo.png",
-                //           height: 40,
-                //           width: 40,
-                //         ),
-                //         const Spacer(),
-                //         const Text(
-                //           "Your Aadhaar card \n image is bit blurry",
-                //           style: TextStyle(
-                //             color: Colors.redAccent,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //           // style: CustomTheme.termStyle1,
-                //         ),
-                //         const Spacer(),
-                //         SizedBox(
-                //           height: 30,
-                //           child: ElevatedButton(
-                //             onPressed: () async {
-                //               await alertServices.holdKycAlert(context);
-                //               // holdAlert();
-                //             },
-                //             child: const Text(
-                //               "Re-upload",
-                //               style: TextStyle(
-                //                   fontSize: 10, fontWeight: FontWeight.bold),
-                //             ),
-                //           ),
-                //         ),
-                //         const SizedBox(
-                //           height: 20,
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                //   defaultHeight,
-                // ],
                 const Text(
                   "DriEVantage Rewards",
                   style: TextStyle(
@@ -431,15 +385,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
-                  // style: CustomTheme.headingStyle2green,
                 ),
+                Stack(
+                    alignment: Alignment.center,
+                    children: [
                 _buildCategoriesGrid(),
+                      Divider(color: Colors.grey[200],thickness: 3,endIndent: 30,indent: 30,),
+                    ] ),
                 defaultHeight,
                 Card(
                   elevation: 10,
                   color: Colors.grey[100],
                   surfaceTintColor: Colors.grey[100],
-                  // margin: EdgeInsets.symmetric(vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10), // if you need this
                   ),

@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+// import 'dart:convert' show utf8;
+
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart' as geo;
@@ -70,14 +73,14 @@ class _HomePageState extends State<HomePage> {
     try {
       var position = await GeolocatorPlatform.instance.getCurrentPosition(
           locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.reduced,
-      ));
+            accuracy: LocationAccuracy.reduced,
+          ));
       setState(() {
         customerLocation = LatLng(position.latitude, position.longitude);
       });
     } catch (e) {
-      // print('ERROR:$e');
-      alertServices.errorToast("Error: $e");
+      print('ERROR:$e');
+      // alertServices.errorToast("Error: $e");
       customerLocation = null;
     }
   }
@@ -101,7 +104,7 @@ class _HomePageState extends State<HomePage> {
         }
       } else {
         alertServices.hideLoading();
-        alertServices.errorToast("Something wrong!");
+        // alertServices.errorToast("Something wrong!");
         secureStorage.save("mobile", "");
         secureStorage.save("isLogin", false);
         Navigator.pushNamedAndRemoveUntil(
@@ -113,9 +116,10 @@ class _HomePageState extends State<HomePage> {
   getPlansByStation(String stationId) async {
     alertServices.showLoading("Getting station details...");
     vehicleService.getPlansByStation(stationId).then(
-      (response) async {
+          (response) async {
         alertServices.hideLoading();
         stationDetails = response;
+        print("stationDetails ${stationDetails['plans']}");
         double stationLat = stationDetails['lattitude'];
         double stationLon = stationDetails['longitude'];
         stationLocation = LatLng(stationLat, stationLon);
@@ -134,6 +138,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -147,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                 onCameraMove: _onGeoChanged,
                 initialCameraPosition: CameraPosition(
                   target: customerLocation!,
-                  zoom: 15,
+                  zoom: 20,
                 ),
                 onMapCreated: (GoogleMapController controller) {
                   _controller = controller;
@@ -171,38 +177,39 @@ class _HomePageState extends State<HomePage> {
                 left: 15,
                 right: 0,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onTap: () {
                         Navigator.pushReplacementNamed(context, "profile");
                       },
                       child: CachedNetworkImage(
-                        width: 55,
-                        height: 55,
+                        width: 41,
+                        height: 41,
                         imageUrl: selfieUrl,
                         errorWidget: (context, url, error) => Image.asset(
                           "assets/img/profile_logo.png",
-                          width: 55,
-                          height: 55,
+                          width: 41,
+                          height: 41,
                           fit: BoxFit.cover,
                         ),
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
-                              // shape: BoxShape.circle,
+                            // shape: BoxShape.circle,
                               image: DecorationImage(
                                 image: imageProvider,
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(50),
                               border: Border.all(
-                                color: Colors.grey,
-                                width: 2,
+                                color: Colors.white,
+                                width: 1.5,
                               )),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 5),
                     Container(
                       margin: const EdgeInsets.only(right: 10),
                       decoration: BoxDecoration(
@@ -214,15 +221,18 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(width: 20),
-                          Text(
-                            "Current Location - $currentDistrict",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Current Location - $currentDistrict",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 5),
@@ -242,7 +252,8 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "\u{20B9}${customer[0]['walletBalance']}",
                               style: TextStyle(
-                                fontSize: 14,
+                                // fontSize: 14,
+                                fontSize: width / 30,
                                 fontWeight: FontWeight.bold,
                                 color: getColor(customer[0]['walletBalance']),
                               ),
@@ -259,7 +270,8 @@ class _HomePageState extends State<HomePage> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                top: 450,
+                top: height / 2,
+                // top: 350,
                 child: Container(
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -292,13 +304,6 @@ class _HomePageState extends State<HomePage> {
                                   thumbColor: Colors.transparent,
                                   thumbRadius: 20,
                                   activeDividerColor: Colors.white,
-                                  // tooltipBackgroundColor: Colors.transparent,
-                                  //     tooltipTextStyle: TextStyle(
-                                  //       color: AppColors.primary,
-                                  //       fontSize: 14,
-                                  //       fontWeight: FontWeight.bold,
-                                  //       // backgroundColor: Colors.transparent
-                                  //     )
                                 ),
                                 child: Center(
                                   child: SfSlider(
@@ -307,16 +312,13 @@ class _HomePageState extends State<HomePage> {
                                     interval: 10,
                                     shouldAlwaysShowTooltip: false,
                                     stepSize: 10,
-                                    // tooltipShape: SfTooltipShape(),
                                     thumbIcon: Image.asset(
                                       "assets/img/slider_icon.png",
                                       height: 50,
                                     ),
-                                    // tooltipPosition: SliderTooltipPosition.left,
                                     value: distance,
-                                    // activeColor: AppColors.primary,
                                     inactiveColor:
-                                        AppColors.primary.withOpacity(0.3),
+                                    AppColors.primary.withOpacity(0.3),
                                     labelPlacement: LabelPlacement.onTicks,
                                     thumbShape: const SfThumbShape(),
                                     semanticFormatterCallback: (dynamic value) {
@@ -324,12 +326,11 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     enableTooltip: true,
                                     showLabels: false,
-                                    // dividerShape: _DividerShape(),
                                     showDividers: true,
                                     showTicks: false,
                                     tooltipTextFormatterCallback:
                                         (dynamic actualValue,
-                                            String formattedText) {
+                                        String formattedText) {
                                       return "$formattedText km";
                                     },
                                     onChanged: (dynamic newValue) {
@@ -344,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('10 km',
@@ -365,21 +366,19 @@ class _HomePageState extends State<HomePage> {
                             "Preferred Category",
                             style: TextStyle(
                               fontSize: 16,
-                              // decoration: TextDecoration.underline,
                               fontWeight: FontWeight.w500,
                             ),
-                            // style: CustomTheme.headingStyle1,
                           ),
                           const SizedBox(height: 5),
                           if (stationDetails.isNotEmpty) ...[
                             Wrap(
-                              // spacing: 1.0,
-                              // runSpacing: 1.0,
-                              // alignment: WrapAlignment.start,
+                              spacing: 10.0,
+                              runSpacing: 5.0,
+                              alignment: WrapAlignment.start,
                               children: [
                                 for (int i = 0;
-                                    i < stationDetails['plans'].length;
-                                    i++) ...[
+                                i < stationDetails['plans'].length;
+                                i++) ...[
                                   if (stationDetails['plans'][i] != null) ...[
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -393,7 +392,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                          BorderRadius.circular(10),
                                         ),
                                       ),
                                       onPressed: () {
@@ -401,7 +400,7 @@ class _HomePageState extends State<HomePage> {
                                           {
                                             'sId': stationDetails['stationId'],
                                             'sName':
-                                                stationDetails['stationName'],
+                                            stationDetails['stationName'],
                                             'plan': stationDetails['plans'][i],
                                             'distanceText': distanceText,
                                             'distance': distance
@@ -414,7 +413,7 @@ class _HomePageState extends State<HomePage> {
                                             arguments: {"params": list});
                                       },
                                       child: Text(
-                                        '${stationDetails['plans'][i]}',
+                                        stationDetails['plans'][i].toString(),
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -463,7 +462,9 @@ class _HomePageState extends State<HomePage> {
     bool serviceEnabled;
     serviceEnabled = await location.serviceEnabled();
     PermissionStatus permissionGranted;
-    permissionGranted = await Permission.location.status;
+    permissionGranted = await Permission.locationWhenInUse.status;
+    print("serviceEnabled $serviceEnabled");
+    print("permissionGranted $permissionGranted");
 
     // LOCATION SERVICE
     if (!serviceEnabled) {
@@ -494,7 +495,7 @@ class _HomePageState extends State<HomePage> {
         _onGeoChanged(currentPosition);
         // GET ADDRESS - CITY NAME
         List<geo.Placemark> placeMark =
-            await geo.placemarkFromCoordinates(lat, long);
+        await geo.placemarkFromCoordinates(lat, long);
         geo.Placemark place = placeMark[0];
         currentDistrict = place.locality!;
         // setState(() {});
@@ -550,7 +551,7 @@ class _HomePageState extends State<HomePage> {
             distanceText = legs['distance']['text'];
             if (distanceText.isNotEmpty) {
               String extractDistance =
-                  distanceText.replaceAll(",", "").replaceAll(" km", "");
+              distanceText.replaceAll(",", "").replaceAll(" km", "");
               print("extractDistance $extractDistance");
               // distance = double.parse(extractDistance);
               // String durationText = legs['duration']['text'];
@@ -558,7 +559,7 @@ class _HomePageState extends State<HomePage> {
 
               PolylinePoints polylinePoints = PolylinePoints();
               PolylineResult result =
-                  await polylinePoints.getRouteBetweenCoordinates(
+              await polylinePoints.getRouteBetweenCoordinates(
                 Constants.apikey,
                 PointLatLng(
                     customerLocation!.latitude, customerLocation!.longitude),
@@ -583,7 +584,7 @@ class _HomePageState extends State<HomePage> {
                 );
                 // _polyLines.clear();
                 _polyLines.add(polyline);
-                Future.delayed(const Duration(seconds: 5), () {
+                Future.delayed(const Duration(seconds: 2), () {
                   _zoomToFitPositions();
                 });
 
@@ -626,7 +627,7 @@ class _HomePageState extends State<HomePage> {
         customerLocation != null &&
         stationLocation != null) {
       double distance = distanceBetween(customerLocation!, stationLocation!);
-      double zoomLevel = 16.0 - (log(distance) / log(2));
+      double zoomLevel = 15.0 - (log(distance) / log(2));
       LatLngBounds bounds = LatLngBounds(
         southwest: LatLng(
           customerLocation!.latitude < stationLocation!.latitude

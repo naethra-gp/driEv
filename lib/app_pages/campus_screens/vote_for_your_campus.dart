@@ -71,6 +71,7 @@ class _VoteForYourCampusState extends State<VoteForYourCampus> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         leading: IconButton(
           icon: Image.asset(Constants.backButton),
           onPressed: () => Navigator.of(context).pop(),
@@ -144,14 +145,7 @@ class _VoteForYourCampusState extends State<VoteForYourCampus> {
   Widget listView(List list) {
     return GestureDetector(
       onTap: () {
-        alertServices.showLoading();
-        campusServices.voteColleges(list[0]['collegeId'].toString()).then(
-          (response) async {
-            alertServices.hideLoading();
-            alertServices.successToast("Vote successfully.");
-            Navigator.pushNamed(context, "vote_campus_success");
-          },
-        );
+        submitRank(list);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -190,11 +184,36 @@ class _VoteForYourCampusState extends State<VoteForYourCampus> {
                 height: 16,
                 width: 16,
               ),
-              onPressed: () {},
+              onPressed: () {
+                submitRank(list);
+              },
             ),
           ),
         ),
       ),
+    );
+  }
+
+  submitRank(List list) {
+    alertServices.showLoading();
+    String mobile = secureStorage.get("mobile");
+    Map<String, String> params = {
+      "collegeId": list[0]['collegeId'].toString(),
+      "name": list[0]['collegeName'].toString(),
+      "email": "",
+      "contact": mobile.toString(),
+      "message": ""
+    };
+    campusServices.voteCollege(params, true).then(
+      (r) async {
+        alertServices.hideLoading();
+        if(r['collegeId'] != null) {
+          alertServices.successToast("Vote successfully.");
+          Navigator.pushNamed(context, "vote_campus_success");
+        } else {
+          Navigator.pushNamed(context, "vote_campus_error", arguments: {"params" : r});
+        }
+      },
     );
   }
 }
