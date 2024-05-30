@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-// import 'dart:convert' show utf8;
 
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart' as geo;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../app_pages/index.dart';
-import '../app_pages/test/test.dart';
 import '../app_utils/app_provider/connectivity_provider.dart';
 
 class AppRoute {
@@ -40,16 +39,20 @@ class AppRoute {
           return VoteErrorScreen(params: args['params']);
         case "rank_list":
           return const RankList();
-        case "select_vehicle":
-          Map args = settings.arguments as Map;
-          return SelectVehiclePage(stationDetails: args['params']);
         case "registration":
           String id = settings.arguments as String;
           return RegistrationPage(campusId: id);
         case "profile":
           return const ProfilePage();
-        case "test":
-          return const LoginTest();
+        // Vehicle Routes
+        case "select_vehicle":
+          Map args = settings.arguments as Map;
+          return SelectVehiclePage(stationDetails: args['params']);
+        case "error_bike":
+          return const ErrorBikes();
+        case "bike_fare_details":
+          Map args = settings.arguments as Map;
+          return BikeFareDetails(stationDetails: args['query']);
       }
       return const LandingPage();
     });

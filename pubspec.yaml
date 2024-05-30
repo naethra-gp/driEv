@@ -44,6 +44,7 @@ dependencies:
   pin_code_fields: ^8.0.1
   readsms: ^0.0.2+2
   google_maps_flutter_ios: ^2.6.0
+  super_tooltip: ^2.0.7
   #  otp_pin_field: ^1.2.2
   #  otp_text_field: ^1.1.3
   #  google_fonts: ^6.2.1

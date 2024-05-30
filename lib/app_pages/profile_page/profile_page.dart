@@ -1,14 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
-import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 import 'widgets/document_re_upload.dart';
 
@@ -111,16 +108,16 @@ class _ProfilePageState extends State<ProfilePage> {
         leading: userBlock
             ? null
             : IconButton(
-                icon: const Icon(
-                  Icons.home_outlined,
-                  size: 30,
-                  color: AppColors.primary,
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, "home");
-                  // Navigator.of(context).pop();
-                },
-              ),
+          icon: const Icon(
+            Icons.home_outlined,
+            size: 30,
+            color: AppColors.primary,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, "home");
+            // Navigator.of(context).pop();
+          },
+        ),
       ),
       body: SingleChildScrollView(
           physics: const ScrollPhysics(),
@@ -164,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                         decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
+                                            shape: BoxShape.circle,
                                             image: DecorationImage(
                                               image: imageProvider,
                                               fit: BoxFit.cover,
@@ -389,7 +386,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Stack(
                     alignment: Alignment.center,
                     children: [
-                _buildCategoriesGrid(),
+                      _buildCategoriesGrid(),
                       Divider(color: Colors.grey[200],thickness: 3,endIndent: 30,indent: 30,),
                     ] ),
                 defaultHeight,
@@ -413,7 +410,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Colors.grey[400],
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
-                            () {}),
+                                () {}),
                         Divider(
                           endIndent: 15,
                           indent: 15,
@@ -455,11 +452,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget bottomUserDetail(
-    fIcon,
-    fText,
-    sIcon,
-    sText,
-  ) {
+      fIcon,
+      fText,
+      sIcon,
+      sText,
+      ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [

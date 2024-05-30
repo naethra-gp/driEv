@@ -18,5 +18,6 @@ class EndPoints {
   static const getVehiclesByPlan = 'getVehiclesByPlan';
   static const getPlansByStation = 'getPlansByStation';
   static const uploadDocument = 'uploadDocument';
+  static const getBikeDetails = 'getBikeDetails';
 
 }
