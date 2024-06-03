@@ -13,9 +13,22 @@ class ScanToUnlock extends StatefulWidget {
 
 class _ScanToUnlockState extends State<ScanToUnlock> {
   bool isScanCompleted = false;
-  final GlobalKey _qrKey = GlobalKey();
   TextEditingController bikeNumberCtl = TextEditingController();
   AlertServices alertServices = AlertServices();
+  bool isTorchOn = true;
+  MobileScannerController cameraController = MobileScannerController();
+  @override
+  void initState() {
+    super.initState();
+    cameraController.toggleTorch();
+  }
+
+  void toggleTorch() {
+    setState(() {
+      isTorchOn = !isTorchOn;
+    });
+    cameraController.toggleTorch();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,37 +41,36 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
             ClipRRect(
               borderRadius:
                   BorderRadius.circular(10), // Adjust the radius as needed
-              child: Container(
+              child: SizedBox(
                 width: 250, // adjust the size as needed
                 height: 250,
-                decoration: ShapeDecoration(
-                  shape: QrScannerOverlayShape(
-                    borderColor: AppColors.primary,
-                    borderRadius: 5,
-                    borderWidth: 10,
-                  ),
-                ),
                 child: Stack(
                   children: [
-                    Expanded(
-                      child: MobileScanner(
-                        onDetect: (qrcode, args) {
-                          if (!isScanCompleted) {
-                            if (qrcode.rawValue == null) {
-                              isScanCompleted = true;
-                              debugPrint('Failed to scan Barcode');
-                              alertServices
-                                  .errorToast("Unable to Scan QR Code!");
-                            } else {
-                              final String code = qrcode.rawValue!;
-                              debugPrint('Qr found! $code');
-                              setState(() {
-                                bikeNumberCtl.text =
-                                    code.toString().substring(3);
-                              });
-                            }
+                    MobileScanner(
+                      controller: cameraController,
+                      onDetect: (qrcode, args) {
+                        if (!isScanCompleted) {
+                          if (qrcode.rawValue == null) {
+                            isScanCompleted = true;
+                            debugPrint('Failed to scan Barcode');
+                            alertServices.errorToast("Unable to Scan QR Code!");
+                          } else {
+                            final String code = qrcode.rawValue!;
+                            debugPrint('Qr found! $code');
+                            setState(() {
+                              bikeNumberCtl.text = code.toString().substring(3);
+                            });
                           }
-                        },
+                        }
+                      },
+                    ),
+                    Container(
+                      decoration: ShapeDecoration(
+                        shape: QrScannerOverlayShape(
+                          borderColor: AppColors.primary,
+                          borderRadius: 5,
+                          borderWidth: 8,
+                        ),
                       ),
                     ),
                   ],
@@ -100,10 +112,10 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     controller: bikeNumberCtl,
                     decoration: InputDecoration(
                       hintText: 'Enter Bike Number',
-                      // hintStyle: GoogleFonts.roboto().copyWith(
-                      //     fontWeight: FontWeight.w400,
-                      //     color: AppColors.fontgrey,
-                      //     fontSize: 12),
+                       hintStyle: const TextStyle(
+                           fontWeight: FontWeight.w400,
+                           color: AppColors.fontgrey,
+                           fontSize: 12),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(10.0),
@@ -124,13 +136,10 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: IconButton(
-                    icon: Image.asset(
-                      "assets/img/flash_on.png",
-                      height: 19,
-                      width: 9,
-                    ),
-                    onPressed: () {
-                      showModalBottomSheet(
+                    icon: Icon(isTorchOn ? Icons.flash_off : Icons.flash_on,
+                        color: Colors.white),
+                    onPressed: toggleTorch,
+                  ), /* showModalBottomSheet(
                         context: context,
                         backgroundColor: Colors.transparent,
                         builder: (context) {
@@ -213,9 +222,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                             ),
                           );
                         },
-                      );
-                    },
-                  ),
+                      );*/
                 ),
                 const SizedBox(
                   height: 15,
