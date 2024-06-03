@@ -53,6 +53,14 @@ class AppRoute {
         case "bike_fare_details":
           Map args = settings.arguments as Map;
           return BikeFareDetails(stationDetails: args['query']);
+        case "booking_success":
+          return const BookingSuccessful();
+        case "booking_failed":
+          return const BookingFailed();
+        case "scan_to_unlock":
+          return const ScanToUnlock();
+        case "on_ride":
+          return const OnRide();
       }
       return const LandingPage();
     });

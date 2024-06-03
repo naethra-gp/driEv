@@ -108,16 +108,16 @@ class _ProfilePageState extends State<ProfilePage> {
         leading: userBlock
             ? null
             : IconButton(
-          icon: const Icon(
-            Icons.home_outlined,
-            size: 30,
-            color: AppColors.primary,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, "home");
-            // Navigator.of(context).pop();
-          },
-        ),
+                icon: const Icon(
+                  Icons.home_outlined,
+                  size: 30,
+                  color: AppColors.primary,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, "home");
+                  // Navigator.of(context).pop();
+                },
+              ),
       ),
       body: SingleChildScrollView(
           physics: const ScrollPhysics(),
@@ -153,25 +153,25 @@ class _ProfilePageState extends State<ProfilePage> {
                                   imageUrl: selfieUrl,
                                   errorWidget: (context, url, error) =>
                                       Image.asset(
-                                        "assets/img/profile_logo.png",
-                                        width: 70,
-                                        height: 70,
-                                        fit: BoxFit.cover,
-                                      ),
+                                    "assets/img/profile_logo.png",
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                  ),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            // borderRadius: BorderRadius.circular(50),
-                                            border: Border.all(
-                                              color: Colors.grey,
-                                              width: 2,
-                                            )),
-                                      ),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        // borderRadius: BorderRadius.circular(50),
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 2,
+                                        )),
+                                  ),
                                 ),
                               ),
                             ),
@@ -181,7 +181,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Column(
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       const SizedBox(height: 15),
                                       SizedBox(
@@ -211,7 +212,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                               builder: (BuildContext context) {
                                                 return DocumentUploadAlert(
                                                   document: selfie,
-                                                  onDataReceived: (bool status) {
+                                                  onDataReceived:
+                                                      (bool status) {
                                                     if (status) {
                                                       alertServices.successToast(
                                                           "File Uploaded Successfully.");
@@ -234,7 +236,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   const SizedBox(height: 15),
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Expanded(
@@ -254,17 +257,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   children: [
                                                     const TextSpan(text: 'CO'),
                                                     WidgetSpan(
-                                                      child: Transform.translate(
-                                                        offset:
-                                                        const Offset(0.0, 4.0),
+                                                      child:
+                                                          Transform.translate(
+                                                        offset: const Offset(
+                                                            0.0, 4.0),
                                                         child: const Text(
                                                           '2',
-                                                          style:
-                                                          TextStyle(fontSize: 10),
+                                                          style: TextStyle(
+                                                              fontSize: 10),
                                                         ),
                                                       ),
                                                     ),
-                                                    const TextSpan(text: ' Saved'),
+                                                    const TextSpan(
+                                                        text: ' Saved'),
                                                   ],
                                                 ),
                                               ),
@@ -289,7 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         flex: 3,
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             Align(
                                               alignment: Alignment.centerLeft,
@@ -383,12 +388,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      _buildCategoriesGrid(),
-                      Divider(color: Colors.grey[200],thickness: 3,endIndent: 30,indent: 30,),
-                    ] ),
+                Stack(alignment: Alignment.center, children: [
+                  _buildCategoriesGrid(),
+                  Divider(
+                    color: Colors.grey[200],
+                    thickness: 3,
+                    endIndent: 30,
+                    indent: 30,
+                  ),
+                ]),
                 defaultHeight,
                 Card(
                   elevation: 10,
@@ -403,14 +411,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        menuList("assets/img/wallet.png", "View Wallet", () {}),
+                        menuList("assets/img/wallet.png", "View Wallet", () {
+                          Navigator.pushNamed(context, "on_ride");
+                        }),
                         Divider(
                           endIndent: 15,
                           indent: 15,
                           color: Colors.grey[400],
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
-                                () {}),
+                            () {
+                          // Navigator.pushNamed(context, "booking_failed");
+                        }),
                         Divider(
                           endIndent: 15,
                           indent: 15,
@@ -452,11 +464,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget bottomUserDetail(
-      fIcon,
-      fText,
-      sIcon,
-      sText,
-      ) {
+    fIcon,
+    fText,
+    sIcon,
+    sText,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [

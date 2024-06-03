@@ -77,8 +77,6 @@ class _HomePageState extends State<HomePage> {
         customerLocation = LatLng(position.latitude, position.longitude);
       });
     } catch (e) {
-      print('ERROR:$e');
-      // alertServices.errorToast("Error: $e");
       customerLocation = null;
     }
   }

@@ -9,6 +9,7 @@
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -24,9 +25,6 @@
         android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true">
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA"/>
-<!--        <meta-data-->
-<!--            android:name="com.google.android.gms.version"-->
-<!--            android:value="4323000" />-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

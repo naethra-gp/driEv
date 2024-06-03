@@ -19,5 +19,6 @@ class EndPoints {
   static const getPlansByStation = 'getPlansByStation';
   static const uploadDocument = 'uploadDocument';
   static const getBikeDetails = 'getBikeDetails';
+  static const walletBalance = 'wallet/openingBalance';
 
 }

@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:super_tooltip/super_tooltip.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 import 'package:driev/app_services/booking_services.dart';
+
+import '../registration_page/widget/reg_text_form_widget.dart';
+import 'widget/fare_details_widget.dart';
 
 class BikeFareDetails extends StatefulWidget {
   final List stationDetails;
@@ -23,20 +28,60 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   BookingServices bookingServices = BookingServices();
   String notes =
       "Battery swap after the given range might be chargeable and depends on the availability of assets & resources";
-  final SuperTooltipController _controller = SuperTooltipController();
   List fareDetails = [];
+  List reserveTime = [
+    {"mins": 5, "selected": false, "disabled": false},
+    {"mins": 10, "selected": false, "disabled": false},
+    {"mins": 15, "selected": false, "disabled": false},
+  ];
+
+  bool isReserve = false;
+  bool isReserveReady = false;
+  TextEditingController reserveTimeCtrl = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+
+  bool isInputDisabled = false;
+  bool enableChasingTime = false;
+  bool isReservedDone = false;
+  String reserveMins = "0";
+
+  int _start = 0;
+  late Timer _timer;
 
   @override
   void initState() {
     String id = widget.stationDetails[0]['vehicleId'];
     getFareDetails(id);
-    print("stationDetails ${widget.stationDetails}");
     super.initState();
   }
 
   @override
   void dispose() {
+    _timeController.dispose();
+    _timer.cancel();
     super.dispose();
+  }
+
+  void _startTimer() {
+    double percentage = _start * 0.99;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_start > 0) {
+          _start--;
+        } else {
+          _timer.cancel();
+        }
+        if (percentage == _start) {
+          enableChasingTime = true;
+        }
+      });
+    });
+  }
+
+  String get _formattedTime {
+    int minutes = _start ~/ 60;
+    int seconds = _start % 60;
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
   getFareDetails(String id) {
@@ -218,43 +263,374 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               ),
               if (fd.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                _baseFare(
-                    "Base fare", true, fd[0]['offer']['basePrice'].toString()),
-                const SizedBox(height: 5),
-                _baseFare("Ride charge per minute", false,
-                    fd[0]['offer']['perMinPaisa'].toString()),
-                const SizedBox(height: 5),
-                _baseFare("Ride charge per km", false,
-                    fd[0]['offer']['perKmPaisa'].toString()),
-                const SizedBox(height: 25),
-                AppButtonWidget(
-                  title:
-                      "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
-                  onPressed: () {},
+                FareDetailsWidget(
+                  title: "Base fare",
+                  info: true,
+                  fareDetails: fd,
+                  price: fd[0]['offer']['basePrice'].toString(),
                 ),
-                const SizedBox(height: 25),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                      ),
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.white,
-                      side:
-                          const BorderSide(color: AppColors.primary, width: 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
+                const SizedBox(height: 5),
+                FareDetailsWidget(
+                  title: "Ride charge per minute",
+                  info: false,
+                  fareDetails: fd,
+                  price: fd[0]['offer']['perMinPaisa'].toString(),
+                ),
+                const SizedBox(height: 5),
+                FareDetailsWidget(
+                  title: "Ride charge per km",
+                  info: false,
+                  fareDetails: fd,
+                  price: fd[0]['offer']['perKmPaisa'].toString(),
+                ),
+                const SizedBox(height: 16),
+                if (!isReservedDone) ...[
+                  if (isReserve) ...[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      // TODO: To change text to rich text
+                      child: Text(
+                        "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.15,
+                        ),
                       ),
                     ),
-                    child: const Text("Scan to Unlock"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(reserveTime.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: reserveTime[index]['disabled']
+                                ? null
+                                : () {
+                                    setState(() {
+                                      for (var i in reserveTime) {
+                                        i['selected'] = false;
+                                        // i['disabled'] = true;
+                                      }
+                                      reserveMins =
+                                          reserveTime[index]['mins'].toString();
+                                      reserveTimeCtrl.text = "";
+                                      reserveTime[index]['selected'] = true;
+                                    });
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              textStyle: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.white,
+                              disabledBackgroundColor: reserveTime[index]
+                                      ['selected']
+                                  ? Colors.white
+                                  : const Color(0xffF5F5F5),
+                              disabledForegroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 13),
+                              animationDuration: const Duration(seconds: 1),
+                              splashFactory: InkRipple.splashFactory,
+                              side: BorderSide(
+                                  color: reserveTime[index]['selected']
+                                      ? AppColors.primary
+                                      : Colors.grey,
+                                  width: 1.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('${reserveTime[index]['mins']} mins'),
+                          ),
+                        );
+                      }),
+                    ),
+                    TextFormWidget(
+                      title: 'Enter Manually',
+                      controller: reserveTimeCtrl,
+                      required: true,
+                      maxLength: 2,
+                      readOnly: isInputDisabled,
+                      prefixIcon: Icons.account_circle_outlined,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.done,
+                      onChanged: (value) {
+                        setState(() {
+                          for (var i in reserveTime) {
+                            i['selected'] = false;
+                          }
+                          reserveMins = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value.toString().isNotEmpty) {
+                          if (int.parse(value) > 60) {
+                            return "Only allowed 60 Mins.";
+                          }
+                          if (int.parse(value) == 0) {
+                            return "Invalid Time";
+                          }
+                        }
+
+                        return null;
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(
+                          RegExp('[0-9]'),
+                        ),
+                      ],
+                    ),
+                  ] else ...[
+                    const SizedBox(height: 25),
+                    AppButtonWidget(
+                      title:
+                          "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
+                      onPressed: () {
+                        setState(() {
+                          isReserve = true;
+                          isReserveReady = true;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          textStyle: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(
+                              color: AppColors.primary, width: 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: const Text("Scan to Unlock"),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ] else ...[
+                  /// isReservedDone
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        elevation: 0,
+                        foregroundColor: Colors.white,
+                        backgroundColor: enableChasingTime
+                            ? const Color(0xffFB8F80)
+                            : const Color(0xffE1FFE6),
+                        side: const BorderSide(
+                            color: Color(0xffE1FFE6), width: 0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: Text(
+                        "$_formattedTime Minute to Ride Time!",
+                        style: TextStyle(
+                            color: enableChasingTime
+                                ? Colors.white
+                                : AppColors.primary,
+                            fontSize: 14),
+                      ),
+                    ),
                   ),
-                )
+                  const SizedBox(height: 16),
+                  if (enableChasingTime) ...[
+                    const Text(
+                      "Chasing time?",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    // const SizedBox(height: 16),
+                    const Text(
+                      "Give your adventure a stylish extension!",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(reserveTime.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: reserveTime[index]['disabled']
+                                ? null
+                                : () {
+                                    setState(() {
+                                      for (var i in reserveTime) {
+                                        i['selected'] = false;
+                                        // i['disabled'] = true;
+                                      }
+                                      reserveMins =
+                                          reserveTime[index]['mins'].toString();
+                                      reserveTimeCtrl.text = "";
+                                      reserveTime[index]['selected'] = true;
+                                    });
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              textStyle: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 13),
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.white,
+                              disabledBackgroundColor: reserveTime[index]
+                                      ['selected']
+                                  ? Colors.white
+                                  : const Color(0xffF5F5F5),
+                              disabledForegroundColor: Colors.black,
+                              animationDuration: const Duration(seconds: 1),
+                              splashFactory: InkRipple.splashFactory,
+                              side: BorderSide(
+                                  color: reserveTime[index]['selected']
+                                      ? AppColors.primary
+                                      : Colors.grey,
+                                  width: 1.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('${reserveTime[index]['mins']} mins'),
+                          ),
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: 16),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          /// --- Start
+                          reserveBike();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          textStyle: const TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(
+                              color: AppColors.primary, width: 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        child: const Text(
+                          "Proceed to reserve your bike",
+                          style: TextStyle(color: AppColors.primary),
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 50),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primary,
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: const Text("Scan to Unlock"),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                if (isReserveReady && !isReservedDone) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        /// --- Start
+                        reserveBike();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        foregroundColor: Colors.black,
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: const Text(
+                        "Proceed to reserve your bike",
+                        style: TextStyle(color: AppColors.primary),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        scanToUnlock();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primary,
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: const Text("Scan to Unlock"),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 25),
               ],
             ],
           ),
@@ -272,55 +648,41 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     );
   }
 
-  _baseFare(String title, bool info, String price) {
-    return Card(
-      surfaceTintColor: const Color(0xffF5F5F5),
-      color: const Color(0xffF5F5F5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        minVerticalPadding: 0,
-        title: Row(
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: Color(0xff020B01),
-                fontSize: 16,
-              ),
-            ),
-            if (info)
-              SuperTooltip(
-                showBarrier: true,
-                controller: _controller,
-                popupDirection: TooltipDirection.up,
-                content: Text(
-                  "Receive a complimentary ${fareDetails[0]['offer']['discountMin']} minute ride spanning ${fareDetails[0]['offer']['discountKm']} kilometers",
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                child: IconButton(
-                  onPressed: () async {
-                    await _controller.showTooltip();
-                  },
-                  icon: const Icon(
-                    Icons.info,
-                    color: Color(0xff7D7D7D),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        trailing: Text(
-          "₹$price",
-          style: const TextStyle(color: Color(0xff020B01), fontSize: 16),
-        ),
-      ),
-    );
+  reserveBike() {
+    // _timer.cancel();
+    Map<String, Object> params = {
+      "contact": secureStorage.get("mobile").toString(),
+      "vehicleId": fareDetails[0]['vehicleId'].toString(),
+      "duration": reserveMins.toString()
+    };
+    setState(() {
+      // _timer.cancel();
+      enableChasingTime = false;
+      _start = int.parse(reserveMins.toString()) * 60;
+      isReservedDone = true;
+    });
+    _startTimer();
+  }
+
+  getWalletBalance() async {}
+  scanToUnlock() async {
+    alertServices.showLoading();
+    String mobile = await secureStorage.get("mobile");
+    double balance = 0;
+    int selectedMin = 0;
+    double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
+    List a =
+        reserveTime.where((e) => e['selected'].toString() == "true").toList();
+    selectedMin = a[0]['mins'];
+    double amount = selectedMin * reserve;
+    bookingServices.getWalletBalance(mobile).then((r) {
+      alertServices.hideLoading();
+      balance = r['balance'];
+      if (amount > balance) {
+        alertServices.insufficientBalanceAlert(context, balance.toString());
+      } else {
+        /// BALANCE AVAILABLE
+      }
+    });
   }
 }

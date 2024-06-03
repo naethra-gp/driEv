@@ -33,6 +33,7 @@ class Assets {
   static const String imgErrorLogo = 'assets/img/error_logo.png';
   static const String imgFaq = 'assets/img/faq.png';
   static const String imgFeedbaclLogo = 'assets/img/feedbacl_logo.png';
+  static const String imgFlashOn = 'assets/img/flash_on.png';
   static const String imgGetStarted = 'assets/img/get_started.png';
   static const String imgGift = 'assets/img/gift.png';
   static const String imgGiftbox = 'assets/img/giftbox.png';
@@ -45,7 +46,9 @@ class Assets {
   static const String imgMapStationIcon = 'assets/img/map_station_icon.png';
   static const String imgMapUserIcon = 'assets/img/map_user_icon.png';
   static const String imgNoInternet = 'assets/img/no-internet.png';
+  static const String imgOops = 'assets/img/oops.png';
   static const String imgProfileLogo = 'assets/img/profile_logo.png';
+  static const String imgQuestionMark = 'assets/img/question_mark.png';
   static const String imgRate = 'assets/img/rate.png';
   static const String imgRideHistory = 'assets/img/ride_history.png';
   static const String imgScooter = 'assets/img/scooter.png';

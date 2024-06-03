@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 import '../app_storages/secure_storage.dart';
+import '../main.dart';
 
 class Connection {
   final header = {'Content-Type': 'application/json'};
@@ -63,6 +65,7 @@ class Connection {
         return json.decode(response.body);
       } else if (response.statusCode == 404) {
         if (error != null) {
+          gotoLogin();
           return json.decode(response.body);
         } else {
           var result = json.decode(response.body);
@@ -95,6 +98,7 @@ class Connection {
             .decode(utf8.decode(response.bodyBytes, allowMalformed: true));
       } else if (response.statusCode == 401) {
         alertService.errorToast("Unauthorized");
+        gotoLogin();
         return null;
       } else {
         if (error == null) {
@@ -176,5 +180,12 @@ class Connection {
         }
       });
     }
+  }
+
+  gotoLogin() {
+    Navigator.pushNamedAndRemoveUntil(
+        navigatorKey.currentState!.overlay!.context,
+        "login",
+        (Route<dynamic> route) => false);
   }
 }

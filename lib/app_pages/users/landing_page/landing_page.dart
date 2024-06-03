@@ -58,7 +58,7 @@ class _LandingPageState extends State<LandingPage> {
                 const SizedBox(height: 30),
                 AppButtonWidget(
                   title: "Sign In / Sign Up",
-                  onPressed: () async {
+                  onPressed: () {
                     Navigator.pushNamed(context, "login");
                   },
                 ),
@@ -73,7 +73,7 @@ class _LandingPageState extends State<LandingPage> {
 
   getPermissions() async {
     var status = await [
-      // Permission.location,
+      Permission.location,
       Permission.locationAlways,
       Permission.sms,
       Permission.camera,

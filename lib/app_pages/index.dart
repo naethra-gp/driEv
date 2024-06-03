@@ -17,3 +17,7 @@ export 'profile_page/profile_page.dart';
 export 'home_screen/home_page.dart';
 export 'bike_booking/bike_booking.dart';
 export 'bike_booking/bike_fare_details.dart';
+export 'scan_to_unlock/scan_to_unlock.dart';
+export 'bike_booking/pages/booking_failed.dart';
+export 'bike_booking/pages/booking_successful.dart';
+export 'on_ride/on_ride.dart';

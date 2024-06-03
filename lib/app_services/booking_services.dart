@@ -9,5 +9,11 @@ class BookingServices {
     var response = await connection.getWithToken(url);
     return response;
   }
+  getWalletBalance(String mobileNo) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi1}/${EndPoints.walletBalance}/$mobileNo';
+    var response = await connection.getWithToken(url);
+    return response;
+  }
 
 }

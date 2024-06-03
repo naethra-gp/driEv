@@ -305,4 +305,69 @@ class AlertServices {
       },
     );
   }
+
+  insufficientBalanceAlert(BuildContext context, String balance) {
+    showModalBottomSheet(
+      context: context,
+      // isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.white,
+      barrierColor: Colors.black.withOpacity(.80),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: SizedBox(
+            height: 400,
+            child: Column(
+              children: [
+                const SizedBox(height: 50),
+                Align(
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    "assets/img/oops.png",
+                    height: 75,
+                    width: 75,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Oops!",
+                  style:
+                  TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "₹$balance",
+                  style:
+                  const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Your wallet balance is insufficient. To request a ride, kindly recharge your wallet.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(height: 25),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Top Up Now'),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
