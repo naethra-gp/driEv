@@ -1,9 +1,9 @@
-import 'package:driev/app_pages/ride_summary/ride_summary.dart';
-import 'package:driev/app_pages/scan_to_endride/scan_to_endride.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../app_pages/index.dart';
+import '../app_pages/ride_summary/summary_ride.dart';
+import '../app_pages/scan_to_endride/end_ride_scan.dart';
 import '../app_utils/app_provider/connectivity_provider.dart';
 
 class AppRoute {

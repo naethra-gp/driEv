@@ -1,28 +1,18 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:screenshot/screenshot.dart';
-import 'dart:io';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 
-class RideSummary extends StatefulWidget {
-  const RideSummary({super.key});
+class EndRideScanner extends StatefulWidget {
+  const EndRideScanner({super.key});
 
   @override
-  State<RideSummary> createState() => _RideSummaryState();
+  State<EndRideScanner> createState() => _EndRideScannerState();
 }
 
-class _RideSummaryState extends State<RideSummary> {
+class _EndRideScannerState extends State<EndRideScanner> {
   bool isScanCompleted = false;
-  final GlobalKey _qrKey = GlobalKey();
   TextEditingController bikeNumberCtl = TextEditingController();
   AlertServices alertServices = AlertServices();
 
