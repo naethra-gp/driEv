@@ -421,7 +421,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
                             () {
-                          // Navigator.pushNamed(context, "booking_failed");
+                           Navigator.pushNamed(context, "ride_summary");
                         }),
                         Divider(
                           endIndent: 15,

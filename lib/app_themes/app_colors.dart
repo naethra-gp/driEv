@@ -21,6 +21,8 @@ class AppColors {
   static const Color black50 = Color(0x88001424);
   static const Color blackLight = Color(0xff011f35);
   static const Color transactionRevert = Color(0xffDFF5FF);
+  static const Color customGrey = Color(0xfff5f5f5);
+  static const Color fontgrey= Color(0xff7E7E7E);
 
   // List of primary colors
   static List<Color> primaryColorOptions = const [

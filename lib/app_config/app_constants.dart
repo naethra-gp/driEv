@@ -18,6 +18,9 @@ class Constants {
   // NEW IMAGES
   static const String appLogo = "assets/img/app_logo.png";
   static const String votecampus="assets/app/vote_for_campus_logo.png";
+  static const String pdf="assets/img/pdf.png";
+  static const String bike="assets/img/bike.png";
+
 
   static const String title1="Let's get you road-ready!";
   static const String title2="Get set to zip through the city,uncover \n hidden hotspots,and transform every \n journey into an epic adventure with our \n eco-friendly rides.Let's hit the road!";

@@ -67,4 +67,7 @@ class CustomTheme {
   );
   static BoxDecoration get fillGrey =>
       const BoxDecoration(color: Color(0xffF5F5F5));
+
+  static SizedBox defaultHeight10 = const SizedBox(height: 15);
+
 }

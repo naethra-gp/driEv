@@ -386,7 +386,9 @@ class _OnRideState extends State<OnRide> {
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(context, "end_ride_scanner");
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                               ),

@@ -1,3 +1,5 @@
+import 'package:driev/app_pages/ride_summary/ride_summary.dart';
+import 'package:driev/app_pages/scan_to_endride/scan_to_endride.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,6 +63,11 @@ class AppRoute {
           return const ScanToUnlock();
         case "on_ride":
           return const OnRide();
+        case "ride_summary":
+          return const RideSummary();
+        case "end_ride_scanner":
+          return const EndRideScanner();
+
       }
       return const LandingPage();
     });
