@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,6 +8,7 @@ import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -54,11 +54,11 @@ class _OnRideState extends State<OnRide> {
         setState(() {
           rideDetails = [r];
         });
-        // if(r['status'].toString() == "On Ride") {
-        //   Timer.periodic(const Duration(seconds: 10), (Timer t) {
-        //     getRideDetails(widget.rideId);
-        //   });
-        // }
+        if(r['status'].toString() == "On Ride") {
+          Timer.periodic(const Duration(minutes: 1), (Timer t) {
+            getRideDetails(id);
+          });
+        }
         print("remainingRange ${r['remainingRange']}");
       }
     });
@@ -76,7 +76,7 @@ class _OnRideState extends State<OnRide> {
         'assets/img/map_user_icon.png',
       );
       print("${position.latitude} ${position.longitude}");
-      setState(() {
+      setState(() async {
         currentLocation = LatLng(position.latitude, position.longitude);
         _markers.add(
           Marker(
@@ -85,6 +85,10 @@ class _OnRideState extends State<OnRide> {
             icon: customIcon,
           ),
         );
+        List<Placemark> placeMark =
+            await placemarkFromCoordinates(position.latitude, position.longitude);
+        Placemark place = placeMark[0];
+        currentDistrict = place.locality!;
       });
     } catch (e) {
       alertServices.errorToast("Location Issue");
@@ -191,12 +195,12 @@ class _OnRideState extends State<OnRide> {
                               const SizedBox(width: 10),
                               if (rideDetails.isNotEmpty)
                                 Text(
-                                  "\u{20B9}$availableBalance",
-                                  style: const TextStyle(
-                                    // fontSize: 14,z
+                                  "\u{20B9}${availableBalance.toStringAsFixed(3)}",
+                                  style: TextStyle(
+                                    // fontSize: 14,
                                     // fontSize: width / 30,
                                     fontWeight: FontWeight.bold,
-                                    // color: getColor(availableBalance),
+                                    color: getColor(availableBalance),
                                   ),
                                   // style: CustomTheme.termStyle1red,
                                 ),
@@ -467,7 +471,7 @@ class _OnRideState extends State<OnRide> {
     );
   }
 
-  getColor(value) {
+  getColor(double value) {
     if (value < 350) {
       return Colors.redAccent;
     } else {
@@ -666,9 +670,10 @@ class _OnRideState extends State<OnRide> {
     String mobile = await secureStorage.get("mobile");
     bookingServices.getWalletBalance(mobile).then((r) {
       alertServices.hideLoading();
-      String balance = r['balance'];
+      double balance = r['balance'];
+      print("bal -- ${balance.toStringAsFixed(2)}");
       setState(() {
-        availableBalance = double.parse(balance);
+        availableBalance = double.parse(balance.toStringAsFixed(2));
       });
     });
   }

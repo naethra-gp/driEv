@@ -61,13 +61,14 @@ class AppRoute {
         case "booking_failed":
           return const BookingFailed();
         case "scan_to_unlock":
-          String vId = settings.arguments as String;
-          return ScanToUnlock(vehicleId: vId);
+          List args = settings.arguments as List;
+          return ScanToUnlock(data: args);
         case "on_ride":
           String id = settings.arguments as String;
           return OnRide(rideId: id);
         case "ride_summary":
-          return const RideSummary();
+          String id = settings.arguments as String;
+          return RideSummary(rideId: id);
         case "scan_to_end_ride":
           String id = settings.arguments as String;
           return EndRideScanner(rideId: id);

@@ -205,10 +205,11 @@ class _EndRideScannerState extends State<EndRideScanner> {
       print("Resposne: $r");
       if (r != null) {
         String stopPing = r['stopPing'].toString();
+        String rideID = r['rideID'].toString();
         shopOTP(stopPing);
         timer = Timer.periodic(
           const Duration(seconds: 15),
-          (Timer t) => startWatching(stopPing),
+          (Timer t) => startWatching(rideID),
         );
       }
     });
@@ -308,11 +309,141 @@ class _EndRideScannerState extends State<EndRideScanner> {
     bookingServices.rideEndConfirmation(mobile.toString()).then((r) {
       if (r != null) {
         String totalRideDuration = r['rideId'].toString();
-        if (rideId.toString() == widget.rideId) {
-          Navigator.pushNamed(context, "home");
+        if (rideId.toString() == r['rideId'].toString()) {
+          // Navigator.pushNamed(context, "home");
+          rideDoneAlert();
         }
         print("rideId $totalRideDuration");
       }
     });
+  }
+
+  rideDoneAlert() {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (context) {
+        return SizedBox(
+          height: height / 1.5,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Positioned(
+                top: height / 5.5 - 100,
+                child: Container(
+                  height: height,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: height / 6.6 - 100,
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.close),
+                          color: Colors.white,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 50,
+                        left: 50,
+                        top: 50,
+                        bottom: 20,
+                      ),
+                      child: Image.asset(
+                        "assets/img/ride_end.png",
+                        height: 60,
+                        width: 60,
+                      ),
+                    ),
+                    const Text(
+                      "Ride done!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Color(0xff2c2c2c),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Great job on your ',
+                        style: DefaultTextStyle.of(context).style,
+                        children: const <TextSpan>[
+                          TextSpan(
+                              text: 'last trip covering',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(
+                              text: ' 25 kilometers!',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              )),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            // width: width / 2,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    "ride_summary",
+                                    arguments: widget.rideId.toString(),
+                                    (route) => false);
+                              },
+                              child: const Text("View Ride Summary"),
+                            ),
+                          ),
+                          const SizedBox(width: 25),
+                          SizedBox(
+                            // width: width / 2,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text("Rate This Ride"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }

@@ -47,9 +47,11 @@ class Assets {
   static const String imgMapUserIcon = 'assets/img/map_user_icon.png';
   static const String imgNoInternet = 'assets/img/no-internet.png';
   static const String imgOops = 'assets/img/oops.png';
+  static const String imgPdf = 'assets/img/pdf.png';
   static const String imgProfileLogo = 'assets/img/profile_logo.png';
   static const String imgQuestionMark = 'assets/img/question_mark.png';
   static const String imgRate = 'assets/img/rate.png';
+  static const String imgRideEnd = 'assets/img/ride_end.png';
   static const String imgRideHistory = 'assets/img/ride_history.png';
   static const String imgScooter = 'assets/img/scooter.png';
   static const String imgSliderIcon = 'assets/img/slider_icon.png';

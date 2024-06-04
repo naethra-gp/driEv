@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
+import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -199,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       // const SizedBox(width: 20),
                                       SizedBox(
                                         height: 20,
@@ -411,9 +412,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        menuList("assets/img/wallet.png", "View Wallet", () {
-                          Navigator.pushNamed(context, "scan_to_end_ride");
-                        }),
+                        menuList("assets/img/wallet.png", "View Wallet", () {}),
                         Divider(
                           endIndent: 15,
                           indent: 15,
@@ -421,7 +420,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
                             () {
-                           // Navigator.pushNamed(context, "ride_summary");
+                          // Navigator.pushNamed(context, "ride_summary");
                         }),
                         Divider(
                           endIndent: 15,

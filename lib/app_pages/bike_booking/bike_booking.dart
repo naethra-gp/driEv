@@ -23,7 +23,7 @@ class _BikeBookingState extends State<BikeBooking> {
             },
           ),
         ),
-        body: Center(
+        body: const Center(
           child: Text("Bike Booking"),
         )
     );

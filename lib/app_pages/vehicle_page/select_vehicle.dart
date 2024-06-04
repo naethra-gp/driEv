@@ -55,7 +55,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
       vehicleList = response.where((i) => i['distanceRange'] != null).toList();
       for (int i = 0; i < vehicleList.length; i++) {
         List dis = vehicleList[i]['distanceRange'].toString().split("-");
-        print("dis ${dis.length}");
+        // print("dis ${dis.length}");
         // print("dis ${dis[1] == null}");
         if (dis.length == 2) {
           // int a = int.parse(dis[0]);
@@ -69,7 +69,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
           setState(() {});
         }
       }
-      print("filterVehicleList $filterVehicleList");
+      // print("filterVehicleList $filterVehicleList");
       if (filterVehicleList.isEmpty) {
         Navigator.pushNamed(context, "error_bike");
       }

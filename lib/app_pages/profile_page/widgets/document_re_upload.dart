@@ -1,17 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:driev/app_services/customer_services.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
-
-import '../../../app_storages/secure_storage.dart';
-import '../../../app_themes/app_colors.dart';
-import '../../../app_utils/app_loading/alert_services.dart';
 import 'document_upload_alert.dart';
 
 class DocumentReUpload extends StatelessWidget {

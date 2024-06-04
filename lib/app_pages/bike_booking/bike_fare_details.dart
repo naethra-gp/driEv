@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -654,14 +653,12 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   }
 
   reserveBike() {
-    // _timer.cancel();
     Map<String, Object> params = {
       "contact": secureStorage.get("mobile").toString(),
       "vehicleId": fareDetails[0]['vehicleId'].toString(),
       "duration": reserveMins.toString()
     };
     setState(() {
-      // _timer.cancel();
       enableChasingTime = false;
       _start = int.parse(reserveMins.toString()) * 60;
       isReservedDone = true;
@@ -677,11 +674,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     int selectedMin = 0;
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
     List a =
-    reserveTime.where((e) => e['selected'].toString() == "true").toList();
-    print("a $a");
+        reserveTime.where((e) => e['selected'].toString() == "true").toList();
 
     if (a.isNotEmpty) {
-
       selectedMin = a[0]['mins'];
       double amount = selectedMin * reserve;
       bookingServices.getWalletBalance(mobile).then((r) {
@@ -691,7 +686,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           alertServices.insufficientBalanceAlert(context, balance.toString());
         } else {
           /// BALANCE AVAILABLE
-          Navigator.pushNamed(context, "scan_to_unlock", arguments: fareDetails[0]['vehicleId'].toString());
+          Navigator.pushNamed(context, "scan_to_unlock",
+              arguments: fareDetails[0]['vehicleId'].toString());
         }
       });
     } else {
@@ -699,7 +695,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       double perMinPaisa = fareDetails[0]['offer']['perMinPaisa'];
       double perKmPaisa = fareDetails[0]['offer']['perKmPaisa'];
       double amount = baseFare + perKmPaisa + perMinPaisa;
-      print("amount $amount");
       bookingServices.getWalletBalance(mobile).then((r) {
         alertServices.hideLoading();
         balance = r['balance'];
@@ -707,10 +702,14 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           alertServices.insufficientBalanceAlert(context, balance.toString());
         } else {
           /// BALANCE AVAILABLE arguments: list['campusId'].toString()
-          Navigator.pushNamed(context, "scan_to_unlock", arguments: fareDetails[0]['vehicleId'].toString());
+          String campus = widget.stationDetails[0]['campus'].toString();
+          String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+          List arg = [
+            {"campus": campus, "vehicleId": vehicleId,},
+          ];
+          Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
         }
       });
     }
-
   }
 }

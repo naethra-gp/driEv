@@ -115,7 +115,6 @@ class _HomePageState extends State<HomePage> {
           (response) async {
         alertServices.hideLoading();
         stationDetails = response;
-        print("stationDetails ${stationDetails['plans']}");
         double stationLat = stationDetails['lattitude'];
         double stationLon = stationDetails['longitude'];
         stationLocation = LatLng(stationLat, stationLon);

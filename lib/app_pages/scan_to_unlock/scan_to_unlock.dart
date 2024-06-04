@@ -12,8 +12,8 @@ import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 
 class ScanToUnlock extends StatefulWidget {
-  final String vehicleId;
-  const ScanToUnlock({super.key, required this.vehicleId});
+  final List data;
+  const ScanToUnlock({super.key, required this.data});
 
   @override
   State<ScanToUnlock> createState() => _ScanToUnlockState();
@@ -31,6 +31,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
 
   @override
   void initState() {
+    print("test -> ${widget.data}");
     _getCurrentLocation();
     super.initState();
   }
@@ -101,9 +102,9 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  "End your ride at KIIT Campus 6 by scanning the QR code or entering the bike number manually.",
-                  style: TextStyle(color: Colors.white),
+                Text(
+                  "End your ride at ${widget.data[0]['campus']} by scanning the QR code or entering the bike number manually.",
+                  style: const TextStyle(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
@@ -212,11 +213,12 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
 
   startMyRide() {
     String mobile = secureStorage.get("mobile");
-    if (widget.vehicleId.toString() != "null") {
+    print("Vid ${widget.data[0]['vehicleId'].toString()}");
+    if (widget.data[0]['vehicleId'].toString() != "null") {
       if (currentLocation != null) {
         alertServices.showLoading();
         var params = {
-          "vehicleId": widget.vehicleId,
+          "vehicleId": widget.data[0]['vehicleId'].toString(),
           "scanCode": bikeNumberCtl.text.toString(),
           "contact": mobile.toString(),
           "noOfHelmet": 1,
