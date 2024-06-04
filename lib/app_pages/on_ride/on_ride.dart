@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:driev/app_services/booking_services.dart';
+import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +15,8 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OnRide extends StatefulWidget {
-  const OnRide({super.key});
+  final String rideId;
+  const OnRide({super.key, required this.rideId});
 
   @override
   State<OnRide> createState() => _OnRideState();
@@ -19,14 +24,15 @@ class OnRide extends StatefulWidget {
 
 class _OnRideState extends State<OnRide> {
   AlertServices alertServices = AlertServices();
+  BookingServices bookingServices = BookingServices();
+  SecureStorage secureStorage = SecureStorage();
 
   late GoogleMapController mapController;
-
-  final LatLng _center =
-      const LatLng(37.7749, -122.4194); // San Francisco coordinates
+  List rideDetails = [];
   LatLng? currentLocation;
-
   String currentDistrict = "Dindigul";
+  double availableBalance = 0;
+
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -35,9 +41,27 @@ class _OnRideState extends State<OnRide> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    print("Ride ID --> ${widget.rideId}");
     _getUserLocation();
+    getBalance();
+    getRideDetails(widget.rideId);
     super.initState();
+  }
+
+  getRideDetails(String id) {
+    bookingServices.getRideDetails(id).then((r) {
+      if (r != null) {
+        setState(() {
+          rideDetails = [r];
+        });
+        // if(r['status'].toString() == "On Ride") {
+        //   Timer.periodic(const Duration(seconds: 10), (Timer t) {
+        //     getRideDetails(widget.rideId);
+        //   });
+        // }
+        print("remainingRange ${r['remainingRange']}");
+      }
+    });
   }
 
   _getUserLocation() async {
@@ -165,17 +189,17 @@ class _OnRideState extends State<OnRide> {
                                 width: 20,
                               ),
                               const SizedBox(width: 10),
-                              // if (customer.isNotEmpty)
-                              //   Text(
-                              //     "\u{20B9}${customer[0]['walletBalance']}",
-                              //     style: TextStyle(
-                              //       // fontSize: 14,
-                              //       fontSize: width / 30,
-                              //       fontWeight: FontWeight.bold,
-                              //       color: getColor(customer[0]['walletBalance']),
-                              //     ),
-                              //     // style: CustomTheme.termStyle1red,
-                              //   ),
+                              if (rideDetails.isNotEmpty)
+                                Text(
+                                  "\u{20B9}$availableBalance",
+                                  style: const TextStyle(
+                                    // fontSize: 14,z
+                                    // fontSize: width / 30,
+                                    fontWeight: FontWeight.bold,
+                                    // color: getColor(availableBalance),
+                                  ),
+                                  // style: CustomTheme.termStyle1red,
+                                ),
                               const SizedBox(width: 20),
                             ],
                           ),
@@ -183,241 +207,251 @@ class _OnRideState extends State<OnRide> {
                       ],
                     ),
                   ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(15.0),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 5.0,
-                            offset: Offset(0, 5),
+                  if (rideDetails.isNotEmpty) ...[
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            topRight: Radius.circular(25),
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Card(
-                            surfaceTintColor: const Color(0xffF5F5F5),
-                            color: const Color(0xffF5F5F5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 5.0,
+                              offset: Offset(0, 5),
                             ),
-                            clipBehavior: Clip.antiAlias,
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      RichText(
-                                          text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'dri',
-                                            style: heading(Colors.black),
-                                          ),
-                                          TextSpan(
-                                            text: 'EV ',
-                                            style: heading(AppColors.primary),
-                                          ),
-                                          TextSpan(
-                                            text: "Speed-44",
-                                            // '${fd[0]['planType']}-${fd[0]['vehicleId']}',
-                                            style: heading(Colors.black),
-                                          ),
-                                        ],
-                                      )),
-                                      // const SizedBox(height: 15),
-                                      const SizedBox(height: 50),
-                                      const Text(
-                                        "Estimated Range",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: "Poppins",
-                                          color: Color(0xff626262),
-                                        ),
-                                      ),
-                                      const Text(
-                                        "0",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontFamily: "Poppins",
-                                        ),
-                                      ),
-                                      const SizedBox(height: 25),
-                                      const Icon(
-                                          LineAwesome.battery_full_solid),
-                                      const Text(
-                                        "100%",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontFamily: "Poppins",
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          needHelpAlert(context);
-                                          print("ontap");
-                                        },
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Container(
-                                            width: 25,
-                                            height: 25,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.green,
-                                              shape: BoxShape.circle,
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Card(
+                              surfaceTintColor: const Color(0xffF5F5F5),
+                              color: const Color(0xffF5F5F5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                            text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'dri',
+                                              style: heading(Colors.black),
                                             ),
-                                            child: const Center(
-                                              child: Icon(
-                                                Icons.headset_mic_outlined,
-                                                color: Colors.white,
-                                                size: 15,
+                                            TextSpan(
+                                              text: 'EV ',
+                                              style: heading(AppColors.primary),
+                                            ),
+                                            TextSpan(
+                                              text:
+                                                  "${rideDetails[0]['planType'].toString()}-${rideDetails[0]['vehicleId'].toString()}",
+                                              // '${fd[0]['planType']}-${fd[0]['vehicleId']}',
+                                              style: heading(Colors.black),
+                                            ),
+                                          ],
+                                        )),
+                                        // const SizedBox(height: 15),
+                                        const SizedBox(height: 50),
+                                        const Text(
+                                          "Estimated Range",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: "Poppins",
+                                            color: Color(0xff626262),
+                                          ),
+                                        ),
+                                        Text(
+                                          "${rideDetails[0]['remainingRange']} KM",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: "Poppins",
+                                          ),
+                                        ),
+                                        const SizedBox(height: 25),
+                                        const Icon(
+                                            LineAwesome.battery_full_solid),
+                                        const Text(
+                                          "100%",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontFamily: "Poppins",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            needHelpAlert(context);
+                                            print("ontap");
+                                          },
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Container(
+                                              width: 25,
+                                              height: 25,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.headset_mic_outlined,
+                                                  color: Colors.white,
+                                                  size: 15,
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 40),
-                                      Image.asset(
-                                        "assets/img/bike.png",
-                                        fit: BoxFit.fitWidth,
-                                        width: 180,
-                                        // height: 130,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 15.0),
-                          const Divider(),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.speed_outlined,
-                                        color: AppColors.primary,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '12.5 km',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text(
-                                      'Ride Distance',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Color(0xff7E7E7E),
-                                        fontSize: 10,
-                                      ),
+                                        const SizedBox(height: 40),
+                                        Image.asset(
+                                          "assets/img/bike.png",
+                                          fit: BoxFit.fitWidth,
+                                          width: 170,
+                                          // height: 130,
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.timer_outlined,
-                                        color: AppColors.primary,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        '00:00:00',
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text(
-                                      'Ride Duration',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Color(0xff7E7E7E),
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const Divider(),
-                          const SizedBox(height: 15.0),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, "end_ride_scanner");
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              child: const Text('End Ride'),
-                            ),
-                          ),
-                          const SizedBox(height: 10.0),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.info_outline,
-                                color: Colors.red,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'You can end your ride at the KIIT station only',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
+                                  ],
                                 ),
                               ),
-                            ],
-                          )
-                        ],
+                            ),
+                            const SizedBox(height: 15.0),
+                            const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.speed_outlined,
+                                          color: AppColors.primary,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          '${rideDetails[0]['totalKm']} km',
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      child: Text(
+                                        'Ride Distance',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Color(0xff7E7E7E),
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.timer_outlined,
+                                          color: AppColors.primary,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          "${rideDetails[0]['duration']}",
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      child: Text(
+                                        'Ride Duration',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Color(0xff7E7E7E),
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const Divider(),
+                            const SizedBox(height: 15.0),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    "scan_to_end_ride",
+                                    arguments: widget.rideId.toString(),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                ),
+                                child: const Text('End Ride'),
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  'You can end your ride at the KIIT station only',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
       ),
@@ -533,10 +567,8 @@ class _OnRideState extends State<OnRide> {
                           onPressed: () async {
                             // var contact = "+919439099990";
                             // const tel= $contact;
-                            final Uri smsLaunchUri = Uri(
-                                scheme: 'tel',
-                                path: "+919439099990"
-                            );
+                            final Uri smsLaunchUri =
+                                Uri(scheme: 'tel', path: "+919439099990");
                             await launchUrl(smsLaunchUri);
                           },
                           style: ElevatedButton.styleFrom(
@@ -578,9 +610,9 @@ class _OnRideState extends State<OnRide> {
                           onPressed: () async {
                             var url = 'mailto:info@driev.bike';
                             if (await canLaunch(url)) {
-                            await launch(url);
+                              await launch(url);
                             } else {
-                            throw 'Could not launch $url';
+                              throw 'Could not launch $url';
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -627,5 +659,17 @@ class _OnRideState extends State<OnRide> {
         );
       },
     );
+  }
+
+  getBalance() async {
+    alertServices.showLoading();
+    String mobile = await secureStorage.get("mobile");
+    bookingServices.getWalletBalance(mobile).then((r) {
+      alertServices.hideLoading();
+      String balance = r['balance'];
+      setState(() {
+        availableBalance = double.parse(balance);
+      });
+    });
   }
 }

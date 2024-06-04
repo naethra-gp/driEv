@@ -1,5 +1,6 @@
 import 'dart:async';
 
+
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -216,7 +217,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                                 : Image.asset(
                                     "assets/img/bike.png",
                                     fit: BoxFit.fitWidth,
-                                    width: 185,
+                                    width: 170,
                                     // height: 130,
                                   ),
                           ],
@@ -402,7 +403,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          scanToUnlock();
+                        },
                         style: ElevatedButton.styleFrom(
                           textStyle: const TextStyle(
                             color: Colors.black,
@@ -555,7 +558,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        scanToUnlock();
+                      },
                       style: ElevatedButton.styleFrom(
                         textStyle: const TextStyle(
                           color: Colors.black,
@@ -672,17 +677,40 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     int selectedMin = 0;
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
     List a =
-        reserveTime.where((e) => e['selected'].toString() == "true").toList();
-    selectedMin = a[0]['mins'];
-    double amount = selectedMin * reserve;
-    bookingServices.getWalletBalance(mobile).then((r) {
-      alertServices.hideLoading();
-      balance = r['balance'];
-      if (amount > balance) {
-        alertServices.insufficientBalanceAlert(context, balance.toString());
-      } else {
-        /// BALANCE AVAILABLE
-      }
-    });
+    reserveTime.where((e) => e['selected'].toString() == "true").toList();
+    print("a $a");
+
+    if (a.isNotEmpty) {
+
+      selectedMin = a[0]['mins'];
+      double amount = selectedMin * reserve;
+      bookingServices.getWalletBalance(mobile).then((r) {
+        alertServices.hideLoading();
+        balance = r['balance'];
+        if (amount > balance) {
+          alertServices.insufficientBalanceAlert(context, balance.toString());
+        } else {
+          /// BALANCE AVAILABLE
+          Navigator.pushNamed(context, "scan_to_unlock", arguments: fareDetails[0]['vehicleId'].toString());
+        }
+      });
+    } else {
+      double baseFare = fareDetails[0]['offer']['basePrice'];
+      double perMinPaisa = fareDetails[0]['offer']['perMinPaisa'];
+      double perKmPaisa = fareDetails[0]['offer']['perKmPaisa'];
+      double amount = baseFare + perKmPaisa + perMinPaisa;
+      print("amount $amount");
+      bookingServices.getWalletBalance(mobile).then((r) {
+        alertServices.hideLoading();
+        balance = r['balance'];
+        if (amount > balance) {
+          alertServices.insufficientBalanceAlert(context, balance.toString());
+        } else {
+          /// BALANCE AVAILABLE arguments: list['campusId'].toString()
+          Navigator.pushNamed(context, "scan_to_unlock", arguments: fareDetails[0]['vehicleId'].toString());
+        }
+      });
+    }
+
   }
 }

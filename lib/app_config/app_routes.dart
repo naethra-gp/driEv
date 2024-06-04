@@ -56,17 +56,21 @@ class AppRoute {
           Map args = settings.arguments as Map;
           return BikeFareDetails(stationDetails: args['query']);
         case "booking_success":
-          return const BookingSuccessful();
+          String id = settings.arguments as String;
+          return BookingSuccessful(rideId: id);
         case "booking_failed":
           return const BookingFailed();
         case "scan_to_unlock":
-          return const ScanToUnlock();
+          String vId = settings.arguments as String;
+          return ScanToUnlock(vehicleId: vId);
         case "on_ride":
-          return const OnRide();
+          String id = settings.arguments as String;
+          return OnRide(rideId: id);
         case "ride_summary":
           return const RideSummary();
-        case "end_ride_scanner":
-          return const EndRideScanner();
+        case "scan_to_end_ride":
+          String id = settings.arguments as String;
+          return EndRideScanner(rideId: id);
 
       }
       return const LandingPage();

@@ -3,7 +3,9 @@ import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
 class BookingSuccessful extends StatefulWidget {
-  const BookingSuccessful({super.key});
+  final String rideId;
+
+  const BookingSuccessful({super.key, required this.rideId});
 
   @override
   State<BookingSuccessful> createState() => _BookingSuccessfulState();
@@ -49,7 +51,10 @@ class _BookingSuccessfulState extends State<BookingSuccessful> {
               const SizedBox(height: 50),
               AppButtonWidget(
                 title: "Go to Controls",
-                onPressed: () {},
+                onPressed: () {
+                  String rideId = widget.rideId.toString();
+                  Navigator.pushNamed(context, "on_ride", arguments: rideId);
+                },
               ),
             ],
           ),

@@ -20,5 +20,9 @@ class EndPoints {
   static const uploadDocument = 'uploadDocument';
   static const getBikeDetails = 'getBikeDetails';
   static const walletBalance = 'wallet/openingBalance';
+  static const createMyRide = 'createMyRide';
+  static const rideDetails = 'rideDetails';
+  static const getRideEndPin = 'getRideEndPin';
+  static const rideEndConfirmation = 'rideEndConfirmation';
 
 }

@@ -412,7 +412,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         menuList("assets/img/wallet.png", "View Wallet", () {
-                          Navigator.pushNamed(context, "on_ride");
+                          Navigator.pushNamed(context, "scan_to_end_ride");
                         }),
                         Divider(
                           endIndent: 15,
@@ -421,7 +421,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
                             () {
-                           Navigator.pushNamed(context, "ride_summary");
+                           // Navigator.pushNamed(context, "ride_summary");
                         }),
                         Divider(
                           endIndent: 15,
