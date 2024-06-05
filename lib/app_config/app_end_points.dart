@@ -21,6 +21,8 @@ class EndPoints {
   static const getBikeDetails = 'getBikeDetails';
   static const walletBalance = 'wallet/openingBalance';
   static const createMyRide = 'createMyRide';
+  static const blockBike = 'blockBike';
+  static const extendBlocking = 'extendBlocking';
   static const rideDetails = 'rideDetails';
   static const getRideEndPin = 'getRideEndPin';
   static const rideEndConfirmation = 'rideEndConfirmation';

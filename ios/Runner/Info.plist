@@ -67,7 +67,10 @@
     <string>media</string>
     <key>NSCameraUsageDescription</key>
     <string>This app needs camera access to scan QR codes</string>
-
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>This app needs access to your location to show your position on the map.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This app needs access to your location to show your position on the map.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>This app needs photos access to get QR code from photo library</string>
 </dict>

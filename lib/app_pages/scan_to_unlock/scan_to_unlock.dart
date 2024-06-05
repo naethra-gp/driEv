@@ -31,7 +31,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
 
   @override
   void initState() {
-    print("test -> ${widget.data}");
     _getCurrentLocation();
     super.initState();
   }
@@ -76,8 +75,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     qrCodeCallback: (String? code) {
                       setState(() {
                         bikeNumberCtl.text = code!;
+                        startMyRide();
                       });
-                      print("code $code");
                     },
                     child: Container(
                       decoration: BoxDecoration(

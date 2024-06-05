@@ -16,6 +16,19 @@ class BookingServices {
     return response;
   }
 
+  blockBike(dynamic params, [error]) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.blockBike}';
+    var response = await connection.postWithToken(url, params, error);
+    return response;
+  }
+  extendBlocking(dynamic params, [error]) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.extendBlocking}';
+    var response = await connection.postWithToken(url, params, error);
+    return response;
+  }
+
   startMyRide(dynamic params, [error]) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.createMyRide}';
@@ -36,6 +49,7 @@ class BookingServices {
     var response = await connection.getWithToken(url);
     return response;
   }
+
   rideEndConfirmation(String mobile) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.rideEndConfirmation}/$mobile';

@@ -21,8 +21,10 @@ class AppRoute {
         case "login":
           dynamic mobile = settings.arguments;
           return LoginPage(mobileNumber: mobile);
+        // case "home":
+        //   return const HomePage();
         case "home":
-          return const HomePage();
+          return const Home();
         case "verify_otp":
           String mobile = settings.arguments as String;
           return VerifyOTP(mobileNumber: mobile);

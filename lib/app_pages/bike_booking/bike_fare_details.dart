@@ -43,7 +43,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   bool isInputDisabled = false;
   bool enableChasingTime = false;
   bool isReservedDone = false;
-  String reserveMins = "0";
+  String reserveMins = "";
+  String blockId = "";
 
   int _start = 0;
   late Timer _timer;
@@ -529,7 +530,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       child: ElevatedButton(
                         onPressed: () {
                           /// --- Start
-                          reserveBike();
+                          extendBlocking();
                         },
                         style: ElevatedButton.styleFrom(
                           textStyle: const TextStyle(
@@ -546,7 +547,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                           ),
                         ),
                         child: const Text(
-                          "Proceed to reserve your bike",
+                          "Extend to reserve your bike",
                           style: TextStyle(color: AppColors.primary),
                         ),
                       ),
@@ -652,21 +653,79 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     );
   }
 
-  reserveBike() {
-    Map<String, Object> params = {
-      "contact": secureStorage.get("mobile").toString(),
-      "vehicleId": fareDetails[0]['vehicleId'].toString(),
-      "duration": reserveMins.toString()
-    };
-    setState(() {
-      enableChasingTime = false;
-      _start = int.parse(reserveMins.toString()) * 60;
-      isReservedDone = true;
-    });
-    _startTimer();
+  reserveBike() async {
+    alertServices.showLoading();
+    String mobile = await secureStorage.get("mobile");
+    double balance = 0;
+    int selectedMin = 0;
+    double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
+    List a =
+    reserveTime.where((e) => e['selected'].toString() == "true").toList();
+    if (a.isNotEmpty) {
+      selectedMin = a[0]['mins'];
+      double amount = selectedMin * reserve;
+      bookingServices.getWalletBalance(mobile).then((r) {
+        alertServices.hideLoading();
+        balance = r['balance'];
+        if (amount > balance) {
+          alertServices.insufficientBalanceAlert(context, balance.toString());
+        } else {
+          if (reserveMins.isEmpty) {
+            alertServices.errorToast("Invalid Time!!!");
+          } else {
+            alertServices.showLoading();
+            Map<String, Object> params = {
+              "contact": secureStorage.get("mobile").toString(),
+              "vehicleId": fareDetails[0]['vehicleId'].toString(),
+              "duration": reserveMins.toString()
+            };
+            print("params $params");
+            bookingServices.blockBike(params).then((r) {
+              alertServices.hideLoading();
+              if (r != null) {
+                setState(() {
+                  blockId = r['blockId'].toString();
+                  enableChasingTime = false;
+                  _start = int.parse(reserveMins.toString()) * 60;
+                  isReservedDone = true;
+                });
+                _startTimer();
+              }
+            });
+          }
+        }
+      });
+    }
+
   }
 
-  getWalletBalance() async {}
+  extendBlocking() {
+    print("--- extendBlocking ---");
+    if (reserveMins.isEmpty) {
+      alertServices.errorToast("Invalid Time!!!");
+    } else {
+      alertServices.showLoading();
+      Map<String, Object> params = {
+        "blockId": blockId.toString(),
+        "duration": reserveMins.toString()
+      };
+      print("params $params");
+      bookingServices.extendBlocking(params).then((r) {
+        alertServices.hideLoading();
+        print("extendBlocking Response -->  $r");
+        if (r != null) {
+          setState(() {
+            // blockId = r['blockId'].toString();
+            enableChasingTime = false;
+            _start = int.parse(reserveMins.toString()) * 60;
+            isReservedDone = true;
+          });
+          _startTimer();
+        }
+      });
+    }
+  }
+
   scanToUnlock() async {
     alertServices.showLoading();
     String mobile = await secureStorage.get("mobile");
@@ -675,7 +734,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
     List a =
         reserveTime.where((e) => e['selected'].toString() == "true").toList();
-
     if (a.isNotEmpty) {
       selectedMin = a[0]['mins'];
       double amount = selectedMin * reserve;
@@ -705,7 +763,10 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           String campus = widget.stationDetails[0]['campus'].toString();
           String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
           List arg = [
-            {"campus": campus, "vehicleId": vehicleId,},
+            {
+              "campus": campus,
+              "vehicleId": vehicleId,
+            },
           ];
           Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
         }
