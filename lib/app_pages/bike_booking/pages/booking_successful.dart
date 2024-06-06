@@ -12,6 +12,16 @@ class BookingSuccessful extends StatefulWidget {
 }
 
 class _BookingSuccessfulState extends State<BookingSuccessful> {
+
+
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 5), () {
+      String rideId = widget.rideId.toString();
+      Navigator.pushNamed(context, "on_ride", arguments: rideId);
+    });
+      super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

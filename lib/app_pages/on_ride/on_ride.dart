@@ -54,7 +54,7 @@ class _OnRideState extends State<OnRide> {
         setState(() {
           rideDetails = [r];
         });
-        if(r['status'].toString() == "On Ride") {
+        if (r['status'].toString() == "On Ride") {
           Timer.periodic(const Duration(minutes: 1), (Timer t) {
             getRideDetails(id);
           });
@@ -85,13 +85,13 @@ class _OnRideState extends State<OnRide> {
             icon: customIcon,
           ),
         );
-        List<Placemark> placeMark =
-            await placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placeMark = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
         Placemark place = placeMark[0];
         currentDistrict = place.locality!;
       });
     } catch (e) {
-      alertServices.errorToast("Location Issue");
+      // alertServices.errorToast("Location Issue");
       // customerLocation = null;
     }
   }
@@ -112,7 +112,7 @@ class _OnRideState extends State<OnRide> {
                     zoomControlsEnabled: true,
                     initialCameraPosition: CameraPosition(
                       target: currentLocation!,
-                      zoom: 18,
+                      zoom: 15,
                     ),
                   ),
                   Positioned(
@@ -195,7 +195,7 @@ class _OnRideState extends State<OnRide> {
                               const SizedBox(width: 10),
                               if (rideDetails.isNotEmpty)
                                 Text(
-                                  "\u{20B9}${availableBalance.toStringAsFixed(3)}",
+                                  "\u{20B9}${availableBalance.toStringAsFixed(2)}",
                                   style: TextStyle(
                                     // fontSize: 14,
                                     // fontSize: width / 30,
@@ -273,7 +273,7 @@ class _OnRideState extends State<OnRide> {
                                           ],
                                         )),
                                         // const SizedBox(height: 15),
-                                        const SizedBox(height: 50),
+                                        const SizedBox(height: 30),
                                         const Text(
                                           "Estimated Range",
                                           style: TextStyle(
@@ -493,7 +493,7 @@ class _OnRideState extends State<OnRide> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: SizedBox(
-            height: 400,
+            height: 380,
             child: Column(
               children: [
                 const SizedBox(height: 50),
@@ -501,15 +501,16 @@ class _OnRideState extends State<OnRide> {
                   alignment: Alignment.center,
                   child: Image.asset(
                     "assets/img/question_mark.png",
-                    height: 75,
-                    width: 75,
+                    height: 50,
+                    width: 50,
                   ),
                 ),
                 const SizedBox(height: 10),
                 const Text(
                   "Need Help?",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 25),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: Column(
@@ -612,12 +613,15 @@ class _OnRideState extends State<OnRide> {
                       const SizedBox(height: 16),
                       ElevatedButton(
                           onPressed: () async {
-                            var url = 'mailto:info@driev.bike';
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
+                            // var url = 'mailto:info@driev.bike';
+                            // if (await canLaunch(url)) {
+                            //   await launch(url);
+                            // } else {
+                            //   throw 'Could not launch $url';
+                            // }
+                            final Uri smsLaunchUri =
+                                Uri(scheme: 'mailto', path: "info@driev.bike");
+                            await launchUrl(smsLaunchUri);
                           },
                           style: ElevatedButton.styleFrom(
                             textStyle: const TextStyle(
@@ -673,7 +677,7 @@ class _OnRideState extends State<OnRide> {
       double balance = r['balance'];
       print("bal -- ${balance.toStringAsFixed(2)}");
       setState(() {
-        availableBalance = double.parse(balance.toStringAsFixed(2));
+        availableBalance = balance;
       });
     });
   }

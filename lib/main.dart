@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'app_config/app_routes.dart';
 import 'app_utils/app_provider/connectivity_provider.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
         initialRoute: 'splash',
         builder: EasyLoading.init(),
         onGenerateRoute: AppRoute.allRoutes,
-        navigatorKey: navigatorKey,
+        navigatorKey: Constants.navigatorKey,
         theme: AppThemes.lightTheme,
       ),
     );

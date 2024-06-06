@@ -25,8 +25,10 @@ class FareDetailsWidget extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: ListTile(
+        visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
         minVerticalPadding: 0,
         title: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               title,
@@ -54,6 +56,7 @@ class FareDetailsWidget extends StatelessWidget {
                   },
                   icon: const Icon(
                     Icons.info,
+                    size: 20,
                     color: Color(0xff7D7D7D),
                   ),
                 ),

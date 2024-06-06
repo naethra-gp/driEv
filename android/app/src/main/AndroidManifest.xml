@@ -29,6 +29,9 @@
         android:requestLegacyExternalStorage="true"
         android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA"/>
         <activity
             android:name=".MainActivity"

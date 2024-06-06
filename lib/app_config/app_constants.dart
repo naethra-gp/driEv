@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+
 class Constants {
 
   static const String storageBox = "driEV";
   static const String clientId = "070720222304";
   static const String clientSecret = "403222027070";
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   /// ASSETS IMAGES
   static const String getStarted = "assets/app/getStarted.png";

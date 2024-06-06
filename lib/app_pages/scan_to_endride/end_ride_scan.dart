@@ -4,7 +4,8 @@ import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_mobile_vision/qr_camera.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 
 class EndRideScanner extends StatefulWidget {
@@ -26,6 +27,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
   SecureStorage secureStorage = SecureStorage();
   String otpCode = "";
   Timer? timer;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'end-QR');
 
   @override
   void initState() {
@@ -39,159 +41,128 @@ class _EndRideScannerState extends State<EndRideScanner> {
     super.dispose();
   }
 
-  _swapBackLightState() async {
-    QrCamera.toggleFlash();
-  }
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double scanArea = (width < 400 || height < 400) ? 150.0 : 300.0;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: height / 10),
-                SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: QrCamera(
-                    onError: (context, error) => Text(
-                      error.toString(),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    offscreenBuilder: (context) => const Text(
-                      "Loading...",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    cameraDirection: CameraDirection.BACK,
-                    qrCodeCallback: (String? code) {
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius:
+                  BorderRadius.circular(10), // Adjust the radius as needed
+              child: Container(
+                width: 250, // adjust the size as needed
+                height: 250,
+                decoration: ShapeDecoration(
+                  shape: QrScannerOverlayShape(
+                    borderColor: AppColors.primary,
+                    borderRadius: 5,
+                    borderWidth: 10,
+                  ),
+                ),
+                child: MobileScanner(
+                  onDetect: (qrcode) {
+                    print("qrcode $qrcode");
+                    List a = [qrcode];
+                    // if (!isScanCompleted) {
+                    if (a[0]['rawValue'] == null) {
+                      isScanCompleted = true;
+                      debugPrint('Failed to scan Barcode');
+                      alertServices.errorToast("Unable to Scan QR Code!");
+                    } else {
+                      final String code = a[0]['rawValue'];
+                      debugPrint('Qr found! $code');
                       setState(() {
-                        bikeNumberCtl.text = code!;
+                        bikeNumberCtl.text = code.toString();
+                        submitBikeNUmber();
                       });
-                      print("code $code");
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(
-                          color: AppColors.primary,
-                          width: 4.0,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
-                    ),
-                    notStartedBuilder: (context) {
-                      return const Text("Loading the QR Code scanner");
-                    },
-                  ),
+                    }
+                    // }
+                  },
                 ),
-                const SizedBox(height: 50),
-                const Text(
-                  "Wrap up your two-wheeled adventure!",
-                  style: TextStyle(
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Wrap up your two-wheeled adventure!",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "End your ride at KIIT Campus 6 by scanning the QR \n code or entering the bike number manually.",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 190,
+                  height: 40,
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "End your ride at KIIT Campus 6 by scanning the QR code or entering the bike number manually.",
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 250,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: TextField(
-                          controller: bikeNumberCtl,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.phone,
-                          maxLength: 7,
-                          decoration: InputDecoration(
-                            hintText: 'Enter Bike Number',
-                            counterText: "",
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                          ),
-                          onChanged: (value) {
-                            if (value.toString().length == 7) {
-                              submitBikeNUmber();
-                              FocusScope.of(context).unfocus();
-                            }
-                          },
-                        ),
+                  child: TextField(
+                    controller: bikeNumberCtl,
+                    onChanged: (value){
+                      if(value.toString().length == 7) {
+                        submitBikeNUmber();
+                      }
+                    },
+                    maxLength: 7,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      hintText: 'Enter Bike Number',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 60,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: IconButton(
-                          icon: Image.asset(
-                            "assets/img/flash_on.png",
-                            height: 19,
-                            width: 9,
-                          ),
-                          onPressed: () {
-                            _swapBackLightState();
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                    ]),
-                // const SizedBox(height: 50),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                //   child: SizedBox(
-                //     width: double.infinity,
-                //     child: AppButtonWidget(
-                //       title: "End my Ride",
-                //       onPressed: () {
-                //         print("VID: ${bikeNumberCtl.text}");
-                //         alertServices.showLoading();
-                //         bookingServices.getRideEndPin("ITER-906").then((r) {
-                //           alertServices.hideLoading();
-                //           print("Resposne: $r");
-                //           if (r != null) {
-                //             String stopPing = r['stopPing'].toString();
-                //             shopOTP(stopPing);
-                //             timer = Timer.periodic(
-                //               const Duration(seconds: 15),
-                //               (Timer t) => startWatching(stopPing),
-                //             );
-                //           }
-                //         });
-                //       },
-                //     ),
-                //   ),
-                // )
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: IconButton(
+                    icon: Image.asset(
+                      "assets/img/flash_on.png",
+                      height: 19,
+                      width: 9,
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(height: 15),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
+import '../app_config/app_constants.dart';
 import '../app_storages/secure_storage.dart';
 import '../main.dart';
 
@@ -184,8 +185,9 @@ class Connection {
 
   gotoLogin() {
     Navigator.pushNamedAndRemoveUntil(
-        navigatorKey.currentState!.overlay!.context,
-        "login",
-        (Route<dynamic> route) => false);
+      Constants.navigatorKey.currentState!.overlay!.context,
+      "login",
+      (route) => false,
+    );
   }
 }

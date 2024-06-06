@@ -166,7 +166,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
-                                  "${sd[0]['campus']} (${sd[0]['distance']})",
+                                  "${sd[0]['campus']} (${sd[0]['distance']} km)",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -263,7 +263,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                 ),
               ),
               if (fd.isNotEmpty) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: 5),
                 FareDetailsWidget(
                   title: "Base fare",
                   info: true,
@@ -366,6 +366,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             i['selected'] = false;
                           }
                           reserveMins = value;
+                          reserveTimeCtrl.text = value.toString();
                         });
                       },
                       validator: (value) {
@@ -387,7 +388,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       ],
                     ),
                   ] else ...[
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 10),
                     AppButtonWidget(
                       title:
                           "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
@@ -654,16 +655,22 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   }
 
   reserveBike() async {
+    print("reserveBike");
     alertServices.showLoading();
     String mobile = await secureStorage.get("mobile");
     double balance = 0;
     int selectedMin = 0;
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
+    print("mobile $mobile");
+    print("reserve $reserve");
+    print("reserve ${reserveTimeCtrl.text}");
     List a =
-    reserveTime.where((e) => e['selected'].toString() == "true").toList();
-    if (a.isNotEmpty) {
-      selectedMin = a[0]['mins'];
-      double amount = selectedMin * reserve;
+        reserveTime.where((e) => e['selected'].toString() == "true").toList();
+    print("a $a");
+    String b = reserveTimeCtrl.text.toString();
+    if (b.isNotEmpty) {
+      // selectedMin = a[0]['mins'];
+      double amount = double.parse(b) * reserve;
       bookingServices.getWalletBalance(mobile).then((r) {
         alertServices.hideLoading();
         balance = r['balance'];
@@ -696,7 +703,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         }
       });
     }
-
   }
 
   extendBlocking() {
@@ -744,8 +750,15 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           alertServices.insufficientBalanceAlert(context, balance.toString());
         } else {
           /// BALANCE AVAILABLE
-          Navigator.pushNamed(context, "scan_to_unlock",
-              arguments: fareDetails[0]['vehicleId'].toString());
+          String campus = widget.stationDetails[0]['campus'].toString();
+          String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+          List arg = [
+            {
+              "campus": campus,
+              "vehicleId": vehicleId,
+            },
+          ];
+          Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
         }
       });
     } else {

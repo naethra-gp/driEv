@@ -420,7 +420,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
                             () {
-                          // Navigator.pushNamed(context, "ride_summary");
+                              // List arg = [
+                              //   {
+                              //     "campus": "campus",
+                              //     "vehicleId": "22",
+                              //   },
+                              // ];
+                              // Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
                         }),
                         Divider(
                           endIndent: 15,

@@ -320,7 +320,7 @@ class AlertServices {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: SizedBox(
-            height: 400,
+            height: 450,
             child: Column(
               children: [
                 const SizedBox(height: 50),
@@ -336,19 +336,19 @@ class AlertServices {
                 const Text(
                   "Oops!",
                   style:
-                  TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   "₹$balance",
                   style:
-                  const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 const Text(
                   "Your wallet balance is insufficient. To request a ride, kindly recharge your wallet.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                 ),
                 const SizedBox(height: 25),
                 SizedBox(
