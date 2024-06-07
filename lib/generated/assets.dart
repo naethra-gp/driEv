@@ -24,6 +24,7 @@ class Assets {
   static const String fontsPoppinsRegular = 'assets/fonts/Poppins-Regular.ttf';
   static const String fontsRoboto = 'assets/fonts/Roboto.ttf';
   static const String fontsRobotoRegular = 'assets/fonts/Roboto-Regular.ttf';
+  static const String imgAnimm = 'assets/img/animm.png';
   static const String imgAppLogo = 'assets/img/app_logo.png';
   static const String imgAttachmentIcon = 'assets/img/attachment_icon.png';
   static const String imgBike = 'assets/img/bike.png';
@@ -32,6 +33,7 @@ class Assets {
   static const String imgErrorAlertLogo = 'assets/img/error_alert_logo.png';
   static const String imgErrorLogo = 'assets/img/error_logo.png';
   static const String imgFaq = 'assets/img/faq.png';
+  static const String imgFeedbackStar = 'assets/img/feedback_star.png';
   static const String imgFeedbaclLogo = 'assets/img/feedbacl_logo.png';
   static const String imgFlashOn = 'assets/img/flash_on.png';
   static const String imgGetStarted = 'assets/img/get_started.png';
@@ -54,6 +56,7 @@ class Assets {
   static const String imgRideEnd = 'assets/img/ride_end.png';
   static const String imgRideHistory = 'assets/img/ride_history.png';
   static const String imgScooter = 'assets/img/scooter.png';
+  static const String imgScooter1 = 'assets/img/scooter_1.png';
   static const String imgSliderIcon = 'assets/img/slider_icon.png';
   static const String imgSuccessLogo = 'assets/img/success_logo.png';
   static const String imgWallet = 'assets/img/wallet.png';

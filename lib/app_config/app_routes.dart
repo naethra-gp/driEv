@@ -65,6 +65,12 @@ class AppRoute {
         case "scan_to_unlock":
           List args = settings.arguments as List;
           return ScanToUnlock(data: args);
+        case "time_out":
+          List args = settings.arguments as List;
+          return TimeOutError(data: args);
+        case "end_time_out":
+          List args = settings.arguments as List;
+          return EndTimeOut(data: args);
         case "on_ride":
           String id = settings.arguments as String;
           return OnRide(rideId: id);
@@ -72,8 +78,10 @@ class AppRoute {
           String id = settings.arguments as String;
           return RideSummary(rideId: id);
         case "scan_to_end_ride":
-          String id = settings.arguments as String;
-          return EndRideScanner(rideId: id);
+          List args = settings.arguments as List;
+          return EndRideScanner(rideId: args);
+        case "rate_this_raid":
+          return const RateThisRide();
 
       }
       return const LandingPage();

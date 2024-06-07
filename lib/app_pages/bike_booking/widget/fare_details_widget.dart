@@ -17,56 +17,70 @@ class FareDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      surfaceTintColor: const Color(0xffF5F5F5),
-      color: const Color(0xffF5F5F5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          color: Color(0xffE1E1E1),
+        )
       ),
-      clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-        minVerticalPadding: 0,
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: Color(0xff020B01),
-                fontSize: 16,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontSize: 16.0),
               ),
-            ),
-            if (info)
-              SuperTooltip(
-                showBarrier: true,
-                controller: _controller,
-                popupDirection: TooltipDirection.up,
-                content: Text(
-                  "Receive a complimentary ${fareDetails[0]['offer']['discountMin']} minute ride spanning ${fareDetails[0]['offer']['discountKm']} kilometers",
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.black,
+              if (info)
+                SuperTooltip(
+                  showBarrier: true,
+                  controller: _controller,
+                  popupDirection: TooltipDirection.up,
+                  content: Text(
+                    "Receive a complimentary ${fareDetails[0]['offer']['discountMin']} minute ride spanning ${fareDetails[0]['offer']['discountKm']} kilometers",
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                child: IconButton(
-                  onPressed: () async {
-                    await _controller.showTooltip();
-                  },
-                  icon: const Icon(
-                    Icons.info,
-                    size: 20,
-                    color: Color(0xff7D7D7D),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await _controller.showTooltip();
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: Icon(
+                        Icons.info,
+                        size: 20.0,
+                        color: Color(0xff7D7D7D),
+                      ),
+                    ),
                   ),
+                  // child: IconButton(
+                  //   onPressed: () async {
+                  //     await _controller.showTooltip();
+                  //   },
+                  //   icon: const Icon(
+                  //     Icons.info,
+                  //     size: 20,
+                  //     color: Color(0xff7D7D7D),
+                  //   ),
+                  // ),
                 ),
-              ),
-          ],
-        ),
-        trailing: Text(
-          "₹$price",
-          style: const TextStyle(color: Color(0xff020B01), fontSize: 16),
-        ),
+
+            ],
+          ),
+          Text(
+            "₹$price",
+            style: const TextStyle(fontSize: 16.0),
+          ),
+        ],
       ),
     );
   }

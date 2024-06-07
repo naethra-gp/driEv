@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../app_themes/app_colors.dart';
+
 class AlertServices {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -307,63 +309,296 @@ class AlertServices {
   }
 
   insufficientBalanceAlert(BuildContext context, String balance) {
-    showModalBottomSheet(
+    // double height = MediaQuery.of(context).size.height;
+    // double width = MediaQuery.of(context).size.width;
+    // return showModalBottomSheet(
+    //   context: context,
+    //   // isDismissible: true,
+    //   enableDrag: true,
+    //   backgroundColor: Colors.white,
+    //   barrierColor: Colors.black.withOpacity(.80),
+    //   // shape: const RoundedRectangleBorder(
+    //   //   borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
+    //   // ),
+    //   builder: (BuildContext context) {
+    //     return Padding(
+    //       padding: const EdgeInsets.symmetric(horizontal: 15),
+    //       child: SizedBox(
+    //         height: 400,
+    //         child: Column(
+    //           children: [
+    //             const SizedBox(height: 50),
+    //             Align(
+    //               alignment: Alignment.center,
+    //               child: Image.asset(
+    //                 "assets/img/oops.png",
+    //                 height: 75,
+    //                 width: 75,
+    //               ),
+    //             ),
+    //             const SizedBox(height: 10),
+    //             const Text(
+    //               "Oops!",
+    //               style:
+    //               TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+    //             ),
+    //             const SizedBox(height: 10),
+    //             Text(
+    //               "₹$balance",
+    //               style:
+    //               const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+    //             ),
+    //             const SizedBox(height: 30),
+    //             const Text(
+    //               "Your wallet balance is insufficient. To request a ride, kindly recharge your wallet.",
+    //               textAlign: TextAlign.center,
+    //               style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+    //             ),
+    //             const SizedBox(height: 25),
+    //             SizedBox(
+    //               width: double.infinity,
+    //               height: 50,
+    //               child: ElevatedButton(
+    //                 onPressed: () {
+    //                   Navigator.pop(context);
+    //                 },
+    //                 child: const Text('Top Up Now'),
+    //               ),
+    //             ),
+    //             const SizedBox(height: 10),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //     // return SizedBox(
+    //     //   height: height / 1.5,
+    //     //   child: Stack(
+    //     //     alignment: Alignment.center,
+    //     //     children: <Widget>[
+    //     //       Positioned(
+    //     //         top: height / 5.5 - 100,
+    //     //         child: Container(
+    //     //           height: height,
+    //     //           width: width,
+    //     //           decoration: const BoxDecoration(
+    //     //             color: Colors.white,
+    //     //             borderRadius: BorderRadius.vertical(
+    //     //               top: Radius.circular(20),
+    //     //             ),
+    //     //           ),
+    //     //         ),
+    //     //       ),
+    //     //       Positioned(
+    //     //         top: height / 6.6 - 100,
+    //     //         child: Column(
+    //     //           children: <Widget>[
+    //     //             SizedBox(
+    //     //               width: 50,
+    //     //               height: 50,
+    //     //               child: Container(
+    //     //                 decoration: const BoxDecoration(
+    //     //                   shape: BoxShape.circle,
+    //     //                   color: Colors.green,
+    //     //                 ),
+    //     //                 child: IconButton(
+    //     //                   icon: const Icon(Icons.close),
+    //     //                   color: Colors.white,
+    //     //                   onPressed: () {
+    //     //                     Navigator.pop(context);
+    //     //                   },
+    //     //                 ),
+    //     //               ),
+    //     //             ),
+    //     //             Padding(
+    //     //               padding: const EdgeInsets.only(
+    //     //                 right: 50,
+    //     //                 left: 50,
+    //     //                 top: 50,
+    //     //                 bottom: 20,
+    //     //               ),
+    //     //               child: Image.asset(
+    //     //                 "assets/img/ride_end.png",
+    //     //                 height: 60,
+    //     //                 width: 60,
+    //     //               ),
+    //     //             ),
+    //     //             const Text(
+    //     //               "Ride done!",
+    //     //               textAlign: TextAlign.center,
+    //     //               style: TextStyle(
+    //     //                   color: Color(0xff2c2c2c),
+    //     //                   fontSize: 24,
+    //     //                   fontWeight: FontWeight.bold),
+    //     //             ),
+    //     //             const SizedBox(height: 16),
+    //     //             RichText(
+    //     //               text: TextSpan(
+    //     //                 text: 'Great job on your ',
+    //     //                 style: DefaultTextStyle.of(context).style,
+    //     //                 children: <TextSpan>[
+    //     //                   const TextSpan(
+    //     //                       text: 'last trip covering',
+    //     //                       style: TextStyle(fontWeight: FontWeight.bold)),
+    //     //                   TextSpan(
+    //     //                       text: ' kilometers!',
+    //     //                       style: const TextStyle(
+    //     //                         fontWeight: FontWeight.bold,
+    //     //                         color: AppColors.primary,
+    //     //                       )),
+    //     //                 ],
+    //     //               ),
+    //     //             ),
+    //     //             const SizedBox(height: 25),
+    //     //             Padding(
+    //     //               padding: const EdgeInsets.symmetric(horizontal: 15),
+    //     //               child: Row(
+    //     //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //     //                 crossAxisAlignment: CrossAxisAlignment.center,
+    //     //                 children: [
+    //     //                   SizedBox(
+    //     //                     // width: width / 2,
+    //     //                     child: ElevatedButton(
+    //     //                       onPressed: () {
+    //     //                         Navigator.pushNamedAndRemoveUntil(
+    //     //                             context,
+    //     //                             "ride_summary",
+    //     //                             arguments: "rideId",
+    //     //                                 (route) => false);
+    //     //                       },
+    //     //                       child: const Text("View Ride Summary"),
+    //     //                     ),
+    //     //                   ),
+    //     //                   const SizedBox(width: 25),
+    //     //                   SizedBox(
+    //     //                     // width: width / 2,
+    //     //                     child: ElevatedButton(
+    //     //                       onPressed: () {
+    //     //                         Navigator.pushNamed(context, "rate_this_raid");
+    //     //                       },
+    //     //                       child: const Text("Rate This Ride"),
+    //     //                     ),
+    //     //                   ),
+    //     //                 ],
+    //     //               ),
+    //     //             ),
+    //     //           ],
+    //     //         ),
+    //     //       )
+    //     //     ],
+    //     //   ),
+    //     // );
+    //   },
+    // );
+
+
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return showModalBottomSheet(
       context: context,
-      // isDismissible: true,
-      enableDrag: true,
-      backgroundColor: Colors.white,
-      barrierColor: Colors.black.withOpacity(.80),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
-      ),
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: SizedBox(
-            height: 450,
-            child: Column(
-              children: [
-                const SizedBox(height: 50),
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    "assets/img/oops.png",
-                    height: 75,
-                    width: 75,
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      enableDrag: false,
+      builder: (context) {
+        return SizedBox(
+          height: height / 1.5,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Positioned(
+                top: height / 5.5 - 100,
+                child: Container(
+                  height: height,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Oops!",
-                  style:
-                  TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              Positioned(
+                top: height / 6.6 - 100,
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.close),
+                          color: Colors.white,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 50,
+                        left: 50,
+                        top: 50,
+                        bottom: 20,
+                      ),
+                      child: Image.asset(
+                        "assets/img/oops.png",
+                        height: 60,
+                        width: 60,
+                      ),
+                    ),
+                    const Text(
+                      "Oops!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Color(0xff2c2c2c),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "₹$balance",
+                      style:
+                      const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 25),
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: Text(
+                          "Your wallet balance is insufficient. To request a\n ride, kindly recharge your wallet.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
+                      child: SizedBox(
+                        // width: double.infinity,
+                        width: 300,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Top Up Now'),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                  ],
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  "₹$balance",
-                  style:
-                  const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 30),
-                const Text(
-                  "Your wallet balance is insufficient. To request a ride, kindly recharge your wallet.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                ),
-                const SizedBox(height: 25),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Top Up Now'),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
+              )
+            ],
           ),
         );
       },

@@ -1,15 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 
 class EndRideScanner extends StatefulWidget {
-  final String rideId;
+  final List rideId;
   const EndRideScanner({
     super.key,
     required this.rideId,
@@ -28,19 +28,92 @@ class _EndRideScannerState extends State<EndRideScanner> {
   String otpCode = "";
   Timer? timer;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'end-QR');
+  Barcode? result;
+  QRViewController? controller;
+  String campus = '';
+  String rideId = '';
 
-  @override
-  void initState() {
-    super.initState();
+  int remainingSeconds = 30;
+  Timer? countdownTimer;
+
+  /// TIMER 30S
+  void _startCountdown() {
+    _cancelTimer();
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+        } else {
+          _cancelTimer();
+          Navigator.pushReplacementNamed(context, "end_time_out", arguments: widget.rideId);
+        }
+      });
+    });
   }
 
+  void _cancelTimer() {
+    if (countdownTimer != null) {
+      countdownTimer!.cancel();
+      countdownTimer = null;
+    }
+  }
+  @override
+  void initState() {
+    List<String> a = widget.rideId[0]['rideId'].toString().split("-");
+    setState(() {
+      campus = a[0];
+      rideId = widget.rideId[0]['rideId'].toString();
+    });
+    _startCountdown();
+    super.initState();
+  }
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
+    }
+  }
   @override
   void dispose() {
     timer?.cancel();
     bikeNumberCtl.dispose();
+    controller?.dispose();
     super.dispose();
   }
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((Barcode scanData) {
+      setState(() {
+        result = scanData;
+        bikeNumberCtl.text = result!.code.toString();
+        print("result-> $result");
+        if(result != null) {
+          controller.pauseCamera();
+          checkBikeNumber(result!.code.toString());
 
+          // submitBikeNUmber();
+        }
+      });
+      print("result ${result!.code}");
+    });
+  }
+  checkBikeNumber(String bikeNo) {
+    String bike = widget.rideId[0]['scanCode'].toString();
+    if(bike != bikeNo) {
+      setState(() {
+        bikeNumberCtl.text = "";
+      });
+      alertServices.errorToast("Wrong vehicle!!! Scan the code of the selected vehicle");
+      controller?.resumeCamera();
+    } else {
+      /// BIKE NUMBER VALID STATE
+      submitBikeNUmber();
+    }
+    // alertServices.showLoading();
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -65,25 +138,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
                     borderWidth: 10,
                   ),
                 ),
-                child: MobileScanner(
-                  onDetect: (qrcode) {
-                    print("qrcode $qrcode");
-                    List a = [qrcode];
-                    // if (!isScanCompleted) {
-                    if (a[0]['rawValue'] == null) {
-                      isScanCompleted = true;
-                      debugPrint('Failed to scan Barcode');
-                      alertServices.errorToast("Unable to Scan QR Code!");
-                    } else {
-                      final String code = a[0]['rawValue'];
-                      debugPrint('Qr found! $code');
-                      setState(() {
-                        bikeNumberCtl.text = code.toString();
-                        submitBikeNUmber();
-                      });
-                    }
-                    // }
-                  },
+                child: QRView(
+                  key: qrKey,
+                  onQRViewCreated: _onQRViewCreated,
                 ),
               ),
             ),
@@ -98,9 +155,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
-            const Text(
-              "End your ride at KIIT Campus 6 by scanning the QR \n code or entering the bike number manually.",
-              style: TextStyle(
+            Text(
+              "End your ride at $campus Campus 6 by scanning the QR \n code or entering the bike number manually.",
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
@@ -122,7 +179,8 @@ class _EndRideScannerState extends State<EndRideScanner> {
                     controller: bikeNumberCtl,
                     onChanged: (value){
                       if(value.toString().length == 7) {
-                        submitBikeNUmber();
+                        checkBikeNumber(value);
+                        // submitBikeNUmber();
                       }
                     },
                     maxLength: 7,
@@ -156,7 +214,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
                       height: 19,
                       width: 9,
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      await controller?.toggleFlash();
+                    },
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -171,13 +231,14 @@ class _EndRideScannerState extends State<EndRideScanner> {
   submitBikeNUmber() {
     print("VID: ${bikeNumberCtl.text}");
     alertServices.showLoading();
-    bookingServices.getRideEndPin(widget.rideId.toString()).then((r) {
+    _cancelTimer();
+    bookingServices.getRideEndPin(rideId).then((r) {
       alertServices.hideLoading();
       print("Resposne: $r");
       if (r != null) {
         String stopPing = r['stopPing'].toString();
+        showOtp(stopPing);
         String rideID = r['rideID'].toString();
-        shopOTP(stopPing);
         timer = Timer.periodic(
           const Duration(seconds: 15),
           (Timer t) => startWatching(rideID),
@@ -186,7 +247,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
     });
   }
 
-  shopOTP(String otp) {
+  showOtp(String otp) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return showModalBottomSheet(
@@ -282,14 +343,15 @@ class _EndRideScannerState extends State<EndRideScanner> {
         String totalRideDuration = r['rideId'].toString();
         if (rideId.toString() == r['rideId'].toString()) {
           // Navigator.pushNamed(context, "home");
-          rideDoneAlert();
+          rideDoneAlert([r]);
+          timer?.cancel();
         }
         print("rideId $totalRideDuration");
       }
     });
   }
 
-  rideDoneAlert() {
+  rideDoneAlert(List res) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return showModalBottomSheet(
@@ -364,13 +426,13 @@ class _EndRideScannerState extends State<EndRideScanner> {
                       text: TextSpan(
                         text: 'Great job on your ',
                         style: DefaultTextStyle.of(context).style,
-                        children: const <TextSpan>[
-                          TextSpan(
+                        children: <TextSpan>[
+                          const TextSpan(
                               text: 'last trip covering',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           TextSpan(
-                              text: ' 25 kilometers!',
-                              style: TextStyle(
+                              text: ' ${res[0]['lastRideDistance']} kilometers!',
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primary,
                               )),
@@ -391,7 +453,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                                 Navigator.pushNamedAndRemoveUntil(
                                     context,
                                     "ride_summary",
-                                    arguments: widget.rideId.toString(),
+                                    arguments: rideId,
                                     (route) => false);
                               },
                               child: const Text("View Ride Summary"),
@@ -401,7 +463,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
                           SizedBox(
                             // width: width / 2,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(context, "rate_this_raid");
+                              },
                               child: const Text("Rate This Ride"),
                             ),
                           ),

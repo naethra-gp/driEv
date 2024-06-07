@@ -4,6 +4,8 @@ import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/intl.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -48,6 +50,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   int _start = 0;
   late Timer _timer;
+  String formattedMinutes = "";
+  String formattedSeconds = "";
+  Timer? countdownTimer;
 
   @override
   void initState() {
@@ -61,22 +66,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     _timeController.dispose();
     _timer.cancel();
     super.dispose();
-  }
-
-  void _startTimer() {
-    double percentage = _start * 0.99;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_start > 0) {
-          _start--;
-        } else {
-          _timer.cancel();
-        }
-        if (percentage == _start) {
-          enableChasingTime = true;
-        }
-      });
-    });
   }
 
   String get _formattedTime {
@@ -115,7 +104,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              const SizedBox(height: 16),
               if (fd.isNotEmpty) ...[
                 Card(
                   surfaceTintColor: const Color(0xffF5F5F5),
@@ -184,13 +172,13 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                               ),
                             ),
                             Text(
-                              fd[0]['estimatedRange'] ?? "0",
+                              "${fd[0]['estimatedRange' ?? "0"]} km",
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontFamily: "Poppins",
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 10),
                             const Icon(LineAwesome.battery_full_solid),
                             const Text(
                               "100%",
@@ -202,26 +190,28 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                           ],
                         ),
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const SizedBox(height: 40),
+
+                            const SizedBox(height: 50),
                             fd[0]['imageUrl'] != null
                                 ? Image.network(
                                     fd[0]['imageUrl']
                                         .toString(), // Replace with your image URL
                                     width: 150,
                                     height: 150,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
                                   )
                                 : Image.asset(
                                     "assets/img/bike.png",
                                     fit: BoxFit.fitWidth,
-                                    width: 170,
+                                    width: 190,
                                     // height: 130,
                                   ),
                           ],
                         ),
+
                       ],
                     ),
                   ),
@@ -249,7 +239,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 25),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -263,7 +253,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                 ),
               ),
               if (fd.isNotEmpty) ...[
-                const SizedBox(height: 5),
+                const SizedBox(height: 15.0),
                 FareDetailsWidget(
                   title: "Base fare",
                   info: true,
@@ -284,7 +274,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   fareDetails: fd,
                   price: fd[0]['offer']['perKmPaisa'].toString(),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 25),
                 if (!isReservedDone) ...[
                   if (isReserve) ...[
                     Align(
@@ -360,13 +350,13 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       prefixIcon: Icons.account_circle_outlined,
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.done,
-                      onChanged: (value) {
+                      onChanged: (String value) {
                         setState(() {
                           for (var i in reserveTime) {
                             i['selected'] = false;
                           }
-                          reserveMins = value;
-                          reserveTimeCtrl.text = value.toString();
+                          reserveMins = value.toString();
+                          reserveTimeCtrl.text = reserveMins;
                         });
                       },
                       validator: (value) {
@@ -378,7 +368,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             return "Invalid Time";
                           }
                         }
-
                         return null;
                       },
                       inputFormatters: <TextInputFormatter>[
@@ -399,7 +388,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         });
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 25),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -452,7 +441,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                       ),
                       child: Text(
-                        "$_formattedTime Minute to Ride Time!",
+                        "$formattedMinutes:$formattedSeconds Minute to Ride Time!",
+                        // "$_formattedTime Minute to Ride Time!",
                         style: TextStyle(
                             color: enableChasingTime
                                 ? Colors.white
@@ -510,10 +500,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                               animationDuration: const Duration(seconds: 1),
                               splashFactory: InkRipple.splashFactory,
                               side: BorderSide(
-                                  color: reserveTime[index]['selected']
-                                      ? AppColors.primary
-                                      : Colors.grey,
-                                  width: 1.5),
+                                color: reserveTime[index]['selected']
+                                    ? AppColors.primary
+                                    : Colors.grey,
+                                width: 1.5,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -523,8 +514,13 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         );
                       }),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 4),
 
+                    Center(
+                      child: Text(
+                          "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
+                    ),
+                    const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -554,7 +550,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 25),
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -610,7 +606,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 25),
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -655,53 +651,144 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   }
 
   reserveBike() async {
-    print("reserveBike");
-    alertServices.showLoading();
-    String mobile = await secureStorage.get("mobile");
     double balance = 0;
-    int selectedMin = 0;
+    String mobile = await secureStorage.get("mobile");
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
-    print("mobile $mobile");
-    print("reserve $reserve");
-    print("reserve ${reserveTimeCtrl.text}");
-    List a =
-        reserveTime.where((e) => e['selected'].toString() == "true").toList();
-    print("a $a");
-    String b = reserveTimeCtrl.text.toString();
-    if (b.isNotEmpty) {
-      // selectedMin = a[0]['mins'];
-      double amount = double.parse(b) * reserve;
+    if (reserveMins.isEmpty) {
+      alertServices.errorToast("Please select/enter valid mins!");
+    } else {
+      alertServices.showLoading();
+      double amount = double.parse(reserveMins) * reserve;
+      print("Reserve Amount -> $amount");
       bookingServices.getWalletBalance(mobile).then((r) {
         alertServices.hideLoading();
         balance = r['balance'];
+        print("Available Balance -> $balance");
         if (amount > balance) {
           alertServices.insufficientBalanceAlert(context, balance.toString());
         } else {
-          if (reserveMins.isEmpty) {
-            alertServices.errorToast("Invalid Time!!!");
-          } else {
-            alertServices.showLoading();
-            Map<String, Object> params = {
-              "contact": secureStorage.get("mobile").toString(),
-              "vehicleId": fareDetails[0]['vehicleId'].toString(),
-              "duration": reserveMins.toString()
-            };
-            print("params $params");
-            bookingServices.blockBike(params).then((r) {
-              alertServices.hideLoading();
-              if (r != null) {
-                setState(() {
-                  blockId = r['blockId'].toString();
-                  enableChasingTime = false;
-                  _start = int.parse(reserveMins.toString()) * 60;
-                  isReservedDone = true;
-                });
-                _startTimer();
-              }
-            });
-          }
+          alertServices.showLoading();
+          Map<String, Object> params = {
+            "contact": secureStorage.get("mobile").toString(),
+            "vehicleId": fareDetails[0]['vehicleId'].toString(),
+            "duration": reserveMins.toString()
+          };
+          print("params $params");
+          bookingServices.blockBike(params).then((r2) async {
+            alertServices.hideLoading();
+            print("blockBike --> $r2");
+            if (r2 != null) {
+              setState(() {
+                blockId = r2['blockId'].toString();
+                enableChasingTime = false;
+                _start = int.parse(reserveMins.toString()) * 60;
+                isReservedDone = true;
+              });
+              var time1 = DateTime.parse(r2['blockedOn'].toString());
+              var time2 = DateTime.parse(r2['blockedTill'].toString());
+              print(DateFormat.jm()
+                  .format(DateTime.parse(r2['blockedOn'].toString())));
+              print(DateFormat.jm()
+                  .format(DateTime.parse(r2['blockedTill'].toString())));
+              Duration difference = time2.difference(time1);
+              print("difference $difference");
+              countDownTime(r2['blockedTill'].toString());
+              _startTimer();
+            }
+          });
         }
       });
+    }
+    // List a =
+    //     reserveTime.where((e) => e['selected'].toString() == "true").toList();
+    // print("a $a");
+    // String b = reserveTimeCtrl.text.toString();
+    // if (b.isNotEmpty) {
+    //   // selectedMin = a[0]['mins'];
+    //   double amount = double.parse(b) * reserve;
+    //   bookingServices.getWalletBalance(mobile).then((r) {
+    //     alertServices.hideLoading();
+    //     balance = r['balance'];
+    //     if (amount > balance) {
+    //       alertServices.insufficientBalanceAlert(context, balance.toString());
+    //     } else {
+    //       if (reserveMins.isEmpty) {
+    //         alertServices.errorToast("Invalid Time!!!");
+    //       } else {
+    //         alertServices.showLoading();
+    //         Map<String, Object> params = {
+    //           "contact": secureStorage.get("mobile").toString(),
+    //           "vehicleId": fareDetails[0]['vehicleId'].toString(),
+    //           "duration": reserveMins.toString()
+    //         };
+    //         print("params $params");
+    //         bookingServices.blockBike(params).then((r) {
+    //           alertServices.hideLoading();
+    //           if (r != null) {
+    //             setState(() {
+    //               blockId = r['blockId'].toString();
+    //               enableChasingTime = false;
+    //               _start = int.parse(reserveMins.toString()) * 60;
+    //               isReservedDone = true;
+    //             });
+    //             _startTimer();
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // }
+  }
+
+  void _startTimer() {
+    double percentage = _start * 0.20;
+    print("percentage $percentage");
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_start > 0) {
+          _start--;
+        } else {
+          _timer.cancel();
+        }
+        if (percentage > _start) {
+          enableChasingTime = true;
+        }
+        print("_start $_start");
+        print("enableChasingTime $enableChasingTime");
+      });
+    });
+  }
+
+  countDownTime(String blockedTill) {
+    _cancelTimer();
+    DateTime targetDateTime = DateTime.parse(blockedTill);
+    print("targetDateTime $targetDateTime");
+    Duration remainingTime = const Duration();
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        remainingTime = targetDateTime.difference(DateTime.now());
+        print("remainingTime $remainingTime");
+        int minutes = remainingTime.inMinutes % 60;
+        int seconds = remainingTime.inSeconds % 60;
+        formattedMinutes = minutes.toString().padLeft(2, '0');
+        formattedSeconds = seconds.toString().padLeft(2, '0');
+        print("'Time remaining: $formattedMinutes:$formattedSeconds'");
+        // if (remainingTime.isNegative) {
+        //   countdownTimer?.cancel();
+        // }
+        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
+          print("--- Timer Stopped ---");
+          countdownTimer?.cancel();
+          Navigator.pushReplacementNamed(context, "error_bike");
+        }
+      });
+    });
+  }
+
+  void _cancelTimer() {
+    if (countdownTimer != null) {
+      countdownTimer!.cancel();
+      countdownTimer = null;
     }
   }
 
@@ -723,9 +810,21 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           setState(() {
             // blockId = r['blockId'].toString();
             enableChasingTime = false;
-            _start = int.parse(reserveMins.toString()) * 60;
+            int blockStart = int.parse(reserveMins.toString()) * 60;
+            print("blockStart $blockStart");
+            // _start = int.parse(reserveMins.toString()) * 60;
+            _start = blockStart + _start;
+            print("_start --> $_start");
             isReservedDone = true;
+            // do {
+            //   countdownTimer.cancel();
+            // } while (countdownTimer.isActive);
+
+            countDownTime(r['blockedTill'].toString());
           });
+          do {
+            _timer.cancel();
+          } while (_timer.isActive);
           _startTimer();
         }
       });
@@ -733,6 +832,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   }
 
   scanToUnlock() async {
+    countdownTimer?.cancel();
     alertServices.showLoading();
     String mobile = await secureStorage.get("mobile");
     double balance = 0;
@@ -758,6 +858,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               "vehicleId": vehicleId,
             },
           ];
+          print("arg $arg");
           Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
         }
       });
@@ -786,4 +887,5 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       });
     }
   }
+
 }

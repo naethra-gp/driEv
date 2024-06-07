@@ -70,7 +70,9 @@ class _HomeState extends State<Home> {
                 zoomControlsEnabled: true,
                 compassEnabled: false,
                 mapType: MapType.normal,
-                onMapCreated: _onMapCreated,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                },
                 polylines: _polyLines,
                 initialCameraPosition: CameraPosition(
                   target: _currentPosition!,
@@ -141,7 +143,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -158,13 +160,13 @@ class _HomeState extends State<Home> {
                           width: 2, // Adjust width as needed
                           color: Colors.grey[300], // Adjust color as needed
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 5),
                         Image.asset(
                           "assets/img/wallet.png",
                           height: 20,
                           width: 20,
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 5),
                         if (customer.isNotEmpty)
                           Text(
                             "\u{20B9}${customer[0]['walletBalance']}",
@@ -176,7 +178,7 @@ class _HomeState extends State<Home> {
                             ),
                             // style: CustomTheme.termStyle1red,
                           ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                       ],
                     ),
                   ),
@@ -448,6 +450,7 @@ class _HomeState extends State<Home> {
   }
 
   void _addPolyline(List<LatLng> polylineCoordinates) {
+    print("_addPolyline");
     Polyline polyline = Polyline(
       polylineId: const PolylineId("polyLines"),
       color: Colors.black,
@@ -458,21 +461,25 @@ class _HomeState extends State<Home> {
         PatternItem.gap(10),
       ],
     );
+    if (mapController == null) {
+      alertServices.errorToast('GoogleMapController is not yet initialized.');
+      return;
+    }
     setState(() {
       _polyLines.add(polyline);
     });
-    Future.delayed(const Duration(seconds: 2), () {
+    alertServices.showLoading("Calculate distance...");
+    Future.delayed(const Duration(seconds: 3), () {
+      print("_zoomToFitPositions");
+      alertServices.hideLoading();
       _zoomToFitPositions();
     });
   }
 
   void _fetchAndDisplayDirections(LatLng start, LatLng end) async {
-    try {
-      List<LatLng> pc = await _locationService.getDirections(start, end);
-      _addPolyline(pc);
-    } catch (e) {
-      print(e);
-    }
+    print("add polyline");
+    List<LatLng> pc = await _locationService.getDirections(start, end);
+    _addPolyline(pc);
   }
 
   getPlansByStation(String stationId) async {
@@ -484,17 +491,27 @@ class _HomeState extends State<Home> {
         double stationLat = stationDetails['lattitude'];
         double stationLon = stationDetails['longitude'];
         stationLocation = LatLng(stationLat, stationLon);
-        double distance = _locationService.calculateDistance(
-          _currentPosition!.latitude,
-          _currentPosition!.longitude,
-          stationLat,
-          stationLon,
-        );
-        setState(() {
-          distanceText = distance.toStringAsFixed(2);
+        alertServices.showLoading("Finding best route...");
+        Future.delayed(const Duration(seconds: 5), () {
+          print("delay logic");
+          alertServices.hideLoading();
+          if(_currentPosition != null) {
+            double distance = _locationService.calculateDistance(
+              _currentPosition!.latitude,
+              _currentPosition!.longitude,
+              stationLat,
+              stationLon,
+            );
+            setState(() {
+              distanceText = distance.toStringAsFixed(2);
+            });
+            _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
+          }
+          print("distance: ${distance.toStringAsFixed(2)}");
+
         });
-        _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
-        print("distance: ${distance.toStringAsFixed(2)}");
+
+
       },
     );
   }

@@ -51,6 +51,7 @@ dependencies:
   intl: ^0.19.0
   qr_code_scanner: ^1.0.1
   mobile_scanner: ^5.1.1
+  flutter_rating_bar: ^4.0.1
   #  qrscan: ^0.3.3
   #  image_gallery_saver: ^2.0.3
   #  qr_scanner_with_effect: ^1.0.5

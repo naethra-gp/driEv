@@ -39,7 +39,7 @@ class _ErrorBikesState extends State<ErrorBikes> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 30),
               const Text(
                 "Oh Snap!",
                 textAlign: TextAlign.center,
@@ -49,13 +49,13 @@ class _ErrorBikesState extends State<ErrorBikes> {
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               const Text(
-                "No EVs available for reservation at the moment!",
+                "No EVs available for\nreservation at the moment!",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, color: Colors.black),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 30),
               AppButtonWidget(
                   title: "Pick Another Ride",
                   onPressed: () {

@@ -3,6 +3,8 @@ import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart'
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
@@ -28,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool userVerified = false;
   List rewards = [100, 200, 300];
   String selfieUrl = "";
+  double distance = 50;
 
   Widget _buildCategoriesGrid() {
     return SizedBox(
@@ -412,22 +415,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        menuList("assets/img/wallet.png", "View Wallet", () {}),
+                        menuList("assets/img/wallet.png", "View Wallet", () {
+                          // slider();
+                        }),
                         Divider(
                           endIndent: 15,
                           indent: 15,
                           color: Colors.grey[400],
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
-                            () {
-                              // List arg = [
-                              //   {
-                              //     "campus": "campus",
-                              //     "vehicleId": "22",
-                              //   },
-                              // ];
-                              // Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
-                        }),
+                            () {}),
                         Divider(
                           endIndent: 15,
                           indent: 15,
@@ -465,6 +462,205 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           )),
+    );
+  }
+
+  slider() {
+    List aa = [
+      {
+        "rideId": "ITER-938",
+        "lastRideDuration": "0 : 5 : 4",
+        "totalRideDuration": "13 : 44 : 6",
+        "lastRideDistance": 0.0,
+        "totalRideDistance": 0.53,
+        "contact": "7845456609"
+      }
+    ];
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (context) {
+        return SizedBox(
+          height: height / 1.5,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Positioned(
+                top: height / 5.5 - 100,
+                child: Container(
+                  height: height,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: height / 6.6 - 100,
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.close),
+                          color: Colors.white,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 50,
+                        left: 50,
+                        top: 50,
+                        bottom: 20,
+                      ),
+                      child: Image.asset(
+                        "assets/img/ride_end.png",
+                        height: 60,
+                        width: 60,
+                      ),
+                    ),
+                    const Text(
+                      "Ride done!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Color(0xff2c2c2c),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Great job on your ',
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          const TextSpan(
+                              text: 'last trip covering',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(
+                            text: ' ${aa[0]['lastRideDistance']} kilometers!',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 0),
+                    //   child: SfSliderTheme(
+                    //     data: const SfSliderThemeData(
+                    //       tooltipBackgroundColor: AppColors.primary,
+                    //       thumbColor: Colors.transparent,
+                    //       thumbRadius: 20,
+                    //       activeDividerColor: Colors.white,
+                    //     ),
+                    //     child: SfSlider(
+                    //       min: 10.0,
+                    //       max: 500.0,
+                    //       shouldAlwaysShowTooltip: false,
+                    //       thumbIcon: Image.asset(
+                    //         "assets/img/scooter_1.png",
+                    //         height: 20,
+                    //         width: 20,
+                    //       ),
+                    //       value: distance,
+                    //       inactiveColor: AppColors.primary.withOpacity(0.3),
+                    //       // labelPlacement: LabelPlacement.onTicks,
+                    //       thumbShape: const SfThumbShape(),
+                    //       semanticFormatterCallback: (dynamic value) {
+                    //         return '$value km';
+                    //       },
+                    //       enableTooltip: true,
+                    //       showLabels: false,
+                    //       showDividers: true,
+                    //       showTicks: false,
+                    //       tooltipTextFormatterCallback:
+                    //           (dynamic actualValue, String formattedText) {
+                    //         return "$formattedText km";
+                    //       },
+                    //       onChanged: (dynamic newValue) {
+                    //         setState(() {
+                    //           // distance = newValue;
+                    //         });
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('0',
+                              style: TextStyle(
+                                  color: Color(0xff7B7B7B),
+                                  fontWeight: FontWeight.bold)),
+                          Text('500 km',
+                              style: TextStyle(
+                                  color: Color(0xff7B7B7B),
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            // width: width / 2,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    "ride_summary",
+                                    arguments: "rideId",
+                                    (route) => false);
+                              },
+                              child: const Text("View Ride Summary"),
+                            ),
+                          ),
+                          const SizedBox(width: 25),
+                          SizedBox(
+                            // width: width / 2,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text("Rate This Ride"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 

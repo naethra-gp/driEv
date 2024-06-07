@@ -34,13 +34,25 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   Barcode? result;
   QRViewController? controller;
 
+
+  int remainingSeconds = 30;
+  Timer? countdownTimer;
+
   @override
   void initState() {
-    _getCurrentLocation();
+    print("Data: ${widget.data}");
+    _startCountdown();
     super.initState();
+  }
+  void _cancelTimer() {
+    if (countdownTimer != null) {
+      countdownTimer!.cancel();
+      countdownTimer = null;
+    }
   }
   @override
   void reassemble() {
+    print(" --- reassemble --- ");
     super.reassemble();
     if (Platform.isAndroid) {
       controller!.pauseCamera();
@@ -48,12 +60,25 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       controller!.resumeCamera();
     }
   }
-
+  void _startCountdown() {
+    _cancelTimer();
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+        } else {
+          _cancelTimer();
+          Navigator.pushReplacementNamed(context, "time_out", arguments: widget.data);
+        }
+      });
+    });
+  }
   @override
   void dispose() {
     timer?.cancel();
     bikeNumberCtl.dispose();
     controller?.dispose();
+    _cancelTimer();
     super.dispose();
   }
 
@@ -64,9 +89,19 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
         result = scanData;
         bikeNumberCtl.text = result!.code.toString();
         print("result-> $result");
-        if(result != null) {
-          // controller.pauseCamera();
+        if (result != null) {
+          controller.stopCamera();
+          // startMyRide();
           print("---- Start ---- ");
+          String vId = widget.data[0]['vehicleId'].toString().padLeft(4, '0');
+          bool checkVehicle =
+              bikeNumberCtl.text.toString().contains(vId.toString());
+          if (!checkVehicle) {
+            alertServices.errorToast(
+                "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+          } else {
+            startMyRide();
+          }
         }
       });
       print("result ${result!.code}");
@@ -114,9 +149,9 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
-            const Text(
-              "End your ride at KIIT Campus 6 by scanning the QR \n code or entering the bike number manually.",
-              style: TextStyle(
+            Text(
+              "End your ride at ${widget.data[0]['campus'].toString()} Campus 6 by scanning the QR \n code or entering the bike number manually.",
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
@@ -141,8 +176,16 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     keyboardType: TextInputType.phone,
                     onChanged: (value) {
                       if (value.toString().length == 7) {
-                        startMyRide();
+                        String vId = widget.data[0]['vehicleId'].toString().padLeft(4, '0');
+                        bool checkVehicle = value.toString().contains(vId.toString());
+                        if (!checkVehicle) {
+                          alertServices.errorToast(
+                              "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+                        } else {
+                          startMyRide();
+                        }
                       }
+                      print("Value: $value");
                     },
                     decoration: InputDecoration(
                       counterText: "",
@@ -151,8 +194,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 16),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                     ),
                   ),
                 ),
@@ -187,6 +229,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   }
 
   Future<void> _getCurrentLocation() async {
+    alertServices.showLoading("Fetching location details...");
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -221,36 +264,45 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     setState(() {
       currentLocation = LatLng(position.latitude, position.longitude);
       _locationMessage = "${position.latitude},${position.longitude}";
+      alertServices.hideLoading();
+      bookAndStartMyRide();
     });
     print("_locationMessage $_locationMessage");
   }
 
   startMyRide() {
-    String mobile = secureStorage.get("mobile");
+    _cancelTimer();
     if (widget.data[0]['vehicleId'].toString() != "null") {
-      if (currentLocation != null) {
-        alertServices.showLoading();
-        var params = {
-          "vehicleId": widget.data[0]['vehicleId'].toString(),
-          "scanCode": bikeNumberCtl.text.toString(),
-          "contact": mobile.toString(),
-          "noOfHelmet": 1,
-          "lattitude": currentLocation!.latitude.toString(),
-          "longitude": currentLocation!.longitude.toString(),
-        };
-        print("params ${jsonEncode(params)}");
-        bookingServices.startMyRide(params).then((r) {
-          alertServices.hideLoading();
-          if (r != null) {
-            String rideId = r['rideId'].toString();
-            Navigator.pushNamed(context, "booking_success", arguments: rideId);
-          }
-        });
+      print("bikeNumberCtl.text -> ${bikeNumberCtl.text}");
+      print("bikeNumberCtl.text -> ${bikeNumberCtl.text.toString() == ""}");
+      if (bikeNumberCtl.text.toString() != "") {
+        _getCurrentLocation();
       } else {
-        alertServices.errorToast("Location Invalid!");
+        alertServices.errorToast("Please enter valid Bike Number!");
       }
     } else {
       alertServices.errorToast("Invalid Vehicle ID!");
     }
+  }
+
+  bookAndStartMyRide() {
+    alertServices.showLoading();
+    String mobile = secureStorage.get("mobile");
+    var params = {
+      "vehicleId": widget.data[0]['vehicleId'].toString(),
+      "scanCode": bikeNumberCtl.text.toString(),
+      "contact": mobile.toString(),
+      "noOfHelmet": 1,
+      "lattitude": currentLocation!.latitude.toString(),
+      "longitude": currentLocation!.longitude.toString(),
+    };
+    print("params ${jsonEncode(params)}");
+    bookingServices.startMyRide(params).then((r) {
+      alertServices.hideLoading();
+      if (r != null) {
+        String rideId = r['rideId'].toString();
+        Navigator.pushNamed(context, "booking_success", arguments: rideId);
+      }
+    });
   }
 }
