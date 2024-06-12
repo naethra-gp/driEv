@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_mobile_vision/qr_camera.dart';
+import 'package:qr_mobile_vision/qr_mobile_vision.dart';
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -33,7 +33,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
-
+  String qr = "";
 
   int remainingSeconds = 30;
   Timer? countdownTimer;
@@ -44,13 +44,15 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     _startCountdown();
     super.initState();
   }
+
   void _cancelTimer() {
     if (countdownTimer != null) {
       countdownTimer!.cancel();
       countdownTimer = null;
     }
   }
-  @override
+
+  /* @override
   void reassemble() {
     print(" --- reassemble --- ");
     super.reassemble();
@@ -59,7 +61,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     } else if (Platform.isIOS) {
       controller!.resumeCamera();
     }
-  }
+  }*/
+
   void _startCountdown() {
     _cancelTimer();
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
@@ -68,11 +71,13 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
           remainingSeconds--;
         } else {
           _cancelTimer();
-          Navigator.pushReplacementNamed(context, "time_out", arguments: widget.data);
+          Navigator.pushReplacementNamed(context, "time_out",
+              arguments: widget.data);
         }
       });
     });
   }
+
   @override
   void dispose() {
     timer?.cancel();
@@ -82,37 +87,30 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     super.dispose();
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((Barcode scanData) {
-      setState(() {
-        result = scanData;
-        bikeNumberCtl.text = result!.code.toString();
-        print("result-> $result");
-        if (result != null) {
-          controller.stopCamera();
-          // startMyRide();
-          print("---- Start ---- ");
-          String vId = widget.data[0]['vehicleId'].toString().padLeft(4, '0');
-          bool checkVehicle =
-              bikeNumberCtl.text.toString().contains(vId.toString());
-          if (!checkVehicle) {
-            alertServices.errorToast(
-                "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
-          } else {
-            startMyRide();
-          }
+  void _onQRViewCreated(String code) {
+    setState(() {
+      qr = code;
+      bikeNumberCtl.text = qr.toString();
+      print("result-> $qr");
+      if (qr != "") {
+        print("---- Start ---- ");
+        QrMobileVision.stop();
+        String vId = widget.data[0]['vehicleId'].toString().padLeft(4, '0');
+        bool checkVehicle =
+            bikeNumberCtl.text.toString().contains(vId.toString());
+        if (!checkVehicle) {
+          alertServices.errorToast(
+              "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+        } else {
+          startMyRide();
         }
-      });
-      print("result ${result!.code}");
+      }
     });
+    print("result $qr");
   }
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    double scanArea = (width < 400 || height < 400) ? 150.0 : 300.0;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -132,9 +130,17 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     borderWidth: 10,
                   ),
                 ),
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
+                child: QrCamera(
+                  onError: (context, error) => Text(
+                    error.toString(),
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  cameraDirection: CameraDirection.BACK,
+                  qrCodeCallback: (code) {
+                    if (code != null) {
+                      _onQRViewCreated(code);
+                    }
+                  },
                 ),
               ),
             ),
@@ -176,8 +182,11 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     keyboardType: TextInputType.phone,
                     onChanged: (value) {
                       if (value.toString().length == 7) {
-                        String vId = widget.data[0]['vehicleId'].toString().padLeft(4, '0');
-                        bool checkVehicle = value.toString().contains(vId.toString());
+                        String vId = widget.data[0]['vehicleId']
+                            .toString()
+                            .padLeft(4, '0');
+                        bool checkVehicle =
+                            value.toString().contains(vId.toString());
                         if (!checkVehicle) {
                           alertServices.errorToast(
                               "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
@@ -194,7 +203,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
                     ),
                   ),
                 ),
@@ -215,7 +225,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                       width: 9,
                     ),
                     onPressed: () async {
-                      await controller?.toggleFlash();
+                      await QrMobileVision.toggleFlash();
                     },
                   ),
                 ),

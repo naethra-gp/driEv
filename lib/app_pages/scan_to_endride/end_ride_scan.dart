@@ -6,6 +6,8 @@ import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_mobile_vision/qr_camera.dart';
+import 'package:qr_mobile_vision/qr_mobile_vision.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 
 class EndRideScanner extends StatefulWidget {
@@ -32,7 +34,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
   QRViewController? controller;
   String campus = '';
   String rideId = '';
-
+  String qr="";
   int remainingSeconds = 30;
   Timer? countdownTimer;
 
@@ -68,14 +70,20 @@ class _EndRideScannerState extends State<EndRideScanner> {
     super.initState();
   }
   @override
-  void reassemble() {
+  deactivate() {
+    super.deactivate();
+    QrMobileVision.stop();
+  }
+
+  @override
+  /*void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
       controller!.pauseCamera();
     } else if (Platform.isIOS) {
       controller!.resumeCamera();
     }
-  }
+  }*/
   @override
   void dispose() {
     timer?.cancel();
@@ -83,22 +91,22 @@ class _EndRideScannerState extends State<EndRideScanner> {
     controller?.dispose();
     super.dispose();
   }
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((Barcode scanData) {
+  void _onQRViewCreated(String code) {
+    //this.controller = controller;
+  //  controller.scannedDataStream.listen((Barcode scanData) {
       setState(() {
-        result = scanData;
-        bikeNumberCtl.text = result!.code.toString();
-        print("result-> $result");
-        if(result != null) {
-          controller.pauseCamera();
-          checkBikeNumber(result!.code.toString());
+        qr = code;
+        bikeNumberCtl.text = qr.toString();
+        print("result-> $qr");
+        if(qr != "") {
+          QrMobileVision.stop();
+          checkBikeNumber(qr.toString());
 
           // submitBikeNUmber();
         }
       });
-      print("result ${result!.code}");
-    });
+      print("result $qr");
+  //  });
   }
   checkBikeNumber(String bikeNo) {
     String bike = widget.rideId[0]['scanCode'].toString();
@@ -138,9 +146,17 @@ class _EndRideScannerState extends State<EndRideScanner> {
                     borderWidth: 10,
                   ),
                 ),
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
+                child: QrCamera(
+                  onError: (context, error) => Text(
+                    error.toString(),
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  cameraDirection: CameraDirection.BACK,
+                  qrCodeCallback: (code) {
+                    if (code != null) {
+                      _onQRViewCreated(code);
+                    }
+                  },
                 ),
               ),
             ),
@@ -215,7 +231,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                       width: 9,
                     ),
                     onPressed: () async {
-                      await controller?.toggleFlash();
+                      await QrMobileVision.toggleFlash();
                     },
                   ),
                 ),
