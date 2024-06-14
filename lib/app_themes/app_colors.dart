@@ -23,6 +23,12 @@ class AppColors {
   static const Color transactionRevert = Color(0xffDFF5FF);
   static const Color customGrey = Color(0xfff5f5f5);
   static const Color fontgrey= Color(0xff7E7E7E);
+  static const Color chipText =Color(0XffB6B6B6);
+  static const Color commentColor =Color(0XffC4C4C4);
+  static const Color referColor =Color(0Xff6F6F6F);
+  static const Color walletColor =Color(0XffF6F6F6);
+  static const Color centerAlign =Color(0XffE1E1E1);
+  static const Color transacColor =Color(0Xff112C8C);
 
   // List of primary colors
   static List<Color> primaryColorOptions = const [

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
@@ -479,8 +477,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
                           SizedBox(
                             // width: width / 2,
                             child: ElevatedButton(
+
                               onPressed: () {
-                                Navigator.pushNamed(context, "rate_this_raid");
+                                Navigator.pushNamed(context, "rate_this_raid",arguments: rideId);
                               },
                               child: const Text("Rate This Ride"),
                             ),

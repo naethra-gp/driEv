@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
-import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -31,7 +28,6 @@ class _ProfilePageState extends State<ProfilePage> {
   List rewards = [100, 200, 300];
   String selfieUrl = "";
   double distance = 50;
-
   Widget _buildCategoriesGrid() {
     return SizedBox(
       height: 120.0,
@@ -416,7 +412,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         menuList("assets/img/wallet.png", "View Wallet", () {
-                          // slider();
+                          Navigator.pushNamed(context, "wallet_summary");
                         }),
                         Divider(
                           endIndent: 15,
@@ -424,26 +420,34 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Colors.grey[400],
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
-                            () {}),
+                            () {
+                          Navigator.pushNamed(context, "ride_history");
+                        }),
                         Divider(
                           endIndent: 15,
                           indent: 15,
                           color: Colors.grey[400],
                         ),
-                        menuList("assets/img/faq.png", "FAQs", () {}),
+                        menuList("assets/img/faq.png", "FAQs", () {
+                          launchFaq();
+                        }),
                         Divider(
                           endIndent: 15,
                           indent: 15,
                           color: Colors.grey[400],
                         ),
-                        menuList("assets/img/rate.png", "Rate us", () {}),
+                        menuList("assets/img/rate.png", "Rate us", () {
+                          Navigator.pushNamed(context, "rate_this_raid",arguments:"rideId");
+                        }),
                         Divider(
                           endIndent: 15,
                           indent: 15,
                           color: Colors.grey[400],
                         ),
-                        menuList(
-                            "assets/img/gift.png", "Refer your friends", () {}),
+                        menuList("assets/img/gift.png", "Refer your friends",
+                            () {
+                          Navigator.pushNamed(context, "refer_screen");
+                        }),
                         Divider(
                           endIndent: 15,
                           indent: 15,
@@ -740,5 +744,12 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  void launchFaq() async {
+    final Uri url = Uri.parse('https://driev.bike/faqs');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      alertServices.errorToast("Could not launch $url");
+    }
   }
 }

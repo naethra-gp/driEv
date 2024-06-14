@@ -26,5 +26,10 @@ class EndPoints {
   static const rideDetails = 'rideDetails';
   static const getRideEndPin = 'getRideEndPin';
   static const rideEndConfirmation = 'rideEndConfirmation';
+  static const rideFeedback = 'rideFeedBack';
+  static const assignCouponCode = 'wallet/assignCouponCode';
+  static const rideHistory = 'flespi/getRidesByCustomer';
+  static const transactionByContact = 'fetchTransactionByContact';
+  static const withdrawmoney = 'wallet/withdrawMoneyFromWallet';
 
 }

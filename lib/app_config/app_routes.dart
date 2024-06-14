@@ -1,7 +1,11 @@
+import 'package:driev/app_pages/ride_history/ride_history.dart';
+import 'package:driev/app_pages/wallet_screens/wallet_summary.dart';
+import 'package:driev/app_pages/wallet_screens/walllet_all_transaction.dart';
+import 'package:driev/app_pages/wallet_screens/withdraw_amount.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../app_pages/index.dart';
+import '../app_pages/referral_screen/referCode_apply.dart';
 import '../app_pages/ride_summary/summary_ride.dart';
 import '../app_pages/scan_to_endride/end_ride_scan.dart';
 import '../app_utils/app_provider/connectivity_provider.dart';
@@ -81,7 +85,20 @@ class AppRoute {
           List args = settings.arguments as List;
           return EndRideScanner(rideId: args);
         case "rate_this_raid":
-          return const RateThisRide();
+          String id = settings.arguments as String;
+          return  RateThisRide(rideId: id);
+        case "refer_screen":
+          return  const ReferCodeApply();
+        case "ride_history":
+          return  const RideHistory();
+        case "wallet_summary":
+          return  const WalletSummary();
+        case "withdraw_amount":
+          String id = settings.arguments as String;
+          return WithdrawAmount(balance:id);
+        case "all_transaction":
+          List id = settings.arguments as List;
+          return AllTransaction(allTransaction:id);
 
       }
       return const LandingPage();

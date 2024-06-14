@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:driev/app_services/feedback_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../app_themes/app_colors.dart';
+import '../../app_utils/app_loading/alert_services.dart';
+
 class RateThisRide extends StatefulWidget {
-  const RateThisRide({super.key});
+  final String rideId;
+   const RateThisRide({super.key, required this.rideId});
 
   @override
   State<RateThisRide> createState() => _RateThisRideState();
@@ -12,7 +19,8 @@ class RateThisRide extends StatefulWidget {
 class _RateThisRideState extends State<RateThisRide> {
   final _ratingController = TextEditingController();
   double? _rating;
-  static const Color faqColor =Color(0XffC7C7C7);
+  AlertServices alertServices = AlertServices();
+  FeedbackServices feedbackServices = FeedbackServices();
 
   final items = [
     "battery issue",
@@ -99,24 +107,24 @@ class _RateThisRideState extends State<RateThisRide> {
                   ),
                 ],
                 if (_rating == 3.0 || _rating == 4.0) ...[
-                  Text(
+                  const Text(
                     "What services do you think could be improved?",
-                    // style: GoogleFonts.roboto().copyWith(
-                    //   fontSize: 14,
-                    //   color: AppColors.black,
-                    //   fontWeight: FontWeight.w500,
-                    // ),
+                    /* style: TextStyle(
+                       fontSize: 14,
+                       color: AppColors.black,
+                       fontWeight: FontWeight.w500,
+                     ),*/
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 5.0) ...[
-                  Text(
+                  const Text(
                     "Thank you for rating us the best!",
-                    // style: GoogleFonts.roboto().copyWith(
-                    //   fontSize: 14,
-                    //   color: AppColors.black,
-                    //   fontWeight: FontWeight.w500,
-                    // ),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -131,8 +139,7 @@ class _RateThisRideState extends State<RateThisRide> {
                   itemSize: 30.0,
                   unratedColor: Colors.grey,
                   itemPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  itemBuilder: (context, _) =>
-                  const ImageIcon(
+                  itemBuilder: (context, _) => const ImageIcon(
                     AssetImage("assets/img/feedback_star.png"),
                     color: Colors.yellow,
                   ),
@@ -153,32 +160,31 @@ class _RateThisRideState extends State<RateThisRide> {
                     runSpacing: 5.0, // vertical spacing between rows
                     children: items
                         .map(
-                          (e) =>
-                          FilterChip(
+                          (e) => FilterChip(
                             elevation: 5,
                             backgroundColor: Colors.white,
                             showCheckmark: false,
                             avatar: const Icon(
                               Icons.check,
-                              // color: AppColors.chipText,
+                              color: AppColors.chipText,
                             ),
                             label: Text(e),
-                            // labelStyle: GoogleFonts.roboto().copyWith(
-                            //   fontSize: 12,
-                            //   color: AppColors.chipText,
-                            //   fontWeight: FontWeight.w400,
-                            // ),
+                            labelStyle: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.chipText,
+                              fontWeight: FontWeight.w400,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius:
-                              BorderRadius.circular(7.0), // rounded corners
+                                  BorderRadius.circular(7.0), // rounded corners
                               side: const BorderSide(
-                                // color: AppColors.commentColor, // grey border
+                                color: AppColors.commentColor, // grey border
                               ),
                             ),
                             selected: selectedItem.contains(e),
                             onSelected: (bool value) {
                               setState(
-                                    () {
+                                () {
                                   if (selectedItem.contains(e)) {
                                     selectedItem.remove(e);
                                   } else {
@@ -186,9 +192,10 @@ class _RateThisRideState extends State<RateThisRide> {
                                   }
                                 },
                               );
+                              print(selectedItem);
                             },
                           ),
-                    )
+                        )
                         .toList(),
                   ),
                 ],
@@ -215,14 +222,14 @@ class _RateThisRideState extends State<RateThisRide> {
                           textAlignVertical: TextAlignVertical.center,
                           maxLines: 3,
                           minLines: 3,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "  Comments..",
-                            // hintStyle: GoogleFonts.roboto().copyWith(
-                            //   fontSize: 12,
-                            //   color: AppColors.commentColor,
-                            //   fontWeight: FontWeight.w400,
-                            // ),
+                            hintStyle: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.commentColor,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
@@ -407,9 +414,9 @@ class _RateThisRideState extends State<RateThisRide> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+                        submitRideFeedback();
                       },
-                      child: Text("Submit"),
+                      child: const Text("Submit"),
                     ),
                   ),
                 ),
@@ -420,6 +427,7 @@ class _RateThisRideState extends State<RateThisRide> {
       ),
     );
   }
+
   whatsApp() async {
     try {
       await launchUrl(
@@ -453,5 +461,22 @@ class _RateThisRideState extends State<RateThisRide> {
       print("Error launching WhatsApp: $e");
       // Handle the error gracefully
     }
+  }
+
+  void submitRideFeedback() {
+    alertServices.showLoading();
+    var params = {
+      "rideId": widget.rideId,
+      "feedBacks": selectedItem,
+      "comments": commentCtl.text.toString(),
+      "rating": _rating,
+    };
+    print("params ${jsonEncode(params)}");
+    feedbackServices.rideFeedBack(params).then((response) {
+      alertServices.hideLoading();
+      if (response != null) {
+        Navigator.pushNamed(context, "home");
+      }
+    });
   }
 }
