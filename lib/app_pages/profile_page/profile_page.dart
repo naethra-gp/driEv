@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:driev/app_config/app_constants.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
+import 'package:driev/app_services/wallet_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../app_config/app_constants.dart';
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -41,8 +44,8 @@ class _ProfilePageState extends State<ProfilePage> {
   List<double> progressValues = [];
   String selfieUrl = "";
   double distance = 50;
+  String result = "";
   int rideDurationmilliSec = 0;
-
   Widget _buildCategoriesGrid() {
     return SizedBox(
       height: 150.0,
@@ -507,7 +510,8 @@ getSliderValues() async{
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         menuList("assets/img/wallet.png", "View Wallet", () {
-                          Navigator.pushNamed(context, "wallet_summary");
+                          // Navigator.pushNamed(context, "wallet_summary");
+                          paytm("10.00");
                         }),
                         Divider(
                           endIndent: 15,
@@ -532,6 +536,8 @@ getSliderValues() async{
                           color: Colors.grey[400],
                         ),
                         menuList("assets/img/rate.png", "Rate us", () {
+                          Navigator.pushNamed(context, "rate_this_raid",
+                              arguments: "rideId");
                           launchRateUs();
                         }),
                         Divider(
@@ -853,6 +859,77 @@ getSliderValues() async{
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       alertServices.errorToast("Could not launch $url");
     }
+  }
+
+  paytm(String amount) {
+    WalletServices walletServices = WalletServices();
+    alertServices.showLoading();
+    String mobile = secureStorage.get("mobile") ?? "";
+    var params = {
+      "amount": amount.toString(),
+      "contact": mobile.toString(),
+      "staging": Constants.isStagingMode,
+    };
+    walletServices.initiateTransaction(params).then((dynamic res) {
+      print("response --> $res");
+      List token = [res];
+      // String mid = "cxAfAZ34251794799551";
+      // String tToken = "cc302ad05939411cbf77d4f2010e5d6c1718892040879";
+      // String amt = "1.00";
+      // String oId = "OD_59";
+      // String cbUrl = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=OD_59";
+      // bool staging = false;
+      String mid = token[0]['mid'].toString();
+      String tToken = token[0]['txnToken'].toString();
+      String amt = amount.toString();
+      String oId = token[0]['orderId'].toString();
+      String cbUrl = token[0]['callbackUrl'].toString();
+      bool staging = Constants.isStagingMode;
+      bool rai = true;
+      debugPrint("-------------- PAYTM Payment ---------------------");
+      debugPrint("mid: $mid");
+      debugPrint("orderID: $oId");
+      debugPrint("txtToken: $tToken");
+      debugPrint("amount: $amt");
+      debugPrint("callbackurl: $cbUrl");
+      debugPrint("isStaging: $staging");
+      debugPrint("-------------- // PAYTM Payment ---------------------");
+      alertServices.hideLoading();
+      var response = AllInOneSdk.startTransaction(
+          mid, oId, amt, tToken, cbUrl, staging, rai);
+      response.then((value) {
+        setState(() {
+          result = value.toString();
+        });
+        List res = [value];
+        print("---------------------");
+        print("result ---> ${res[0]['STATUS']}");
+        print("---------------------");
+
+        if(res[0]['STATUS'].toString() == "TXN_SUCCESS") {
+          debugPrint("Transaction Success");
+        }
+      }).catchError((onError) {
+        if (onError is PlatformException) {
+          setState(() {
+            result = "${onError.message!} \n  ${onError.details}";
+          });
+        } else {
+          setState(() {
+            result = onError.toString();
+          });
+        }
+        List response = [onError.details];
+        print("---------------------");
+        print("error result ---> ${response[0]['STATUS']}");
+        print("error result ---> ${response[0]['RESPMSG']}");
+        print("---------------------");
+
+        if(response[0]['STATUS'].toString() == "TXN_FAILURE") {
+          debugPrint("Transaction Failure");
+        }
+      });
+    });
   }
 }
 class RewardSlider extends StatelessWidget {

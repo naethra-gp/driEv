@@ -57,6 +57,8 @@ class Assets {
   static const String imgRideHistory = 'assets/img/ride_history.png';
   static const String imgScooter = 'assets/img/scooter.png';
   static const String imgScooter1 = 'assets/img/scooter_1.png';
+  static const String imgScooter2 = 'assets/img/scooter_2.png';
+  static const String imgScooter3 = 'assets/img/scooter_3.png';
   static const String imgSliderIcon = 'assets/img/slider_icon.png';
   static const String imgSuccessLogo = 'assets/img/success_logo.png';
   static const String imgWallet = 'assets/img/wallet.png';

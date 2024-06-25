@@ -248,6 +248,10 @@ class _RideSummaryState extends State<RideSummary> {
                             Navigator.pushNamed(context, "rate_this_raid",
                                 arguments: widget.rideId);
                             },
+                          // onPressed: () {
+                          //   Navigator.pushNamedAndRemoveUntil(context, "rate_this_raid", (route)=>false);
+                          //   // Navigator.pushAndRemoveUntil(context, "rate_this_raid", (route) => false);
+                          // },
                         ),
                       ),
                     ],

@@ -69,4 +69,8 @@ flutter {
 dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-location:21.2.0'
+    implementation('com.paytm.appinvokesdk:appinvokesdk:1.5.4'){
+        exclude group: "com.squareup.okhttp3", module: 'okhttp3'
+    }
+    implementation "com.squareup.okhttp3:okhttp:4.8.0"
 }

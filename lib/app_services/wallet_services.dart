@@ -10,7 +10,14 @@ class WalletServices{
   }
   withdrawMoneyFromWallet(dynamic params, [error]) async {
     Connection connection = Connection();
-    var url = '${EndPoints.baseApi1}/${EndPoints.withdrawmoney}';
+    var url = '${EndPoints.baseApi1}/${EndPoints.withdrawMoney}';
+    var response = await connection.postWithToken(url, params, error);
+    return response;
+  }
+
+  initiateTransaction(dynamic params, [error]) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.payment}/${EndPoints.initiateTransaction}';
     var response = await connection.postWithToken(url, params, error);
     return response;
   }

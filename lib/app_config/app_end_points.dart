@@ -1,5 +1,4 @@
 class EndPoints {
-
   static const baseApi = 'https://community-test.driev.bike/driev/api/app';
   static const baseApi1 = 'https://community-test.driev.bike/driev/api';
   static const sendOtp = 'generateOTP';
@@ -32,5 +31,7 @@ class EndPoints {
   static const transactionByContact = 'fetchTransactionByContact';
   static const withdrawmoney = 'wallet/withdrawMoneyFromWallet';
   static const validateCode = 'validateCode';
-
+  static const payment = 'https://community-test.driev.bike/driev/app/payment';
+  static const withdrawMoney = 'wallet/withdrawMoneyFromWallet';
+  static const initiateTransaction = 'initiateTransaction';
 }

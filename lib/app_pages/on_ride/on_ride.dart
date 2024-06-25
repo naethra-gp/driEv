@@ -71,7 +71,6 @@ class _OnRideState extends State<OnRide> {
         if (r['status'].toString() == "On Ride") {
           countdownTimer =
               Timer.periodic(const Duration(minutes: 1), (Timer t) {
-            print("Timer --> ${jsonEncode(t)}");
             getRideDetails(widget.rideId);
           });
         }
