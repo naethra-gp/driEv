@@ -31,5 +31,6 @@ class EndPoints {
   static const rideHistory = 'flespi/getRidesByCustomer';
   static const transactionByContact = 'fetchTransactionByContact';
   static const withdrawmoney = 'wallet/withdrawMoneyFromWallet';
+  static const validateCode = 'validateCode';
 
 }

@@ -18,13 +18,14 @@ class FareDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      height: 30,
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8.0),
+        color:const Color(0xffF5F5F5),
+        borderRadius: BorderRadius.circular(6.0),
         border: Border.all(
-          color: Color(0xffE1E1E1),
+          color: const Color(0xffE1E1E1),
         )
       ),
       child: Row(
@@ -34,7 +35,7 @@ class FareDetailsWidget extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 16.0),
+                style: const TextStyle(fontSize: 12.0),
               ),
               if (info)
                 SuperTooltip(
@@ -57,7 +58,7 @@ class FareDetailsWidget extends StatelessWidget {
                       padding: EdgeInsets.only(left: 4.0),
                       child: Icon(
                         Icons.info,
-                        size: 20.0,
+                        size: 15.0,
                         color: Color(0xff7D7D7D),
                       ),
                     ),
@@ -78,7 +79,7 @@ class FareDetailsWidget extends StatelessWidget {
           ),
           Text(
             "₹$price",
-            style: const TextStyle(fontSize: 16.0),
+            style: const TextStyle(fontSize: 12.0),
           ),
         ],
       ),

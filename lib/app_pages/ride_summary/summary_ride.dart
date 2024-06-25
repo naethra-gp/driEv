@@ -244,7 +244,10 @@ class _RideSummaryState extends State<RideSummary> {
                         padding: const EdgeInsets.symmetric(horizontal: 75),
                         child: AppButtonWidget(
                           title: "Rate this Ride",
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, "rate_this_raid",
+                                arguments: widget.rideId);
+                            },
                         ),
                       ),
                     ],

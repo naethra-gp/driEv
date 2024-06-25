@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:icons_plus/icons_plus.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
@@ -99,8 +97,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
+      body: SingleChildScrollView(child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
@@ -113,105 +110,116 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(15),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'dri',
-                                      style: heading(Colors.black),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                              //  mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'dri',
+                                            style: heading(Colors.black),
+                                          ),
+                                          TextSpan(
+                                            text: 'EV ',
+                                            style: heading(AppColors.primary),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    TextSpan(
-                                      text: 'EV ',
-                                      style: heading(AppColors.primary),
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          '${fd[0]['planType']}-${fd[0]['vehicleId']}',
-                                      style: heading(Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "assets/img/slider_icon.png",
-                                  height: 21,
-                                  width: 16,
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  "${sd[0]['campus']} (${sd[0]['distance']} km)",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
                                   ),
+                                  Text(
+                                    '${fd[0]['planType']} ${fd[0]['vehicleId']}',
+                                    style: heading(Colors.black),
+                                  ),
+                                  ],
+                              ),
+                              const SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    "assets/img/slider_icon.png",
+                                    height: 18,
+                                    width: 13,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "${sd[0]['campus']} (${sd[0]['distance']} km)",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                "Estimated Range",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: "Poppins",
+                                  color: Color(0xff626262),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            const Text(
-                              "Estimated Range",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: "Poppins",
-                                color: Color(0xff626262),
                               ),
-                            ),
-                            Text(
-                              "${fd[0]['estimatedRange' ?? "0"]} km",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontFamily: "Poppins",
+                              Text(
+                                "${fd[0]['estimatedRange' ?? "0"]} km",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: "Poppins",
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 10),
+                              /* const SizedBox(height: 10),
                             const Icon(LineAwesome.battery_full_solid),
                             const Text(
                               "100%",
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontFamily: "Poppins",
                               ),
-                            ),
-                          ],
+                            ),*/
+                            ],
+                          ),
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-
-                            const SizedBox(height: 50),
-                            fd[0]['imageUrl'] != null
-                                ? Image.network(
-                                    fd[0]['imageUrl']
-                                        .toString(), // Replace with your image URL
-                                    width: 150,
-                                    height: 150,
-                                    fit: BoxFit.contain,
-                                  )
-                                : Image.asset(
-                                    "assets/img/bike.png",
-                                    fit: BoxFit.fitWidth,
-                                    width: 190,
-                                    // height: 130,
-                                  ),
-                          ],
-                        ),
-
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 40),
+                              fd[0]['imageUrl'] != null
+                                  ? Image.network(
+                                      fd[0]['imageUrl']
+                                          .toString(), // Replace with your image URL
+                                      width: 200,
+                                      height: 130,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : Image.asset(
+                                      "assets/img/bike.png",
+                                      fit: BoxFit.fitWidth,
+                                      width: 210,
+                                      height: 100,
+                                      // height: 130,
+                                    ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -226,20 +234,20 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       text: "* ",
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize: 13,
+                        fontSize: 10,
                       ),
                     ),
                     TextSpan(
                       text: notes,
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 10,
                         color: Color(0xff7E7E7E),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 15),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -253,28 +261,28 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                 ),
               ),
               if (fd.isNotEmpty) ...[
-                const SizedBox(height: 15.0),
+                const SizedBox(height:3.0),
                 FareDetailsWidget(
                   title: "Base fare",
                   info: true,
                   fareDetails: fd,
                   price: fd[0]['offer']['basePrice'].toString(),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 3),
                 FareDetailsWidget(
                   title: "Ride charge per minute",
                   info: false,
                   fareDetails: fd,
-                  price: fd[0]['offer']['perMinPaisa'].toString(),
+                  price: (fd[0]['offer']['perMinPaisa'] / 100.0).toString(),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 3),
                 FareDetailsWidget(
                   title: "Ride charge per km",
                   info: false,
                   fareDetails: fd,
-                  price: fd[0]['offer']['perKmPaisa'].toString(),
+                  price: (fd[0]['offer']['perKmPaisa'] / 100.0).toString(),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
                 if (!isReservedDone) ...[
                   if (isReserve) ...[
                     Align(
@@ -284,7 +292,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.15,
                         ),
@@ -388,26 +396,26 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         });
                       },
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 15),
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
+                      height: 42,
+                      child: OutlinedButton(
                         onPressed: () {
                           scanToUnlock();
                         },
-                        style: ElevatedButton.styleFrom(
+                        style: OutlinedButton.styleFrom(
                           textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                           foregroundColor: Colors.black,
                           backgroundColor: Colors.white,
                           side: const BorderSide(
                               color: AppColors.primary, width: 1),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         child: const Text("Scan to Unlock"),
@@ -427,7 +435,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         textStyle: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                         elevation: 0,
                         foregroundColor: Colors.white,
@@ -637,8 +645,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
             ],
           ),
         ),
-      ),
-    );
+    ));
   }
 
   TextStyle heading(Color color) {
@@ -887,5 +894,4 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       });
     }
   }
-
 }

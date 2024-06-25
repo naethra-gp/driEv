@@ -67,6 +67,9 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     _cancelTimer();
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
+        if(remainingSeconds==20){
+          QrMobileVision.toggleFlash();
+        }
         if (remainingSeconds > 0) {
           remainingSeconds--;
         } else {
@@ -95,14 +98,12 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       if (qr != "") {
         print("---- Start ---- ");
         QrMobileVision.stop();
-        String vId = widget.data[0]['vehicleId'].toString().padLeft(4, '0');
-        bool checkVehicle =
-            bikeNumberCtl.text.toString().contains(vId.toString());
-        if (!checkVehicle) {
+        String vId = widget.data[0]['vehicleId'].toString();
+        if (bikeNumberCtl.text.toString()==vId) {
+          startMyRide();
+        } else {
           alertServices.errorToast(
               "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
-        } else {
-          startMyRide();
         }
       }
     });
@@ -121,8 +122,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
               borderRadius:
                   BorderRadius.circular(10), // Adjust the radius as needed
               child: Container(
-                width: 250, // adjust the size as needed
-                height: 250,
+                width: 230, // adjust the size as needed
+                height: 230,
                 decoration: ShapeDecoration(
                   shape: QrScannerOverlayShape(
                     borderColor: AppColors.primary,
@@ -144,61 +145,59 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
             const Text(
-              "Wrap up your two-wheeled adventure!",
+              "Not feeling the scan vibe? No worries!",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "End your ride at ${widget.data[0]['campus'].toString()} Campus 6 by scanning the QR \n code or entering the bike number manually.",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.normal,
               ),
               textAlign: TextAlign.center,
             ),
+            Text(
+              "Enter bike number and ride on!",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   width: 190,
-                  height: 40,
+                  height: 42,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: TextField(
                     controller: bikeNumberCtl,
-                    maxLength: 7,
+                    maxLength: 6,
+                    textAlign: TextAlign.left,
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.phone,
                     onChanged: (value) {
-                      if (value.toString().length == 7) {
-                        String vId = widget.data[0]['vehicleId']
-                            .toString()
-                            .padLeft(4, '0');
-                        bool checkVehicle =
-                            value.toString().contains(vId.toString());
-                        if (!checkVehicle) {
-                          alertServices.errorToast(
-                              "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
-                        } else {
-                          startMyRide();
-                        }
-                      }
+                     /* if (value.toString().isNotEmpty && value.toString().length<=6) {
+                        String vId = widget.data[0]['vehicleId'].toString();
+                         if (value.toString()==vId) {
+                           startMyRide();
+                         } else {
+                           alertServices.errorToast(
+                               "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+                         }
+                      }*/
                       print("Value: $value");
                     },
                     decoration: InputDecoration(
                       counterText: "",
                       hintText: 'Enter Bike Number',
+                      hintStyle:TextStyle(fontSize:12,color:Color(0Xff7A7A7A)),
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.circular(10),
@@ -219,13 +218,20 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: IconButton(
-                    icon: Image.asset(
-                      "assets/img/flash_on.png",
-                      height: 19,
-                      width: 9,
-                    ),
+                    icon: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,),
                     onPressed: () async {
-                      await QrMobileVision.toggleFlash();
+                      if (bikeNumberCtl.text.toString().isNotEmpty && bikeNumberCtl.text.toString().length<=6) {
+                        String vId = widget.data[0]['vehicleId'].toString();
+                        if (bikeNumberCtl.text.toString()==vId) {
+                          startMyRide();
+                        } else {
+                          alertServices.errorToast(
+                              "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+                        }
+                      }
+                      print("Value:${bikeNumberCtl.text}");
                     },
                   ),
                 ),

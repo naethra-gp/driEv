@@ -452,6 +452,7 @@ class _OnRideState extends State<OnRide> {
                                       "scanCode": rideDetails[0]['scanCode'],
                                     }
                                   ];
+                                  print(params);
                                   Navigator.pushNamed(
                                     context,
                                     "scan_to_end_ride",

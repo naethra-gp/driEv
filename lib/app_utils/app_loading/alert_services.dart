@@ -501,7 +501,7 @@ class AlertServices {
       enableDrag: false,
       builder: (context) {
         return SizedBox(
-          height: height / 1.5,
+          height: height / 2,
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
@@ -543,8 +543,8 @@ class AlertServices {
                       padding: const EdgeInsets.only(
                         right: 50,
                         left: 50,
-                        top: 50,
-                        bottom: 20,
+                        top: 30,
+                        bottom: 0,
                       ),
                       child: Image.asset(
                         "assets/img/oops.png",
@@ -560,13 +560,13 @@ class AlertServices {
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     Text(
                       "₹$balance",
                       style:
-                      const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                      const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
                     const Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
@@ -574,22 +574,33 @@ class AlertServices {
                         child: Text(
                           "Your wallet balance is insufficient. To request a\n ride, kindly recharge your wallet.",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 0),
                       child: SizedBox(
                         // width: double.infinity,
-                        width: 300,
-                        height: 50,
+                        width: 310,
+                        height: 42,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Top Up Now'),
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            side: const BorderSide(color: Colors.green),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                          child: const Text(
+                            "Top Up Now",
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ),
                     ),

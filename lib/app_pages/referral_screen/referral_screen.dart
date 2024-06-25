@@ -1,4 +1,5 @@
 import 'package:driev/app_services/Coupon_services.dart';
+import 'package:driev/app_services/customer_services.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
   List customerDetails = [];
   SecureStorage secureStorage = SecureStorage();
   AlertServices alertServices = AlertServices();
+  CustomerService customerService=CustomerService();
   @override
   void initState() {
     super.initState();
@@ -31,7 +33,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
   void getCouponCode() {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
-    couponServices.getCouponCode(mobile).then((response) {
+    customerService.getCustomer(mobile).then((response) {
       print(response);
       customerDetails = [response];
      referCode = customerDetails[0]['uniqueReferralCode'];

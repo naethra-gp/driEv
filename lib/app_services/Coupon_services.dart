@@ -9,4 +9,10 @@ class CouponServices {
     var response = await connection.getWithToken(url);
     return response;
   }
+  validateCouponCode(String code) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.validateCode}/$code';
+    var response = await connection.getWithToken(url);
+    return response;
+  }
 }

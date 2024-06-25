@@ -41,6 +41,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
     _cancelTimer();
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
+        if(remainingSeconds==20){
+          QrMobileVision.toggleFlash();
+        }
         if (remainingSeconds > 0) {
           remainingSeconds--;
         } else {
@@ -113,7 +116,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
         bikeNumberCtl.text = "";
       });
       alertServices.errorToast("Wrong vehicle!!! Scan the code of the selected vehicle");
-      controller?.resumeCamera();
+     // controller?.resumeCamera();
     } else {
       /// BIKE NUMBER VALID STATE
       submitBikeNUmber();
@@ -158,22 +161,22 @@ class _EndRideScannerState extends State<EndRideScanner> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             const Text(
-              "Wrap up your two-wheeled adventure!",
+              "Wrap up your two-wheeled \n adventure!",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 19,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             Text(
-              "End your ride at $campus Campus 6 by scanning the QR \n code or entering the bike number manually.",
+              "End your ride at $campus by scanning the QR \n code or entering the bike number manually.",
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.normal,
               ),
               textAlign: TextAlign.center,
@@ -191,16 +194,18 @@ class _EndRideScannerState extends State<EndRideScanner> {
                   ),
                   child: TextField(
                     controller: bikeNumberCtl,
+                    textAlign: TextAlign.left,
                     onChanged: (value){
-                      if(value.toString().length == 7) {
+                  /*    if(value.toString().length == 7) {
                         checkBikeNumber(value);
                         // submitBikeNUmber();
-                      }
+                      }*/
                     },
-                    maxLength: 7,
+                    maxLength: 6,
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
+                      hintStyle:TextStyle(fontSize:12,color:Color(0Xff7A7A7A)),
                       counterText: "",
                       hintText: 'Enter Bike Number',
                       border: OutlineInputBorder(
@@ -223,13 +228,15 @@ class _EndRideScannerState extends State<EndRideScanner> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: IconButton(
-                    icon: Image.asset(
-                      "assets/img/flash_on.png",
-                      height: 19,
-                      width: 9,
-                    ),
+                    icon: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,),
                     onPressed: () async {
-                      await QrMobileVision.toggleFlash();
+                      if (bikeNumberCtl.text.toString().isNotEmpty && bikeNumberCtl.text.toString().length<=6) {
+                        checkBikeNumber(bikeNumberCtl.text.toString());
+                      } else{
+                        alertServices.errorToast("Enter the Bike Number or Scan the QR Code");
+                      }
                     },
                   ),
                 ),
@@ -262,19 +269,25 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   showOtp(String otp) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) {
         return SizedBox(
-          height: height / 2,
+          height: height / 1.8,
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                top: height / 5.5 - 100,
+                top: height / 6.6 - 100,
                 child: Container(
                   height: height,
                   width: width,
@@ -287,7 +300,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                 ),
               ),
               Positioned(
-                top: height / 6.6 - 100,
+                top: height / 8 - 100,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -327,16 +340,16 @@ class _EndRideScannerState extends State<EndRideScanner> {
                       "Share this PIN with our station executive\nto end the ride",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xff2c2c2c),
+                        color: Color(0xff6F6F6F),
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 20),
                     Text(
                       otp,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 26,
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -349,7 +362,6 @@ class _EndRideScannerState extends State<EndRideScanner> {
       },
     );
   }
-
   startWatching(String rideId) {
     String mobile = secureStorage.get("mobile");
     bookingServices.rideEndConfirmation(mobile.toString()).then((r) {

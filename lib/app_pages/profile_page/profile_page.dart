@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../app_config/app_constants.dart';
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -25,54 +27,127 @@ class _ProfilePageState extends State<ProfilePage> {
   List documents = [];
   bool userBlock = false;
   bool userVerified = false;
-  List rewards = [100, 200, 300];
+  List<Map<String, dynamic>> rewards = [
+    {
+      "hours": 100,
+    },
+    {
+      "hours": 200,
+    },
+    {
+      "hours": 300,
+    },
+  ];
+  List<double> progressValues = [];
   String selfieUrl = "";
   double distance = 50;
+  int rideDurationmilliSec = 0;
+
   Widget _buildCategoriesGrid() {
     return SizedBox(
-      height: 120.0,
+      height: 150.0,
       child: GridView.builder(
         shrinkWrap: true,
         padding: const EdgeInsets.all(10.0),
         scrollDirection: Axis.horizontal,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
-          mainAxisSpacing: 20.0,
         ),
-        itemCount: rewards.length,
+        itemCount: progressValues.length,
         itemBuilder: (_, int index) {
-          return GestureDetector(
-            onTap: () {},
-            child: CircleAvatar(
-              backgroundColor: Colors.grey[200],
-              // maxRadius: 150,
-              radius: 120,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/img/giftbox.png",
-                    height: 20,
-                    // width: 20,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Unlock \n ${rewards[index]} hrs",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.clip,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 12,
+          int rewardHours = (index + 1) * 100;
+          double initialValue = progressValues[index];
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 110, // Ensure the widget fits within the Grid
+                child: GestureDetector(
+                  onTap: () {},
+                  child: SleekCircularSlider(
+                    min: 0,
+                    max: 100,
+                    initialValue: initialValue,
+                    appearance: CircularSliderAppearance(
+                      startAngle: 180,
+                      angleRange: 360,
+                      customWidths: CustomSliderWidths(
+                        trackWidth: 4,
+                        progressBarWidth: 6,
+                      ),
+                      size: 120,
+                      customColors: CustomSliderColors(
+                        trackColor: Colors.grey[200],
+                        progressBarColors: [Colors.green, Colors.green],
+                      ),
+                      infoProperties: InfoProperties(
+                        topLabelText:"0",
+                        topLabelStyle:const TextStyle(
+                          fontSize: 240,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
+                    innerWidget: (double value) {
+                      String labelText =
+                          "Complete \n $rewardHours hrs \n to get rewards";
+                      String assetPath = Constants.scooter;
+                      Color backgroundColor = Colors.white;
+                      if (rewardHours.toDouble() >= value && value == 100.0) {
+                        labelText = "Completed \n $rewardHours hrs";
+                        assetPath = Constants.gift;
+                        backgroundColor = Colors.white;
+                      } else if (value <= 100 && value <= 0) {
+                        assetPath = Constants.gift;
+                        labelText = "Unlock \n $rewardHours hrs";
+                        backgroundColor = Colors.grey[200]!;
+                      }
+                      return Center(
+                        child: CircleAvatar(
+                          backgroundColor: backgroundColor,
+                          radius: 50,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                assetPath,
+                                height: 26,
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                labelText,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.clip,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 8,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(
+                width: 18, // Adjust the width as needed
+                child: Divider(
+                  color: Colors.grey[200],
+                  thickness: 3,
+                  height: 10,
+                ),
+              ),
+            ],
           );
         },
       ),
     );
+  }
+  double milliSecToHrs() {
+    return rideDurationmilliSec/ 3600000;
   }
 
   @override
@@ -85,16 +160,36 @@ class _ProfilePageState extends State<ProfilePage> {
   void dispose() {
     super.dispose();
   }
-
+getSliderValues() async{
+  double totalHours = milliSecToHrs();
+  int additionalItems = (totalHours / 100).ceil();
+  int totalItems = rewards.length + additionalItems - 1;
+  progressValues = List.generate(totalItems, (index) {
+    if (totalHours > 0) {
+      if (totalHours >= 100) {
+        totalHours -= 100;
+        return 100.0;
+      } else {
+        double value = totalHours;
+        totalHours = 0;
+        return value;
+      }
+    } else {
+      return 0.0;
+    }
+  });
+}
   getCustomer() async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     customerService.getCustomer(mobile).then((response) {
       customerDetails = [response];
       documents = customerDetails[0]['documents'];
+      rideDurationmilliSec = customerDetails[0]['rideDuration'];
       print("documents ${documents.length}");
       selfieUrl = customerDetails[0]['selfi'] ?? "";
       alertServices.hideLoading();
+      getSliderValues();
       setState(() {});
     });
   }
@@ -388,15 +483,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Stack(alignment: Alignment.center, children: [
-                  _buildCategoriesGrid(),
-                  Divider(
-                    color: Colors.grey[200],
-                    thickness: 3,
-                    endIndent: 30,
-                    indent: 30,
-                  ),
-                ]),
+                // Stack(alignment: Alignment.center, children: [
+                _buildCategoriesGrid(),
+                //  Divider(
+                //   color: Colors.grey[200],
+                // thickness: 3,
+                // endIndent: 30,
+                //indent: 30,
+                // ),
+                // ]),
                 defaultHeight,
                 Card(
                   elevation: 10,
@@ -437,7 +532,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Colors.grey[400],
                         ),
                         menuList("assets/img/rate.png", "Rate us", () {
-                          Navigator.pushNamed(context, "rate_this_raid",arguments:"rideId");
+                          launchRateUs();
                         }),
                         Divider(
                           endIndent: 15,
@@ -446,7 +541,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         menuList("assets/img/gift.png", "Refer your friends",
                             () {
-                          Navigator.pushNamed(context, "refer_screen");
+                          Navigator.pushNamed(context, "validate_code");
                         }),
                         Divider(
                           endIndent: 15,
@@ -751,5 +846,201 @@ class _ProfilePageState extends State<ProfilePage> {
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       alertServices.errorToast("Could not launch $url");
     }
+  }
+
+  void launchRateUs() async {
+    final Uri url = Uri.parse('https://maps.app.goo.gl/gtotFPdQL7iLcrBS7');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      alertServices.errorToast("Could not launch $url");
+    }
+  }
+}
+class RewardSlider extends StatelessWidget {
+  final int rewardHours;
+  final double initialValue;
+
+  RewardSlider({required this.rewardHours, required this.initialValue});
+
+  @override
+  Widget build(BuildContext context) {
+    return SleekCircularSlider(
+      min: 0,
+      max: 100,
+      initialValue: initialValue,
+      appearance: CircularSliderAppearance(
+        startAngle: 180,
+        angleRange: 360,
+        customWidths: CustomSliderWidths(
+          trackWidth: 4,
+          progressBarWidth: 6,
+        ),
+        size: 120,
+        customColors: CustomSliderColors(
+          trackColor: Colors.grey[200],
+          progressBarColors: [Colors.green, Colors.green],
+        ),
+        infoProperties: InfoProperties(
+          mainLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      innerWidget: (double value) {
+        String labelText =
+            "Complete \n $rewardHours hrs \n to get rewards";
+        String assetPath = Constants.scooter;
+        Color backgroundColor = Colors.white;
+        if (rewardHours.toDouble() >= value && value == 100.0) {
+          labelText = "Completed \n $rewardHours hrs";
+          assetPath = Constants.gift;
+          backgroundColor = Colors.white;
+        } else if (value <= 100 && value <= 0) {
+          assetPath = Constants.gift;
+          labelText = "Unlock \n $rewardHours hrs";
+          backgroundColor = Colors.grey[200]!;
+        }
+        return Center(
+          child: CircleAvatar(
+            backgroundColor: backgroundColor,
+            radius: 50,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  assetPath,
+                  height: 26,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  labelText,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 8,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class MyApp1 extends StatefulWidget {
+  @override
+  _MyApp1State createState() => _MyApp1State();
+}
+
+class _MyApp1State extends State<MyApp1> {
+  List<Map<String, dynamic>> rewards = [
+    {"hours": 100},
+    {"hours": 200},
+    {"hours": 300},
+  ];
+
+  List<double> sliderValues = [];
+  double lastCalculatedHours = 0.0;
+  int itemCountCounter = 3; // Initial item count
+
+  @override
+  void initState() {
+    super.initState();
+    _updateSliderValues();
+  }
+
+  @override
+  void didUpdateWidget(covariant MyApp1 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (lastCalculatedHours != milliSecToHrs()) {
+      _updateSliderValues();
+    }
+  }
+
+  void _updateSliderValues() {
+    lastCalculatedHours = milliSecToHrs();
+    double totalHours = lastCalculatedHours;
+
+    sliderValues.clear();
+    int completedCount = 0;
+
+    for (int i = 0; i < rewards.length; i++) {
+      int rewardHours = rewards[i]["hours"];
+
+      if (totalHours >= rewardHours) {
+        sliderValues.add(rewardHours.toDouble());
+        totalHours -= rewardHours.toDouble();
+        completedCount++;
+
+        // Check if additional items need to be added
+        if (completedCount == 3 && i == 2) {
+          // Add two more items after the 3rd slider is filled
+          itemCountCounter += 2;
+        }
+      } else {
+        sliderValues.add(totalHours);
+        totalHours = 0;
+      }
+    }
+
+    setState(() {}); // Trigger rebuild after updating slider values
+  }
+
+  Widget _buildCategoriesGrid() {
+    return SizedBox(
+      height: 150.0,
+      child: GridView.builder(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(10.0),
+        scrollDirection: Axis.horizontal,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+        ),
+        itemCount: itemCountCounter, // Use the itemCountCounter
+        itemBuilder: (_, int index) {
+          if (index < rewards.length) {
+            int rewardHours = rewards[index]["hours"];
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 110,
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: RewardSlider(
+                      rewardHours: rewardHours,
+                      initialValue: sliderValues[index],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 18,
+                  child: Divider(
+                    color: Colors.grey[200],
+                    thickness: 3,
+                    height: 10,
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return SizedBox(); // Return an empty SizedBox for safety
+          }
+        },
+      ),
+    );
+  }
+
+  double milliSecToHrs() {
+    return (310 * 3600000) / 3600000; // Adjusted calculation as per your requirement
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildCategoriesGrid();
   }
 }

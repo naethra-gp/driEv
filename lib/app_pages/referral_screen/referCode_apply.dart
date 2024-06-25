@@ -1,3 +1,6 @@
+import 'package:driev/app_services/Coupon_services.dart';
+import 'package:driev/app_storages/secure_storage.dart';
+import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
@@ -11,6 +14,11 @@ class ReferCodeApply extends StatefulWidget {
 }
 
 class _ReferCodeApplyState extends State<ReferCodeApply> {
+  SecureStorage secureStorage=SecureStorage();
+  CouponServices couponServices= CouponServices();
+  AlertServices alertServices= AlertServices();
+  TextEditingController referCtl= TextEditingController();
+  List referCodeStatusDetails=[];
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -77,6 +85,7 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                           color: Colors.white,
                         ),
                         child: TextFormField(
+                          controller: referCtl,
                           textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 18,
                             color: AppColors.black,
@@ -99,7 +108,9 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        validateCode();
+                      },
                       style: ElevatedButton.styleFrom(
                         textStyle: const TextStyle(
                           color: AppColors.white,
@@ -157,5 +168,25 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
         ),
       ),
     );
+  }
+
+  void validateCode() async {
+    String code = secureStorage.get("referCode") ?? "";
+    if(referCtl.text=="") {
+      alertServices.errorToast("Referral Code is empty");
+    }else {
+      couponServices.validateCouponCode(referCtl.text).then((response) {
+        print(response);
+        referCodeStatusDetails = [response];
+        if( referCodeStatusDetails[0]['status']=="Valid"){
+          alertServices.successToast(referCodeStatusDetails[0]['message']);
+          Navigator.pushNamed(context, "home");
+        }
+        else{
+          alertServices.errorToast(referCodeStatusDetails[0]['message']);
+        }
+        setState(() {});
+      });
+    }
   }
 }

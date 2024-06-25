@@ -23,6 +23,8 @@ class Constants {
   static const String votecampus="assets/app/vote_for_campus_logo.png";
   static const String pdf="assets/img/pdf.png";
   static const String bike="assets/img/bike.png";
+  static const String gift="assets/img/giftbox.png";
+  static const String scooter="assets/img/scooter.png";
 
 
   static const String title1="Let's get you road-ready!";
@@ -44,6 +46,6 @@ class Constants {
 
   static const String apikey="AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA";
   static const String spreadword="Spread the word,earn Rewards!";
-  static const String sharefreinds ="Share your referral code with \n friends and get 20% offwhen they \n take their first ride.";
+  static const String sharefreinds ="Share your referral code with \n friends and get 20% off when they \n take their first ride.";
 
 }

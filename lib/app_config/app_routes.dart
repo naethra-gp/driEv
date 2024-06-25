@@ -1,3 +1,4 @@
+import 'package:driev/app_pages/referral_screen/referral_screen.dart';
 import 'package:driev/app_pages/ride_history/ride_history.dart';
 import 'package:driev/app_pages/wallet_screens/wallet_summary.dart';
 import 'package:driev/app_pages/wallet_screens/walllet_all_transaction.dart';
@@ -88,7 +89,7 @@ class AppRoute {
           String id = settings.arguments as String;
           return  RateThisRide(rideId: id);
         case "refer_screen":
-          return  const ReferCodeApply();
+          return  const ReferralScreen();
         case "ride_history":
           return  const RideHistory();
         case "wallet_summary":
@@ -99,7 +100,8 @@ class AppRoute {
         case "all_transaction":
           List id = settings.arguments as List;
           return AllTransaction(allTransaction:id);
-
+        case "validate_code":
+          return const ReferCodeApply();
       }
       return const LandingPage();
     });
