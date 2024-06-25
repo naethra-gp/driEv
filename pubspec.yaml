@@ -55,6 +55,8 @@ dependencies:
   paytm_allinonesdk: ^1.2.5
   qr_mobile_vision: ^4.1.3
   sleek_circular_slider: ^2.0.1
+
+#  percent_indicator: ^4.2.3
   #  qrscan: ^0.3.3
   #  image_gallery_saver: ^2.0.3
   #  qr_scanner_with_effect: ^1.0.5

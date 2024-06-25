@@ -213,7 +213,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/Naethra/Desktop/env/flutter/packages/flutter",
+      "rootUri": "file:///Users/naethra/Desktop/env/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
@@ -315,13 +315,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/Naethra/Desktop/env/flutter/packages/flutter_test",
+      "rootUri": "file:///Users/naethra/Desktop/env/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/Naethra/Desktop/env/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/naethra/Desktop/env/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -855,7 +855,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/Naethra/Desktop/env/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/naethra/Desktop/env/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -1082,10 +1082,10 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-06-25T13:16:07.013640Z",
+  "generated": "2024-06-25T13:26:29.596727Z",
   "generator": "pub",
   "generatorVersion": "3.4.3",
-  "flutterRoot": "file:///Users/Naethra/Desktop/env/flutter",
+  "flutterRoot": "file:///Users/naethra/Desktop/env/flutter",
   "flutterVersion": "3.22.2",
   "pubCache": "file:///Users/naethra/.pub-cache"
 }

@@ -5,7 +5,9 @@ import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
@@ -18,26 +20,32 @@ class WalletSummary extends StatefulWidget {
 }
 
 class _WalletSummaryState extends State<WalletSummary> {
-  AlertServices alertServices= AlertServices();
+  AlertServices alertServices = AlertServices();
   WalletServices walletServices = WalletServices();
-  SecureStorage secureStorage= SecureStorage();
-  List walletSummaryDetails=[];
-  String walletBalance="";
-@override
+  SecureStorage secureStorage = SecureStorage();
+
+  List walletSummaryDetails = [];
+  String walletBalance = "";
+  String result = "";
+
+
+  @override
   void initState() {
     super.initState();
     getWalletSummary();
   }
+
   void getWalletSummary() async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     walletServices.getWalletTransaction(mobile).then((response) {
       setState(() {
-        walletSummaryDetails = List<Map<String,dynamic>>.from(response);
+        walletSummaryDetails = List<Map<String, dynamic>>.from(response);
         alertServices.hideLoading();
       });
       print(walletSummaryDetails[0]["openingBalance"]);
-     walletBalance= walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2);
+      walletBalance =
+          walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2);
       setState(() {});
     }).catchError((error) {
       alertServices.hideLoading();
@@ -80,7 +88,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                     width: 57,
                   ),
                   const SizedBox(width: 15),
-                   Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -91,13 +99,16 @@ class _WalletSummaryState extends State<WalletSummary> {
                             color: Colors.black,
                             fontWeight: FontWeight.w400),
                       ),
-                      if(walletSummaryDetails.isNotEmpty)...[  Text(
-                        walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2),
-                        style: const TextStyle(
-                            fontSize: 46,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),]
+                      if (walletSummaryDetails.isNotEmpty) ...[
+                        Text(
+                          walletSummaryDetails[0]["closingBalance"]
+                              .toStringAsFixed(2),
+                          style: const TextStyle(
+                              fontSize: 46,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ]
                     ],
                   ),
                 ],
@@ -137,7 +148,8 @@ class _WalletSummaryState extends State<WalletSummary> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "withdraw_amount",arguments: walletBalance);
+                        Navigator.pushNamed(context, "withdraw_amount",
+                            arguments: walletBalance);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -206,7 +218,10 @@ class _WalletSummaryState extends State<WalletSummary> {
                   Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(5),
-                      itemCount: min(4,walletSummaryDetails.length), // Limit to 4 transactions
+                      itemCount: min(
+                          4,
+                          walletSummaryDetails
+                              .length), // Limit to 4 transactions
                       itemBuilder: (context, index) {
                         final transaction = walletSummaryDetails[index];
                         return Column(
@@ -217,13 +232,14 @@ class _WalletSummaryState extends State<WalletSummary> {
                             WalletSummaryList(
                               title: transaction['description'],
                               subTitle: transaction['transactionTime'],
-                              amount: transaction['transactionAmount'].toStringAsFixed(2),
+                              amount: transaction['transactionAmount']
+                                  .toStringAsFixed(2),
                               transactionType: transaction['transactionType'],
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                             const Divider(
+                            const Divider(
                               color: AppColors.centerAlign,
                             ),
                           ],
@@ -244,8 +260,10 @@ class _WalletSummaryState extends State<WalletSummary> {
                                 decoration: TextDecoration.underline,
                                 color: AppColors.transacColor,
                                 fontWeight: FontWeight.w500),
-                            recognizer: TapGestureRecognizer()..onTap = () {
-                              Navigator.pushNamed(context, "all_transaction",arguments: walletSummaryDetails);
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pushNamed(context, "all_transaction",
+                                    arguments: walletSummaryDetails);
                               },
                           ),
                         ],
@@ -288,6 +306,79 @@ class _WalletSummaryState extends State<WalletSummary> {
       ),
     );
   }
+
+
+  /// PAYMENT INTEGRATIONS
+  paytm(String amount) {
+    WalletServices walletServices = WalletServices();
+    alertServices.showLoading();
+    String mobile = secureStorage.get("mobile") ?? "";
+    var params = {
+      "amount": amount.toString(),
+      "contact": mobile.toString(),
+      "staging": Constants.isStagingMode,
+    };
+    walletServices.initiateTransaction(params).then((dynamic res) {
+      print("response --> $res");
+      List token = [res];
+      // String mid = "cxAfAZ34251794799551";
+      // String tToken = "cc302ad05939411cbf77d4f2010e5d6c1718892040879";
+      // String amt = "1.00";
+      // String oId = "OD_59";
+      // String cbUrl = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=OD_59";
+      // bool staging = false;
+      String mid = token[0]['mid'].toString();
+      String tToken = token[0]['txnToken'].toString();
+      String amt = amount.toString();
+      String oId = token[0]['orderId'].toString();
+      String cbUrl = token[0]['callbackUrl'].toString();
+      bool staging = Constants.isStagingMode;
+      bool rai = true;
+      debugPrint("-------------- PAYTM Payment ---------------------");
+      debugPrint("mid: $mid");
+      debugPrint("orderID: $oId");
+      debugPrint("txtToken: $tToken");
+      debugPrint("amount: $amt");
+      debugPrint("callbackurl: $cbUrl");
+      debugPrint("isStaging: $staging");
+      debugPrint("-------------- // PAYTM Payment ---------------------");
+      alertServices.hideLoading();
+      var response = AllInOneSdk.startTransaction(
+          mid, oId, amt, tToken, cbUrl, staging, rai);
+      response.then((value) {
+        setState(() {
+          result = value.toString();
+        });
+        List res = [value];
+        print("---------------------");
+        print("result ---> ${res[0]['STATUS']}");
+        print("---------------------");
+
+        if(res[0]['STATUS'].toString() == "TXN_SUCCESS") {
+          debugPrint("Transaction Success");
+        }
+      }).catchError((onError) {
+        if (onError is PlatformException) {
+          setState(() {
+            result = "${onError.message!} \n  ${onError.details}";
+          });
+        } else {
+          setState(() {
+            result = onError.toString();
+          });
+        }
+        List response = [onError.details];
+        print("---------------------");
+        print("error result ---> ${response[0]['STATUS']}");
+        print("error result ---> ${response[0]['RESPMSG']}");
+        print("---------------------");
+
+        if(response[0]['STATUS'].toString() == "TXN_FAILURE") {
+          debugPrint("Transaction Failure");
+        }
+      });
+    });
+  }
 }
 
 class WalletSummaryList extends StatelessWidget {
@@ -302,7 +393,6 @@ class WalletSummaryList extends StatelessWidget {
     required this.subTitle,
     required this.amount,
     required this.transactionType,
-
   });
 
   @override
@@ -341,7 +431,7 @@ class WalletSummaryList extends StatelessWidget {
           child: Text(
             "$symbol ${amount.toString()}",
             textAlign: TextAlign.right,
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: 14,
               color: amountColor,
               fontWeight: FontWeight.w500,
@@ -351,13 +441,17 @@ class WalletSummaryList extends StatelessWidget {
       ],
     );
   }
+
   String _formatTransactionTime(String timeString) {
     final DateTime time = DateTime.parse(timeString);
     final now = DateTime.now();
-    if (time.year == now.year && time.month == now.month && time.day == now.day - 1) {
+    if (time.year == now.year &&
+        time.month == now.month &&
+        time.day == now.day - 1) {
       return "Yesterday, ${DateFormat('HH:mm').format(time)}";
     } else {
       return DateFormat('yyyy-MM-dd, HH:mm').format(time);
     }
   }
+
 }
