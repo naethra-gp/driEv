@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       size: 120,
                       customColors: CustomSliderColors(
-                        trackColor: Colors.grey[200],
+                        trackColor: const Color(0xffF5F5F5),
                         progressBarColors: [Colors.green, Colors.green],
                       ),
                       infoProperties: InfoProperties(
@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       } else if (value <= 100 && value <= 0) {
                         assetPath = Constants.gift;
                         labelText = "Unlock \n $rewardHours hrs";
-                        backgroundColor = Colors.grey[200]!;
+                        backgroundColor = const Color(0xffF5F5F5);
                       }
                       return Center(
                         child: CircleAvatar(
@@ -132,14 +132,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 18, // Adjust the width as needed
-                child: Divider(
-                  color: Colors.grey[200],
-                  thickness: 3,
-                  height: 10,
+              if (index != progressValues.length - 1) // Add this condition
+                const SizedBox(
+                  width: 20, // Adjust the width as needed
+                  child: Divider(
+                    color: Color(0xffF5F5F5),
+                    thickness: 3,
+                    height: 10,
+                  ),
                 ),
-              ),
             ],
           );
         },
@@ -263,7 +264,7 @@ getSliderValues() async{
                                         ),
                                         // borderRadius: BorderRadius.circular(50),
                                         border: Border.all(
-                                          color: Colors.grey,
+                                          color: const Color(0xffF5F5F5),
                                           width: 2,
                                         )),
                                   ),
@@ -422,10 +423,10 @@ getSliderValues() async{
                             ),
                           ],
                         ),
-                        Divider(
+                        const Divider(
                           endIndent: 10,
                           indent: 10,
-                          color: Colors.grey[500],
+                          color: Color(0xff929292),
                         ),
                         Container(
                           margin: const EdgeInsets.symmetric(
@@ -494,9 +495,8 @@ getSliderValues() async{
                 // ]),
                 defaultHeight,
                 Card(
-                  elevation: 10,
-                  color: Colors.grey[100],
-                  surfaceTintColor: Colors.grey[100],
+                  color: const Color(0xffF5F5F5),
+                  surfaceTintColor: const Color(0xffF5F5F5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10), // if you need this
                   ),
@@ -510,46 +510,46 @@ getSliderValues() async{
                           Navigator.pushNamed(context, "wallet_summary");
                           // paytm("10.00");
                         }),
-                        Divider(
+                        const Divider(
                           endIndent: 15,
                           indent: 15,
-                          color: Colors.grey[400],
+                          color: Color(0xffD9D9D9),
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
                             () {
                           Navigator.pushNamed(context, "ride_history");
                         }),
-                        Divider(
+                        const Divider(
                           endIndent: 15,
                           indent: 15,
-                          color: Colors.grey[400],
+                          color: Color(0xffD9D9D9),
                         ),
                         menuList("assets/img/faq.png", "FAQs", () {
                           launchFaq();
                         }),
-                        Divider(
+                        const Divider(
                           endIndent: 15,
                           indent: 15,
-                          color: Colors.grey[400],
+                          color: Color(0xffD9D9D9),
                         ),
                         menuList("assets/img/rate.png", "Rate us", () {
                           Navigator.pushNamed(context, "rate_this_raid",
                               arguments: "rideId");
                           launchRateUs();
                         }),
-                        Divider(
+                        const Divider(
                           endIndent: 15,
                           indent: 15,
-                          color: Colors.grey[400],
+                          color: Color(0xffD9D9D9),
                         ),
                         menuList("assets/img/gift.png", "Refer your friends",
                             () {
                           Navigator.pushNamed(context, "validate_code");
                         }),
-                        Divider(
+                        const Divider(
                           endIndent: 15,
                           indent: 15,
-                          color: Colors.grey[400],
+                          color: Color(0xffD9D9D9),
                         ),
                         menuList("assets/img/logout.png", "Logout", () {
                           secureStorage.save("isLogin", false);
@@ -880,7 +880,7 @@ class RewardSlider extends StatelessWidget {
         ),
         size: 120,
         customColors: CustomSliderColors(
-          trackColor: Colors.grey[200],
+          trackColor: const Color(0xffF5F5F5),
           progressBarColors: [Colors.green, Colors.green],
         ),
         infoProperties: InfoProperties(
@@ -902,7 +902,7 @@ class RewardSlider extends StatelessWidget {
         } else if (value <= 100 && value <= 0) {
           assetPath = Constants.gift;
           labelText = "Unlock \n $rewardHours hrs";
-          backgroundColor = Colors.grey[200]!;
+          backgroundColor = const Color(0xffF5F5F5);
         }
         return Center(
           child: CircleAvatar(
@@ -1020,10 +1020,10 @@ class _MyApp1State extends State<MyApp1> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 18,
                   child: Divider(
-                    color: Colors.grey[200],
+                    color: Color(0xffF5F5F5),
                     thickness: 3,
                     height: 10,
                   ),

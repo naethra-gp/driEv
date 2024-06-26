@@ -83,6 +83,9 @@ class _RideSummaryState extends State<RideSummary> {
                         controller: screenshotController,
                         child: Column(
                           children: [
+                            const SizedBox(
+                              height: 5,
+                            ),
                             const Text(
                               "Ride Summary",
                               style: TextStyle(
@@ -99,24 +102,24 @@ class _RideSummaryState extends State<RideSummary> {
                               decoration: BoxDecoration(
                                 color: AppColors.customGrey,
                                 borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
+                                    color: Color(0xffF5F5F5),
                                     spreadRadius: 1,
                                   ),
                                 ],
                               ),
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                    const EdgeInsets.symmetric(horizontal: 5),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        RichText(
+                                       Expanded(
+                                         flex:8,
+                                           child:  RichText(
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
@@ -135,20 +138,21 @@ class _RideSummaryState extends State<RideSummary> {
                                               ),
                                             ],
                                           ),
-                                        ),
-                                        IconButton(
+                                        )),
+                                Expanded(
+                                  flex:1,
+                                       child: IconButton(
                                           icon: Image.asset(
                                             "assets/img/pdf.png",
-                                            height: 50,
-                                            width: 50,
+                                            height: 30,
+                                            width: 19,
                                           ),
                                           onPressed: () async {
                                             await requestPermission();
                                           },
-                                        )
+                                        ),)
                                       ],
                                     ),
-                                    const SizedBox(height: 20),
                                     Row(
                                       children: <Widget>[
                                         Expanded(
@@ -161,7 +165,7 @@ class _RideSummaryState extends State<RideSummary> {
                                               const Text(
                                                 "Payment Total",
                                                 style: TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 14,
                                                     color: Colors.black,
                                                     fontWeight:
                                                         FontWeight.w500),
@@ -182,12 +186,12 @@ class _RideSummaryState extends State<RideSummary> {
                                           child: Image.asset(
                                             Constants.bike,
                                             height: 110,
-                                            width: 150,
+                                            width: 160,
                                           ),
                                         )
                                       ],
                                     ),
-                                    CustomTheme.defaultHeight10,
+                                    const SizedBox(height: 10,),
                                     const Divider(
                                       color: Color(0XffADADAD),
                                     ),
@@ -198,7 +202,7 @@ class _RideSummaryState extends State<RideSummary> {
                                         // value: "${rd[0]['endTime']}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
-                                        label: "Vehicle No.",
+                                        label: "driEV {vehicle No.}",
                                         value: "${rd[0]['vehicleId']}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
@@ -232,6 +236,7 @@ class _RideSummaryState extends State<RideSummary> {
                                     ListViewWidget(
                                         label: "Total Amount (excl.GST)",
                                         value: "${rd[0]['payableAmountExclGst']}"),
+                                    CustomTheme.defaultHeight10,
                                   ],
                                 ),
                               ),
@@ -240,18 +245,32 @@ class _RideSummaryState extends State<RideSummary> {
                         ),
                       ),
                       const SizedBox(height: 25),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 75),
-                        child: AppButtonWidget(
-                          title: "Rate this Ride",
+                      SizedBox(
+                        width: 150,
+                        height: 42,
+                        child: ElevatedButton(
                           onPressed: () {
                             Navigator.pushNamed(context, "rate_this_raid",
                                 arguments: widget.rideId);
-                            },
-                          // onPressed: () {
-                          //   Navigator.pushNamedAndRemoveUntil(context, "rate_this_raid", (route)=>false);
-                          //   // Navigator.pushAndRemoveUntil(context, "rate_this_raid", (route) => false);
-                          // },
+                          },
+                          style: ElevatedButton.styleFrom(
+                            textStyle: const TextStyle(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                            ),
+                            foregroundColor: Colors.white,
+                            backgroundColor: AppColors.primary,
+                            side: const BorderSide(
+                                color: AppColors.primary, width: 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            "Rate This Ride",
+                            style: TextStyle(color: AppColors.white,fontSize: 14),
+                          ),
                         ),
                       ),
                     ],
@@ -267,7 +286,7 @@ class _RideSummaryState extends State<RideSummary> {
       fontFamily: "Poppins",
       fontWeight: FontWeight.bold,
       color: color,
-      fontSize: 18,
+      fontSize: 16,
     );
   }
 

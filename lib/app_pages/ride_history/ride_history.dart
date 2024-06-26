@@ -58,7 +58,9 @@ class _RideHistoryState extends State<RideHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Image.asset(Constants.backButton),
@@ -88,7 +90,7 @@ class _RideHistoryState extends State<RideHistory> {
             const SizedBox(
               height: 20,
             ),
-            Expanded(
+            Flexible(
               child: ListView.builder(
                 physics: const ScrollPhysics(),
                 padding: const EdgeInsets.all(5),
