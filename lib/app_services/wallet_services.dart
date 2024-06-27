@@ -21,4 +21,10 @@ class WalletServices{
     var response = await connection.postWithToken(url, params, error);
     return response;
   }
+  getWalletBalance(String mobileNo) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi1}/${EndPoints.walletBalance}/$mobileNo';
+    var response = await connection.getWithToken(url);
+    return response;
+  }
 }

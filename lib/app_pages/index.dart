@@ -25,3 +25,6 @@ export 'home_screen/home.dart';
 export 'scan_to_unlock/widget/time_out_error.dart';
 export 'scan_to_unlock/widget/end_time_out.dart';
 export 'rate_this_ride/rate_this_ride.dart';
+export 'wallet_screens/widgets/transaction_success.dart';
+export 'wallet_screens/widgets/transaction_failure.dart';
+export 'wallet_screens/add_more_fund.dart';

@@ -81,8 +81,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         progressBarColors: [Colors.green, Colors.green],
                       ),
                       infoProperties: InfoProperties(
-                        topLabelText:"0",
-                        topLabelStyle:const TextStyle(
+                        topLabelText: "0",
+                        topLabelStyle: const TextStyle(
                           fontSize: 240,
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -147,8 +147,9 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
   double milliSecToHrs() {
-    return rideDurationmilliSec/ 3600000;
+    return rideDurationmilliSec / 3600000;
   }
 
   @override
@@ -161,25 +162,27 @@ class _ProfilePageState extends State<ProfilePage> {
   void dispose() {
     super.dispose();
   }
-getSliderValues() async{
-  double totalHours = milliSecToHrs();
-  int additionalItems = (totalHours / 100).ceil();
-  int totalItems = rewards.length + additionalItems - 1;
-  progressValues = List.generate(totalItems, (index) {
-    if (totalHours > 0) {
-      if (totalHours >= 100) {
-        totalHours -= 100;
-        return 100.0;
+
+  getSliderValues() async {
+    double totalHours = milliSecToHrs();
+    int additionalItems = (totalHours / 100).ceil();
+    int totalItems = rewards.length + additionalItems - 1;
+    progressValues = List.generate(totalItems, (index) {
+      if (totalHours > 0) {
+        if (totalHours >= 100) {
+          totalHours -= 100;
+          return 100.0;
+        } else {
+          double value = totalHours;
+          totalHours = 0;
+          return value;
+        }
       } else {
-        double value = totalHours;
-        totalHours = 0;
-        return value;
+        return 0.0;
       }
-    } else {
-      return 0.0;
-    }
-  });
-}
+    });
+  }
+
   getCustomer() async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
@@ -507,6 +510,7 @@ getSliderValues() async{
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         menuList("assets/img/wallet.png", "View Wallet", () {
+                          // Navigator.pushNamed(context, "transaction_success");
                           Navigator.pushNamed(context, "wallet_summary");
                           // paytm("10.00");
                         }),
@@ -857,8 +861,8 @@ getSliderValues() async{
       alertServices.errorToast("Could not launch $url");
     }
   }
-
 }
+
 class RewardSlider extends StatelessWidget {
   final int rewardHours;
   final double initialValue;
@@ -891,8 +895,7 @@ class RewardSlider extends StatelessWidget {
         ),
       ),
       innerWidget: (double value) {
-        String labelText =
-            "Complete \n $rewardHours hrs \n to get rewards";
+        String labelText = "Complete \n $rewardHours hrs \n to get rewards";
         String assetPath = Constants.scooter;
         Color backgroundColor = Colors.white;
         if (rewardHours.toDouble() >= value && value == 100.0) {
@@ -1039,9 +1042,9 @@ class _MyApp1State extends State<MyApp1> {
   }
 
   double milliSecToHrs() {
-    return (310 * 3600000) / 3600000; // Adjusted calculation as per your requirement
+    return (310 * 3600000) /
+        3600000; // Adjusted calculation as per your requirement
   }
-
 
   @override
   Widget build(BuildContext context) {

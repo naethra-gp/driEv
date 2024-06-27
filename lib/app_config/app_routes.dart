@@ -102,6 +102,12 @@ class AppRoute {
           return AllTransaction(allTransaction:id);
         case "validate_code":
           return const ReferCodeApply();
+        case "add_more_fund":
+          return const AddMoreFund();
+        case "transaction_success":
+          return const TransactionSuccess();
+        case "transaction_failure":
+          return const TransactionFailure();
       }
       return const LandingPage();
     });

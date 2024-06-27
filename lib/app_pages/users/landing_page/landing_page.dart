@@ -22,14 +22,14 @@ class _LandingPageState extends State<LandingPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 75),
+                // const SizedBox(height: 75),
                 Center(
                   child: Image.asset(
                     "assets/app/get_started.png",

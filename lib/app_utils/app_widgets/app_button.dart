@@ -17,16 +17,16 @@ class AppButtonWidget extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           textStyle: const TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.w500,
-            fontSize: 14,
+            // fontSize: 15,
           ),
-          foregroundColor: Colors.black,
+          foregroundColor: Colors.white,
           backgroundColor: AppColors.primary,
           side: const BorderSide(
               color: AppColors.primary, width: 1),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(25),
           ),
         ),
         child: Text(title.toString(),),

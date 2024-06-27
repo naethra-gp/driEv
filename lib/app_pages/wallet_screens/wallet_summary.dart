@@ -9,8 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import '../../app_config/app_constants.dart';
+import '../../app_config/app_size_config.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
+import '../registration_page/widget/reg_text_form_widget.dart';
 
 class WalletSummary extends StatefulWidget {
   const WalletSummary({super.key});
@@ -23,11 +25,11 @@ class _WalletSummaryState extends State<WalletSummary> {
   AlertServices alertServices = AlertServices();
   WalletServices walletServices = WalletServices();
   SecureStorage secureStorage = SecureStorage();
+  final GlobalKey secondComponentKey = GlobalKey();
 
   List walletSummaryDetails = [];
   String walletBalance = "";
   String result = "";
-
 
   @override
   void initState() {
@@ -123,7 +125,9 @@ class _WalletSummaryState extends State<WalletSummary> {
                 minWidth: 140,
                 height: 40,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, "add_more_fund");
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     side: const BorderSide(color: Colors.green),
@@ -307,7 +311,6 @@ class _WalletSummaryState extends State<WalletSummary> {
     );
   }
 
-
   /// PAYMENT INTEGRATIONS
   paytm(String amount) {
     WalletServices walletServices = WalletServices();
@@ -354,8 +357,9 @@ class _WalletSummaryState extends State<WalletSummary> {
         print("result ---> ${res[0]['STATUS']}");
         print("---------------------");
 
-        if(res[0]['STATUS'].toString() == "TXN_SUCCESS") {
+        if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
           debugPrint("Transaction Success");
+          Navigator.pushReplacementNamed(context, "transaction_success");
         }
       }).catchError((onError) {
         if (onError is PlatformException) {
@@ -373,12 +377,182 @@ class _WalletSummaryState extends State<WalletSummary> {
         print("error result ---> ${response[0]['RESPMSG']}");
         print("---------------------");
 
-        if(response[0]['STATUS'].toString() == "TXN_FAILURE") {
+        if (response[0]['STATUS'].toString() == "TXN_FAILURE") {
           debugPrint("Transaction Failure");
+          Navigator.pushReplacementNamed(context, "transaction_failure");
         }
       });
     });
   }
+
+  // CREDIT API CALL
+  // addMoreFunds(GlobalKey key) {
+  //   double height = MediaQuery.of(context).size.height;
+  //   double width = MediaQuery.of(context).size.width;
+  //   final renderBox = key.currentContext?.findRenderObject();
+  //   print("renderBox  $renderBox");
+  //
+  //   return showModalBottomSheet(
+  //     context: context,
+  //     barrierColor: Colors.black87,
+  //     backgroundColor: Colors.transparent,
+  //     isDismissible: true,
+  //     enableDrag: false,
+  //     builder: (context) {
+  //       return Wrap(children: <Widget>[
+  //         SizedBox(
+  //           // height: sheetHeight,
+  //           height: height / 2,
+  //           // height: SizeConfig.screenHeight * 0.6,
+  //           child: Stack(
+  //             alignment: Alignment.center,
+  //             children: <Widget>[
+  //               Positioned(
+  //                 top: height / 5.5 - 100,
+  //                 child: Container(
+  //                   height: height,
+  //                   width: width,
+  //                   decoration: const BoxDecoration(
+  //                     color: Colors.white,
+  //                     borderRadius: BorderRadius.vertical(
+  //                       top: Radius.circular(20),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                 top: height / 6.6 - 100,
+  //                 child: Column(
+  //                   children: <Widget>[
+  //                     SizedBox(
+  //                       width: 50,
+  //                       height: 50,
+  //                       child: Container(
+  //                         decoration: const BoxDecoration(
+  //                           shape: BoxShape.circle,
+  //                           color: Colors.green,
+  //                         ),
+  //                         child: IconButton(
+  //                           icon: const Icon(Icons.close),
+  //                           color: Colors.white,
+  //                           onPressed: () {
+  //                             Navigator.pop(context);
+  //                           },
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     SizedBox(
+  //                       width: MediaQuery.of(context).size.width - 100,
+  //                       child: TextFormField(
+  //                         keyboardType: TextInputType.phone,
+  //                         textInputAction: TextInputAction.done,
+  //                         autofocus: false,
+  //                         autovalidateMode: AutovalidateMode.onUserInteraction,
+  //                         style: const TextStyle(
+  //                             fontSize: 12,
+  //                             fontWeight: FontWeight.normal,
+  //                             color: Colors.black),
+  //                         decoration: InputDecoration(
+  //                           prefix: IconButton(
+  //                             onPressed: (){},
+  //                             icon: const Icon(Icons.currency_rupee),
+  //                           ),
+  //                           // hintText: hintText ?? title,
+  //                           // counterText: counterText ?? '',
+  //                           // errorMaxLines: errorMaxLines ?? 2,
+  //                           // helperText: helperText,
+  //                           // filled: readOnly,
+  //                           // fillColor: Colors.grey[200],
+  //                           errorStyle: const TextStyle(
+  //                             color: Colors.redAccent,
+  //                             fontSize: 12,
+  //                             fontWeight: FontWeight.normal,
+  //                           ),
+  //                           // helperStyle: helperStyle,
+  //                           hintStyle: const TextStyle(
+  //                             fontSize: 12,
+  //                             color: Colors.grey,
+  //                           ),
+  //                           border: OutlineInputBorder(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             borderSide:
+  //                             const BorderSide(color: Color(0xffD2D2D2)),
+  //                           ),
+  //                           enabledBorder: OutlineInputBorder(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             borderSide:
+  //                             const BorderSide(color: Color(0xffD2D2D2)),
+  //                           ),
+  //                           focusedBorder: OutlineInputBorder(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             borderSide:
+  //                             const BorderSide(color: AppColors.primary),
+  //                           ),
+  //                           focusedErrorBorder: OutlineInputBorder(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             borderSide:
+  //                             const BorderSide(color: Colors.redAccent),
+  //                           ),
+  //                           disabledBorder: OutlineInputBorder(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             borderSide:
+  //                             const BorderSide(color: Color(0xffD2D2D2)),
+  //                           ),
+  //                           errorBorder: OutlineInputBorder(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             borderSide:
+  //                             const BorderSide(color: Colors.redAccent),
+  //                           ),
+  //                           contentPadding: const EdgeInsets.only(left: 15),
+  //                           isDense: false,
+  //                           // prefixIcon: prefixIcon != null
+  //                           //     ? Icon(
+  //                           //         prefixIcon,
+  //                           //         color: iconColor ?? themeColor,
+  //                           //         size: 26,
+  //                           //       )
+  //                           //     : null,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 20),
+  //                     Padding(
+  //                       padding: const EdgeInsets.symmetric(horizontal: 0),
+  //                       child: SizedBox(
+  //                         width: MediaQuery.of(context).size.width - 100,
+  //                         height: 45,
+  //                         child: ElevatedButton(
+  //                           onPressed: () {},
+  //                           style: ElevatedButton.styleFrom(
+  //                             backgroundColor: Colors.green,
+  //                             side: const BorderSide(color: Colors.green),
+  //                             shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.circular(25.0),
+  //                             ),
+  //                           ),
+  //                           child: const Text(
+  //                             "Proceed",
+  //                             style: TextStyle(
+  //                               fontSize: 14,
+  //                               color: AppColors.white,
+  //                               fontWeight: FontWeight.w500,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                   ],
+  //                 ),
+  //               )
+  //             ],
+  //           ),
+  //         )
+  //       ]);
+  //     },
+  //   );
+  // }
 }
 
 class WalletSummaryList extends StatelessWidget {
@@ -453,5 +627,4 @@ class WalletSummaryList extends StatelessWidget {
       return DateFormat('yyyy-MM-dd, HH:mm').format(time);
     }
   }
-
 }
