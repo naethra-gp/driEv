@@ -118,17 +118,20 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 70,),
+            Padding(
+              padding: const EdgeInsets.all(15.0), // Adjust padding to align borders// Adjust the radius as needed
+              child:
             ClipRRect(
               borderRadius:
-                  BorderRadius.circular(10), // Adjust the radius as needed
-              child: Container(
-                width: 230, // adjust the size as needed
-                height: 230,
+                  BorderRadius.circular(10),child: Container(
+                width: 150, // adjust the size as needed
+                height: 150,
                 decoration: ShapeDecoration(
                   shape: QrScannerOverlayShape(
                     borderColor: AppColors.primary,
                     borderRadius: 5,
-                    borderWidth: 10,
+                    borderWidth: 5,
                   ),
                 ),
                 child: QrCamera(
@@ -144,8 +147,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                   },
                 ),
               ),
-            ),
-            const SizedBox(height: 50),
+            ),),
+            const SizedBox(height: 70),
             const Text(
               "Not feeling the scan vibe? No worries!",
               style: TextStyle(
@@ -155,9 +158,9 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
               ),
               textAlign: TextAlign.center,
             ),
-            Text(
+            const Text(
               "Enter bike number and ride on!",
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.normal,

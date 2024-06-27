@@ -127,24 +127,24 @@ class _EndRideScannerState extends State<EndRideScanner> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    double scanArea = (width < 400 || height < 400) ? 150.0 : 300.0;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 70,),
             ClipRRect(
               borderRadius:
                   BorderRadius.circular(10), // Adjust the radius as needed
               child: Container(
-                width: 250, // adjust the size as needed
-                height: 250,
+                width: 150, // adjust the size as needed
+                height: 150,
                 decoration: ShapeDecoration(
                   shape: QrScannerOverlayShape(
                     borderColor: AppColors.primary,
                     borderRadius: 5,
-                    borderWidth: 10,
+                    borderWidth: 5,
                   ),
                 ),
                 child: QrCamera(

@@ -2,8 +2,6 @@ import 'package:driev/app_services/index.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
-
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_utils/app_loading/alert_services.dart';
@@ -29,11 +27,11 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
   String stationName = '';
   String distance = '';
   String distanceText = '';
-
+  String plan="";
   @override
   void initState() {
     String sId = widget.stationDetails[0]['sId'];
-    String plan = widget.stationDetails[0]['plan'];
+     plan = widget.stationDetails[0]['plan'];
     setState(() {
       stationName = widget.stationDetails[0]['sName'];
       distance = widget.stationDetails[0]['distance'];
@@ -194,7 +192,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 8.0,
                   crossAxisSpacing: 8.0,
-                  mainAxisExtent: 230,
+                  mainAxisExtent: 190,
                   // mainAxisExtent: MediaQuery.of(context).size.height / 3,
                 ),
                 itemCount: filterVehicleList.length,
@@ -213,7 +211,8 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(0),
                       child: Card(
-                        surfaceTintColor: Colors.grey[200],
+                        elevation: 0,
+                        surfaceTintColor: const Color(0xffF5F5F5),
                         color: const Color(0xffF5F5F5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -227,6 +226,8 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                             children: [
                               const SizedBox(height: 5),
                               Image.asset(
+                                width: 135,
+                                height: 90,
                                 "assets/img/bike.png",
                                 fit: BoxFit.fill,
                               ),
@@ -242,7 +243,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.bold,
                                           color: CupertinoColors.black,
-                                          fontSize: 14,
+                                          fontSize: 12,
                                         ),
                                       ),
                                       const TextSpan(
@@ -251,36 +252,36 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.bold,
                                           color: AppColors.primary,
-                                          fontSize: 14,
+                                          fontSize: 12,
                                         ),
                                       ),
                                       TextSpan(
                                         text:
-                                            'Speed - ${filterVehicleList[index]['vehicleId']}',
+                                           '$plan ${filterVehicleList[index]['vehicleId']}',
                                         style: const TextStyle(
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.bold,
                                           color: CupertinoColors.black,
-                                          fontSize: 14,
+                                          fontSize: 12,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 12),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: Row(
-                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                  // crossAxisAlignment: CrossAxisAlignment.center,
+                                   mainAxisAlignment: MainAxisAlignment.center,
+                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         const Align(
                                           alignment: Alignment.center,
@@ -288,7 +289,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                             "Estimated Range",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              fontSize: 10,
+                                              fontSize: 8,
                                               // fontWeight: FontWeight.bold,
                                               color: Color(0xff626262),
                                             ),
@@ -302,14 +303,14 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                               ? "-"
                                               : "${filterVehicleList[index]['distanceRange']} KM",
                                           style: const TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 10,
                                             fontFamily: "Poppins",
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const Spacer(),
+                                 /*   const Spacer(),
                                     const Column(
                                       children: [
                                         Icon(LineAwesome.battery_full_solid),
@@ -322,7 +323,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                           ),
                                         ),
                                       ],
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),

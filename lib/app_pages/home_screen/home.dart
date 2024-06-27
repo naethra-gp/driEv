@@ -96,8 +96,7 @@ class _HomeState extends State<Home> {
               left: 15,
               right: 0,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -115,21 +114,22 @@ class _HomeState extends State<Home> {
                       ),
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
-                            // shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 1.5,
-                            )),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 5),
                   Container(
+                    width: 260,
                     margin: const EdgeInsets.only(right: 10),
                     decoration: BoxDecoration(
                       color: const Color(0xffF5F5F5),
@@ -140,46 +140,57 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(width: 10),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Current Location - $currentDistrict",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
+                        Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            const Icon(Icons.location_on_outlined),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                currentDistrict,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(width: 5),
-                        Container(
-                          height: 40,
-                          width: 2, // Adjust width as needed
-                          color: Colors.grey[300], // Adjust color as needed
-                        ),
-                        const SizedBox(width: 5),
-                        Image.asset(
-                          "assets/img/wallet.png",
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(width: 5),
-                        if (customer.isNotEmpty)
-                          Text(
-                            "\u{20B9}${customer[0]['walletBalance']}",
-                            style: TextStyle(
-                              // fontSize: 14,
-                              fontSize: width / 30,
-                              fontWeight: FontWeight.bold,
-                              color: getColor(customer[0]['walletBalance']),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.pushNamed(context, "wallet_summary");
+                          },
+                          child:
+                        Row(
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 2,
+                              color: const Color(0xffDEDEDE),
                             ),
-                            // style: CustomTheme.termStyle1red,
-                          ),
-                        const SizedBox(width: 10),
-                      ],
+                            const SizedBox(width: 5),
+                            Image.asset(
+                              "assets/img/wallet.png",
+                              height: 20,
+                              width: 20,
+                            ),
+                            const SizedBox(width: 5),
+                            if (customer.isNotEmpty)
+                              Text(
+                                "\u{20B9}${customer[0]['walletBalance']}",
+                                style: TextStyle(
+                                  fontSize: width / 30,
+                                  fontWeight: FontWeight.bold,
+                                  color: getColor(customer[0]['walletBalance']),
+                                ),
+                              ),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        ),],
                     ),
                   ),
                 ],
@@ -217,54 +228,64 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SfSliderTheme(
-                              data: const SfSliderThemeData(
-                                tooltipBackgroundColor: AppColors.primary,
-                                thumbColor: Colors.transparent,
-                                thumbRadius: 20,
-                                activeDividerColor: Colors.white,
-                              ),
-                              child: Center(
-                                child: SfSlider(
-                                  min: 10.0,
-                                  max: 100.0,
-                                  interval: 10,
-                                  shouldAlwaysShowTooltip: false,
-                                  stepSize: 10,
-                                  thumbIcon: Image.asset(
-                                    "assets/img/slider_icon.png",
-                                    height: 50,
+                            Stack(
+                              children: [
+                                SfSliderTheme(
+                                  data: const SfSliderThemeData(
+                                    tooltipBackgroundColor: AppColors.primary,
+                                    thumbColor: Colors.transparent,
+                                    thumbRadius: 20,
+                                    activeDividerColor: Colors.white,
                                   ),
-                                  value: distance,
-                                  inactiveColor:
-                                      AppColors.primary.withOpacity(0.3),
-                                  labelPlacement: LabelPlacement.onTicks,
-                                  thumbShape: const SfThumbShape(),
-                                  semanticFormatterCallback: (dynamic value) {
-                                    return '$value km';
-                                  },
-                                  enableTooltip: true,
-                                  showLabels: false,
-                                  showDividers: true,
-                                  showTicks: false,
-                                  tooltipTextFormatterCallback:
-                                      (dynamic actualValue,
-                                          String formattedText) {
-                                    return "$formattedText km";
-                                  },
-                                  onChanged: (dynamic newValue) {
-                                    setState(() {
-                                      distance = newValue;
-                                    });
-                                  },
+                                  child: Center(
+                                    child: SfSlider(
+                                      min: 10.0,
+                                      max: 100.0,
+                                      interval: 10,
+                                      shouldAlwaysShowTooltip: false,
+                                      stepSize: 10,
+                                      thumbIcon: Image.asset(
+                                        "assets/img/slider1.png",
+                                        width: 16,
+                                        height: 20,
+                                      ),
+                                      value: distance,
+                                      inactiveColor: AppColors.primary.withOpacity(0.3),
+                                      labelPlacement: LabelPlacement.onTicks,
+                                      thumbShape: const SfThumbShape(),
+                                      semanticFormatterCallback: (dynamic value) {
+                                        return '$value km';
+                                      },
+                                      enableTooltip: true,
+                                      showLabels: false,
+                                      showDividers: true,
+                                      showTicks: false,
+                                      tooltipTextFormatterCallback: (dynamic actualValue, String formattedText) {
+                                        return "$formattedText km";
+                                      },
+                                      onChanged: (dynamic newValue) {
+                                        setState(() {
+                                          distance = newValue;
+                                        });
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                /*Positioned(
+                                  right: 0,  // Adjust this value to position the scooter image exactly at the end of the slider
+                                  top: 10,   // Adjust this value to vertically center the image if necessary
+                                  child: Image.asset(
+                                    "assets/img/scooter.png",
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                ),*/
+                              ],
                             ),
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('10 km',
