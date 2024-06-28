@@ -88,7 +88,9 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, "wallet_summary");
+                      },
                       style: ElevatedButton.styleFrom(
                         textStyle: const TextStyle(
                           color: Colors.black,

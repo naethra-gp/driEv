@@ -27,4 +27,11 @@ class WalletServices{
     var response = await connection.getWithToken(url);
     return response;
   }
+
+  creditMoneyToWallet(request) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi1}/${EndPoints.creditMoneyToWallet}';
+    var response =  await connection.postWithToken(url, request);
+    return response;
+  }
 }

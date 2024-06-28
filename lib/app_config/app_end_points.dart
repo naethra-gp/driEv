@@ -34,4 +34,5 @@ class EndPoints {
   static const payment = 'https://community-test.driev.bike/driev/app/payment';
   static const withdrawMoney = 'wallet/withdrawMoneyFromWallet';
   static const initiateTransaction = 'initiateTransaction';
+  static const creditMoneyToWallet = 'wallet/creditMoneyToWallet';
 }
