@@ -717,21 +717,20 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       double amount = double.parse(reserveMins) * reserve;
       print("Reserve Amount -> $amount");
       bookingServices.getWalletBalance(mobile).then((r) {
-        alertServices.hideLoading();
         balance = r['balance'];
         print("Available Balance -> $balance");
-        if (amount > balance) {
-          // alertServices.insufficientBalanceAlert(context, balance.toString());
+        Map<String, Object> params = {
+          "contact": secureStorage.get("mobile").toString(),
+          "vehicleId": fareDetails[0]['vehicleId'].toString(),
+          "duration": reserveMins.toString()
+        };
+        print("params $params");
+        bookingServices.blockBike(params).then((r2) async {
+          alertServices.hideLoading();
+          if (amount > balance) {
+           alertServices.insufficientBalanceAlert(context, balance.toString(),r2["message"]);
         } else {
           alertServices.showLoading();
-          Map<String, Object> params = {
-            "contact": secureStorage.get("mobile").toString(),
-            "vehicleId": fareDetails[0]['vehicleId'].toString(),
-            "duration": reserveMins.toString()
-          };
-          print("params $params");
-          bookingServices.blockBike(params).then((r2) async {
-            alertServices.hideLoading();
             print("blockBike --> $r2");
             if (r2 != null) {
               setState(() {
@@ -751,9 +750,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               countDownTime(r2['blockedTill'].toString());
               _startTimer();
             }
-          });
-        }
-      });
+          }});
+        });
     }
     // List a =
     //     reserveTime.where((e) => e['selected'].toString() == "true").toList();
@@ -900,23 +898,31 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       selectedMin = a[0]['mins'];
       double amount = selectedMin * reserve;
       bookingServices.getWalletBalance(mobile).then((r) {
-        alertServices.hideLoading();
         balance = r['balance'];
-        if (amount > balance) {
-          // alertServices.insufficientBalanceAlert(context, balance.toString());
-        } else {
-          /// BALANCE AVAILABLE
-          String campus = widget.stationDetails[0]['campus'].toString();
-          String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
-          List arg = [
-            {
-              "campus": campus,
-              "vehicleId": vehicleId,
-            },
-          ];
-          print("arg $arg");
-          Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
-        }
+        Map<String, Object> params = {
+          "contact": secureStorage.get("mobile").toString(),
+          "vehicleId": fareDetails[0]['vehicleId'].toString(),
+          "duration": reserveMins.toString()
+        };
+        print("params $params");
+        bookingServices.blockBike(params).then((r2) async {
+          alertServices.hideLoading();
+          if (amount > balance) {
+            alertServices.insufficientBalanceAlert(context, balance.toString(),r2["message"]);
+          } else {
+            /// BALANCE AVAILABLE
+            String campus = widget.stationDetails[0]['campus'].toString();
+            String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+            List arg = [
+              {
+                "campus": campus,
+                "vehicleId": vehicleId,
+              },
+            ];
+            print("arg $arg");
+            Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+          }
+        });
       });
     } else {
       double baseFare = fareDetails[0]['offer']['basePrice'];
@@ -924,22 +930,32 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       double perKmPaisa = fareDetails[0]['offer']['perKmPaisa'];
       double amount = baseFare + perKmPaisa + perMinPaisa;
       bookingServices.getWalletBalance(mobile).then((r) {
-        alertServices.hideLoading();
         balance = r['balance'];
-        if (amount > balance) {
-          // alertServices.insufficientBalanceAlert(context, balance.toString(), true);
-        } else {
-          /// BALANCE AVAILABLE arguments: list['campusId'].toString()
-          String campus = widget.stationDetails[0]['campus'].toString();
-          String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
-          List arg = [
-            {
-              "campus": campus,
-              "vehicleId": vehicleId,
-            },
-          ];
-          Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
-        }
+        Map<String, Object> params = {
+          "contact": secureStorage.get("mobile").toString(),
+          "vehicleId": fareDetails[0]['vehicleId'].toString(),
+          "duration": reserveMins.toString()
+        };
+        print("params $params");
+        bookingServices.blockBike(params).then((r2) async {
+          alertServices.hideLoading();
+
+          if (amount > balance) {
+            alertServices.insufficientBalanceAlert(
+                context, balance.toString(),r2["message"]);
+          } else {
+            /// BALANCE AVAILABLE arguments: list['campusId'].toString()
+            String campus = widget.stationDetails[0]['campus'].toString();
+            String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+            List arg = [
+              {
+                "campus": campus,
+                "vehicleId": vehicleId,
+              },
+            ];
+            Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+          }
+        });
       });
     }
   }

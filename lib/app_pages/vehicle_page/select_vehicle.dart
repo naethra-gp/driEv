@@ -49,22 +49,25 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
   getVehiclesByPlan(String sId, String plan) async {
     alertServices.showLoading();
     vehicleService.getVehiclesByPlan(sId, plan).then((response) async {
+      print(response);
       alertServices.hideLoading();
       vehicleList = response.where((i) => i['distanceRange'] != null).toList();
       for (int i = 0; i < vehicleList.length; i++) {
         List dis = vehicleList[i]['distanceRange'].toString().split("-");
-        // print("dis ${dis.length}");
-        // print("dis ${dis[1] == null}");
         if (dis.length == 2) {
-          // int a = int.parse(dis[0]);
-          int b = int.parse(dis[1]);
-          int c = int.parse(distance);
-          if (b <= c) {
-            filterVehicleList.add(vehicleList[i]);
+          int minDistance = int.parse(dis[0]);
+          int maxDistance = int.parse(dis[1]);
+          int userDistance = int.parse(distance);
+          int lowerBound = userDistance - 20;
+          int upperBound = userDistance + 20;
+          if ((minDistance >= lowerBound && minDistance <= upperBound) ||
+              (maxDistance >= lowerBound && maxDistance <= upperBound) ||
+              (minDistance <= lowerBound && maxDistance >= upperBound)) {
+            print("Adding vehicle: ${vehicleList[i]}");
+            setState(() {
+              filterVehicleList.add(vehicleList[i]);
+            });
           }
-          filterVehicleList
-              .sort((a, b) => a['distanceRange'].compareTo(b['distanceRange']));
-          setState(() {});
         }
       }
       // print("filterVehicleList $filterVehicleList");
