@@ -110,6 +110,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "cron",
+      "rootUri": "file:///Users/naethra/.pub-cache/hosted/pub.dev/cron-0.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "cross_file",
       "rootUri": "file:///Users/naethra/.pub-cache/hosted/pub.dev/cross_file-0.3.4+1",
       "packageUri": "lib/",
@@ -1082,7 +1088,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-06-25T13:26:29.596727Z",
+  "generated": "2024-07-01T08:42:04.740058Z",
   "generator": "pub",
   "generatorVersion": "3.4.3",
   "flutterRoot": "file:///Users/naethra/Desktop/env/flutter",

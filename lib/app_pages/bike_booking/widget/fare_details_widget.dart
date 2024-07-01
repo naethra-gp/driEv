@@ -11,7 +11,8 @@ class FareDetailsWidget extends StatelessWidget {
     super.key,
     required this.title,
     required this.info,
-    required this.fareDetails, required this.price,
+    required this.fareDetails,
+    required this.price,
   });
   final SuperTooltipController _controller = SuperTooltipController();
 
@@ -22,12 +23,12 @@ class FareDetailsWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       decoration: BoxDecoration(
-        color:const Color(0xffF5F5F5),
-        borderRadius: BorderRadius.circular(6.0),
-        border: Border.all(
-          color: const Color(0xffE1E1E1),
-        )
-      ),
+          color: const Color(0xffF5F5F5),
+          borderRadius: BorderRadius.circular(6.0),
+          border: Border.all(
+            color: const Color(0xFFE1E1E1),
+            width: 0.5,
+          )),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -40,6 +41,8 @@ class FareDetailsWidget extends StatelessWidget {
               if (info)
                 SuperTooltip(
                   showBarrier: true,
+                  showCloseButton: ShowCloseButton.inside,
+                  closeButtonSize: 25,
                   controller: _controller,
                   popupDirection: TooltipDirection.up,
                   content: Text(
@@ -74,7 +77,6 @@ class FareDetailsWidget extends StatelessWidget {
                   //   ),
                   // ),
                 ),
-
             ],
           ),
           Text(

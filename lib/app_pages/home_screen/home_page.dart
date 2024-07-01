@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart' as geo;
@@ -418,6 +419,8 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ],
+                          const SizedBox(height: 5),
+                          AppButtonWidget(title: "Proceed", onPressed: (){},),
                         ],
                       ),
                     )),

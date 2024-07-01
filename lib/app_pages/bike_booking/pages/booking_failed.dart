@@ -49,8 +49,10 @@ class _BookingFailedState extends State<BookingFailed> {
               ),
               const SizedBox(height: 50),
               AppButtonWidget(
-                title: "Okay",
-                onPressed: () {},
+                title: "Okay!",
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, "home");
+                },
               ),
             ],
           ),

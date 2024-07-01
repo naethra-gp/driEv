@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -86,513 +87,503 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   Widget build(BuildContext context) {
     List fd = fareDetails;
     List sd = widget.stationDetails;
+    print("fd ${jsonEncode(fd)}");
     return Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: Colors.white,
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Image.asset(Constants.backButton),
-            onPressed: () async {
-              Navigator.pop(context);
-            },
-          ),
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Image.asset(Constants.backButton),
+          onPressed: () async {
+            Navigator.pop(context);
+          },
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              children: [
-                if (fd.isNotEmpty) ...[
-                  Card(
-                    surfaceTintColor: const Color(0xffF5F5F5),
-                    color: const Color(0xffF5F5F5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  //  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'dri',
-                                              style: heading(Colors.black),
-                                            ),
-                                            TextSpan(
-                                              text: 'EV ',
-                                              style: heading(AppColors.primary),
-                                            ),
-                                          ],
-                                        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            children: [
+              if (fd.isNotEmpty) ...[
+                Card(
+                  surfaceTintColor: Colors.transparent,
+                  color: const Color(0xffF5F5F5),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                //  mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'dri',
+                                            style: heading(Colors.black),
+                                          ),
+                                          TextSpan(
+                                            text: 'EV ',
+                                            style: heading(AppColors.primary),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Text(
-                                      '${fd[0]['planType']} ${fd[0]['vehicleId']}',
-                                      style: heading(Colors.black),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 15),
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/img/slider_icon.png",
-                                      height: 18,
-                                      width: 13,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      "${sd[0]['campus']} (${sd[0]['distance']} km)",
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  "Estimated Range",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: "Poppins",
-                                    color: Color(0xff626262),
                                   ),
-                                ),
-                                Text(
-                                  "${fd[0]['estimatedRange' ?? "0"]} km",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: "Poppins",
+                                  Text(
+                                    '${fd[0]['planType']} ${fd[0]['vehicleId']}',
+                                    style: heading(Colors.black),
                                   ),
-                                ),
-                                /* const SizedBox(height: 10),
-                            const Icon(LineAwesome.battery_full_solid),
-                            const Text(
-                              "100%",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontFamily: "Poppins",
+                                ],
                               ),
-                            ),*/
-                              ],
-                            ),
+                              const SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    "assets/img/slider_icon.png",
+                                    height: 18,
+                                    width: 13,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "${sd[0]['campus']} (${sd[0]['distance']}km)",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                "Estimated Range",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: "Poppins",
+                                  color: Color(0xff626262),
+                                ),
+                              ),
+                              Text(
+                                "${fd[0]['estimatedRange'] ?? "0"} km",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: "Poppins",
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 40),
-                                fd[0]['imageUrl'] != null
-                                    ? Image.network(
-                                        fd[0]['imageUrl']
-                                            .toString(), // Replace with your image URL
-                                        width: 200,
-                                        height: 120,
-                                        fit: BoxFit.contain,
-                                      )
-                                    : Image.asset(
-                                        "assets/img/bike2.png",
-                                        fit: BoxFit.fitWidth,
-                                        width: 210,
-                                        height: 110,
-                                        // height: 130,
-                                      ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // const SizedBox(height: 40),
+                              fd[0]['imageUrl'] != null
+                                  ? Image.network(
+                                fd[0]['imageUrl']
+                                    .toString(), // Replace with your image URL
+                                width: 200,
+                                height: 130,
+                                fit: BoxFit.contain,
+                              )
+                                  : Image.asset(
+                                "assets/img/bike.png",
+                                fit: BoxFit.fitWidth,
+                                // width: 210,
+                                // height: 20,
+                                // height: 130,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ],
-                const SizedBox(height: 5),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      const TextSpan(
-                        text: "* ",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 10,
-                        ),
+                ),
+              ],
+              const SizedBox(height: 5),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: <TextSpan>[
+                    const TextSpan(
+                      text: "* ",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 10,
                       ),
-                      TextSpan(
-                        text: notes,
+                    ),
+                    TextSpan(
+                      text: notes,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Color(0xff7E7E7E),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 15),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Fare Details",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    // letterSpacing: 0.15,
+                  ),
+                ),
+              ),
+              if (fd.isNotEmpty) ...[
+                const SizedBox(height: 3.0),
+                FareDetailsWidget(
+                  title: "Base fare",
+                  info: true,
+                  fareDetails: fd,
+                  price: fd[0]['offer']['basePrice'].toString(),
+                ),
+                const SizedBox(height: 3),
+                FareDetailsWidget(
+                  title: "Ride charge per minute",
+                  info: false,
+                  fareDetails: fd,
+                  price: (fd[0]['offer']['perMinPaisa'] / 100).toString(),
+                ),
+                const SizedBox(height: 3),
+                FareDetailsWidget(
+                  title: "Ride charge per km",
+                  info: false,
+                  fareDetails: fd,
+                  price: (fd[0]['offer']['perKmPaisa'] / 100).toString(),
+                ),
+                const SizedBox(height: 10),
+                if (!isReservedDone) ...[
+                  if (isReserve) ...[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      // TODO: To change text to rich text
+                      child: Text(
+                        "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
+                        textAlign: TextAlign.left,
                         style: const TextStyle(
-                          fontSize: 10,
-                          color: Color(0xff7E7E7E),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          // letterSpacing: 0.15,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Fare Details",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.15,
                     ),
-                  ),
-                ),
-                if (fd.isNotEmpty) ...[
-                  const SizedBox(height: 3.0),
-                  FareDetailsWidget(
-                    title: "Base fare",
-                    info: true,
-                    fareDetails: fd,
-                    price: fd[0]['offer']['basePrice'].toString(),
-                  ),
-                  const SizedBox(height: 3),
-                  FareDetailsWidget(
-                    title: "Ride charge per minute",
-                    info: false,
-                    fareDetails: fd,
-                    price: (fd[0]['offer']['perMinPaisa'] / 100.0).toString(),
-                  ),
-                  const SizedBox(height: 3),
-                  FareDetailsWidget(
-                    title: "Ride charge per km",
-                    info: false,
-                    fareDetails: fd,
-                    price: (fd[0]['offer']['perKmPaisa'] / 100.0).toString(),
-                  ),
-                  const SizedBox(height: 10),
-                  if (!isReservedDone) ...[
-                    if (isReserve) ...[
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.15,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: List.generate(reserveTime.length, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              onPressed: reserveTime[index]['disabled']
-                                  ? null
-                                  : () {
-                                      setState(() {
-                                        for (var i in reserveTime) {
-                                          i['selected'] = false;
-                                          // i['disabled'] = true;
-                                        }
-                                        reserveMins = reserveTime[index]['mins']
-                                            .toString();
-                                        reserveTimeCtrl.text = "";
-                                        reserveTime[index]['selected'] = true;
-                                      });
-                                    },
-                              style: ElevatedButton.styleFrom(
-                                textStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                ),
-                                foregroundColor: Colors.black,
-                                backgroundColor: Colors.white,
-                                disabledBackgroundColor: reserveTime[index]
-                                        ['selected']
-                                    ? Colors.white
-                                    : const Color(0xffF5F5F5),
-                                disabledForegroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18, vertical: 13),
-                                animationDuration: const Duration(seconds: 1),
-                                splashFactory: InkRipple.splashFactory,
-                                side: BorderSide(
-                                    color: reserveTime[index]['selected']
-                                        ? AppColors.primary
-                                        : Colors.grey,
-                                    width: 1.5),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(reserveTime.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: reserveTime[index]['disabled']
+                                ? null
+                                : () {
+                              setState(() {
+                                for (var i in reserveTime) {
+                                  i['selected'] = false;
+                                  // i['disabled'] = true;
+                                }
+                                reserveMins =
+                                    reserveTime[index]['mins'].toString();
+                                reserveTimeCtrl.text = "";
+                                reserveTime[index]['selected'] = true;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              textStyle: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
                               ),
-                              child: Text('${reserveTime[index]['mins']} mins'),
+                              foregroundColor: Colors.black,
+                              backgroundColor: reserveTime[index]['selected']
+                                  ? Colors.white
+                                  : Color(0xffF5F5F5),
+                              // disabledBackgroundColor: reserveTime[index]
+                              //         ['selected']
+                              //     ? Colors.white
+                              //     : const Color(0xffF5F5F5),
+                              // disabledForegroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 13),
+                              animationDuration: const Duration(seconds: 1),
+                              splashFactory: InkRipple.splashFactory,
+                              side: BorderSide(
+                                  color: reserveTime[index]['selected']
+                                      ? AppColors.primary
+                                      : Colors.grey,
+                                  width: 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          );
-                        }),
-                      ),
-                      TextFormWidget(
-                        title: 'Enter Manually',
-                        controller: reserveTimeCtrl,
-                        required: true,
-                        maxLength: 2,
-                        readOnly: isInputDisabled,
-                        prefixIcon: Icons.account_circle_outlined,
-                        keyboardType: TextInputType.phone,
-                        textInputAction: TextInputAction.done,
-                        onChanged: (String value) {
-                          setState(() {
-                            for (var i in reserveTime) {
-                              i['selected'] = false;
-                            }
-                            reserveMins = value.toString();
-                            reserveTimeCtrl.text = reserveMins;
-                          });
-                        },
-                        validator: (value) {
-                          if (value.toString().isNotEmpty) {
-                            if (int.parse(value) > 60) {
-                              return "Only allowed 60 Mins.";
-                            }
-                            if (int.parse(value) == 0) {
-                              return "Invalid Time";
-                            }
-                          }
-                          return null;
-                        },
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                            RegExp('[0-9]'),
+                            child: Text('${reserveTime[index]['mins']} mins'),
                           ),
-                        ],
-                      ),
-                    ] else ...[
-                      const SizedBox(height: 10),
-                      AppButtonWidget(
-                        title:
-                            "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
-                        onPressed: () {
-                          setState(() {
-                            isReserve = true;
-                            isReserveReady = true;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 42,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            scanToUnlock();
-                          },
-                          style: OutlinedButton.styleFrom(
-                            textStyle: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                            foregroundColor: Colors.black,
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(
-                                color: AppColors.primary, width: 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          child: const Text("Scan to Unlock"),
+                        );
+                      }),
+                    ),
+                    TextFormWidget(
+                      title: 'Enter Manually',
+                      controller: reserveTimeCtrl,
+                      required: true,
+                      decoration: InputDecoration(
+                        hintText: "Enter Manually",
+                        fillColor: Colors.grey[200],
+                        counterText: "",
+                        errorStyle: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
                         ),
+                        hintStyle: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                          const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                          const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                          const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.redAccent),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                          const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.redAccent),
+                        ),
+                        contentPadding: const EdgeInsets.only(left: 20),
+                        isDense: false,
+                        // prefixIcon: prefixIcon != null
+                        //     ? Icon(
+                        //         prefixIcon,
+                        //         color: iconColor ?? themeColor,
+                        //         size: 26,
+                        //       )
+                        //     : null,
                       ),
-                      const SizedBox(height: 16),
-                    ],
+                      maxLength: 2,
+                      readOnly: isInputDisabled,
+                      prefixIcon: Icons.account_circle_outlined,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.done,
+                      onChanged: (String value) {
+                        setState(() {
+                          for (var i in reserveTime) {
+                            i['selected'] = false;
+                          }
+                          reserveMins = value.toString();
+                          reserveTimeCtrl.text = reserveMins;
+                        });
+                      },
+                      validator: (value) {
+                        if (value.toString().isNotEmpty) {
+                          if (int.parse(value) > 60) {
+                            return "Only allowed 60 Mins.";
+                          }
+                          if (int.parse(value) == 0) {
+                            return "Invalid Time";
+                          }
+                        }
+                        return null;
+                      },
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(
+                          RegExp('[0-9]'),
+                        ),
+                      ],
+                    ),
                   ] else ...[
-                    /// isReservedDone
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
+                    AppButtonWidget(
+                      title:
+                      "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
+                      onPressed: () {
+                        setState(() {
+                          isReserve = true;
+                          isReserveReady = true;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 15),
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
+                      height: 42,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          scanToUnlock();
+                        },
+                        style: OutlinedButton.styleFrom(
                           textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                           ),
-                          elevation: 0,
-                          foregroundColor: Colors.white,
-                          backgroundColor: enableChasingTime
-                              ? const Color(0xffFB8F80)
-                              : const Color(0xffE1FFE6),
-                          side: const BorderSide(
-                              color: Color(0xffE1FFE6), width: 0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: Text(
-                          "$formattedMinutes:$formattedSeconds Minute to Ride Time!",
-                          // "$_formattedTime Minute to Ride Time!",
-                          style: TextStyle(
-                              color: enableChasingTime
-                                  ? Colors.white
-                                  : AppColors.primary,
-                              fontSize: 14),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (enableChasingTime) ...[
-                      const Text(
-                        "Chasing time?",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      // const SizedBox(height: 16),
-                      const Text(
-                        "Give your adventure a stylish extension!",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: List.generate(reserveTime.length, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              onPressed: reserveTime[index]['disabled']
-                                  ? null
-                                  : () {
-                                      setState(() {
-                                        for (var i in reserveTime) {
-                                          i['selected'] = false;
-                                          // i['disabled'] = true;
-                                        }
-                                        reserveMins = reserveTime[index]['mins']
-                                            .toString();
-                                        reserveTimeCtrl.text = "";
-                                        reserveTime[index]['selected'] = true;
-                                      });
-                                    },
-                              style: ElevatedButton.styleFrom(
-                                textStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18, vertical: 13),
-                                foregroundColor: Colors.black,
-                                backgroundColor: Colors.white,
-                                disabledBackgroundColor: reserveTime[index]
-                                        ['selected']
-                                    ? Colors.white
-                                    : const Color(0xffF5F5F5),
-                                disabledForegroundColor: Colors.black,
-                                animationDuration: const Duration(seconds: 1),
-                                splashFactory: InkRipple.splashFactory,
-                                side: BorderSide(
-                                  color: reserveTime[index]['selected']
-                                      ? AppColors.primary
-                                      : Colors.grey,
-                                  width: 1.5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              child: Text('${reserveTime[index]['mins']} mins'),
-                            ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 4),
-
-                      Center(
-                        child: Text(
-                            "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            /// --- Start
-                            extendBlocking();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            textStyle: const TextStyle(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                            foregroundColor: Colors.black,
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(
-                                color: AppColors.primary, width: 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          child: const Text(
-                            "Extend to reserve your bike",
-                            style: TextStyle(color: AppColors.primary),
-                          ),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 25),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          scanToUnlock();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),
-                          foregroundColor: Colors.white,
-                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.white,
                           side: const BorderSide(
                               color: AppColors.primary, width: 1),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         child: const Text("Scan to Unlock"),
                       ),
                     ),
+                    const SizedBox(height: 16),
                   ],
+                ] else ...[
+                  /// isReservedDone
                   const SizedBox(height: 16),
-                  if (isReserveReady && !isReservedDone) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                        elevation: 0,
+                        foregroundColor: Colors.white,
+                        backgroundColor: enableChasingTime
+                            ? const Color(0xffFB8F80)
+                            : const Color(0xffE1FFE6),
+                        side: const BorderSide(
+                            color: Color(0xffE1FFE6), width: 0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: Text(
+                        "$formattedMinutes:$formattedSeconds Minute to Ride Time!",
+                        // "$_formattedTime Minute to Ride Time!",
+                        style: TextStyle(
+                            color: enableChasingTime
+                                ? Colors.white
+                                : AppColors.primary,
+                            fontSize: 14),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  if (enableChasingTime) ...[
+                    const Text(
+                      "Chasing time?",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    // const SizedBox(height: 16),
+                    const Text(
+                      "Give your adventure a stylish extension!",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(reserveTime.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: reserveTime[index]['disabled']
+                                ? null
+                                : () {
+                              setState(() {
+                                for (var i in reserveTime) {
+                                  i['selected'] = false;
+                                  // i['disabled'] = true;
+                                }
+                                reserveMins =
+                                    reserveTime[index]['mins'].toString();
+                                reserveTimeCtrl.text = "";
+                                reserveTime[index]['selected'] = true;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              textStyle: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 13),
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.white,
+                              disabledBackgroundColor: reserveTime[index]
+                              ['selected']
+                                  ? Colors.white
+                                  : const Color(0xffF5F5F5),
+                              disabledForegroundColor: Colors.black,
+                              animationDuration: const Duration(seconds: 1),
+                              splashFactory: InkRipple.splashFactory,
+                              side: BorderSide(
+                                color: reserveTime[index]['selected']
+                                    ? AppColors.primary
+                                    : Colors.grey,
+                                width: 1.5,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('${reserveTime[index]['mins']} mins'),
+                          ),
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: 4),
+
+                    Center(
+                      child: Text(
+                          "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
+                    ),
+                    const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
                           /// --- Start
-                          reserveBike();
+                          extendBlocking();
                         },
                         style: ElevatedButton.styleFrom(
                           textStyle: const TextStyle(
@@ -609,43 +600,101 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                           ),
                         ),
                         child: const Text(
-                          "Proceed to reserve your bike",
+                          "Extend to reserve your bike",
                           style: TextStyle(color: AppColors.primary),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 25),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          scanToUnlock();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),
-                          foregroundColor: Colors.white,
-                          backgroundColor: AppColors.primary,
-                          side: const BorderSide(
-                              color: AppColors.primary, width: 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: const Text("Scan to Unlock"),
-                      ),
-                    ),
                   ],
                   const SizedBox(height: 25),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        scanToUnlock();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primary,
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: const Text("Scan to Unlock"),
+                    ),
+                  ),
                 ],
+                const SizedBox(height: 16),
+                if (isReserveReady && !isReservedDone) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        /// --- Start
+                        reserveBike();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        foregroundColor: Colors.black,
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: const Text(
+                        "Proceed to reserve your bike",
+                        style: TextStyle(color: AppColors.primary),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        scanToUnlock();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primary,
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      child: const Text("Scan to Unlock"),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 25),
               ],
-            ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   TextStyle heading(Color color) {
@@ -671,20 +720,19 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         alertServices.hideLoading();
         balance = r['balance'];
         print("Available Balance -> $balance");
-        alertServices.showLoading();
-        Map<String, Object> params = {
-          "contact": secureStorage.get("mobile").toString(),
-          "vehicleId": fareDetails[0]['vehicleId'].toString(),
-          "duration": reserveMins.toString()
-        };
-        print("params $params");
-        bookingServices.blockBike(params).then((r2) async {
-          alertServices.hideLoading();
-          print("blockBike --> $r2");
-          if (amount > balance) {
-            alertServices.insufficientBalanceAlert(
-                context, balance.toString(), r2["message"]);
-          } else {
+        if (amount > balance) {
+          // alertServices.insufficientBalanceAlert(context, balance.toString());
+        } else {
+          alertServices.showLoading();
+          Map<String, Object> params = {
+            "contact": secureStorage.get("mobile").toString(),
+            "vehicleId": fareDetails[0]['vehicleId'].toString(),
+            "duration": reserveMins.toString()
+          };
+          print("params $params");
+          bookingServices.blockBike(params).then((r2) async {
+            alertServices.hideLoading();
+            print("blockBike --> $r2");
             if (r2 != null) {
               setState(() {
                 blockId = r2['blockId'].toString();
@@ -703,8 +751,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               countDownTime(r2['blockedTill'].toString());
               _startTimer();
             }
-          }
-        });
+          });
+        }
       });
     }
     // List a =
@@ -847,38 +895,28 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     int selectedMin = 0;
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
     List a =
-        reserveTime.where((e) => e['selected'].toString() == "true").toList();
+    reserveTime.where((e) => e['selected'].toString() == "true").toList();
     if (a.isNotEmpty) {
       selectedMin = a[0]['mins'];
       double amount = selectedMin * reserve;
       bookingServices.getWalletBalance(mobile).then((r) {
+        alertServices.hideLoading();
         balance = r['balance'];
-          Map<String, Object> params = {
-            "contact": secureStorage.get("mobile").toString(),
-            "vehicleId": fareDetails[0]['vehicleId'].toString(),
-            "duration": reserveMins.toString()
-          };
-          print("params $params");
-          bookingServices.blockBike(params).then((r2) async {
-            alertServices.hideLoading();
-            if (amount > balance) {
-              alertServices.insufficientBalanceAlert(
-                  context, balance.toString(),r2["message"]);
-            } else {
-              /// BALANCE AVAILABLE
-              String campus = widget.stationDetails[0]['campus'].toString();
-              String vehicleId =
-                  widget.stationDetails[0]['vehicleId'].toString();
-              List arg = [
-                {
-                  "campus": campus,
-                  "vehicleId": vehicleId,
-                },
-              ];
-              print("arg $arg");
-              Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
-            }
-          });
+        if (amount > balance) {
+          // alertServices.insufficientBalanceAlert(context, balance.toString());
+        } else {
+          /// BALANCE AVAILABLE
+          String campus = widget.stationDetails[0]['campus'].toString();
+          String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+          List arg = [
+            {
+              "campus": campus,
+              "vehicleId": vehicleId,
+            },
+          ];
+          print("arg $arg");
+          Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+        }
       });
     } else {
       double baseFare = fareDetails[0]['offer']['basePrice'];
@@ -886,31 +924,22 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       double perKmPaisa = fareDetails[0]['offer']['perKmPaisa'];
       double amount = baseFare + perKmPaisa + perMinPaisa;
       bookingServices.getWalletBalance(mobile).then((r) {
+        alertServices.hideLoading();
         balance = r['balance'];
-        Map<String, Object> params = {
-          "contact": secureStorage.get("mobile").toString(),
-          "vehicleId": fareDetails[0]['vehicleId'].toString(),
-          "duration": reserveMins.toString()
-        };
-        print("params $params");
-        bookingServices.blockBike(params).then((r2) async {
-          alertServices.hideLoading();
-          if (amount > balance) {
-            alertServices.insufficientBalanceAlert(
-                context, balance.toString(), r2["message"]);
-          } else {
-            /// BALANCE AVAILABLE arguments: list['campusId'].toString()
-            String campus = widget.stationDetails[0]['campus'].toString();
-            String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
-            List arg = [
-              {
-                "campus": campus,
-                "vehicleId": vehicleId,
-              },
-            ];
-            Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
-          }
-        });
+        if (amount > balance) {
+          // alertServices.insufficientBalanceAlert(context, balance.toString(), true);
+        } else {
+          /// BALANCE AVAILABLE arguments: list['campusId'].toString()
+          String campus = widget.stationDetails[0]['campus'].toString();
+          String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+          List arg = [
+            {
+              "campus": campus,
+              "vehicleId": vehicleId,
+            },
+          ];
+          Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+        }
       });
     }
   }

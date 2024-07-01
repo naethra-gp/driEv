@@ -35,4 +35,6 @@ class EndPoints {
   static const withdrawMoney = 'wallet/withdrawMoneyFromWallet';
   static const initiateTransaction = 'initiateTransaction';
   static const creditMoneyToWallet = 'wallet/creditMoneyToWallet';
+  static const activeRides = 'activeRides';
+  static const blockedRides = 'blockedBikeByContact';
 }

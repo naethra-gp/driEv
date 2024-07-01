@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cron/cron.dart';
 import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
@@ -51,12 +52,10 @@ class _OnRideState extends State<OnRide> {
 
   @override
   void initState() {
-    print("Ride ID --> ${widget.rideId}");
+    print("Ride ID --> ${widget.rideId} ---");
     _getUserLocation();
     getBalance();
-    // countdownTimer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
     getRideDetails(widget.rideId);
-    // });
     super.initState();
   }
 
@@ -67,12 +66,23 @@ class _OnRideState extends State<OnRide> {
           rideDetails = [r];
         });
         if (r['status'].toString() == "On Ride") {
-          countdownTimer =
-              Timer.periodic(const Duration(minutes: 1), (Timer t) {
-            getRideDetails(widget.rideId);
+          var cron = Cron();
+          cron.schedule(Schedule.parse('*/1 * * * *'), () async {
+            print('every one minutes');
+            getRideDetails1(widget.rideId);
+
           });
         }
         print("remainingRange ${r['remainingRange']}");
+      }
+    });
+  }
+  getRideDetails1(String id) {
+    bookingServices.getRideDetails(id).then((r) {
+      if (r != null) {
+        setState(() {
+          rideDetails = [r];
+        });
       }
     });
   }
@@ -183,17 +193,22 @@ class _OnRideState extends State<OnRide> {
                             children: [
                               // const SizedBox(width: 20),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Current Location - $currentDistrict",
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.location_on_outlined),
+                                        Text(
+                                          currentDistrict,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                               ),
                               const SizedBox(width: 5),
                               Container(
@@ -442,7 +457,7 @@ class _OnRideState extends State<OnRide> {
                               height: 50,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  countdownTimer!.cancel();
+                                  // countdownTimer!.cancel();
                                   List params = [
                                     {
                                       "rideId": widget.rideId.toString(),
@@ -836,7 +851,7 @@ class _OnRideState extends State<OnRide> {
                             child: ElevatedButton(
                                 onPressed: () async {
                                   final Uri smsLaunchUri =
-                                  Uri(scheme: 'tel', path: "+919439099990");
+                                      Uri(scheme: 'tel', path: "+919439099990");
                                   await launchUrl(smsLaunchUri);
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -886,8 +901,9 @@ class _OnRideState extends State<OnRide> {
                                   // } else {
                                   //   throw 'Could not launch $url';
                                   // }
-                                  final Uri smsLaunchUri =
-                                  Uri(scheme: 'mailto', path: "info@driev.bike");
+                                  final Uri smsLaunchUri = Uri(
+                                      scheme: 'mailto',
+                                      path: "info@driev.bike");
                                   await launchUrl(smsLaunchUri);
                                 },
                                 style: ElevatedButton.styleFrom(

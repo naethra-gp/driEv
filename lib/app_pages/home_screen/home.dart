@@ -15,6 +15,7 @@ import '../../app_services/index.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_provider/location_service.dart';
+import '../../app_utils/app_widgets/app_button.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -47,6 +48,8 @@ class _HomeState extends State<Home> {
   BitmapDescriptor? customerMarker;
   BitmapDescriptor? stationMarker;
   final Set<Polyline> _polyLines = {};
+  List categoryList = [];
+  String selectedPlan = "";
 
   @override
   void initState() {
@@ -97,7 +100,8 @@ class _HomeState extends State<Home> {
               left: 15,
               right: 0,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -161,37 +165,40 @@ class _HomeState extends State<Home> {
                           ],
                         ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Navigator.pushNamed(context, "wallet_summary");
                           },
-                          child:
-                        Row(
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 2,
-                              color: const Color(0xffDEDEDE),
-                            ),
-                            const SizedBox(width: 5),
-                            Image.asset(
-                              "assets/img/wallet.png",
-                              height: 20,
-                              width: 20,
-                            ),
-                            const SizedBox(width: 5),
-                            if (customer.isNotEmpty)
-                              Text(
-                                "\u{20B9}${customer[0]['walletBalance']}",
-                                style: TextStyle(
-                                  fontSize: width / 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: getColor(customer[0]['walletBalance']),
-                                ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 2,
+                                color: const Color(0xffDEDEDE),
                               ),
-                            const SizedBox(width: 10),
-                          ],
+                              const SizedBox(width: 10),
+                              Image.asset(
+                                "assets/img/wallet.png",
+                                height: 25,
+                                width: 25,
+                              ),
+                              const SizedBox(width: 10),
+                              if (customer.isNotEmpty)
+                                Text(
+                                  "\u{20B9}${customer[0]['walletBalance']}",
+                                  style: TextStyle(
+                                    fontSize: width / 30,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        getColor(customer[0]['walletBalance']),
+                                  ),
+                                ),
+                              const SizedBox(width: 10),
+                            ],
+                          ),
                         ),
-                        ),],
+                      ],
                     ),
                   ),
                 ],
@@ -201,8 +208,8 @@ class _HomeState extends State<Home> {
               bottom: 0,
               left: 0,
               right: 0,
-              top: height / 2,
-              // top: 350,
+              top: height / 2.10,
+              // top: 550,
               child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -225,83 +232,85 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Stack(
-                              children: [
-                                SfSliderTheme(
-                                  data: const SfSliderThemeData(
-                                    tooltipBackgroundColor: AppColors.primary,
-                                    thumbColor: Colors.transparent,
-                                    thumbRadius: 20,
-                                    activeDividerColor: Colors.white,
-                                  ),
-                                  child: Center(
-                                    child: SfSlider(
-                                      min: 10.0,
-                                      max: 100.0,
-                                      interval: 10,
-                                      shouldAlwaysShowTooltip: false,
-                                      stepSize: 10,
-                                      thumbIcon: Image.asset(
-                                        "assets/img/slider1.png",
-                                        width: 16,
-                                        height: 20,
-                                      ),
-                                      value: distance,
-                                      inactiveColor: AppColors.primary.withOpacity(0.3),
-                                      labelPlacement: LabelPlacement.onTicks,
-                                      thumbShape: const SfThumbShape(),
-                                      semanticFormatterCallback: (dynamic value) {
-                                        return '$value km';
-                                      },
-                                      enableTooltip: true,
-                                      showLabels: false,
-                                      showDividers: true,
-                                      showTicks: false,
-                                      tooltipTextFormatterCallback: (dynamic actualValue, String formattedText) {
-                                        return "$formattedText km";
-                                      },
-                                      onChanged: (dynamic newValue) {
-                                        setState(() {
-                                          distance = newValue;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                /*Positioned(
-                                  right: 0,  // Adjust this value to position the scooter image exactly at the end of the slider
-                                  top: 10,   // Adjust this value to vertically center the image if necessary
-                                  child: Image.asset(
-                                    "assets/img/scooter.png",
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                ),*/
-                              ],
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('10 km',
-                                      style: TextStyle(
-                                          color: Color(0xff7B7B7B),
-                                          fontWeight: FontWeight.bold)),
-                                  Text('100 km',
-                                      style: TextStyle(
-                                          color: Color(0xff7B7B7B),
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                        sliderWidget(),
+                        // const SizedBox(height: 30),
+                        // Column(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: [
+                        //     Stack(
+                        //       children: [
+                        //         SfSliderTheme(
+                        //           data: const SfSliderThemeData(
+                        //             tooltipBackgroundColor: AppColors.primary,
+                        //             thumbColor: Colors.transparent,
+                        //             thumbRadius: 20,
+                        //             activeDividerColor: Colors.white,
+                        //           ),
+                        //           child: Center(
+                        //             child: SfSlider(
+                        //               min: 10.0,
+                        //               max: 100.0,
+                        //               interval: 10,
+                        //               shouldAlwaysShowTooltip: false,
+                        //               stepSize: 10,
+                        //               thumbIcon: Image.asset(
+                        //                 "assets/img/slider1.png",
+                        //                 width: 16,
+                        //                 height: 20,
+                        //               ),
+                        //               value: distance,
+                        //               inactiveColor: AppColors.primary.withOpacity(0.3),
+                        //               labelPlacement: LabelPlacement.onTicks,
+                        //               thumbShape: const SfThumbShape(),
+                        //               semanticFormatterCallback: (dynamic value) {
+                        //                 return '$value km';
+                        //               },
+                        //               enableTooltip: true,
+                        //               showLabels: false,
+                        //               showDividers: true,
+                        //               showTicks: false,
+                        //               tooltipTextFormatterCallback: (dynamic actualValue, String formattedText) {
+                        //                 return "$formattedText km";
+                        //               },
+                        //               onChanged: (dynamic newValue) {
+                        //                 setState(() {
+                        //                   distance = newValue;
+                        //                 });
+                        //               },
+                        //             ),
+                        //           ),
+                        //         ),
+                        //         /*Positioned(
+                        //           right: 0,  // Adjust this value to position the scooter image exactly at the end of the slider
+                        //           top: 10,   // Adjust this value to vertically center the image if necessary
+                        //           child: Image.asset(
+                        //             "assets/img/scooter.png",
+                        //             height: 20,
+                        //             width: 20,
+                        //           ),
+                        //         ),*/
+                        //       ],
+                        //     ),
+                        //     const Padding(
+                        //       padding: EdgeInsets.symmetric(horizontal: 16),
+                        //       child: Row(
+                        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           Text('10 km',
+                        //               style: TextStyle(
+                        //                   color: Color(0xff7B7B7B),
+                        //                   fontWeight: FontWeight.bold)),
+                        //           Text('100 km',
+                        //               style: TextStyle(
+                        //                   color: Color(0xff7B7B7B),
+                        //                   fontWeight: FontWeight.bold)),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         const SizedBox(height: 15),
                         const Text(
                           "Preferred Category",
@@ -318,78 +327,137 @@ class _HomeState extends State<Home> {
                             alignment: WrapAlignment.start,
                             children: [
                               for (int i = 0;
-                              i < stationDetails['plans'].length;
-                              i++) ...[
-                                if (stationDetails['plans'][i] != null) ...[
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      surfaceTintColor: Colors.white,
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: Colors.white,
-                                      side: const BorderSide(
-                                        color: AppColors.primary,
-                                        width: 1,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
+                                  i < stationDetails['plans'].length;
+                                  i++) ...[
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    surfaceTintColor: Colors.white,
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: categoryList[i]
+                                        ? Colors.white
+                                        : const Color(0xffF5F5F5),
+                                    side: BorderSide(
+                                      color: categoryList[i]
+                                          ? const Color(0xff3DB54A)
+                                          : const Color(0xffE1E1E1),
+                                      width: 1,
                                     ),
-                                    onPressed: () {
-                                      List list = [
-                                        {
-                                          'sId': stationDetails['stationId'],
-                                          'sName':
-                                          stationDetails['stationName'],
-                                          'plan': stationDetails['plans'][i],
-                                          'distanceText': distanceText,
-                                          'distance': distance
-                                              .toString()
-                                              .replaceAll(".0", ""),
-                                        },
-                                      ];
-                                      Navigator.pushNamed(
-                                          context, "select_vehicle",
-                                          arguments: {"params": list});
-                                    },
-                                    child: Text(
-                                      stationDetails['plans'][i].toString(),
-                                      style:
-                                      const TextStyle(color: Colors.black),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                ]
+                                  onPressed: () {
+                                    setState(() {
+                                      categoryList = categoryList
+                                          .map((e) => e = false)
+                                          .toList();
+                                      categoryList[i] = true;
+                                      selectedPlan =
+                                          stationDetails['plans'][i].toString();
+                                    });
+                                  },
+                                  child: Text(
+                                    stationDetails['plans'][i].toString(),
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ],
                           ),
-                        ],
-                        CustomTheme.defaultHeight10,
+                        const SizedBox(height: 25),
                         SizedBox(
-                          width: double.infinity,
                           height: 50,
-                          child: ElevatedButton(
-                            onPressed: () {
+                          child: AppButtonWidget(
+                            title: "Proceed",
+                            onPressed: selectedPlan == "" ? null : ()  {
+                              List list = [
+                                {
+                                  'sId': stationDetails['stationId'],
+                                  'sName': stationDetails['stationName'],
+                                  'plan': selectedPlan,
+                                  'distanceText': distanceText,
+                                  'distance':
+                                      distance.toString().replaceAll(".0", ""),
+                                },
+                              ];
+                              Navigator.pushNamed(context, "select_vehicle",
+                                  arguments: {"params": list});
                             },
-                            style: ElevatedButton.styleFrom(
-                              textStyle: const TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                              ),
-                              foregroundColor: Colors.black,
-                              backgroundColor: AppColors.primary,
-                              side: const BorderSide(
-                                  color: AppColors.primary, width: 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            child: const Text(
-                              "Proceed",
-                              style: TextStyle(color: AppColors.white),
-                            ),
                           ),
                         ),
+                        // for(int i = 0; i < stationDetails['plans'].length;
+                        //       i++) ...[
+                        //         if (stationDetails['plans'][i] != null) ...[
+                        //           ElevatedButton(
+                        //             style: ElevatedButton.styleFrom(
+                        //               elevation: 0,
+                        //               surfaceTintColor: Colors.white,
+                        //               foregroundColor: Colors.white,
+                        //               backgroundColor: Colors.white,
+                        //               side: const BorderSide(
+                        //                 color: AppColors.primary,
+                        //                 width: 1,
+                        //               ),
+                        //               shape: RoundedRectangleBorder(
+                        //                 borderRadius: BorderRadius.circular(10),
+                        //               ),
+                        //             ),
+                        //             onPressed: () {
+                        //               List list = [
+                        //                 {
+                        //                   'sId': stationDetails['stationId'],
+                        //                   'sName':
+                        //                   stationDetails['stationName'],
+                        //                   'plan': stationDetails['plans'][i],
+                        //                   'distanceText': distanceText,
+                        //                   'distance': distance
+                        //                       .toString()
+                        //                       .replaceAll(".0", ""),
+                        //                 },
+                        //               ];
+                        //               Navigator.pushNamed(
+                        //                   context, "select_vehicle",
+                        //                   arguments: {"params": list});
+                        //             },
+                        //             child: Text(
+                        //               stationDetails['plans'][i].toString(),
+                        //               style:
+                        //               const TextStyle(color: Colors.black),
+                        //             ),
+                        //           ),
+                        //         ]
+                        //       ],
+                        ],
+                        CustomTheme.defaultHeight10,
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   height: 50,
+                        //   child: ElevatedButton(
+                        //     onPressed: () {
+                        //     },
+                        //     style: ElevatedButton.styleFrom(
+                        //       textStyle: const TextStyle(
+                        //         color: AppColors.primary,
+                        //         fontWeight: FontWeight.w500,
+                        //         fontSize: 16,
+                        //       ),
+                        //       foregroundColor: Colors.black,
+                        //       backgroundColor: AppColors.primary,
+                        //       side: const BorderSide(
+                        //           color: AppColors.primary, width: 1),
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(50),
+                        //       ),
+                        //     ),
+                        //     child: const Text(
+                        //       "Proceed",
+                        //       style: TextStyle(color: AppColors.white),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   )),
@@ -540,11 +608,15 @@ class _HomeState extends State<Home> {
         double stationLat = stationDetails['lattitude'];
         double stationLon = stationDetails['longitude'];
         stationLocation = LatLng(stationLat, stationLon);
+
+        for (var list in stationDetails['plans']) {
+          categoryList.add(false);
+        }
         alertServices.showLoading("Finding best route...");
         Future.delayed(const Duration(seconds: 5), () {
           print("delay logic");
           alertServices.hideLoading();
-          if(_currentPosition != null) {
+          if (_currentPosition != null) {
             double distance = _locationService.calculateDistance(
               _currentPosition!.latitude,
               _currentPosition!.longitude,
@@ -557,10 +629,7 @@ class _HomeState extends State<Home> {
             _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
           }
           print("distance: ${distance.toStringAsFixed(2)}");
-
         });
-
-
       },
     );
   }
@@ -569,5 +638,85 @@ class _HomeState extends State<Home> {
     secureStorage.save("mobile", "");
     secureStorage.save("isLogin", false);
     Navigator.pushNamedAndRemoveUntil(context, "login_page", (route) => false);
+  }
+
+  sliderWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Stack(
+          children: [
+            SfSliderTheme(
+              data: const SfSliderThemeData(
+                tooltipBackgroundColor: AppColors.primary,
+                thumbColor: Colors.transparent,
+                thumbRadius: 20,
+                activeDividerColor: Color(0xff3DB54A),
+                inactiveDividerStrokeColor: Color(0xff3DB54A),
+                activeTrackHeight: 12,
+                inactiveTrackHeight: 12,
+                inactiveDividerColor: Colors.transparent,
+                inactiveTickColor: Colors.transparent,
+                activeTrackColor: Color(0xff3DB54A),
+                trackCornerRadius: 20,
+              ),
+              child: Center(
+                child: SfSlider(
+                  min: 10.0,
+                  max: 100.0,
+                  interval: 10,
+                  shouldAlwaysShowTooltip: false,
+                  stepSize: 10,
+                  thumbIcon: Image.asset("assets/img/slider1.png",
+                      width: 16, height: 20),
+                  value: distance,
+                  labelPlacement: LabelPlacement.onTicks,
+                  thumbShape: const SfThumbShape(),
+                  semanticFormatterCallback: (dynamic value) {
+                    return '$value km';
+                  },
+                  enableTooltip: true,
+                  showLabels: false,
+                  showDividers: true,
+                  showTicks: false,
+                  tooltipTextFormatterCallback: (av, ft) {
+                    return "$ft km";
+                  },
+                  onChanged: (dynamic newValue) {
+                    setState(() {
+                      distance = newValue;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '10 km',
+                style: TextStyle(
+                  color: Color(0xff7B7B7B),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '100 km',
+                style: TextStyle(
+                  color: Color(0xff7B7B7B),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

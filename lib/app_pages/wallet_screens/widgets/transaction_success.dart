@@ -23,6 +23,7 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
     getWalletBalance();
     super.initState();
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -89,7 +90,9 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "wallet_summary");
+                        // Navigator.pushNamed(context, "wallet_summary");
+                        Navigator.pushReplacementNamed(
+                            context, "wallet_summary");
                       },
                       style: ElevatedButton.styleFrom(
                         textStyle: const TextStyle(

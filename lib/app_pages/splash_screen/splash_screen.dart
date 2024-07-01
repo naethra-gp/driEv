@@ -1,5 +1,7 @@
+import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 
+import '../../app_services/vehicle_service.dart';
 import '../../app_storages/secure_storage.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,6 +13,9 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   SecureStorage secureStorage = SecureStorage();
+  AlertServices alertServices = AlertServices();
+  VehicleService vehicleService = VehicleService();
+  bool loading = true;
 
   @override
   void initState() {
@@ -41,12 +46,48 @@ class _SplashScreenState extends State<SplashScreen> {
   getRoute() async {
     bool isLogin = await secureStorage.get("isLogin") ?? false;
     if (isLogin) {
-      // if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+      String mobile = await secureStorage.get("mobile");
+      print("mobile $mobile");
+      getActiveRides(mobile);
+      getBlockRides(mobile);
+
+      // Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     } else {
-      // if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(
           context, "landing_page", (route) => false);
     }
+  }
+  getActiveRides(String mobile) {
+    alertServices.showLoading();
+    vehicleService.getActiveRides(mobile).then((r) {
+      alertServices.hideLoading();
+      if (r != null) {
+        List rideList = [r][0]['rideList'];
+        // "status": "On Ride",
+        debugPrint("----------------------");
+        print("rideList ---> $rideList");
+        List a = rideList.where((e) => e['status'].toString() =="On Ride").toList();
+        if(a.isEmpty) {
+          // home page
+          Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+        } else {
+          print("Ride ID -> ${a[0]['rideId'].toString()}");
+          Navigator.pushNamed(context, "on_ride", arguments: a[0]['rideId'].toString());
+        }
+        debugPrint("----------------------");
+      }
+    });
+  }
+  getBlockRides(String mobile) {
+    alertServices.showLoading();
+    vehicleService.getBlockedRides(mobile).then((r) {
+      alertServices.hideLoading();
+      if (r != null) {
+        print("getBlockRides ---> $r");
+        setState(() {
+          // rideDetails = [r];
+        });
+      }
+    });
   }
 }

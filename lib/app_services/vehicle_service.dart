@@ -15,4 +15,17 @@ class VehicleService {
     var response = await connection.getWithToken(url);
     return response;
   }
+
+  getActiveRides(String mobileNo) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.activeRides}/$mobileNo';
+    var response = await connection.getWithToken(url);
+    return response;
+  }
+  getBlockedRides(String mobileNo) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.blockedRides}/$mobileNo';
+    var response = await connection.getWithToken(url);
+    return response;
+  }
 }
