@@ -60,60 +60,60 @@ class _RateThisRideState extends State<RateThisRide> {
                 const SizedBox(
                   height: 15,
                 ),
-                Text(
+                const Text(
                   "Give us the scoop!",
-                  // style: GoogleFonts.roboto().copyWith(
-                  //   fontSize: 20,
-                  //   color: AppColors.primary,
-                  //   fontWeight: FontWeight.w500,
-                  // ),
+                   style: TextStyle(
+                     fontSize: 20,
+                     color: AppColors.primary,
+                     fontWeight: FontWeight.w500,
+                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
+                const Text(
                   "We are all ears to hear from you",
-                  // style: GoogleFonts.roboto().copyWith(
-                  //   fontSize: 12,
-                  //   color: AppColors.fontgrey,
-                  //   fontWeight: FontWeight.w400,
-                  // ),
+                   style: TextStyle(
+                     fontSize: 12,
+                     color: AppColors.fontgrey,
+                     fontWeight: FontWeight.w400,
+                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
                   height: 30,
                 ),
                 if (_rating == 0) ...[
-                  Text(
+                  const Text(
                     "Rate your last ride with us",
-                    // style: GoogleFonts.roboto().copyWith(
-                    //   fontSize: 14,
-                    //   color: AppColors.black,
-                    //   fontWeight: FontWeight.w500,
-                    // ),
+                    style: TextStyle(
+                       fontSize: 14,
+                       color: AppColors.black,
+                       fontWeight: FontWeight.w500,
+                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 1.0 || _rating == 2.0) ...[
-                  Text(
+                  const Text(
                     "What could be made better?",
-                    // style: GoogleFonts.roboto().copyWith(
-                    //   fontSize: 14,
-                    //   color: AppColors.black,
-                    //   fontWeight: FontWeight.w500,
-                    // ),
+                     style: TextStyle(
+                       fontSize: 14,
+                       color: AppColors.black,
+                       fontWeight: FontWeight.w500,
+                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 3.0 || _rating == 4.0) ...[
                   const Text(
                     "What services do you think could be improved?",
-                    /* style: TextStyle(
+                     style: TextStyle(
                        fontSize: 14,
                        color: AppColors.black,
                        fontWeight: FontWeight.w500,
-                     ),*/
+                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],

@@ -59,7 +59,7 @@ class _RankListState extends State<RankList> {
           surfaceTintColor: Colors.white,
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

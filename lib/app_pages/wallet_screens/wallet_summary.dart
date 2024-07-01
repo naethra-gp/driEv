@@ -9,10 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import '../../app_config/app_constants.dart';
-import '../../app_config/app_size_config.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
-import '../registration_page/widget/reg_text_form_widget.dart';
 
 class WalletSummary extends StatefulWidget {
   const WalletSummary({super.key});
@@ -59,15 +57,18 @@ class _WalletSummaryState extends State<WalletSummary> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: Image.asset(Constants.nav),
-          onPressed: () {},
+          icon: Image.asset(Constants.backButton),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Container(
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
@@ -117,6 +118,7 @@ class _WalletSummaryState extends State<WalletSummary> {
               ),
             ),
           ),
+          const SizedBox(height: 20,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +284,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "refer_friends");
+                          Navigator.pushNamed(context, "home");
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,

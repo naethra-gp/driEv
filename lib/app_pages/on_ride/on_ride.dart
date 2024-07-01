@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
@@ -356,7 +354,7 @@ class _OnRideState extends State<OnRide> {
                                         Align(
                                           alignment: Alignment.centerRight,
                                           child: Image.asset(
-                                            "assets/img/bike.png",
+                                            "assets/img/bike2.png",
                                             fit: BoxFit.contain,
                                             width: 180,
                                             // height: 130,

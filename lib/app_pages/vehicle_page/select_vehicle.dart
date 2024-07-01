@@ -228,7 +228,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                               Image.asset(
                                 width: 135,
                                 height: 90,
-                                "assets/img/bike.png",
+                                "assets/img/bike2.png",
                                 fit: BoxFit.fill,
                               ),
                               const SizedBox(height: 10),

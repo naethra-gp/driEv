@@ -308,7 +308,7 @@ class AlertServices {
     );
   }
 
-  insufficientBalanceAlert(BuildContext context, String balance) {
+  insufficientBalanceAlert(BuildContext context, String balance,String balSub) {
     // double height = MediaQuery.of(context).size.height;
     // double width = MediaQuery.of(context).size.width;
     // return showModalBottomSheet(
@@ -567,14 +567,16 @@ class AlertServices {
                       const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 20),
-                    const Align(
+                     Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Text(
-                          "Your wallet balance is insufficient. To request a\n ride, kindly recharge your wallet.",
+                          balSub,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                         ),
                       ),
                     ),

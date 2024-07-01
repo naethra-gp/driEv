@@ -3,10 +3,8 @@ import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-
 import '../app_config/app_constants.dart';
 import '../app_storages/secure_storage.dart';
-import '../main.dart';
 
 class Connection {
   final header = {'Content-Type': 'application/json'};
@@ -190,4 +188,38 @@ class Connection {
       (route) => false,
     );
   }
+  postWithTokenAlert(String url, request, [error]) async {
+    SecureStorage secureStorage = SecureStorage();
+    final header = {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer ${secureStorage.getToken().toString()}",
+    };
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: header,
+        body: jsonEncode(request),
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 404) {
+        if (error != null) {
+          gotoLogin();
+          return json.decode(response.body);
+        } else {
+          var result = json.decode(response.body);
+          return result;
+          //alertService.errorToast(result['message'].toString());
+        }
+      } else {
+        var result = json.decode(response.body);
+        alertService.errorToast(result['message'].toString());
+      }
+    } catch (e) {
+      alertService.errorToast("Error: ${e.toString()}");
+    } finally {
+      print('API request completed');
+    }
+  }
+
 }

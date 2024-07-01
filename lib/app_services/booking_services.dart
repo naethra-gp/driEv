@@ -19,7 +19,7 @@ class BookingServices {
   blockBike(dynamic params, [error]) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.blockBike}';
-    var response = await connection.postWithToken(url, params, error);
+    var response = await connection.postWithTokenAlert(url, params, error);
     return response;
   }
   extendBlocking(dynamic params, [error]) async {

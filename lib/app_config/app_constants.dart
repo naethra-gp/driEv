@@ -23,7 +23,7 @@ class Constants {
   static const String appLogo = "assets/img/app_logo.png";
   static const String votecampus="assets/app/vote_for_campus_logo.png";
   static const String pdf="assets/img/pdf.png";
-  static const String bike="assets/img/bike.png";
+  static const String bike="assets/img/bike2.png";
   static const String gift="assets/img/giftbox.png";
   static const String scooter="assets/img/scooter.png";
 

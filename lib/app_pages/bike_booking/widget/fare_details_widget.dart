@@ -43,7 +43,7 @@ class FareDetailsWidget extends StatelessWidget {
                   controller: _controller,
                   popupDirection: TooltipDirection.up,
                   content: Text(
-                    "Receive a complimentary ${fareDetails[0]['offer']['discountMin']} minute ride spanning ${fareDetails[0]['offer']['discountKm']} kilometers",
+                    "Receive a complimentary ${fareDetails[0]['offer']['discountMin'].toStringAsFixed(0)} minute ride spanning ${fareDetails[0]['offer']['discountKm'].toStringAsFixed(0)} kilometers",
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: const TextStyle(

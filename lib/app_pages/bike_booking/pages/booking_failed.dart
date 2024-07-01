@@ -49,7 +49,7 @@ class _BookingFailedState extends State<BookingFailed> {
               ),
               const SizedBox(height: 50),
               AppButtonWidget(
-                title: "Pick Another Ride",
+                title: "Okay",
                 onPressed: () {},
               ),
             ],

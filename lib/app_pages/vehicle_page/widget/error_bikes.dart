@@ -57,7 +57,7 @@ class _ErrorBikesState extends State<ErrorBikes> {
               ),
               const SizedBox(height: 30),
               AppButtonWidget(
-                  title: "Pick Another Ride",
+                  title: "Okay",
                   onPressed: () {
                     // Navigator.pop(context);
                     Navigator.pushNamed(context, "home");

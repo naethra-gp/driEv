@@ -4,6 +4,7 @@ import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
+import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
 
@@ -31,6 +32,12 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Image.asset(Constants.backButton),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: Colors.white,
         actions: [
           IconButton(
@@ -62,7 +69,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Container(
                 padding: const EdgeInsets.all(30),
                 decoration: BoxDecoration(
@@ -109,6 +116,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                 ),
               ),
             ),
+            const SizedBox(height: 50,),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -130,7 +138,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                           width: 270,
                           height: 40,
                           decoration: BoxDecoration(
-                              border: Border.all(width: 0.1),
+                              border: Border.all(width: 1,color: Color(0xffD2D2D2)),
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10)),
                           child: TextFormField(
@@ -271,7 +279,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                     ],
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 30,
                   ),
                   SizedBox(
                     width: double.infinity,

@@ -13,6 +13,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../app_services/index.dart';
 import '../../app_themes/app_colors.dart';
+import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_provider/location_service.dart';
 
 class Home extends StatefulWidget {
@@ -301,7 +302,7 @@ class _HomeState extends State<Home> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 15),
                         const Text(
                           "Preferred Category",
                           style: TextStyle(
@@ -317,8 +318,8 @@ class _HomeState extends State<Home> {
                             alignment: WrapAlignment.start,
                             children: [
                               for (int i = 0;
-                                  i < stationDetails['plans'].length;
-                                  i++) ...[
+                              i < stationDetails['plans'].length;
+                              i++) ...[
                                 if (stationDetails['plans'][i] != null) ...[
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
@@ -339,7 +340,7 @@ class _HomeState extends State<Home> {
                                         {
                                           'sId': stationDetails['stationId'],
                                           'sName':
-                                              stationDetails['stationName'],
+                                          stationDetails['stationName'],
                                           'plan': stationDetails['plans'][i],
                                           'distanceText': distanceText,
                                           'distance': distance
@@ -354,7 +355,7 @@ class _HomeState extends State<Home> {
                                     child: Text(
                                       stationDetails['plans'][i].toString(),
                                       style:
-                                          const TextStyle(color: Colors.black),
+                                      const TextStyle(color: Colors.black),
                                     ),
                                   ),
                                 ]
@@ -362,6 +363,33 @@ class _HomeState extends State<Home> {
                             ],
                           ),
                         ],
+                        CustomTheme.defaultHeight10,
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                            },
+                            style: ElevatedButton.styleFrom(
+                              textStyle: const TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                              foregroundColor: Colors.black,
+                              backgroundColor: AppColors.primary,
+                              side: const BorderSide(
+                                  color: AppColors.primary, width: 1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                            child: const Text(
+                              "Proceed",
+                              style: TextStyle(color: AppColors.white),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   )),

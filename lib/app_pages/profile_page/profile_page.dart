@@ -221,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
           physics: const ScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
                 defaultHeight,
@@ -537,8 +537,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Color(0xffD9D9D9),
                         ),
                         menuList("assets/img/rate.png", "Rate us", () {
-                          Navigator.pushNamed(context, "rate_this_raid",
-                              arguments: "rideId");
                           launchRateUs();
                         }),
                         const Divider(
@@ -548,7 +546,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         menuList("assets/img/gift.png", "Refer your friends",
                             () {
-                          Navigator.pushNamed(context, "validate_code");
+                          Navigator.pushNamed(context, "refer_screen");
                         }),
                         const Divider(
                           endIndent: 15,

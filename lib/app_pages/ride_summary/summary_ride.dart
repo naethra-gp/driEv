@@ -76,7 +76,7 @@ class _RideSummaryState extends State<RideSummary> {
               ? const Text("Please wait...")
               : Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
                   child: Column(
                     children: [
                       Screenshot(

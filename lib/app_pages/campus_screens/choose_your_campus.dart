@@ -54,7 +54,7 @@ class _ChooseYourCampusState extends State<ChooseYourCampus> {
         // ),
       ),
       body:  Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
