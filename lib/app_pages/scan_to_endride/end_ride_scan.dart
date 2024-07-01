@@ -265,6 +265,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
           (Timer t) => startWatching(rideID),
         );
       }
+      else{
+        alertServices.insufficientBalanceAlert(context, "Uh-Oh", r["message"]);
+      }
     });
   }
 

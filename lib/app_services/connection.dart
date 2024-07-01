@@ -221,5 +221,39 @@ class Connection {
       print('API request completed');
     }
   }
+  getWithTokenAlert(String url, [error]) async {
+    SecureStorage secureStorage = SecureStorage();
+    final header = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization': "Bearer ${secureStorage.getToken().toString()}",
+    };
+    try {
+      var response = await http.get(
+        Uri.parse(url),
+        headers: header,
+      );
+      if (response.statusCode == 200) {
+        return json
+            .decode(utf8.decode(response.bodyBytes, allowMalformed: true));
+      } else if (response.statusCode == 401) {
+        alertService.errorToast("Unauthorized");
+        gotoLogin();
+        return null;
+      } else {
+        if (error == null) {
+          var result = json.decode(response.body);
+          return result;
+        //  alertService.errorToast(
+          //    "${response.statusCode}: ${result['message'].toString()}");
+        }
+      }
+    } catch (e) {
+      if (error == null) {
+        alertService.errorToast("Error: ${e.toString()}");
+      }
+    } finally {
+      print('API request completed');
+    }
+  }
 
 }

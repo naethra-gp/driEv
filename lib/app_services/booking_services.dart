@@ -46,7 +46,7 @@ class BookingServices {
   getRideEndPin(String rideId) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.getRideEndPin}/$rideId';
-    var response = await connection.getWithToken(url);
+    var response = await connection.getWithTokenAlert(url);
     return response;
   }
 
