@@ -21,6 +21,7 @@ class TextFormWidget extends StatelessWidget {
   final bool? suffixIconTrue;
   final IconData? suffixIcon;
   final String? suffixText;
+  final String? prefixText;
   final VoidCallback? suffixIconOnPressed;
   final String? helperText;
   final String? errorText;
@@ -56,6 +57,7 @@ class TextFormWidget extends StatelessWidget {
     this.inputFormatters,
     this.suffixIconTrue,
     this.suffixIcon,
+    this.prefixText,
     this.suffixText,
     this.suffixIconOnPressed,
     this.helperText,
@@ -130,6 +132,7 @@ class TextFormWidget extends StatelessWidget {
               fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black),
           decoration: decoration ??
               InputDecoration(
+                prefixText: prefixText,
                 hintText: hintText ?? title,
                 counterText: counterText ?? '',
                 errorMaxLines: errorMaxLines ?? 2,

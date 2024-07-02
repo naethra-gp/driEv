@@ -75,7 +75,7 @@ class RideDoneAlert extends StatelessWidget {
                   padding: const EdgeInsets.only(
                     right: 50,
                     left: 50,
-                    top: 50,
+                    top: 20,
                     bottom: 20,
                   ),
                   child: Image.asset(
@@ -161,45 +161,73 @@ class RideDoneAlert extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SfSliderTheme(
-          data: const SfSliderThemeData(
-            tooltipBackgroundColor: AppColors.primary,
-            thumbColor: Colors.transparent,
-            thumbRadius: 20,
-            activeDividerColor: Color(0xff3DB54A),
-            inactiveDividerStrokeColor: Color(0xff3DB54A),
-            activeTrackHeight: 12,
-            inactiveTrackHeight: 12,
-            inactiveDividerColor: Colors.transparent,
-            inactiveTickColor: Colors.transparent,
-            activeTrackColor: Color(0xff3DB54A),
-            trackCornerRadius: 20,
-          ),
-          child: SfSlider(
-            min: 10.0,
-            max: roundToNearest500(rideDistance),
-            interval: 10,
-            shouldAlwaysShowTooltip: true,
-            stepSize: 10,
-            thumbIcon:
-                Image.asset("assets/img/slider1.png", width: 16, height: 20),
-            value: rideDistance,
-            labelPlacement: LabelPlacement.onTicks,
-            thumbShape: const SfThumbShape(),
-            semanticFormatterCallback: (dynamic value) {
-              return '$value km';
-            },
-            enableTooltip: true,
-            showLabels: false,
-            showDividers: true,
-            showTicks: false,
-            tooltipTextFormatterCallback: (av, ft) {
-              return "$ft km";
-            },
-            onChanged: (dynamic newValue) {
-              // distance = newValue;
-            },
-          ),
+        Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            SfSliderTheme(
+              data: const SfSliderThemeData(
+                tooltipBackgroundColor: AppColors.primary,
+                thumbColor: Colors.transparent,
+                thumbRadius: 20,
+                activeDividerColor: Color(0xff3DB54A),
+                inactiveDividerStrokeColor: Color(0xff3DB54A),
+                activeTrackHeight: 12,
+                inactiveTrackHeight: 12,
+                inactiveDividerColor: Colors.transparent,
+                inactiveTickColor: Colors.transparent,
+                activeTrackColor: Color(0xff3DB54A),
+                trackCornerRadius: 20,
+              ),
+              child: SfSlider(
+                min: 10.0,
+                max: roundToNearest500(rideDistance),
+                interval: 10,
+                shouldAlwaysShowTooltip: true,
+                stepSize: 10,
+                thumbIcon: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.green, // Background color
+                    border: Border.all(color: Colors.white, width: 3), // White border
+                    borderRadius: BorderRadius.circular(25), // Adjust border radius as needed
+                  ),
+                  child: Image.asset(
+                    "assets/img/scooter_2.png",
+                    width: 13,
+                    height: 13,
+                  ),
+                ),
+                value: rideDistance,
+                labelPlacement: LabelPlacement.onTicks,
+                thumbShape: const SfThumbShape(),
+                semanticFormatterCallback: (dynamic value) {
+                  return '$value km';
+                },
+                enableTooltip: true,
+                showLabels: false,
+                showDividers: true,
+                showTicks: false,
+                tooltipTextFormatterCallback: (av, ft) {
+                  return "$ft km";
+                },
+                onChanged: (dynamic newValue) {
+                  // distance = newValue;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child:
+              Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                ),
+                padding: const EdgeInsets.all(5), // Adjust padding as needed
+                child: Image.asset(
+                  "assets/img/giftbox.png",
+                  width: 10,
+                  height: 10,
+                ),     ),)],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),

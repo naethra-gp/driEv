@@ -1,3 +1,4 @@
+import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
   SecureStorage secureStorage = SecureStorage();
   String result = "";
   String walletBalance = "0";
-  TextEditingController amountCtrl = TextEditingController();
+  final TextEditingController amountCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -77,6 +78,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
                   controller: amountCtrl,
                   maxLength: 4,
                   required: true,
+                  prefixText: "\u{20B9}",
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.phone,
                   prefixIcon: Icons.account_circle_outlined,
@@ -90,6 +92,84 @@ class _AddMoreFundState extends State<AddMoreFund> {
                     return null;
                   },
                 ),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () => addAmount(100),
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      side: MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return const BorderSide(color: AppColors.primary,width: 2);
+                        }
+                        return const BorderSide(color: Color(0xffDEDEDE));
+                      }),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                    child: const Text(" +100 ", style: TextStyle(color: Colors.black)),
+                  ),
+                  TextButton(
+                    onPressed: () => addAmount(200),
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      side: MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return const BorderSide(color: AppColors.primary,width: 2);
+                        }
+                        return const BorderSide(color: Color(0xffDEDEDE));
+                      }),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                    child: const Text(" +200 ", style: TextStyle(color: Colors.black)),
+                  ),
+                  TextButton(
+                    onPressed: () => addAmount(500),
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      side: MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return const BorderSide(color: AppColors.primary,width: 2);
+                        }
+                        return const BorderSide(color: Color(0xffDEDEDE));
+                      }),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                    child: const Text(" +500 ", style: TextStyle(color: Colors.black)),
+                  ),
+                  TextButton(
+                    onPressed: () => addAmount(1000),
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      side: MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return const BorderSide(color: AppColors.primary,width: 2);
+                        }
+                        return const BorderSide(color: Color(0xffDEDEDE));
+                      }),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                    child: const Text(" +1000 ", style: TextStyle(color: Colors.black)),
+                  ),
+                ],
               ),
               const SizedBox(height: 50),
               SizedBox(
@@ -135,8 +215,10 @@ class _AddMoreFundState extends State<AddMoreFund> {
       "contact": mobile.toString(),
       "staging": Constants.isStagingMode,
     };
+    print(params);
     walletServices.initiateTransaction(params).then((dynamic res) {
       List token = [res];
+      print(token);
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
       String amt = amount.toString();
@@ -210,5 +292,9 @@ class _AddMoreFundState extends State<AddMoreFund> {
       }
     });
   }
-
+  void addAmount(int amount) {
+    int currentAmount = int.tryParse(amountCtrl.text.trim()) ?? 0;
+    int newAmount = currentAmount + amount;
+    amountCtrl.text = newAmount.toString();
+  }
 }

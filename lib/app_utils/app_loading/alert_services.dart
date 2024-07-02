@@ -588,7 +588,9 @@ class AlertServices {
                         width: 310,
                         height: 42,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, "add_more_fund");
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             side: const BorderSide(color: Colors.green),
