@@ -36,7 +36,8 @@ class AppRoute {
         case "success_page":
           return const SuccessScreen();
         case "extend_bike":
-          return const ExtendBikeTimer();
+          List args = settings.arguments as List;
+          return ExtendBikeTimer(blockRide: args);
         case "otp_error_page":
           return const OtpErrorPage();
         case "choose_your_campus":

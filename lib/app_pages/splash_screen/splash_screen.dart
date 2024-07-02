@@ -16,11 +16,15 @@ class _SplashScreenState extends State<SplashScreen> {
   AlertServices alertServices = AlertServices();
   VehicleService vehicleService = VehicleService();
   bool loading = true;
+  String mobile = "";
 
   @override
   void initState() {
     debugPrint('--->>> Splash Screen <<<---');
     super.initState();
+    setState(() {
+      mobile = secureStorage.get("mobile");
+    });
     Future.delayed(const Duration(seconds: 3), () {
       getRoute();
     });
@@ -46,47 +50,51 @@ class _SplashScreenState extends State<SplashScreen> {
   getRoute() async {
     bool isLogin = await secureStorage.get("isLogin") ?? false;
     if (isLogin) {
-      String mobile = await secureStorage.get("mobile");
-      print("mobile $mobile");
       getActiveRides(mobile);
-      getBlockRides(mobile);
-
       // Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     } else {
       Navigator.pushNamedAndRemoveUntil(
           context, "landing_page", (route) => false);
     }
   }
+
   getActiveRides(String mobile) {
+    print("---------- getActiveRides -------------");
     alertServices.showLoading();
     vehicleService.getActiveRides(mobile).then((r) {
       alertServices.hideLoading();
       if (r != null) {
         List rideList = [r][0]['rideList'];
-        // "status": "On Ride",
-        debugPrint("----------------------");
-        print("rideList ---> $rideList");
-        List a = rideList.where((e) => e['status'].toString() =="On Ride").toList();
-        if(a.isEmpty) {
+        List a =
+            rideList.where((e) => e['status'].toString() == "On Ride").toList();
+        if (a.isEmpty) {
+          getBlockRides(mobile);
           // home page
-          Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+          // Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
         } else {
-          print("Ride ID -> ${a[0]['rideId'].toString()}");
-          Navigator.pushNamed(context, "on_ride", arguments: a[0]['rideId'].toString());
+          // print("Ride ID -> ${a[0]['rideId'].toString()}");
+          Navigator.pushNamed(context, "on_ride",
+              arguments: a[0]['rideId'].toString());
         }
-        debugPrint("----------------------");
       }
     });
   }
+
   getBlockRides(String mobile) {
+    print("---------- getBlockRides -------------");
     alertServices.showLoading();
     vehicleService.getBlockedRides(mobile).then((r) {
       alertServices.hideLoading();
       if (r != null) {
-        print("getBlockRides ---> $r");
-        setState(() {
-          // rideDetails = [r];
-        });
+        if (r.isNotEmpty) {
+          print("getBlockRides ---> $r");
+          Navigator.pushNamed(context, "extend_bike", arguments: r);
+        } else {
+          Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+        }
+        // setState(() {
+        // rideDetails = [r];
+        // });
       }
     });
   }

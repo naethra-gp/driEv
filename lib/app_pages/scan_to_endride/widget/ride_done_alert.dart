@@ -18,16 +18,7 @@ class RideDoneAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    List result = [
-      {
-        "rideId": "ITER-998",
-        "lastRideDuration": "98 : 32 : 50",
-        "totalRideDuration": "10827 : 1 : 57",
-        "lastRideDistance": 0.0,
-        "totalRideDistance": 110.6,
-        "contact": "9752340810"
-      }
-    ];
+    // List result = result;
     double rideDistance = result[0]['totalRideDistance'];
     return SizedBox(
       height: height / 1.5,

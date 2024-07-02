@@ -61,6 +61,10 @@ class _EndRideScannerState extends State<EndRideScanner> {
       countdownTimer!.cancel();
       countdownTimer = null;
     }
+    if (timer != null) {
+      timer!.cancel();
+      timer = null;
+    }
   }
 
   @override
@@ -242,7 +246,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
     _cancelTimer();
     bookingServices.getRideEndPin(rideId).then((r) {
       alertServices.hideLoading();
+      print("rrr $r");
       if (r != null) {
+        timer?.cancel();
         String stopPing = r['stopPing'].toString();
         showOtp(stopPing);
         String rideID = r['rideID'].toString();
@@ -264,7 +270,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return SizedBox(
-          height: height / 1.8,
+          height: height / 2.5,
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
@@ -297,6 +303,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                           icon: const Icon(Icons.close),
                           color: Colors.white,
                           onPressed: () {
+                            _cancelTimer();
                             Navigator.pop(context);
                           },
                         ),
@@ -331,8 +338,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
                       otp,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 28,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
                       ),
                     ),
                   ],
@@ -346,23 +354,19 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   startWatching(String rideId) {
+    print(" ---- startWatching ----");
     String mobile = secureStorage.get("mobile");
     bookingServices.rideEndConfirmation(mobile.toString()).then((r) {
       if (r != null) {
-        String totalRideDuration = r['rideId'].toString();
         if (rideId.toString() == r['rideId'].toString()) {
-          // Navigator.pushNamed(context, "home");
           rideDoneAlert([r]);
           timer?.cancel();
         }
-        print("rideId $totalRideDuration");
       }
     });
   }
 
   rideDoneAlert(List res) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     return showModalBottomSheet(
       context: context,
       barrierColor: Colors.black87,
@@ -370,128 +374,12 @@ class _EndRideScannerState extends State<EndRideScanner> {
       isDismissible: false,
       enableDrag: false,
       builder: (context) {
-        // return SizedBox(
-        //   height: height / 1.5,
-        //   child: Stack(
-        //     alignment: Alignment.center,
-        //     children: <Widget>[
-        //       Positioned(
-        //         top: height / 5.5 - 100,
-        //         child: Container(
-        //           height: height,
-        //           width: width,
-        //           decoration: const BoxDecoration(
-        //             color: Colors.white,
-        //             borderRadius: BorderRadius.vertical(
-        //               top: Radius.circular(20),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       Positioned(
-        //         top: height / 6.6 - 100,
-        //         child: Column(
-        //           children: <Widget>[
-        //             SizedBox(
-        //               width: 50,
-        //               height: 50,
-        //               child: Container(
-        //                 decoration: const BoxDecoration(
-        //                   shape: BoxShape.circle,
-        //                   color: Colors.green,
-        //                 ),
-        //                 child: IconButton(
-        //                   icon: const Icon(Icons.close),
-        //                   color: Colors.white,
-        //                   onPressed: () {
-        //                     Navigator.pop(context);
-        //                   },
-        //                 ),
-        //               ),
-        //             ),
-        //             Padding(
-        //               padding: const EdgeInsets.only(
-        //                 right: 50,
-        //                 left: 50,
-        //                 top: 50,
-        //                 bottom: 20,
-        //               ),
-        //               child: Image.asset(
-        //                 "assets/img/ride_end.png",
-        //                 height: 60,
-        //                 width: 60,
-        //               ),
-        //             ),
-        //             const Text(
-        //               "Ride done!",
-        //               textAlign: TextAlign.center,
-        //               style: TextStyle(
-        //                   color: Color(0xff2c2c2c),
-        //                   fontSize: 24,
-        //                   fontWeight: FontWeight.bold),
-        //             ),
-        //             const SizedBox(height: 16),
-        //             RichText(
-        //               text: TextSpan(
-        //                 text: 'Great job on your ',
-        //                 style: DefaultTextStyle.of(context).style,
-        //                 children: <TextSpan>[
-        //                   const TextSpan(
-        //                       text: 'last trip covering',
-        //                       style: TextStyle(fontWeight: FontWeight.bold)),
-        //                   TextSpan(
-        //                       text:
-        //                           ' ${res[0]['lastRideDistance']} kilometers!',
-        //                       style: const TextStyle(
-        //                         fontWeight: FontWeight.bold,
-        //                         color: AppColors.primary,
-        //                       )),
-        //                 ],
-        //               ),
-        //             ),
-        //             const SizedBox(height: 25),
-        //             Padding(
-        //               padding: const EdgeInsets.symmetric(horizontal: 15),
-        //               child: Row(
-        //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //                 crossAxisAlignment: CrossAxisAlignment.center,
-        //                 children: [
-        //                   SizedBox(
-        //                     // width: width / 2,
-        //                     child: ElevatedButton(
-        //                       onPressed: () {
-        //                         Navigator.pushNamedAndRemoveUntil(
-        //                             context,
-        //                             "ride_summary",
-        //                             arguments: rideId,
-        //                             (route) => false);
-        //                       },
-        //                       child: const Text("View Ride Summary"),
-        //                     ),
-        //                   ),
-        //                   const SizedBox(width: 25),
-        //                   SizedBox(
-        //                     // width: width / 2,
-        //                     child: ElevatedButton(
-        //                       onPressed: () {
-        //                         Navigator.pushNamed(context, "rate_this_raid",
-        //                             arguments: rideId);
-        //                       },
-        //                       child: const Text("Rate This Ride"),
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       )
-        //     ],
-        //   ),
-        // );
-        return RideDoneAlert(
-          result: res,
-          rideId: rideId,
+        return PopScope(
+          canPop: false,
+          child: RideDoneAlert(
+            result: res,
+            rideId: rideId,
+          ),
         );
       },
     );

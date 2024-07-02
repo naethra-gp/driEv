@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cron/cron.dart';
 import 'package:driev/app_services/booking_services.dart';
@@ -7,16 +6,17 @@ import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:icons_plus/icons_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../app_common/need_help_widget.dart';
 
 class OnRide extends StatefulWidget {
   final String rideId;
-  const OnRide({super.key, required this.rideId});
+  const OnRide({
+    super.key,
+    required this.rideId,
+  });
 
   @override
   State<OnRide> createState() => _OnRideState();
@@ -41,22 +41,29 @@ class _OnRideState extends State<OnRide> {
 
   final Set<Marker> _markers = {};
 
+  // TIMER
+  late Timer _timer;
+  late DateTime _startTime;
+  // late Duration _elapsedTime;
+  Duration _elapsedTime = Duration.zero; // Initialize with zero duration
+
   @override
   void dispose() {
     if (countdownTimer != null) {
       countdownTimer!.cancel();
       countdownTimer = null;
     }
+    _timer.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
-    print("Ride ID --> ${widget.rideId} ---");
+    super.initState();
+    print("---- ON RIDE ----");
     _getUserLocation();
     getBalance();
     getRideDetails(widget.rideId);
-    super.initState();
   }
 
   getRideDetails(String id) {
@@ -64,6 +71,15 @@ class _OnRideState extends State<OnRide> {
       if (r != null) {
         setState(() {
           rideDetails = [r];
+          int milliseconds = rideDetails[0]['durationTime'];
+          Duration duration = Duration(milliseconds: milliseconds);
+          String formattedTime = _formatDuration1(duration);
+          // print("duration: $duration");
+          // print("First Timer: $formattedTime");
+          rideDuration = formattedTime;
+          _startTime =
+              DateTime.now().subtract(Duration(milliseconds: milliseconds));
+          _startTimer();
         });
         if (r['status'].toString() == "On Ride") {
           var cron = Cron();
@@ -75,6 +91,32 @@ class _OnRideState extends State<OnRide> {
     });
   }
 
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _calculateElapsedTime();
+      });
+    });
+    _calculateElapsedTime();
+  }
+
+  void _calculateElapsedTime() {
+    DateTime now = DateTime.now();
+    _elapsedTime = now.difference(_startTime);
+  }
+
+  String _formatDuration1(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String hours = twoDigits(duration.inHours.remainder(24));
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$hours:$minutes:$seconds";
+  }
+
   getRideDetails1(String id) {
     String rideId = widget.rideId.toString();
     String mobile = secureStorage.get("mobile");
@@ -82,11 +124,11 @@ class _OnRideState extends State<OnRide> {
       if (r != null) {
         setState(() {
           rideDetails = [r];
-          int milliseconds = rideDetails[0]['durationTime'];
-          Duration duration = Duration(milliseconds: milliseconds);
-          String formattedTime = _formatDuration(duration);
-          print("formattedTime $formattedTime");
-          rideDuration = formattedTime;
+          // int milliseconds = rideDetails[0]['durationTime'];
+          // Duration duration = Duration(milliseconds: milliseconds);
+          // String formattedTime = _formatDuration(duration);
+          // print("Count Timer: $formattedTime");
+          // rideDuration = formattedTime;
         });
       }
       bookingServices.getWalletBalance(mobile).then((r) {
@@ -104,17 +146,18 @@ class _OnRideState extends State<OnRide> {
       });
     });
   }
+
   String _formatDuration(Duration duration) {
     int hours = duration.inHours;
     int minutes = duration.inMinutes.remainder(60);
     int seconds = duration.inSeconds.remainder(60);
-
     return '${_twoDigits(hours)}:${_twoDigits(minutes)}:${_twoDigits(seconds)}';
   }
 
   String _twoDigits(int n) {
     return n.toString().padLeft(2, '0');
   }
+
   _getUserLocation() async {
     try {
       Position position = await GeolocatorPlatform.instance.getCurrentPosition(
@@ -149,6 +192,7 @@ class _OnRideState extends State<OnRide> {
 
   @override
   Widget build(BuildContext context) {
+    String formattedTime = _formatDuration1(_elapsedTime);
     return SafeArea(
       child: Scaffold(
         body: currentLocation == null
@@ -222,7 +266,7 @@ class _OnRideState extends State<OnRide> {
                               // const SizedBox(width: 20),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 child: Align(
                                     alignment: Alignment.center,
                                     child: Row(
@@ -263,7 +307,7 @@ class _OnRideState extends State<OnRide> {
                                   ),
                                   // style: CustomTheme.termStyle1red,
                                 ),
-                              const SizedBox(width: 5),
+                              const SizedBox(width: 10),
                             ],
                           ),
                         ),
@@ -310,7 +354,7 @@ class _OnRideState extends State<OnRide> {
                                   children: [
                                     Card(
                                       elevation: 0,
-                                      color: const Color(0xffF5F5F5),
+                                      color: const Color(0xFFF5F5F5),
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             15, 5, 15, 5),
@@ -333,8 +377,7 @@ class _OnRideState extends State<OnRide> {
                                                     ),
                                                     TextSpan(
                                                       text:
-                                                          "${rideDetails[0]['planType'].toString()} - ${rideDetails[0]['vehicleId'].toString()}",
-                                                      // '${fd[0]['planType']}-${fd[0]['vehicleId']}',
+                                                          "${rideDetails[0]['planType'].toString()} ${rideDetails[0]['vehicleId'].toString()}",
                                                       style:
                                                           heading(Colors.black),
                                                     ),
@@ -349,7 +392,6 @@ class _OnRideState extends State<OnRide> {
                                                 GestureDetector(
                                                   onTap: () {
                                                     needHelpAlert(context);
-                                                    print("ontap");
                                                   },
                                                   child: Align(
                                                     alignment:
@@ -380,6 +422,8 @@ class _OnRideState extends State<OnRide> {
                                                   MainAxisAlignment.start,
                                               children: [
                                                 Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     const Text(
                                                       "Estimated Range",
@@ -404,9 +448,9 @@ class _OnRideState extends State<OnRide> {
                                                 // const Spacer(),
                                                 Image.asset(
                                                   "assets/img/bike2.png",
-                                                  height: 120,
-                                                  width: 190,
-                                                  fit: BoxFit.fitWidth,
+                                                  height: 150,
+                                                  width: 200,
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ],
                                             ),
@@ -620,7 +664,7 @@ class _OnRideState extends State<OnRide> {
                                         ),
                                         const SizedBox(width: 5),
                                         Text(
-                                          rideDuration,
+                                          formattedTime,
                                           style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold),
@@ -719,195 +763,6 @@ class _OnRideState extends State<OnRide> {
   }
 
   needHelpAlert(BuildContext context) {
-    // showModalBottomSheet(
-    //   context: context,
-    //   // isDismissible: true,
-    //   enableDrag: true,
-    //   backgroundColor: Colors.white,
-    //   barrierColor: Colors.black.withOpacity(.80),
-    //   shape: const RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
-    //   ),
-    //   builder: (BuildContext context) {
-    //     return Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 15),
-    //       child: SizedBox(
-    //         height: 380,
-    //         child: Column(
-    //           children: [
-    //             const SizedBox(height: 50),
-    //             Align(
-    //               alignment: Alignment.center,
-    //               child: Image.asset(
-    //                 "assets/img/question_mark.png",
-    //                 height: 50,
-    //                 width: 50,
-    //               ),
-    //             ),
-    //             const SizedBox(height: 10),
-    //             const Text(
-    //               "Need Help?",
-    //               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-    //             ),
-    //             const SizedBox(height: 25),
-    //             Padding(
-    //               padding: const EdgeInsets.symmetric(horizontal: 50),
-    //               child: Column(
-    //                 children: [
-    //                   ElevatedButton(
-    //                       onPressed: () async {
-    //                         var contact = "+919439099990";
-    //                         var androidUrl =
-    //                             "whatsapp://send?phone=$contact&text=Hi, I need some help";
-    //                         var iosUrl =
-    //                             "https://wa.me/$contact?text=${Uri.parse('Hi, I need some help')}";
-    //                         try {
-    //                           if (Platform.isIOS) {
-    //                             await launchUrl(Uri.parse(iosUrl));
-    //                           } else {
-    //                             await launchUrl(Uri.parse(androidUrl));
-    //                           }
-    //                         } on Exception {
-    //                           EasyLoading.showError(
-    //                               'WhatsApp is not installed.');
-    //                         }
-    //                       },
-    //                       style: ElevatedButton.styleFrom(
-    //                         textStyle: const TextStyle(
-    //                           color: Colors.black,
-    //                           fontWeight: FontWeight.w500,
-    //                           fontSize: 16,
-    //                         ),
-    //                         elevation: 0,
-    //                         foregroundColor: Colors.black,
-    //                         backgroundColor: Colors.white,
-    //                         side: const BorderSide(
-    //                             color: Color(0xffC7C7C7), width: 1),
-    //                         shape: RoundedRectangleBorder(
-    //                           borderRadius: BorderRadius.circular(50),
-    //                         ),
-    //                       ),
-    //                       child: const Row(
-    //                         mainAxisAlignment: MainAxisAlignment.center,
-    //                         crossAxisAlignment: CrossAxisAlignment.center,
-    //                         children: [
-    //                           Icon(
-    //                             LineAwesome.whatsapp,
-    //                             color: AppColors.primary,
-    //                           ),
-    //                           SizedBox(width: 10),
-    //                           Text(
-    //                             "Whatsapp Us",
-    //                             textAlign: TextAlign.center,
-    //                             style: TextStyle(
-    //                               fontWeight: FontWeight.normal,
-    //                               color: Color(0xff626262),
-    //                             ),
-    //                           ),
-    //                         ],
-    //                       )),
-    //                   const SizedBox(height: 16),
-    //                   ElevatedButton(
-    //                       onPressed: () async {
-    //                         // var contact = "+919439099990";
-    //                         // const tel= $contact;
-    //                         final Uri smsLaunchUri =
-    //                             Uri(scheme: 'tel', path: "+919439099990");
-    //                         await launchUrl(smsLaunchUri);
-    //                       },
-    //                       style: ElevatedButton.styleFrom(
-    //                         textStyle: const TextStyle(
-    //                           color: Colors.black,
-    //                           fontWeight: FontWeight.w500,
-    //                           fontSize: 16,
-    //                         ),
-    //                         elevation: 0,
-    //                         foregroundColor: Colors.black,
-    //                         backgroundColor: Colors.white,
-    //                         side: const BorderSide(
-    //                             color: Color(0xffC7C7C7), width: 1),
-    //                         shape: RoundedRectangleBorder(
-    //                           borderRadius: BorderRadius.circular(50),
-    //                         ),
-    //                       ),
-    //                       child: const Row(
-    //                         mainAxisAlignment: MainAxisAlignment.center,
-    //                         crossAxisAlignment: CrossAxisAlignment.center,
-    //                         children: [
-    //                           Icon(
-    //                             Icons.phone_callback_outlined,
-    //                             color: AppColors.primary,
-    //                           ),
-    //                           SizedBox(width: 10),
-    //                           Text(
-    //                             "Call Us",
-    //                             textAlign: TextAlign.center,
-    //                             style: TextStyle(
-    //                               fontWeight: FontWeight.normal,
-    //                               color: Color(0xff626262),
-    //                             ),
-    //                           ),
-    //                         ],
-    //                       )),
-    //                   const SizedBox(height: 16),
-    //                   ElevatedButton(
-    //                       onPressed: () async {
-    //                         // var url = 'mailto:info@driev.bike';
-    //                         // if (await canLaunch(url)) {
-    //                         //   await launch(url);
-    //                         // } else {
-    //                         //   throw 'Could not launch $url';
-    //                         // }
-    //                         final Uri smsLaunchUri =
-    //                             Uri(scheme: 'mailto', path: "info@driev.bike");
-    //                         await launchUrl(smsLaunchUri);
-    //                       },
-    //                       style: ElevatedButton.styleFrom(
-    //                         textStyle: const TextStyle(
-    //                           color: Colors.black,
-    //                           fontWeight: FontWeight.w500,
-    //                           fontSize: 16,
-    //                         ),
-    //                         elevation: 0,
-    //                         foregroundColor: Colors.black,
-    //                         backgroundColor: Colors.white,
-    //                         side: const BorderSide(
-    //                             color: Color(0xffC7C7C7), width: 1),
-    //                         shape: RoundedRectangleBorder(
-    //                           borderRadius: BorderRadius.circular(50),
-    //                         ),
-    //                       ),
-    //                       child: const Row(
-    //                         mainAxisAlignment: MainAxisAlignment.center,
-    //                         crossAxisAlignment: CrossAxisAlignment.center,
-    //                         children: [
-    //                           Icon(
-    //                             Icons.mark_email_read_outlined,
-    //                             color: AppColors.primary,
-    //                           ),
-    //                           SizedBox(width: 10),
-    //                           Text(
-    //                             "Mail Us",
-    //                             textAlign: TextAlign.center,
-    //                             style: TextStyle(
-    //                               fontWeight: FontWeight.normal,
-    //                               color: Color(0xff626262),
-    //                             ),
-    //                           ),
-    //                         ],
-    //                       )),
-    //                 ],
-    //               ),
-    //             ),
-    //             const SizedBox(height: 10),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     return showModalBottomSheet(
       context: context,
       barrierColor: Colors.black87,
@@ -915,234 +770,7 @@ class _OnRideState extends State<OnRide> {
       isDismissible: true,
       enableDrag: false,
       builder: (context) {
-        return SizedBox(
-          height: height / 2,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Positioned(
-                top: height / 5.5 - 100,
-                child: Container(
-                  height: height,
-                  width: width,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: height / 6.6 - 100,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.close),
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 50,
-                        left: 50,
-                        top: 25,
-                        bottom: 20,
-                      ),
-                      child: Image.asset(
-                        "assets/img/question_mark.png",
-                        height: 60,
-                        width: 60,
-                      ),
-                    ),
-                    const Text(
-                      "Need Help?",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xff2c2c2c),
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 200,
-                            height: 40,
-                            child: ElevatedButton(
-                                onPressed: () async {
-                                  var contact = "+919439099990";
-                                  var androidUrl =
-                                      "whatsapp://send?phone=$contact&text=Hi, I need some help";
-                                  var iosUrl =
-                                      "https://wa.me/$contact?text=${Uri.parse('Hi, I need some help')}";
-                                  try {
-                                    if (Platform.isIOS) {
-                                      await launchUrl(Uri.parse(iosUrl));
-                                    } else {
-                                      await launchUrl(Uri.parse(androidUrl));
-                                    }
-                                  } on Exception {
-                                    EasyLoading.showError(
-                                        'WhatsApp is not installed.');
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                  elevation: 0,
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(
-                                      color: Color(0xffC7C7C7), width: 1),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      LineAwesome.whatsapp,
-                                      color: AppColors.primary,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      "Whatsapp Us",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        color: Color(0xff626262),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            width: 200,
-                            height: 40,
-                            child: ElevatedButton(
-                                onPressed: () async {
-                                  final Uri smsLaunchUri =
-                                      Uri(scheme: 'tel', path: "+919439099990");
-                                  await launchUrl(smsLaunchUri);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                  elevation: 0,
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(
-                                      color: Color(0xffC7C7C7), width: 1),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.phone_callback_outlined,
-                                      color: AppColors.primary,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      "Call Us",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        color: Color(0xff626262),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            width: 200,
-                            height: 40,
-                            child: ElevatedButton(
-                                onPressed: () async {
-                                  // var url = 'mailto:info@driev.bike';
-                                  // if (await canLaunch(url)) {
-                                  //   await launch(url);
-                                  // } else {
-                                  //   throw 'Could not launch $url';
-                                  // }
-                                  final Uri smsLaunchUri = Uri(
-                                      scheme: 'mailto',
-                                      path: "info@driev.bike");
-                                  await launchUrl(smsLaunchUri);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  textStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                  elevation: 0,
-                                  foregroundColor: Colors.black,
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(
-                                      color: Color(0xffC7C7C7), width: 1),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.mark_email_read_outlined,
-                                      color: AppColors.primary,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      "Mail Us",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        color: Color(0xff626262),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
+        return const NeedHelpWidget();
       },
     );
   }
@@ -1159,4 +787,6 @@ class _OnRideState extends State<OnRide> {
       });
     });
   }
+
+  // TIMER
 }
