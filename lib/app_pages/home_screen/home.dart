@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
@@ -29,10 +30,6 @@ class _HomeState extends State<Home> {
   late GoogleMapController mapController;
   LatLng? _currentPosition;
   String selfieUrl = "";
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
-
   double distance = 20;
   String currentDistrict = "";
   String distanceText = "";
@@ -367,97 +364,10 @@ class _HomeState extends State<Home> {
                               ],
                             ],
                           ),
-                        const SizedBox(height: 25),
-                        SizedBox(
-                          height: 50,
-                          child: AppButtonWidget(
-                            title: "Proceed",
-                            onPressed: selectedPlan == "" ? null : ()  {
-                              List list = [
-                                {
-                                  'sId': stationDetails['stationId'],
-                                  'sName': stationDetails['stationName'],
-                                  'plan': selectedPlan,
-                                  'distanceText': distanceText,
-                                  'distance':
-                                      distance.toString().replaceAll(".0", ""),
-                                },
-                              ];
-                              Navigator.pushNamed(context, "select_vehicle",
-                                  arguments: {"params": list});
-                            },
-                          ),
-                        ),
-                        // for(int i = 0; i < stationDetails['plans'].length;
-                        //       i++) ...[
-                        //         if (stationDetails['plans'][i] != null) ...[
-                        //           ElevatedButton(
-                        //             style: ElevatedButton.styleFrom(
-                        //               elevation: 0,
-                        //               surfaceTintColor: Colors.white,
-                        //               foregroundColor: Colors.white,
-                        //               backgroundColor: Colors.white,
-                        //               side: const BorderSide(
-                        //                 color: AppColors.primary,
-                        //                 width: 1,
-                        //               ),
-                        //               shape: RoundedRectangleBorder(
-                        //                 borderRadius: BorderRadius.circular(10),
-                        //               ),
-                        //             ),
-                        //             onPressed: () {
-                        //               List list = [
-                        //                 {
-                        //                   'sId': stationDetails['stationId'],
-                        //                   'sName':
-                        //                   stationDetails['stationName'],
-                        //                   'plan': stationDetails['plans'][i],
-                        //                   'distanceText': distanceText,
-                        //                   'distance': distance
-                        //                       .toString()
-                        //                       .replaceAll(".0", ""),
-                        //                 },
-                        //               ];
-                        //               Navigator.pushNamed(
-                        //                   context, "select_vehicle",
-                        //                   arguments: {"params": list});
-                        //             },
-                        //             child: Text(
-                        //               stationDetails['plans'][i].toString(),
-                        //               style:
-                        //               const TextStyle(color: Colors.black),
-                        //             ),
-                        //           ),
-                        //         ]
-                        //       ],
+                          const SizedBox(height: 25),
+                          buttonWidget(),
                         ],
                         CustomTheme.defaultHeight10,
-                        // SizedBox(
-                        //   width: double.infinity,
-                        //   height: 50,
-                        //   child: ElevatedButton(
-                        //     onPressed: () {
-                        //     },
-                        //     style: ElevatedButton.styleFrom(
-                        //       textStyle: const TextStyle(
-                        //         color: AppColors.primary,
-                        //         fontWeight: FontWeight.w500,
-                        //         fontSize: 16,
-                        //       ),
-                        //       foregroundColor: Colors.black,
-                        //       backgroundColor: AppColors.primary,
-                        //       side: const BorderSide(
-                        //           color: AppColors.primary, width: 1),
-                        //       shape: RoundedRectangleBorder(
-                        //         borderRadius: BorderRadius.circular(50),
-                        //       ),
-                        //     ),
-                        //     child: const Text(
-                        //       "Proceed",
-                        //       style: TextStyle(color: AppColors.white),
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   )),
@@ -466,6 +376,18 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  String _formatDuration(Duration duration) {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
+
+    return '${_twoDigits(hours)}:${_twoDigits(minutes)}:${_twoDigits(seconds)}';
+  }
+
+  String _twoDigits(int n) {
+    return n.toString().padLeft(2, '0');
   }
 
   getLocation() async {
@@ -717,6 +639,36 @@ class _HomeState extends State<Home> {
           ),
         ),
       ],
+    );
+  }
+
+  buttonWidget() {
+    return SizedBox(
+      height: 50,
+      child: AppButtonWidget(
+        title: "Proceed",
+        onPressed: selectedPlan == ""
+            ? null
+            : () {
+                List list = [
+                  {
+                    'sId': stationDetails['stationId'],
+                    'sName': stationDetails['stationName'],
+                    'plan': selectedPlan,
+                    'distanceText': distanceText,
+                    'distance': distance.toString().replaceAll(".0", ""),
+                  },
+                ];
+                Navigator.pushNamed(context, "select_vehicle",
+                    arguments: {"params": list});
+                // Navigator.pushNamed(context, "extend_bike");
+
+                // int milliseconds = 355468;
+                // Duration duration = Duration(milliseconds: milliseconds);
+                // String formattedTime = _formatDuration(duration);
+                // print("formattedTime $formattedTime");
+              },
+      ),
     );
   }
 }

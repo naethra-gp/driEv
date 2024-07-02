@@ -28,3 +28,4 @@ export 'rate_this_ride/rate_this_ride.dart';
 export 'wallet_screens/widgets/transaction_success.dart';
 export 'wallet_screens/widgets/transaction_failure.dart';
 export 'wallet_screens/add_more_fund.dart';
+export 'bike_booking/extend_bike_timer/extend_bike_timer.dart';

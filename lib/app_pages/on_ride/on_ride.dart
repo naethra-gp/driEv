@@ -33,6 +33,7 @@ class _OnRideState extends State<OnRide> {
   String currentDistrict = "";
   double availableBalance = 0;
   Timer? countdownTimer;
+  String rideDuration = "00:00:00";
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -42,7 +43,6 @@ class _OnRideState extends State<OnRide> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     if (countdownTimer != null) {
       countdownTimer!.cancel();
       countdownTimer = null;
@@ -68,38 +68,53 @@ class _OnRideState extends State<OnRide> {
         if (r['status'].toString() == "On Ride") {
           var cron = Cron();
           cron.schedule(Schedule.parse('*/1 * * * *'), () async {
-            print('every one minutes');
             getRideDetails1(widget.rideId);
-                     });
+          });
         }
-        print("remainingRange ${r['remainingRange']}");
       }
     });
   }
+
   getRideDetails1(String id) {
+    String rideId = widget.rideId.toString();
+    String mobile = secureStorage.get("mobile");
     bookingServices.getRideDetails(id).then((r) {
       if (r != null) {
         setState(() {
           rideDetails = [r];
+          int milliseconds = rideDetails[0]['durationTime'];
+          Duration duration = Duration(milliseconds: milliseconds);
+          String formattedTime = _formatDuration(duration);
+          print("formattedTime $formattedTime");
+          rideDuration = formattedTime;
         });
-        print(rideDetails);
       }
-      String mobile = secureStorage.get("mobile");
       bookingServices.getWalletBalance(mobile).then((r) {
-        double balance = r['balance'];
-        print("Available Balance -> $balance");
-        bookingServices.getRideEndPin(widget.rideId).then((r2) {
+        double b = r['balance'];
+        bookingServices.getRideEndPin(rideId).then((r2) {
           alertServices.hideLoading();
-          print("Resposne: $r");
-        if (balance < rideDetails[0]["payableAmount"]) {
-          print("low Balance");
-          alertServices.insufficientBalanceAlert(context, "Uh-Oh", r2["message"]);
-        }
-      });
+          if (b < rideDetails[0]["payableAmount"]) {
+            alertServices.insufficientBalanceAlert(
+              context,
+              "Uh-Oh",
+              r2["message"],
+            );
+          }
+        });
       });
     });
   }
+  String _formatDuration(Duration duration) {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
 
+    return '${_twoDigits(hours)}:${_twoDigits(minutes)}:${_twoDigits(seconds)}';
+  }
+
+  String _twoDigits(int n) {
+    return n.toString().padLeft(2, '0');
+  }
   _getUserLocation() async {
     try {
       Position position = await GeolocatorPlatform.instance.getCurrentPosition(
@@ -280,7 +295,7 @@ class _OnRideState extends State<OnRide> {
                           children: [
                             Card(
                               surfaceTintColor: Colors.transparent,
-                              color: const Color(0xffF5F5F5),
+                              color: const Color(0xFFF5F5F5),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -288,115 +303,275 @@ class _OnRideState extends State<OnRide> {
                               clipBehavior: Clip.antiAlias,
                               child: Padding(
                                 padding: const EdgeInsets.all(15),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            //  mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text: 'dri',
-                                                        style: heading(Colors.black),
+                                    Card(
+                                      elevation: 0,
+                                      color: const Color(0xffF5F5F5),
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            15, 5, 15, 5),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                RichText(
+                                                    text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: 'dri',
+                                                      style:
+                                                          heading(Colors.black),
+                                                    ),
+                                                    TextSpan(
+                                                      text: 'EV ',
+                                                      style: heading(
+                                                          AppColors.primary),
+                                                    ),
+                                                    TextSpan(
+                                                      text:
+                                                          "${rideDetails[0]['planType'].toString()} - ${rideDetails[0]['vehicleId'].toString()}",
+                                                      // '${fd[0]['planType']}-${fd[0]['vehicleId']}',
+                                                      style:
+                                                          heading(Colors.black),
+                                                    ),
+                                                  ],
+                                                )),
+                                                const Spacer(),
+                                                // IconButton(
+                                                //   color: AppColors.primary,
+                                                //   onPressed: () {},
+                                                //   icon: const Icon(Icons.add),
+                                                // ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    needHelpAlert(context);
+                                                    print("ontap");
+                                                  },
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Container(
+                                                      width: 25,
+                                                      height: 25,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.green,
+                                                        shape: BoxShape.circle,
                                                       ),
-                                                      TextSpan(
-                                                        text: 'EV ',
-                                                        style: heading(AppColors.primary),
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .headset_mic_outlined,
+                                                          color: Colors.white,
+                                                          size: 15,
+                                                        ),
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Text(
-                                                '${rideDetails[0]['planType']} ${rideDetails[0]['vehicleId']}',
-                                                style: heading(Colors.black),
-                                              ),
-                                              SizedBox(width: 120,),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  needHelpAlert(context);
-                                                  print("ontap");
-                                                },
-                                                child: Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: Container(
-                                                    width: 25,
-                                                    height: 25,
-                                                    decoration: const BoxDecoration(
-                                                      color: Colors.green,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: const Center(
-                                                      child: Icon(
-                                                        Icons.headset_mic_outlined,
-                                                        color: Colors.white,
-                                                        size: 15,
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Column(
+                                                  children: <Widget>[
+                                                    const Text(
+                                                      "Estimated Range",
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xff626262),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
-                                                  ),
+                                                    Text(
+                                                      "${rideDetails[0]['estimatedRange'] ?? "0"} km",
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: AppColors.black,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                          const SizedBox(height: 16),
-                                          const Text(
-                                            "Estimated Range",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontFamily: "Poppins",
-                                              color: Color(0xff626262),
+
+                                                // const Spacer(),
+                                                Image.asset(
+                                                  "assets/img/bike2.png",
+                                                  height: 120,
+                                                  width: 190,
+                                                  fit: BoxFit.fitWidth,
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          Text(
-                                            "${rideDetails[0]['estimatedRange'] ?? "0"} km",
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontFamily: "Poppins",
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          // const SizedBox(height: 40),
-                                          rideDetails[0]['imageUrl'] != null
-                                              ? Image.network(
-                                            rideDetails[0]['imageUrl']
-                                                .toString(), // Replace with your image URL
-                                            width: 200,
-                                            height: 130,
-                                            fit: BoxFit.contain,
-                                          )
-                                              : Image.asset(
-                                            "assets/img/bike2.png",
-                                            fit: BoxFit.fitWidth,
-                                            // width: 210,
-                                            // height: 20,
-                                            // height: 130,
-                                          ),
-                                        ],
-                                      ),
-                                    )
                                   ],
                                 ),
+                                // child: Row(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   mainAxisAlignment: MainAxisAlignment.start,
+                                //   children: [
+                                //     Expanded(
+                                //       flex: 2,
+                                //       child: Column(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.start,
+                                //         crossAxisAlignment:
+                                //             CrossAxisAlignment.start,
+                                //         children: [
+                                //           Row(
+                                //             children: [
+                                //               RichText(
+                                //                   text: TextSpan(
+                                //                     children: [
+                                //                       TextSpan(
+                                //                         text: 'dri',
+                                //                         style: heading(Colors.black),
+                                //                       ),
+                                //                       TextSpan(
+                                //                         text: 'EV ',
+                                //                         style: heading(AppColors.primary),
+                                //                       ),
+                                //                       TextSpan(
+                                //                         text: " Speed 123",
+                                //                         // "${rideDetails[0]['planType'].toString()}-${rideDetails[0]['vehicleId'].toString()}",
+                                //                         // '${fd[0]['planType']}-${fd[0]['vehicleId']}',
+                                //                         style: heading(Colors.black),
+                                //                       ),
+                                //                     ],
+                                //                   )),
+                                //               const Spacer(),
+                                //               IconButton(
+                                //                 color: AppColors.primary,
+                                //                 onPressed: () {},
+                                //                 icon: const Icon(Icons.add),
+                                //               ),
+                                //             ],
+                                //           ),
+                                //           Row(
+                                //              mainAxisAlignment: MainAxisAlignment.start,
+                                //             crossAxisAlignment:
+                                //                 CrossAxisAlignment.center,
+                                //             mainAxisSize: MainAxisSize.min,
+                                //             children: [
+                                //               Row(
+                                //                 children: [
+                                //                   Align(
+                                //                     alignment: Alignment.centerLeft,
+                                //                     child: RichText(
+                                //                       text: TextSpan(
+                                //                         children: [
+                                //                           TextSpan(
+                                //                             text: 'dri',
+                                //                             style: heading(
+                                //                                 Colors.black),
+                                //                           ),
+                                //                           TextSpan(
+                                //                             text: 'EV ',
+                                //                             style: heading(
+                                //                                 AppColors.primary),
+                                //                           ),
+                                //                         ],
+                                //                       ),
+                                //                     ),
+                                //                   ),
+                                //                   Text(
+                                //                     '${rideDetails[0]['planType']} ${rideDetails[0]['vehicleId'].toString()}',
+                                //                     style: heading(Colors.black),
+                                //                   ),
+                                //                   Spacer(),
+                                //
+                                //                   const SizedBox(width: 120),
+                                //                   GestureDetector(
+                                //                     onTap: () {
+                                //                       needHelpAlert(context);
+                                //                       print("ontap");
+                                //                     },
+                                //                     child: Align(
+                                //                       alignment:
+                                //                       Alignment.centerRight,
+                                //                       child: Container(
+                                //                         width: 25,
+                                //                         height: 25,
+                                //                         decoration:
+                                //                         const BoxDecoration(
+                                //                           color: Colors.green,
+                                //                           shape: BoxShape.circle,
+                                //                         ),
+                                //                         child: const Center(
+                                //                           child: Icon(
+                                //                             Icons
+                                //                                 .headset_mic_outlined,
+                                //                             color: Colors.white,
+                                //                             size: 15,
+                                //                           ),
+                                //                         ),
+                                //                       ),
+                                //                     ),
+                                //                   )
+                                //                 ],
+                                //               ),
+                                //
+                                //
+                                //             ],
+                                //           ),
+                                //           const SizedBox(height: 16),
+                                //           const Text(
+                                //             "Estimated Range",
+                                //             style: TextStyle(
+                                //               fontSize: 12,
+                                //               fontFamily: "Poppins",
+                                //               color: Color(0xff626262),
+                                //             ),
+                                //           ),
+                                //           Text(
+                                //             "${rideDetails[0]['estimatedRange'] ?? "0"} km",
+                                //             style: const TextStyle(
+                                //               fontSize: 12,
+                                //               fontFamily: "Poppins",
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //     ),
+                                //     Expanded(
+                                //       flex: 3,
+                                //       child: Column(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.center,
+                                //         crossAxisAlignment:
+                                //             CrossAxisAlignment.center,
+                                //         children: [
+                                //           // const SizedBox(height: 40),
+                                //           rideDetails[0]['imageUrl'] != null
+                                //               ? Image.network(
+                                //                   rideDetails[0]['imageUrl']
+                                //                       .toString(), // Replace with your image URL
+                                //                   width: 200,
+                                //                   height: 130,
+                                //                   fit: BoxFit.contain,
+                                //                 )
+                                //               : Image.asset(
+                                //                   "assets/img/bike2.png",
+                                //                   fit: BoxFit.fitWidth,
+                                //                   // width: 210,
+                                //                   // height: 20,
+                                //                   // height: 130,
+                                //                 ),
+                                //         ],
+                                //       ),
+                                //     )
+                                //   ],
+                                // ),
                               ),
                             ),
                             const SizedBox(height: 25.0),
@@ -416,12 +591,14 @@ class _OnRideState extends State<OnRide> {
                                         Text(
                                           '${rideDetails[0]['totalKm']} km',
                                           style: const TextStyle(
-                                              fontSize: 14, fontWeight: FontWeight.bold),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
                                     const Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 10),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
                                       child: Text(
                                         'Ride Distance',
                                         textAlign: TextAlign.center,
@@ -443,14 +620,16 @@ class _OnRideState extends State<OnRide> {
                                         ),
                                         const SizedBox(width: 5),
                                         Text(
-                                          "${rideDetails[0]['duration']}",
+                                          rideDuration,
                                           style: const TextStyle(
-                                              fontSize: 14, fontWeight: FontWeight.bold),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
                                     const Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 10),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
                                       child: Text(
                                         'Ride Duration',
                                         textAlign: TextAlign.center,
@@ -512,8 +691,7 @@ class _OnRideState extends State<OnRide> {
                             ),
                             const SizedBox(height: 5.0),
                           ],
-                        )
-                        ,
+                        ),
                       ),
                     ),
                   ],

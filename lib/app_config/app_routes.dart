@@ -35,6 +35,8 @@ class AppRoute {
           return VerifyOTP(mobileNumber: mobile);
         case "success_page":
           return const SuccessScreen();
+        case "extend_bike":
+          return const ExtendBikeTimer();
         case "otp_error_page":
           return const OtpErrorPage();
         case "choose_your_campus":
@@ -87,19 +89,19 @@ class AppRoute {
           return EndRideScanner(rideId: args);
         case "rate_this_raid":
           String id = settings.arguments as String;
-          return  RateThisRide(rideId: id);
+          return RateThisRide(rideId: id);
         case "refer_screen":
-          return  const ReferralScreen();
+          return const ReferralScreen();
         case "ride_history":
-          return  const RideHistory();
+          return const RideHistory();
         case "wallet_summary":
-          return  const WalletSummary();
+          return const WalletSummary();
         case "withdraw_amount":
           String id = settings.arguments as String;
-          return WithdrawAmount(balance:id);
+          return WithdrawAmount(balance: id);
         case "all_transaction":
           List id = settings.arguments as List;
-          return AllTransaction(allTransaction:id);
+          return AllTransaction(allTransaction: id);
         case "validate_code":
           return const ReferCodeApply();
         case "add_more_fund":
