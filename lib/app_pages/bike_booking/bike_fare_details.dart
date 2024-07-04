@@ -199,19 +199,19 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                               // const SizedBox(height: 40),
                               fd[0]['imageUrl'] != null
                                   ? Image.network(
-                                fd[0]['imageUrl']
-                                    .toString(), // Replace with your image URL
-                                width: 200,
-                                height: 130,
-                                fit: BoxFit.contain,
-                              )
+                                      fd[0]['imageUrl']
+                                          .toString(), // Replace with your image URL
+                                      width: 200,
+                                      height: 130,
+                                      fit: BoxFit.contain,
+                                    )
                                   : Image.asset(
-                                "assets/img/bike.png",
-                                fit: BoxFit.fitWidth,
-                                // width: 210,
-                                // height: 20,
-                                // height: 130,
-                              ),
+                                      "assets/img/bike.png",
+                                      fit: BoxFit.fitWidth,
+                                      // width: 210,
+                                      // height: 20,
+                                      // height: 130,
+                                    ),
                             ],
                           ),
                         )
@@ -256,28 +256,28 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                 ),
               ),
               if (fd.isNotEmpty) ...[
-                const SizedBox(height: 3.0),
+                const SizedBox(height: 10.0),
                 FareDetailsWidget(
                   title: "Base fare",
                   info: true,
                   fareDetails: fd,
                   price: fd[0]['offer']['basePrice'].toString(),
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: 10),
                 FareDetailsWidget(
                   title: "Ride charge per minute",
                   info: false,
                   fareDetails: fd,
                   price: (fd[0]['offer']['perMinPaisa'] / 100).toString(),
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: 10),
                 FareDetailsWidget(
                   title: "Ride charge per km",
                   info: false,
                   fareDetails: fd,
                   price: (fd[0]['offer']['perKmPaisa'] / 100).toString(),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 25),
                 if (!isReservedDone) ...[
                   if (isReserve) ...[
                     Align(
@@ -302,46 +302,49 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             onPressed: reserveTime[index]['disabled']
                                 ? null
                                 : () {
-                              setState(() {
-                                for (var i in reserveTime) {
-                                  i['selected'] = false;
-                                  // i['disabled'] = true;
-                                }
-                                reserveMins =
-                                    reserveTime[index]['mins'].toString();
-                                reserveTimeCtrl.text = "";
-                                reserveTime[index]['selected'] = true;
-                              });
-                            },
+                                    setState(() {
+                                      for (var i in reserveTime) {
+                                        i['selected'] = false;
+                                      }
+                                      reserveMins =
+                                          reserveTime[index]['mins'].toString();
+                                      reserveTimeCtrl.text = "";
+                                      reserveTime[index]['selected'] = true;
+                                    });
+                                  },
                             style: ElevatedButton.styleFrom(
+                              elevation: 0,
                               textStyle: const TextStyle(
                                 color: Colors.black,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.normal,
                                 fontSize: 16,
                               ),
                               foregroundColor: Colors.black,
                               backgroundColor: reserveTime[index]['selected']
                                   ? Colors.white
-                                  : Color(0xffF5F5F5),
-                              // disabledBackgroundColor: reserveTime[index]
-                              //         ['selected']
-                              //     ? Colors.white
-                              //     : const Color(0xffF5F5F5),
-                              // disabledForegroundColor: Colors.black,
+                                  : const Color(0xffF5F5F5),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 13),
+                                horizontal: 20,
+                                vertical: 14,
+                              ),
                               animationDuration: const Duration(seconds: 1),
                               splashFactory: InkRipple.splashFactory,
                               side: BorderSide(
-                                  color: reserveTime[index]['selected']
-                                      ? AppColors.primary
-                                      : Colors.grey,
-                                  width: 1),
+                                color: reserveTime[index]['selected']
+                                    ? AppColors.primary
+                                    : const Color(0xFFE1E1E1),
+                                width: 1,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            child: Text('${reserveTime[index]['mins']} mins'),
+                            child: Text(
+                              '${reserveTime[index]['mins']} mins',
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
                         );
                       }),
@@ -366,17 +369,17 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                          const BorderSide(color: Color(0xffD2D2D2)),
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                          const BorderSide(color: Color(0xffD2D2D2)),
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                          const BorderSide(color: Color(0xffD2D2D2)),
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -385,7 +388,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                          const BorderSide(color: Color(0xffD2D2D2)),
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -393,13 +396,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         contentPadding: const EdgeInsets.only(left: 20),
                         isDense: false,
-                        // prefixIcon: prefixIcon != null
-                        //     ? Icon(
-                        //         prefixIcon,
-                        //         color: iconColor ?? themeColor,
-                        //         size: 26,
-                        //       )
-                        //     : null,
                       ),
                       maxLength: 2,
                       readOnly: isInputDisabled,
@@ -433,21 +429,24 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       ],
                     ),
                   ] else ...[
-                    const SizedBox(height: 10),
-                    AppButtonWidget(
-                      title:
-                      "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
-                      onPressed: () {
-                        setState(() {
-                          isReserve = true;
-                          isReserveReady = true;
-                        });
-                      },
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 50,
+                      child: AppButtonWidget(
+                        title:
+                            "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
+                        onPressed: () {
+                          setState(() {
+                            isReserve = true;
+                            isReserveReady = true;
+                          });
+                        },
+                      ),
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
-                      height: 42,
+                      height: 50,
                       child: OutlinedButton(
                         onPressed: () {
                           scanToUnlock();
@@ -463,7 +462,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                           side: const BorderSide(
                               color: AppColors.primary, width: 1),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(25),
                           ),
                         ),
                         child: const Text("Scan to Unlock"),
@@ -473,7 +472,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   ],
                 ] else ...[
                   /// isReservedDone
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 25),
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -527,17 +526,17 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             onPressed: reserveTime[index]['disabled']
                                 ? null
                                 : () {
-                              setState(() {
-                                for (var i in reserveTime) {
-                                  i['selected'] = false;
-                                  // i['disabled'] = true;
-                                }
-                                reserveMins =
-                                    reserveTime[index]['mins'].toString();
-                                reserveTimeCtrl.text = "";
-                                reserveTime[index]['selected'] = true;
-                              });
-                            },
+                                    setState(() {
+                                      for (var i in reserveTime) {
+                                        i['selected'] = false;
+                                        // i['disabled'] = true;
+                                      }
+                                      reserveMins =
+                                          reserveTime[index]['mins'].toString();
+                                      reserveTimeCtrl.text = "";
+                                      reserveTime[index]['selected'] = true;
+                                    });
+                                  },
                             style: ElevatedButton.styleFrom(
                               textStyle: const TextStyle(
                                 color: Colors.black,
@@ -549,7 +548,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                               foregroundColor: Colors.black,
                               backgroundColor: Colors.white,
                               disabledBackgroundColor: reserveTime[index]
-                              ['selected']
+                                      ['selected']
                                   ? Colors.white
                                   : const Color(0xffF5F5F5),
                               disabledForegroundColor: Colors.black,
@@ -576,7 +575,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       child: Text(
                           "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 25),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -632,7 +631,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     ),
                   ),
                 ],
-                const SizedBox(height: 16),
+                const SizedBox(height: 25),
                 if (isReserveReady && !isReservedDone) ...[
                   SizedBox(
                     width: double.infinity,
@@ -702,7 +701,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       fontFamily: "Poppins",
       fontWeight: FontWeight.bold,
       color: color,
-      fontSize: 18,
+      fontSize: 16,
     );
   }
 
@@ -728,9 +727,10 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         bookingServices.blockBike(params).then((r2) async {
           alertServices.hideLoading();
           if (amount > balance) {
-           alertServices.insufficientBalanceAlert(context, balance.toString(),r2["message"]);
-        } else {
-          alertServices.showLoading();
+            alertServices.insufficientBalanceAlert(
+                context, balance.toString(), r2["message"]);
+          } else {
+            // alertServices.showLoading();
             print("blockBike --> $r2");
             if (r2 != null) {
               setState(() {
@@ -750,8 +750,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               countDownTime(r2['blockedTill'].toString());
               _startTimer();
             }
-          }});
+          }
         });
+      });
     }
     // List a =
     //     reserveTime.where((e) => e['selected'].toString() == "true").toList();
@@ -893,7 +894,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     int selectedMin = 0;
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
     List a =
-    reserveTime.where((e) => e['selected'].toString() == "true").toList();
+        reserveTime.where((e) => e['selected'].toString() == "true").toList();
     if (a.isNotEmpty) {
       selectedMin = a[0]['mins'];
       double amount = selectedMin * reserve;
@@ -908,7 +909,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         bookingServices.blockBike(params).then((r2) async {
           alertServices.hideLoading();
           if (amount > balance) {
-            alertServices.insufficientBalanceAlert(context, balance.toString(),r2["message"]);
+            alertServices.insufficientBalanceAlert(
+                context, balance.toString(), r2["message"]);
           } else {
             /// BALANCE AVAILABLE
             String campus = widget.stationDetails[0]['campus'].toString();
@@ -942,7 +944,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
           if (amount > balance) {
             alertServices.insufficientBalanceAlert(
-                context, balance.toString(),r2["message"]);
+                context, balance.toString(), r2["message"]);
           } else {
             /// BALANCE AVAILABLE arguments: list['campusId'].toString()
             String campus = widget.stationDetails[0]['campus'].toString();

@@ -16,15 +16,12 @@ class _SplashScreenState extends State<SplashScreen> {
   AlertServices alertServices = AlertServices();
   VehicleService vehicleService = VehicleService();
   bool loading = true;
-  String mobile = "";
+  // String mobile = "";
 
   @override
   void initState() {
     debugPrint('--->>> Splash Screen <<<---');
     super.initState();
-    setState(() {
-      mobile = secureStorage.get("mobile");
-    });
     Future.delayed(const Duration(seconds: 3), () {
       getRoute();
     });
@@ -48,8 +45,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   getRoute() async {
+    var mobile = await secureStorage.get("mobile");
     bool isLogin = await secureStorage.get("isLogin") ?? false;
-    if (isLogin) {
+    print("mobile $mobile");
+    print("isLogin $isLogin");
+    if (isLogin && mobile != null) {
       getActiveRides(mobile);
       // Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     } else {

@@ -359,6 +359,7 @@ class _HomeState extends State<Home> {
                                     stationDetails['plans'][i].toString(),
                                     style: const TextStyle(
                                       color: Colors.black,
+                                      fontWeight: FontWeight.normal,
                                     ),
                                   ),
                                 ),

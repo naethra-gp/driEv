@@ -19,16 +19,16 @@ class FareDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30,
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      height: 35,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       decoration: BoxDecoration(
-          color: const Color(0xffF5F5F5),
-          borderRadius: BorderRadius.circular(6.0),
-          border: Border.all(
-            color: const Color(0xFFE1E1E1),
-            width: 0.5,
-          )),
+        color: const Color(0xffF5F5F5),
+        borderRadius: BorderRadius.circular(6.0),
+        border: Border.all(
+          color: const Color(0xFFE1E1E1),
+          width: 1,
+        ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -41,8 +41,6 @@ class FareDetailsWidget extends StatelessWidget {
               if (info)
                 SuperTooltip(
                   showBarrier: true,
-                  showCloseButton: ShowCloseButton.inside,
-                  closeButtonSize: 25,
                   controller: _controller,
                   popupDirection: TooltipDirection.up,
                   content: Text(
@@ -66,16 +64,6 @@ class FareDetailsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // child: IconButton(
-                  //   onPressed: () async {
-                  //     await _controller.showTooltip();
-                  //   },
-                  //   icon: const Icon(
-                  //     Icons.info,
-                  //     size: 20,
-                  //     color: Color(0xff7D7D7D),
-                  //   ),
-                  // ),
                 ),
             ],
           ),
