@@ -10,10 +10,10 @@ import '../../app_utils/app_loading/alert_services.dart';
 import 'widget/ride_done_alert.dart';
 
 class EndRideScanner extends StatefulWidget {
-  final List rideId;
+  final List rideID;
   const EndRideScanner({
     super.key,
-    required this.rideId,
+    required this.rideID,
   });
 
   @override
@@ -50,7 +50,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
         } else {
           _cancelTimer();
           Navigator.pushReplacementNamed(context, "end_time_out",
-              arguments: widget.rideId);
+              arguments: widget.rideID);
         }
       });
     });
@@ -69,12 +69,13 @@ class _EndRideScannerState extends State<EndRideScanner> {
 
   @override
   void initState() {
-    List<String> a = widget.rideId[0]['rideId'].toString().split("-");
+    List<String> a = widget.rideID[0]['rideId'].toString().split("-");
     setState(() {
       campus = a[0];
-      rideId = widget.rideId[0]['rideId'].toString();
+      rideId = widget.rideID[0]['rideId'].toString();
     });
     _startCountdown();
+    QrMobileVision.stop();
     super.initState();
   }
 
@@ -89,6 +90,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
     timer?.cancel();
     bikeNumberCtl.dispose();
     controller?.dispose();
+    QrMobileVision.stop();
     super.dispose();
   }
 
@@ -104,7 +106,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   checkBikeNumber(String bikeNo) {
-    String bike = widget.rideId[0]['scanCode'].toString();
+    String bike = widget.rideID[0]['scanCode'].toString();
     if (bike != bikeNo) {
       setState(() {
         bikeNumberCtl.text = "";
@@ -242,23 +244,38 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   submitBikeNUmber() {
+    String mobile = secureStorage.get("mobile");
     alertServices.showLoading();
     _cancelTimer();
     bookingServices.getRideEndPin(rideId).then((r) {
-      alertServices.hideLoading();
-      print("rrr $r");
-      if (r != null) {
-        timer?.cancel();
-        String stopPing = r['stopPing'].toString();
-        showOtp(stopPing);
-        String rideID = r['rideID'].toString();
-        timer = Timer.periodic(
-          const Duration(seconds: 15),
-          (Timer t) => startWatching(rideID),
-        );
-      } else {
-        alertServices.insufficientBalanceAlert(context, "Uh-Oh", r["message"]);
-      }
+      bookingServices.getWalletBalance(mobile).then((r) {
+        double b = r['balance'];
+        bookingServices.getRideDetails(rideId).then((r1) {
+          List rideDetails = [r1];
+          double c = rideDetails[0]["payableAmount"];
+          bookingServices.getRideEndPin(rideId).then((r2) {
+            alertServices.hideLoading();
+            print("rrr $r");
+            print(b);
+            print(c);
+            if (b<c) {
+              QrMobileVision.stop();
+              _cancelTimer();
+              alertServices.insufficientBalanceAlert(
+                  context, "Uh-Oh", r2["message"], [], "",widget.rideID);
+            } else if(r2!=null){
+              timer?.cancel();
+              String stopPing = r2['stopPing'].toString();
+              showOtp(stopPing);
+              String rideID = r2['rideID'].toString();
+              timer = Timer.periodic(
+                const Duration(seconds: 15),
+                    (Timer t) => startWatching(rideID),
+              );
+            }
+          });
+        });
+      });
     });
   }
 

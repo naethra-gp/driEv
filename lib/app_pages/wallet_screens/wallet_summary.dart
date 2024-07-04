@@ -128,7 +128,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, "add_more_fund");
+                    Navigator.pushNamed(context, "add_more_fund", arguments: {"stationDetails": [], "rideId": "","rideID":[]});
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

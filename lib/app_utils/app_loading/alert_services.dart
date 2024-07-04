@@ -308,7 +308,7 @@ class AlertServices {
     );
   }
 
-  insufficientBalanceAlert(BuildContext context, String balance,String balSub) {
+  insufficientBalanceAlert(BuildContext context, String balance,String balSub,List stationDetails,String rideID,List scanEndRideId) {
     // double height = MediaQuery.of(context).size.height;
     // double width = MediaQuery.of(context).size.width;
     // return showModalBottomSheet(
@@ -567,7 +567,7 @@ class AlertServices {
                       const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 20),
-                     Align(
+                    Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -589,7 +589,9 @@ class AlertServices {
                         height: 42,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, "add_more_fund");
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, "add_more_fund", arguments: {"stationDetails": stationDetails, "rideId": rideID,"rideID":scanEndRideId},
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,

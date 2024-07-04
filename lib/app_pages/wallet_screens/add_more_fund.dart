@@ -11,8 +11,10 @@ import '../../app_utils/app_loading/alert_services.dart';
 import '../registration_page/widget/reg_text_form_widget.dart';
 
 class AddMoreFund extends StatefulWidget {
-  const AddMoreFund({super.key});
-
+  final List stationDetails;
+  final String rideId;
+  final List rideID;
+  const AddMoreFund({super.key,required this.stationDetails,required this.rideId,required this.rideID});
   @override
   State<AddMoreFund> createState() => _AddMoreFundState();
 }
@@ -25,9 +27,18 @@ class _AddMoreFundState extends State<AddMoreFund> {
   String walletBalance = "0";
   final TextEditingController amountCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  List stationDetails=[];
+  String rideId="";
+  List rideID=[];
 
   @override
   void initState() {
+    print("stationDetails---->");
+    print(widget.stationDetails);
+    print("rideId---->");
+    print(widget.rideId);
+    print("End Scan rideId---->");
+    print(widget.rideID);
     getWalletBalance();
     super.initState();
   }
@@ -284,11 +295,21 @@ class _AddMoreFundState extends State<AddMoreFund> {
     walletServices.creditMoneyToWallet(params).then((dynamic response) {
       alertServices.hideLoading();
       if (response != null) {
-        Navigator.pushReplacementNamed(context, "transaction_success");
-        // debugPrint("Balance --> ${response][0]['balance']}");
         setState(() {
-          // walletBalance = [response][0]['balance'].toString();
+          walletBalance = [response][0]['closingBalance'].toString();
+          stationDetails=widget.stationDetails;
+          rideId=widget.rideId;
+          rideID=widget.rideID;
+          print("final-------->");
+          print(stationDetails);
+          print(rideId);
+          print(rideID);
         });
+        if(stationDetails.isNotEmpty||rideID.isNotEmpty||rideId.isNotEmpty) {
+          AlertSuccess(context, "TRANSACTION SUCCESS");
+        }else{
+          Navigator.pushNamed(context, "transaction_success");
+        }
       }
     });
   }
@@ -297,4 +318,54 @@ class _AddMoreFundState extends State<AddMoreFund> {
     int newAmount = currentAmount + amount;
     amountCtrl.text = newAmount.toString();
   }
+  Future AlertSuccess(BuildContext context,String msg) async {
+     return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: ((context) {
+        return PopScope(
+            canPop: false,
+        child: AlertDialog(
+          title: Text(
+            msg,
+            style:
+            const TextStyle(fontSize:18,fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            TextButton(
+                style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  if(stationDetails.isNotEmpty) {
+                    print("GO TO --> BIKEFARE");
+                    Navigator.pushReplacementNamed(context, "bike_fare_details",
+                      arguments: {"query": stationDetails},
+                    );
+                  }
+                  else if(rideId.isNotEmpty){
+                    print("GO TO--> ONRIDE");
+                    Navigator.pushReplacementNamed(context, "on_ride",
+                        arguments: rideId);
+                  }
+                  else if(rideID.isNotEmpty){
+                    print("GO TO--> SCANTO END RIDE");
+                    Navigator.pushReplacementNamed(context, "scan_to_end_ride",
+                        arguments: rideID);
+                  }
+
+                }),
+          ],
+        ));
+      }),
+    );
+  }
+
 }

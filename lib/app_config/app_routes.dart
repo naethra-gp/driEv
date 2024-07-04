@@ -87,7 +87,7 @@ class AppRoute {
           return RideSummary(rideId: id);
         case "scan_to_end_ride":
           List args = settings.arguments as List;
-          return EndRideScanner(rideId: args);
+          return EndRideScanner(rideID: args);
         case "rate_this_raid":
           String id = settings.arguments as String;
           return RateThisRide(rideId: id);
@@ -106,7 +106,11 @@ class AppRoute {
         case "validate_code":
           return const ReferCodeApply();
         case "add_more_fund":
-          return const AddMoreFund();
+          final args = settings.arguments as Map<String, Object>;
+          final stationDetails = args['stationDetails'] as List;
+          final rideId = args['rideId'] as String;
+          final rideID = args['rideID'] as List;
+          return AddMoreFund(stationDetails: stationDetails, rideId: rideId,rideID: rideID,);
         case "transaction_success":
           return const TransactionSuccess();
         case "transaction_failure":

@@ -727,8 +727,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         bookingServices.blockBike(params).then((r2) async {
           alertServices.hideLoading();
           if (amount > balance) {
-            alertServices.insufficientBalanceAlert(
-                context, balance.toString(), r2["message"]);
+            alertServices.insufficientBalanceAlert(context, balance.toString(),r2["message"],widget.stationDetails,"",[]);
           } else {
             // alertServices.showLoading();
             print("blockBike --> $r2");
@@ -909,8 +908,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         bookingServices.blockBike(params).then((r2) async {
           alertServices.hideLoading();
           if (amount > balance) {
-            alertServices.insufficientBalanceAlert(
-                context, balance.toString(), r2["message"]);
+            alertServices.insufficientBalanceAlert(context, balance.toString(),r2["message"],widget.stationDetails,"",[]);
           } else {
             /// BALANCE AVAILABLE
             String campus = widget.stationDetails[0]['campus'].toString();
@@ -943,8 +941,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           alertServices.hideLoading();
 
           if (amount > balance) {
-            alertServices.insufficientBalanceAlert(
-                context, balance.toString(), r2["message"]);
+            alertServices.insufficientBalanceAlert(context, balance.toString(),r2["message"],widget.stationDetails,"",[]);
           } else {
             /// BALANCE AVAILABLE arguments: list['campusId'].toString()
             String campus = widget.stationDetails[0]['campus'].toString();

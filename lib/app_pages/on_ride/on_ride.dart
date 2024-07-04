@@ -34,7 +34,7 @@ class _OnRideState extends State<OnRide> {
   double availableBalance = 0;
   Timer? countdownTimer;
   String rideDuration = "00:00:00";
-
+ bool popShown=false;
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -64,6 +64,9 @@ class _OnRideState extends State<OnRide> {
     _getUserLocation();
     getBalance();
     getRideDetails(widget.rideId);
+    setState(() {
+      popShown=false;
+    });
   }
 
   getRideDetails(String id) {
@@ -133,14 +136,21 @@ class _OnRideState extends State<OnRide> {
       }
       bookingServices.getWalletBalance(mobile).then((r) {
         double b = r['balance'];
+        double c=rideDetails[0]["payableAmount"];
         bookingServices.getRideEndPin(rideId).then((r2) {
           alertServices.hideLoading();
-          if (b < rideDetails[0]["payableAmount"]) {
-            alertServices.insufficientBalanceAlert(
-              context,
-              "Uh-Oh",
-              r2["message"],
-            );
+          print(b);
+          print(popShown);
+          print(rideDetails[0]["payableAmount"]);
+          if (!popShown && b < c) {
+            setState(() {
+              popShown = true;
+              alertServices.insufficientBalanceAlert(
+                  context,
+                  "Uh-Oh",
+                  r2["message"], [], widget.rideId,[]
+              );
+            });
           }
         });
       });
