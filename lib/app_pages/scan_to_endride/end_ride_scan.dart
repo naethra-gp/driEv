@@ -262,7 +262,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
               QrMobileVision.stop();
               _cancelTimer();
               alertServices.insufficientBalanceAlert(
-                  context, "Uh-Oh", r2["message"], [], "",widget.rideID);
+                  context, "Uh-Oh!", r2["message"], [], "",widget.rideID);
             } else if(r2!=null){
               timer?.cancel();
               String stopPing = r2['stopPing'].toString();

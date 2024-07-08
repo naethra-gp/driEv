@@ -26,7 +26,7 @@ class RideDoneAlert extends StatelessWidget {
         alignment: Alignment.center,
         children: <Widget>[
           Positioned(
-            top: height / 5.5 - 100,
+            top: height / 3.5 - 100,
             child: Container(
               height: height,
               width: width,
@@ -39,7 +39,7 @@ class RideDoneAlert extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: height / 6.6 - 100,
+            top: height / 3.9- 100,
             left: 0,
             right: 0,
             bottom: 10,
@@ -66,8 +66,8 @@ class RideDoneAlert extends StatelessWidget {
                   padding: const EdgeInsets.only(
                     right: 50,
                     left: 50,
-                    top: 20,
-                    bottom: 20,
+                    top: 10,
+                    bottom: 5,
                   ),
                   child: Image.asset(
                     "assets/img/ride_end.png",
@@ -83,7 +83,7 @@ class RideDoneAlert extends StatelessWidget {
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
                     text: 'Great job on your ',
@@ -101,20 +101,21 @@ class RideDoneAlert extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: sliderWidget(rideDistance),
                 ),
-                const SizedBox(height: 25),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                const SizedBox(height: 10),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      SizedBox(
-                        // width: width / 2,
+                Padding(
+                padding: const EdgeInsets.only(right: 10,left: 10),
+                child: SizedBox(
+                         width: width / 2.3,
+                        height: 42,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pushNamedAndRemoveUntil(
@@ -123,22 +124,22 @@ class RideDoneAlert extends StatelessWidget {
                                 arguments: rideId,
                                 (route) => false);
                           },
-                          child: const Text("View Ride Summary"),
+                          child: const Text("View Ride Summary",style: TextStyle(fontSize: 14)),
                         ),
-                      ),
-                      const SizedBox(width: 25),
-                      SizedBox(
+                      ),),
+                       SizedBox(
+                        width: width / 2.3,
+                        height: 42,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pushNamed(context, "rate_this_raid",
                                 arguments: rideId);
                           },
-                          child: const Text("Rate This Ride"),
+                          child: const Text("Rate This Ride",style: TextStyle(fontSize: 14),),
                         ),
                       ),
-                    ],
+                      ],
                   ),
-                ),
               ],
             ),
           )
@@ -178,8 +179,8 @@ class RideDoneAlert extends StatelessWidget {
                 thumbIcon: Container(
                   decoration: BoxDecoration(
                     color: Colors.green, // Background color
-                    border: Border.all(color: Colors.white, width: 3), // White border
-                    borderRadius: BorderRadius.circular(25), // Adjust border radius as needed
+                    border: Border.all(color: Colors.white, width: 2), // White border
+                    borderRadius: BorderRadius.circular(20), // Adjust border radius as needed
                   ),
                   child: Image.asset(
                     "assets/img/scooter_2.png",

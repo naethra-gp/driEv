@@ -147,7 +147,7 @@ class _OnRideState extends State<OnRide> {
               popShown = true;
               alertServices.insufficientBalanceAlert(
                   context,
-                  "Uh-Oh",
+                  "Uh-Oh!",
                   r2["message"], [], widget.rideId,[]
               );
             });

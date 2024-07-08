@@ -506,7 +506,7 @@ class AlertServices {
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                top: height / 5.5 - 100,
+                top: height / 4.3 - 100,
                 child: Container(
                   height: height,
                   width: width,
@@ -519,7 +519,7 @@ class AlertServices {
                 ),
               ),
               Positioned(
-                top: height / 6.6 - 100,
+                top: height / 4.9 - 100,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -543,7 +543,7 @@ class AlertServices {
                       padding: const EdgeInsets.only(
                         right: 50,
                         left: 50,
-                        top: 30,
+                        top: 20,
                         bottom: 0,
                       ),
                       child: Image.asset(
@@ -562,7 +562,7 @@ class AlertServices {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "₹$balance",
+                      balance,
                       style:
                       const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),

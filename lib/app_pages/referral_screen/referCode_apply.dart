@@ -20,6 +20,21 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
   TextEditingController referCtl= TextEditingController();
   List referCodeStatusDetails=[];
   @override
+  void initState() {
+    super.initState();
+    String mobile = secureStorage.get("mobile");
+    alertServices.showLoading();
+    couponServices.getCouponCode(mobile).then((response) async {
+      alertServices.hideLoading();
+      setState(() {
+        referCodeStatusDetails = [response];
+        String code=referCodeStatusDetails[0]["uniqueReferralCode"];
+        secureStorage.save("referCode", code);
+      });
+    });
+
+  }
+  @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return MaterialApp(

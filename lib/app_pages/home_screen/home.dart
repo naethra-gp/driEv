@@ -8,13 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
-
 import '../../app_services/index.dart';
 import '../../app_themes/app_colors.dart';
-import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_provider/location_service.dart';
 import '../../app_utils/app_widgets/app_button.dart';
 import '../scan_to_endride/widget/ride_done_alert.dart';
@@ -206,7 +203,7 @@ class _HomeState extends State<Home> {
               bottom: 0,
               left: 0,
               right: 0,
-              top: height / 2.10,
+              top: height / 1.96,
               // top: 550,
               child: Container(
                   decoration: const BoxDecoration(
@@ -216,7 +213,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 40, 15, 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -229,7 +226,7 @@ class _HomeState extends State<Home> {
                             fontSize: 16,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                       // const SizedBox(height: 7),
                         sliderWidget(),
                         // const SizedBox(height: 30),
                         // Column(
@@ -309,7 +306,7 @@ class _HomeState extends State<Home> {
                         //     ),
                         //   ],
                         // ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 10),
                         const Text(
                           "Preferred Category",
                           style: TextStyle(
@@ -366,11 +363,10 @@ class _HomeState extends State<Home> {
                               ],
                             ],
                           ),
-                          const SizedBox(height: 25),
+                          const SizedBox(height: 5),
                           buttonWidget(),
                         ],
-                        CustomTheme.defaultHeight10,
-                      ],
+                        SizedBox(height: 5)                      ],
                     ),
                   )),
             )
