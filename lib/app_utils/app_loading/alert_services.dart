@@ -308,7 +308,8 @@ class AlertServices {
     );
   }
 
-  insufficientBalanceAlert(BuildContext context, String balance,String balSub,List stationDetails,String rideID,List scanEndRideId) {
+  insufficientBalanceAlert(BuildContext context, String balance, String balSub,
+      List stationDetails, String rideID, List scanEndRideId) {
     // double height = MediaQuery.of(context).size.height;
     // double width = MediaQuery.of(context).size.width;
     // return showModalBottomSheet(
@@ -489,8 +490,6 @@ class AlertServices {
     //     // );
     //   },
     // );
-
-
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return showModalBottomSheet(
@@ -506,7 +505,7 @@ class AlertServices {
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                top: height / 4.3 - 100,
+                top: height / 5.5 - 100,
                 child: Container(
                   height: height,
                   width: width,
@@ -519,7 +518,7 @@ class AlertServices {
                 ),
               ),
               Positioned(
-                top: height / 4.9 - 100,
+                top: height / 6.6 - 100,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -543,7 +542,7 @@ class AlertServices {
                       padding: const EdgeInsets.only(
                         right: 50,
                         left: 50,
-                        top: 20,
+                        top: 30,
                         bottom: 0,
                       ),
                       child: Image.asset(
@@ -562,35 +561,39 @@ class AlertServices {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      balance,
-                      style:
-                      const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      "$balance",
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: Text(
-                          balSub,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
-                        ),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: Text(
+                        balSub,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.normal),
                       ),
                     ),
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 0),
                       child: SizedBox(
-                        // width: double.infinity,
                         width: 310,
                         height: 42,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            Navigator.pushNamed(context, "add_more_fund", arguments: {"stationDetails": stationDetails, "rideId": rideID,"rideID":scanEndRideId},
+                            Navigator.pushNamed(
+                              context,
+                              "add_more_fund",
+                              arguments: {
+                                "stationDetails": stationDetails,
+                                "rideId": rideID,
+                                "rideID": scanEndRideId
+                              },
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -611,7 +614,6 @@ class AlertServices {
                       ),
                     ),
                     const SizedBox(height: 10),
-
                   ],
                 ),
               )
@@ -621,5 +623,4 @@ class AlertServices {
       },
     );
   }
-
 }

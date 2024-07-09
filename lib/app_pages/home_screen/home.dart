@@ -10,8 +10,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+
 import '../../app_services/index.dart';
 import '../../app_themes/app_colors.dart';
+import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_provider/location_service.dart';
 import '../../app_utils/app_widgets/app_button.dart';
 import '../scan_to_endride/widget/ride_done_alert.dart';
@@ -203,120 +205,42 @@ class _HomeState extends State<Home> {
               bottom: 0,
               left: 0,
               right: 0,
-              top: height / 1.96,
-              // top: 550,
+              top: height / 2.10,
               child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(25),
-                    ),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(25),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "How long is your dream ride?",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 40, 15, 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "How long is your dream ride?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
                         ),
-                       // const SizedBox(height: 7),
-                        sliderWidget(),
-                        // const SizedBox(height: 30),
-                        // Column(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   crossAxisAlignment: CrossAxisAlignment.center,
-                        //   children: [
-                        //     Stack(
-                        //       children: [
-                        //         SfSliderTheme(
-                        //           data: const SfSliderThemeData(
-                        //             tooltipBackgroundColor: AppColors.primary,
-                        //             thumbColor: Colors.transparent,
-                        //             thumbRadius: 20,
-                        //             activeDividerColor: Colors.white,
-                        //           ),
-                        //           child: Center(
-                        //             child: SfSlider(
-                        //               min: 10.0,
-                        //               max: 100.0,
-                        //               interval: 10,
-                        //               shouldAlwaysShowTooltip: false,
-                        //               stepSize: 10,
-                        //               thumbIcon: Image.asset(
-                        //                 "assets/img/slider1.png",
-                        //                 width: 16,
-                        //                 height: 20,
-                        //               ),
-                        //               value: distance,
-                        //               inactiveColor: AppColors.primary.withOpacity(0.3),
-                        //               labelPlacement: LabelPlacement.onTicks,
-                        //               thumbShape: const SfThumbShape(),
-                        //               semanticFormatterCallback: (dynamic value) {
-                        //                 return '$value km';
-                        //               },
-                        //               enableTooltip: true,
-                        //               showLabels: false,
-                        //               showDividers: true,
-                        //               showTicks: false,
-                        //               tooltipTextFormatterCallback: (dynamic actualValue, String formattedText) {
-                        //                 return "$formattedText km";
-                        //               },
-                        //               onChanged: (dynamic newValue) {
-                        //                 setState(() {
-                        //                   distance = newValue;
-                        //                 });
-                        //               },
-                        //             ),
-                        //           ),
-                        //         ),
-                        //         /*Positioned(
-                        //           right: 0,  // Adjust this value to position the scooter image exactly at the end of the slider
-                        //           top: 10,   // Adjust this value to vertically center the image if necessary
-                        //           child: Image.asset(
-                        //             "assets/img/scooter.png",
-                        //             height: 20,
-                        //             width: 20,
-                        //           ),
-                        //         ),*/
-                        //       ],
-                        //     ),
-                        //     const Padding(
-                        //       padding: EdgeInsets.symmetric(horizontal: 16),
-                        //       child: Row(
-                        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //         crossAxisAlignment: CrossAxisAlignment.start,
-                        //         children: [
-                        //           Text('10 km',
-                        //               style: TextStyle(
-                        //                   color: Color(0xff7B7B7B),
-                        //                   fontWeight: FontWeight.bold)),
-                        //           Text('100 km',
-                        //               style: TextStyle(
-                        //                   color: Color(0xff7B7B7B),
-                        //                   fontWeight: FontWeight.bold)),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Preferred Category",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                      const SizedBox(height: 16),
+                      sliderWidget(),
+                      const SizedBox(height: 15),
+                      const Text(
+                        "Preferred Category",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(height: 5),
-                        if (stationDetails.isNotEmpty) ...[
-                          Wrap(
+                      ),
+                      const SizedBox(height: 5),
+                      if (stationDetails.isNotEmpty) ...[
+                        Flexible(
+                          child: Wrap(
                             spacing: 10.0,
                             runSpacing: 5.0,
                             alignment: WrapAlignment.start,
@@ -363,12 +287,15 @@ class _HomeState extends State<Home> {
                               ],
                             ],
                           ),
-                          const SizedBox(height: 5),
-                          buttonWidget(),
-                        ],
-                        SizedBox(height: 5)                      ],
-                    ),
-                  )),
+                        ),
+                        const SizedBox(height: 25),
+                        buttonWidget(),
+                      ],
+                      CustomTheme.defaultHeight10,
+                    ],
+                  ),
+                ),
+              ),
             )
           ],
         ),
@@ -669,6 +596,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
   rideDoneAlert(List res) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;

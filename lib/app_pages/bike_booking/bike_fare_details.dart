@@ -123,7 +123,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Expanded(
-                            flex: 2,
+                            flex: 3,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,7 +199,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // const SizedBox(height: 40),
+                                const SizedBox(height: 40),
                                 fd[0]['imageUrl'] != null
                                     ? Image.network(
                                         fd[0]['imageUrl'].toString(),
@@ -211,8 +211,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                                     : Image.asset(
                                         "assets/img/bike.png",
                                         fit: BoxFit.fitWidth,
+                                        // height: 110,
                                         // width: 210,
-                                        // height: 20,
+                                        // height: 120,
                                         // height: 130,
                                       ),
                               ],
@@ -297,7 +298,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     Row(
