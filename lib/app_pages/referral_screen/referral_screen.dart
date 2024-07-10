@@ -23,9 +23,12 @@ class _ReferralScreenState extends State<ReferralScreen> {
   List customerDetails = [];
   SecureStorage secureStorage = SecureStorage();
   AlertServices alertServices = AlertServices();
-  CustomerService customerService=CustomerService();
+  CustomerService customerService = CustomerService();
+
+  /// INITIATION STATE
   @override
   void initState() {
+    debugPrint(" --- Referral Screen --- ");
     super.initState();
     getCouponCode();
   }
@@ -34,12 +37,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     customerService.getCustomer(mobile).then((response) {
-      print(response);
       customerDetails = [response];
-     referCode = customerDetails[0]['uniqueReferralCode'];
+      referCode = customerDetails[0]['uniqueReferralCode'];
       secureStorage.save("referCode", referCode);
-      print(response["uniqueReferralCode"]);
-      referCodeCtl.text = referCode;
+      referCodeCtl.text = referCode.toUpperCase();
       alertServices.hideLoading();
       setState(() {});
     });
@@ -57,83 +58,89 @@ class _ReferralScreenState extends State<ReferralScreen> {
       ),
       body: SingleChildScrollView(
         physics: const ScrollPhysics(),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
+              const SizedBox(height: 16),
               const Text(
                 Constants.spreadword,
                 style: TextStyle(
-                    fontSize: 20,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w500),
+                  fontSize: 20,
+                  color: AppColors.black,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              const SizedBox(
-                height: 15,
+              const SizedBox(height: 15),
+              const Text(
+                Constants.sharefreinds,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: AppColors.referColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
               ),
-              const Text(Constants.sharefreinds,
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: AppColors.referColor,
-                      fontWeight: FontWeight.w400),
-                  textAlign: TextAlign.center),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Align(
                 alignment: Alignment.center,
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Container(
-                      width: 240,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 0.1),borderRadius: BorderRadius.circular(6),
-                        color: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: referCodeCtl,
+                      textAlign: TextAlign.center,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
                       ),
-                      child: TextFormField(
-                        controller: referCodeCtl,
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.center,
-                        style: const TextStyle(fontSize: 16,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w400,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.copy,
-                                color: Color(0XffB0B0B0)),
-                            onPressed: () {
-                              Clipboard.setData(
-                                  ClipboardData(text: referCodeCtl.text));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Referral code copied to clipboard')),
-                              );
-                            },
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                              const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                              const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                            Icons.copy,
+                            color: Color(0XffB0B0B0),
                           ),
-                          hintStyle: CustomTheme.formFieldStyle,
+                          onPressed: () {
+                            clickToCopy();
+                          },
                         ),
+                        hintStyle: CustomTheme.formFieldStyle,
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 25),
               SizedBox(
-                width: 165,
-                height: 42,
+                width: 200,
+                height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      side: const BorderSide(color: Colors.green),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
+                    backgroundColor: Colors.green,
+                    side: const BorderSide(color: Colors.green),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
                   onPressed: () async {
                     final box = context.findRenderObject() as RenderBox?;
                     await Share.share(referCodeCtl.text,
@@ -144,9 +151,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   child: const Text(
                     "Share Now",
                     style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -155,5 +163,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
         ),
       ),
     );
+  }
+
+  clickToCopy() {
+    Clipboard.setData(ClipboardData(text: referCodeCtl.text));
+    alertServices.toast("Referral code copied to clipboard");
   }
 }

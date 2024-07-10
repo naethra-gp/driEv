@@ -133,7 +133,7 @@ class _RideSummaryState extends State<RideSummary> {
                                               ),
                                               TextSpan(
                                                 text:
-                                                    "${rd[0]['planType']}-${rd[0]['vehicleId']}",
+                                                    "${rd[0]['planType']} ${rd[0]['vehicleId']}",
                                                 style: heading(Colors.black),
                                               ),
                                             ],

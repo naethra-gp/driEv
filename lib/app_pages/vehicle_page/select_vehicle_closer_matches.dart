@@ -50,7 +50,7 @@ class _SelectVehicleCloserMatchesState
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -150,10 +150,11 @@ class _SelectVehicleCloserMatchesState
                             "distance": data[0]['distanceText'].toString(),
                             "vehicleId": fd[index]['vehicleId'].toString(),
                             "via": "app",
-                            "data":  [],
+                            "data": [],
                           }
                         ];
-                        Navigator.pushNamed(context, "bike_fare_details", arguments: {"query": params});
+                        Navigator.pushNamed(context, "bike_fare_details",
+                            arguments: {"query": params});
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(0),
@@ -290,13 +291,16 @@ class _SelectVehicleCloserMatchesState
             ],
             if (cd.isNotEmpty) ...[
               const SizedBox(height: 16),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Closer Matches:",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Closer Matches:",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -322,7 +326,8 @@ class _SelectVehicleCloserMatchesState
                             "via": "app",
                           }
                         ];
-                        Navigator.pushNamed(context, "bike_fare_details", arguments: {"query": params});
+                        Navigator.pushNamed(context, "bike_fare_details",
+                            arguments: {"query": params});
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(0),

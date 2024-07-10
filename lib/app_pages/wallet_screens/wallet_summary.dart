@@ -43,7 +43,6 @@ class _WalletSummaryState extends State<WalletSummary> {
         walletSummaryDetails = List<Map<String, dynamic>>.from(response);
         alertServices.hideLoading();
       });
-      print(walletSummaryDetails[0]["openingBalance"]);
       walletBalance =
           walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2);
       setState(() {});
@@ -82,34 +81,35 @@ class _WalletSummaryState extends State<WalletSummary> {
                 ],
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Image.asset(
                     "assets/img/savemoney.png",
-                    height: 57,
-                    width: 57,
+                    height: 60,
+                    width: 60,
                   ),
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 25),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       const Text(
                         "Current Wallet Balance",
                         style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400),
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                       if (walletSummaryDetails.isNotEmpty) ...[
                         Text(
-                          walletSummaryDetails[0]["closingBalance"]
-                              .toStringAsFixed(2),
+                          "₹ ${walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2)}",
                           style: const TextStyle(
-                              fontSize: 46,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
+                            fontSize: 45,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ]
                     ],
@@ -118,7 +118,7 @@ class _WalletSummaryState extends State<WalletSummary> {
               ),
             ),
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,21 +128,26 @@ class _WalletSummaryState extends State<WalletSummary> {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, "add_more_fund", arguments: {"stationDetails": [], "rideId": "","rideID":[]});
+                    Navigator.pushNamed(context, "add_more_fund", arguments: {
+                      "stationDetails": [],
+                      "rideId": "",
+                      "rideID": []
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     side: const BorderSide(color: Colors.green),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(25),
                     ),
                   ),
                   child: const Text(
                     "Add More Fund",
                     style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500),
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -161,31 +166,31 @@ class _WalletSummaryState extends State<WalletSummary> {
                         backgroundColor: Colors.green,
                         side: const BorderSide(color: Colors.green),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: BorderRadius.circular(25),
                         ),
                       ),
                       child: const Text(
                         "Withdraw Fund",
                         style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500),
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                   Row(
                     children: [
                       const Text(
-                        "*Charges Apply",
+                        "* Charges Apply",
                         style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.black,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w300),
+                          fontSize: 11,
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      const SizedBox(width: 10),
                       Image.asset(
                         "assets/img/vector.png",
                         width: 20,
@@ -197,9 +202,7 @@ class _WalletSummaryState extends State<WalletSummary> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Expanded(
             child: Container(
               width: double.infinity,
@@ -214,20 +217,19 @@ class _WalletSummaryState extends State<WalletSummary> {
                   const Text(
                     "Wallet History",
                     style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(5),
                       itemCount: min(
-                          4,
-                          walletSummaryDetails
-                              .length), // Limit to 4 transactions
+                        4,
+                        walletSummaryDetails.length,
+                      ),
                       itemBuilder: (context, index) {
                         final transaction = walletSummaryDetails[index];
                         return Column(
@@ -242,12 +244,8 @@ class _WalletSummaryState extends State<WalletSummary> {
                                   .toStringAsFixed(2),
                               transactionType: transaction['transactionType'],
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Divider(
-                              color: AppColors.centerAlign,
-                            ),
+                            const SizedBox(height: 10),
+                            const Divider(color: AppColors.centerAlign),
                           ],
                         );
                       },
@@ -262,10 +260,11 @@ class _WalletSummaryState extends State<WalletSummary> {
                           TextSpan(
                             text: "See All Transactions",
                             style: const TextStyle(
-                                fontSize: 12,
-                                decoration: TextDecoration.underline,
-                                color: AppColors.transacColor,
-                                fontWeight: FontWeight.w500),
+                              fontSize: 12,
+                              decoration: TextDecoration.underline,
+                              color: AppColors.transacColor,
+                              fontWeight: FontWeight.w500,
+                            ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.pushNamed(context, "all_transaction",
@@ -290,7 +289,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                           backgroundColor: Colors.green,
                           side: const BorderSide(color: Colors.green),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: BorderRadius.circular(25),
                           ),
                         ),
                         child: const Text(
@@ -588,16 +587,18 @@ class WalletSummaryList extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400),
+                  fontSize: 12,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               Text(
                 formattedTransactionTime,
                 style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.fontgrey,
-                    fontWeight: FontWeight.w400),
+                  fontSize: 10,
+                  color: AppColors.fontgrey,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ],
           ),
@@ -624,9 +625,9 @@ class WalletSummaryList extends StatelessWidget {
     if (time.year == now.year &&
         time.month == now.month &&
         time.day == now.day - 1) {
-      return "Yesterday, ${DateFormat('HH:mm').format(time)}";
+      return "Yesterday, ${DateFormat('HH:mm a').format(time)}";
     } else {
-      return DateFormat('yyyy-MM-dd, HH:mm').format(time);
+      return DateFormat('yyyy-MM-dd, HH:mm a').format(time);
     }
   }
 }

@@ -29,7 +29,7 @@ class _RideHistoryState extends State<RideHistory> {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     feedbackServices.getRideHistory(mobile).then((response) {
-      rideHistoryDetails = List<Map<String,dynamic>>.from(response);
+      rideHistoryDetails = List<Map<String, dynamic>>.from(response);
       alertServices.hideLoading();
       setState(() {});
     }).catchError((error) {
@@ -74,22 +74,20 @@ class _RideHistoryState extends State<RideHistory> {
             const Text(
               "Ride History",
               style: TextStyle(
-                  fontSize: 20,
-                  color: AppColors.black,
-                  fontWeight: FontWeight.w500),
+                fontSize: 20,
+                color: AppColors.black,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             const Text("Take a peek at your ride history \n with us.",
                 style: TextStyle(
-                    fontSize: 18,
-                    color: AppColors.referColor,
-                    fontWeight: FontWeight.w400),
+                  fontSize: 18,
+                  color: AppColors.referColor,
+                  fontWeight: FontWeight.w400,
+                ),
                 textAlign: TextAlign.center),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Flexible(
               child: ListView.builder(
                 physics: const ScrollPhysics(),
@@ -98,78 +96,64 @@ class _RideHistoryState extends State<RideHistory> {
                 itemCount: rideHistoryDetails.length,
                 itemBuilder: (BuildContext ctx, int index) {
                   final ride = rideHistoryDetails[index];
-                  return GestureDetector(
-                    /* onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                RatingBarScreen())), */
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Card(
-                        color: Colors.white,
-                        surfaceTintColor: Colors.white,
-                        elevation: 7,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(10), // if you need this
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
+                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0xffD2D2D2),
+                          width: 1,
                         ),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.all(7),
-                              child: Container(
-                                width: 51,
-                                height: 51,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  border: Border.all(
-                                      color: AppColors.customGrey, width: 1),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: Image.asset(
-                                    "assets/img/ridebike.png",
-                                    height: 30,
-                                    width: 49,
-                                  ),
-                                ),
-                              ),
-                            ), // Icon widget
-                            Expanded(
-                              flex: 5,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    formatDateTime(ride["createdDate"] ?? ""),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  Text(
-                                    formatTime(ride["startTime"] ?? ""),
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ],
-                              ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          width: 51,
+                          height: 51,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            border: Border.all(
+                              color: const Color(0xffD2D2D2),
+                              width: 1,
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                "₹${ride["payableAmount"].toString()}" ?? "",
-                                style: const TextStyle(
-                                    fontSize: 22,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            )
-                          ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Image.asset(
+                              "assets/img/ridebike.png",
+                              height: 30,
+                              width: 49,
+                            ),
+                          ),
                         ),
+                        title: Text(
+                          formatDateTime(ride["createdDate"] ?? ""),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        subtitle: Text(
+                          formatTime(ride["startTime"] ?? ""),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        trailing: Text(
+                          "₹${ride["payableAmount"].toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        onTap: () {},
                       ),
                     ),
                   );

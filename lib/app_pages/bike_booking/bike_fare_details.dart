@@ -118,7 +118,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     DateTime targetDateTime = DateTime.parse(blockedTill);
     print("targetDateTime $targetDateTime");
     Duration remainingTime = const Duration();
-
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         remainingTime = targetDateTime.difference(DateTime.now());
@@ -885,19 +884,13 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         print("extendBlocking Response -->  $r");
         if (r != null) {
           setState(() {
-            // blockId = r['blockId'].toString();
             enableChasingTime = false;
             int blockStart = int.parse(reserveMins.toString()) * 60;
             print("blockStart $blockStart");
-            // _start = int.parse(reserveMins.toString()) * 60;
             _start = blockStart + _start;
             print("_start --> $_start");
             isReservedDone = true;
             timerRunning = true;
-            // do {
-            //   countdownTimer.cancel();
-            // } while (countdownTimer.isActive);
-
             countDownTime(r['blockedTill'].toString());
           });
           do {

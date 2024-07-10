@@ -46,7 +46,7 @@ class Constants {
   static const String nailingit="Check who's nailing it!";
 
   static const String apikey="AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA";
-  static const String spreadword="Spread the word,earn Rewards!";
+  static const String spreadword="Spread the word, earn Rewards!";
   static const String sharefreinds ="Share your referral code with \n friends and get 20% off when they \n take their first ride.";
 
 }
