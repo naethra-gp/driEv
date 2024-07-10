@@ -9,16 +9,15 @@ import 'package:provider/provider.dart';
 import 'app_config/app_routes.dart';
 import 'app_utils/app_provider/connectivity_provider.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      // systemNavigationBarColor: Colors.white,
-      // statusBarColor: Colors.white,
-      // statusBarIconBrightness: Brightness.dark,
-      // statusBarBrightness: Brightness.dark,
-    ),
+        // systemNavigationBarColor: Colors.white,
+        // statusBarColor: Colors.white,
+        // statusBarIconBrightness: Brightness.dark,
+        // statusBarBrightness: Brightness.dark,
+        ),
   );
   await Hive.initFlutter();
   await Hive.openBox(Constants.storageBox);

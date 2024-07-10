@@ -17,15 +17,15 @@ class WithdrawAmount extends StatefulWidget {
 }
 
 class _WithdrawAmountState extends State<WithdrawAmount> {
-  AlertServices alertServices= AlertServices();
-  SecureStorage secureStorage=SecureStorage();
-  WalletServices walletServices=WalletServices();
-  String mobile="";
-  TextEditingController withdrawAmountCtl= TextEditingController();
+  AlertServices alertServices = AlertServices();
+  SecureStorage secureStorage = SecureStorage();
+  WalletServices walletServices = WalletServices();
+  String mobile = "";
+  TextEditingController withdrawAmountCtl = TextEditingController();
   @override
   void initState() {
     super.initState();
-    mobile=secureStorage.get("mobile")??"";
+    mobile = secureStorage.get("mobile") ?? "";
   }
 
   @override
@@ -66,6 +66,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -92,7 +93,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                       width: 57,
                     ),
                     const SizedBox(width: 15),
-                     Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -116,7 +117,9 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                 ),
               ),
             ),
-            const SizedBox(height: 50,),
+            const SizedBox(
+              height: 50,
+            ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -138,7 +141,8 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                           width: 270,
                           height: 40,
                           decoration: BoxDecoration(
-                              border: Border.all(width: 1,color: Color(0xffD2D2D2)),
+                              border: Border.all(
+                                  width: 1, color: Color(0xffD2D2D2)),
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10)),
                           child: TextFormField(
@@ -286,9 +290,9 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                     height: 42,
                     child: ElevatedButton(
                       onPressed: () {
-                        if(withdrawAmountCtl.text=="") {
+                        if (withdrawAmountCtl.text == "") {
                           alertServices.errorToast("Enter amount to Withdraw");
-                        }else{
+                        } else {
                           submitWithdrawal();
                         }
                       },
