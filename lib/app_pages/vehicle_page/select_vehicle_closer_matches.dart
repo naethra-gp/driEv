@@ -150,6 +150,7 @@ class _SelectVehicleCloserMatchesState
                             "distance": data[0]['distanceText'].toString(),
                             "vehicleId": fd[index]['vehicleId'].toString(),
                             "via": "app",
+                            "data":  [],
                           }
                         ];
                         Navigator.pushNamed(context, "bike_fare_details", arguments: {"query": params});

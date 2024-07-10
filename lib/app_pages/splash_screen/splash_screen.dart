@@ -16,7 +16,6 @@ class _SplashScreenState extends State<SplashScreen> {
   AlertServices alertServices = AlertServices();
   VehicleService vehicleService = VehicleService();
   bool loading = true;
-  // String mobile = "";
 
   @override
   void initState() {
@@ -47,11 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
   getRoute() async {
     var mobile = await secureStorage.get("mobile");
     bool isLogin = await secureStorage.get("isLogin") ?? false;
-    // print("mobile $mobile");
-    // print("isLogin $isLogin");
     if (isLogin && mobile != null) {
       getActiveRides(mobile);
-      // Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     } else {
       Navigator.pushNamedAndRemoveUntil(
           context, "landing_page", (route) => false);
@@ -59,7 +55,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   getActiveRides(String mobile) {
-    print("---------- getActiveRides -------------");
     alertServices.showLoading();
     vehicleService.getActiveRides(mobile).then((r) {
       alertServices.hideLoading();
@@ -69,10 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
             rideList.where((e) => e['status'].toString() == "On Ride").toList();
         if (a.isEmpty) {
           getBlockRides(mobile);
-          // home page
-          // Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
         } else {
-          // print("Ride ID -> ${a[0]['rideId'].toString()}");
           Navigator.pushNamed(context, "on_ride",
               arguments: a[0]['rideId'].toString());
         }
@@ -81,20 +73,15 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   getBlockRides(String mobile) {
-    print("---------- getBlockRides -------------");
     alertServices.showLoading();
     vehicleService.getBlockedRides(mobile).then((r) {
       alertServices.hideLoading();
       if (r != null) {
         if (r.isNotEmpty) {
-          // print("getBlockRides ---> $r");
           Navigator.pushNamed(context, "extend_bike", arguments: r);
         } else {
           Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
         }
-        // setState(() {
-        // rideDetails = [r];
-        // });
       }
     });
   }

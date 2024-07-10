@@ -69,10 +69,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     String id = widget.stationDetails[0]['vehicleId'];
     getFareDetails(id);
     super.initState();
+    print("sss ${widget.stationDetails}");
     setState(() {
       timerRunning = widget.stationDetails[0]['via'] == "api";
-      blockId = widget.stationDetails[0]['data'][0]['blockId'].toString();
-      print("blockId $blockId");
       // enableChasingTime = true;
     });
     if (timerRunning) {
@@ -90,6 +89,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     Duration difference = time2.difference(time1);
     _start = difference.inMinutes * 60;
     double percentage = _start * 0.20;
+    blockId = widget.stationDetails[0]['data']![0]['blockId'].toString();
+    print("blockId $blockId");
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         remainingTime = targetDateTime.difference(DateTime.now());
@@ -118,8 +119,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     print("targetDateTime $targetDateTime");
     Duration remainingTime = const Duration();
 
-
-
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         remainingTime = targetDateTime.difference(DateTime.now());
@@ -140,7 +139,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       });
     });
   }
-
 
   @override
   void dispose() {
@@ -864,7 +862,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     });
   }
 
-
   void _cancelTimer() {
     if (countdownTimer != null) {
       countdownTimer!.cancel();
@@ -962,12 +959,13 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         Map<String, Object> params = {
           "contact": secureStorage.get("mobile").toString(),
           "vehicleId": fareDetails[0]['vehicleId'].toString(),
-          "duration": reserveMins.toString()
+          "duration":
+              reserveMins.toString() == "" ? "0" : reserveMins.toString()
         };
         print("params $params");
         bookingServices.blockBike(params).then((r2) async {
           alertServices.hideLoading();
-
+          print("r2 $r2");
           if (amount > balance) {
             alertServices.insufficientBalanceAlert(context, "₹$balance",
                 r2["message"], widget.stationDetails, "", []);

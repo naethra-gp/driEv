@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
@@ -39,9 +38,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   Timer? countdownTimer;
   bool enableChasingTime = false;
   List data = [];
-
   // final _childKey = GlobalKey<_TimerButtonWidgetState>();
-
 
   @override
   void initState() {
@@ -58,7 +55,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
 
   @override
   void dispose() {
-    // Cancel the child widget's timer when the parent is disposed
     // _childKey.currentState?._cancelTimer();
     super.dispose();
   }
@@ -228,7 +224,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
       enableDrag: false,
       builder: (context) {
         return PopScope(
-          canPop: true,
+          canPop: false,
           child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -341,41 +337,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                       // key: _childKey,
                       data: data,
                     ),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   height: 50,
-                    //   child: ElevatedButton(
-                    //     onPressed: () {},
-                    //     style: ElevatedButton.styleFrom(
-                    //       textStyle: const TextStyle(
-                    //         color: Colors.black,
-                    //         fontWeight: FontWeight.w500,
-                    //         fontSize: 14,
-                    //       ),
-                    //       elevation: 0,
-                    //       foregroundColor: Colors.white,
-                    //       backgroundColor: enableChasingTime
-                    //           ? const Color(0xffFB8F80)
-                    //           : const Color(0xffE1FFE6),
-                    //       side: const BorderSide(
-                    //           color: Color(0xffE1FFE6), width: 0),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(50),
-                    //       ),
-                    //     ),
-                    //     child: Text(
-                    //       "$formattedMinutes:$formattedSeconds Minute to Ride Time!",
-                    //       // "$_formattedTime Minute to Ride Time!",
-                    //       style: TextStyle(
-                    //           // color: enableChasingTime
-                    //           //     ? Colors.white
-                    //           //     : AppColors.primary,
-                    //           fontSize: 14,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-
                     const SizedBox(height: 25),
                     SizedBox(
                       height: 50,
@@ -391,8 +352,14 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                               "data": data
                             }
                           ];
-                          Navigator.pushNamed(context, "bike_fare_details",
-                              arguments: {"query": params});
+                          // Navigator.pushNamed(context, "bike_fare_details",
+                          //     arguments: {"query": params});
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            "bike_fare_details",
+                            arguments: {"query": params},
+                            (route) => false,
+                          );
                         },
                       ),
                     ),
@@ -505,4 +472,3 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     }
   }
 }
-
