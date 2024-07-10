@@ -57,12 +57,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   /// timer continue
   bool timerRunning = false;
-  // String formattedMinutes = "";
-  // String formattedSeconds = "";
-  // Timer? countdownTimer;
-  // int _start = 0;
-  // late Timer _timer;
-  // bool enableChasingTime = false;
 
   @override
   void initState() {
@@ -79,66 +73,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     }
   }
 
-  getBlockDetails() {
-    _cancelTimer();
-    List block = widget.stationDetails[0]['data'];
-    var time1 = DateTime.parse(block[0]['blockedOn'].toString());
-    var time2 = DateTime.parse(block[0]['blockedTill'].toString());
-    DateTime targetDateTime = DateTime.parse(time2.toString());
-    Duration remainingTime = const Duration();
-    Duration difference = time2.difference(time1);
-    _start = difference.inMinutes * 60;
-    double percentage = _start * 0.20;
-    blockId = widget.stationDetails[0]['data']![0]['blockId'].toString();
-    print("blockId $blockId");
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      setState(() {
-        remainingTime = targetDateTime.difference(DateTime.now());
-        int minutes = remainingTime.inMinutes % 60;
-        int seconds = remainingTime.inSeconds % 60;
-        int remainInSec = remainingTime.inMinutes * 60;
-        formattedMinutes = minutes.toString().padLeft(2, '0');
-        formattedSeconds = seconds.toString().padLeft(2, '0');
-        if (percentage > remainInSec) {
-          enableChasingTime = true;
-        }
-        if (remainingTime.isNegative) {
-          countdownTimer?.cancel();
-        }
-        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
-          countdownTimer?.cancel();
-          Navigator.pushReplacementNamed(context, "error_bike");
-        }
-      });
-    });
-  }
-
-  countDownTime(String blockedTill) {
-    _cancelTimer();
-    DateTime targetDateTime = DateTime.parse(blockedTill);
-    print("targetDateTime $targetDateTime");
-    Duration remainingTime = const Duration();
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      setState(() {
-        remainingTime = targetDateTime.difference(DateTime.now());
-        print("remainingTime $remainingTime");
-        int minutes = remainingTime.inMinutes % 60;
-        int seconds = remainingTime.inSeconds % 60;
-        formattedMinutes = minutes.toString().padLeft(2, '0');
-        formattedSeconds = seconds.toString().padLeft(2, '0');
-        print("'Time remaining: $formattedMinutes:$formattedSeconds'");
-        // if (remainingTime.isNegative) {
-        //   countdownTimer?.cancel();
-        // }
-        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
-          print("--- Timer Stopped ---");
-          countdownTimer?.cancel();
-          Navigator.pushReplacementNamed(context, "error_bike");
-        }
-      });
-    });
-  }
-
   @override
   void dispose() {
     _timeController.dispose();
@@ -146,27 +80,59 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     super.dispose();
   }
 
-  String get _formattedTime {
-    int minutes = _start ~/ 60;
-    int seconds = _start % 60;
-    return '$minutes:${seconds.toString().padLeft(2, '0')}';
-  }
-
-  getFareDetails(String id) {
-    alertServices.showLoading();
-    bookingServices.getFare(id).then((response) async {
-      alertServices.hideLoading();
-      setState(() {
-        fareDetails = [response];
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     List fd = fareDetails;
     List sd = widget.stationDetails;
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked : (didPop){
+        print("timerRunning $timerRunning");
+        if (didPop) {
+          return;
+        }
+        // if(timerRunning) {
+        //
+        //   showDialog(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return AlertDialog(
+        //         title: const Text('Are you sure?'),
+        //         content: const Text('Do you want to proceed with this action?'),
+        //         actions: <Widget>[
+        //           TextButton(
+        //             onPressed: () {
+        //               Navigator.of(context).pop(false); // Return false when "No" is pressed
+        //             },
+        //             child: const Text('No'),
+        //           ),
+        //           TextButton(
+        //             onPressed: () {
+        //               Navigator.of(context).pop(true); // Return true when "Yes" is pressed
+        //             },
+        //             child: const Text('Yes'),
+        //           ),
+        //         ],
+        //       );
+        //     },
+        //   ).then((result) {
+        //     // Handle the result here
+        //     if (result == true) {
+        //       // User confirmed the action
+        //       ScaffoldMessenger.of(context).showSnackBar(
+        //         const SnackBar(content: Text('Action confirmed')),
+        //       );
+        //     } else {
+        //       // User cancelled the action
+        //       ScaffoldMessenger.of(context).showSnackBar(
+        //         const SnackBar(content: Text('Action cancelled')),
+        //       );
+        //     }
+        //   });
+        //
+        // }
+      },
+      child: Scaffold(
         appBar: AppBar(
           surfaceTintColor: Colors.white,
           backgroundColor: Colors.white,
@@ -455,18 +421,15 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -474,8 +437,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -576,8 +538,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         backgroundColor: enableChasingTime
                             ? const Color(0xffFB8F80)
                             : const Color(0xffE1FFE6),
-                        side: const BorderSide(
-                            color: Color(0xffE1FFE6), width: 0),
+                        side:
+                            const BorderSide(color: Color(0xffE1FFE6), width: 0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -657,7 +619,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       }),
                     ),
                     const SizedBox(height: 4),
-
+      
                     Center(
                       child: Text(
                           "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
@@ -708,8 +670,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         foregroundColor: Colors.white,
                         backgroundColor: AppColors.primary,
-                        side: const BorderSide(
-                            color: AppColors.primary, width: 1),
+                        side:
+                            const BorderSide(color: AppColors.primary, width: 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -736,8 +698,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.white,
-                        side: const BorderSide(
-                            color: AppColors.primary, width: 1),
+                        side:
+                            const BorderSide(color: AppColors.primary, width: 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -764,8 +726,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         foregroundColor: Colors.white,
                         backgroundColor: AppColors.primary,
-                        side: const BorderSide(
-                            color: AppColors.primary, width: 1),
+                        side:
+                            const BorderSide(color: AppColors.primary, width: 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -778,7 +740,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               ],
             ],
           ),
-        )));
+        )),
+      ),
+    );
   }
 
   TextStyle heading(Color color) {
@@ -788,6 +752,16 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       color: color,
       fontSize: 16,
     );
+  }
+
+  getFareDetails(String id) {
+    alertServices.showLoading();
+    bookingServices.getFare(id).then((response) async {
+      alertServices.hideLoading();
+      setState(() {
+        fareDetails = [response];
+      });
+    });
   }
 
   reserveBike() async {
@@ -977,5 +951,65 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         });
       });
     }
+  }
+
+  getBlockDetails() {
+    _cancelTimer();
+    List block = widget.stationDetails[0]['data'];
+    var time1 = DateTime.parse(block[0]['blockedOn'].toString());
+    var time2 = DateTime.parse(block[0]['blockedTill'].toString());
+    DateTime targetDateTime = DateTime.parse(time2.toString());
+    Duration remainingTime = const Duration();
+    Duration difference = time2.difference(time1);
+    _start = difference.inMinutes * 60;
+    double percentage = _start * 0.20;
+    blockId = widget.stationDetails[0]['data']![0]['blockId'].toString();
+    print("blockId $blockId");
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        remainingTime = targetDateTime.difference(DateTime.now());
+        int minutes = remainingTime.inMinutes % 60;
+        int seconds = remainingTime.inSeconds % 60;
+        int remainInSec = remainingTime.inMinutes * 60;
+        formattedMinutes = minutes.toString().padLeft(2, '0');
+        formattedSeconds = seconds.toString().padLeft(2, '0');
+        if (percentage > remainInSec) {
+          enableChasingTime = true;
+        }
+        if (remainingTime.isNegative) {
+          countdownTimer?.cancel();
+        }
+        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
+          countdownTimer?.cancel();
+          Navigator.pushReplacementNamed(context, "error_bike");
+        }
+      });
+    });
+  }
+
+  countDownTime(String blockedTill) {
+    _cancelTimer();
+    DateTime targetDateTime = DateTime.parse(blockedTill);
+    // print("targetDateTime $targetDateTime");
+    Duration remainingTime = const Duration();
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        remainingTime = targetDateTime.difference(DateTime.now());
+        // print("remainingTime $remainingTime");
+        int minutes = remainingTime.inMinutes % 60;
+        int seconds = remainingTime.inSeconds % 60;
+        formattedMinutes = minutes.toString().padLeft(2, '0');
+        formattedSeconds = seconds.toString().padLeft(2, '0');
+        // print("'Time remaining: $formattedMinutes:$formattedSeconds'");
+        // if (remainingTime.isNegative) {
+        //   countdownTimer?.cancel();
+        // }
+        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
+          print("--- Timer Stopped ---");
+          countdownTimer?.cancel();
+          Navigator.pushReplacementNamed(context, "error_bike");
+        }
+      });
+    });
   }
 }

@@ -56,12 +56,15 @@ class _ErrorBikesState extends State<ErrorBikes> {
                 style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               const SizedBox(height: 30),
-              AppButtonWidget(
+              SizedBox(
+                height: 50,
+                child: AppButtonWidget(
                   title: "Okay",
                   onPressed: () {
-                    // Navigator.pop(context);
                     Navigator.pushNamed(context, "home");
-                  }),
+                  },
+                ),
+              ),
             ],
           ),
         ),

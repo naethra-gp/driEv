@@ -505,7 +505,7 @@ class _HomeState extends State<Home> {
                   min: 10.0,
                   max: 100.0,
                   interval: 10,
-                  shouldAlwaysShowTooltip: false,
+                  shouldAlwaysShowTooltip: true,
                   stepSize: 10,
                   thumbIcon: Image.asset("assets/img/slider1.png",
                       width: 16, height: 20),
