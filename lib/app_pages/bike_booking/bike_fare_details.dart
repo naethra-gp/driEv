@@ -55,12 +55,92 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   String formattedSeconds = "";
   Timer? countdownTimer;
 
+  /// timer continue
+  bool timerRunning = false;
+  // String formattedMinutes = "";
+  // String formattedSeconds = "";
+  // Timer? countdownTimer;
+  // int _start = 0;
+  // late Timer _timer;
+  // bool enableChasingTime = false;
+
   @override
   void initState() {
     String id = widget.stationDetails[0]['vehicleId'];
     getFareDetails(id);
     super.initState();
+    setState(() {
+      timerRunning = widget.stationDetails[0]['via'] == "api";
+      blockId = widget.stationDetails[0]['data'][0]['blockId'].toString();
+      print("blockId $blockId");
+      // enableChasingTime = true;
+    });
+    if (timerRunning) {
+      getBlockDetails();
+    }
   }
+
+  getBlockDetails() {
+    _cancelTimer();
+    List block = widget.stationDetails[0]['data'];
+    var time1 = DateTime.parse(block[0]['blockedOn'].toString());
+    var time2 = DateTime.parse(block[0]['blockedTill'].toString());
+    DateTime targetDateTime = DateTime.parse(time2.toString());
+    Duration remainingTime = const Duration();
+    Duration difference = time2.difference(time1);
+    _start = difference.inMinutes * 60;
+    double percentage = _start * 0.20;
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        remainingTime = targetDateTime.difference(DateTime.now());
+        int minutes = remainingTime.inMinutes % 60;
+        int seconds = remainingTime.inSeconds % 60;
+        int remainInSec = remainingTime.inMinutes * 60;
+        formattedMinutes = minutes.toString().padLeft(2, '0');
+        formattedSeconds = seconds.toString().padLeft(2, '0');
+        if (percentage > remainInSec) {
+          enableChasingTime = true;
+        }
+        if (remainingTime.isNegative) {
+          countdownTimer?.cancel();
+        }
+        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
+          countdownTimer?.cancel();
+          Navigator.pushReplacementNamed(context, "error_bike");
+        }
+      });
+    });
+  }
+
+  countDownTime(String blockedTill) {
+    _cancelTimer();
+    DateTime targetDateTime = DateTime.parse(blockedTill);
+    print("targetDateTime $targetDateTime");
+    Duration remainingTime = const Duration();
+
+
+
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        remainingTime = targetDateTime.difference(DateTime.now());
+        print("remainingTime $remainingTime");
+        int minutes = remainingTime.inMinutes % 60;
+        int seconds = remainingTime.inSeconds % 60;
+        formattedMinutes = minutes.toString().padLeft(2, '0');
+        formattedSeconds = seconds.toString().padLeft(2, '0');
+        print("'Time remaining: $formattedMinutes:$formattedSeconds'");
+        // if (remainingTime.isNegative) {
+        //   countdownTimer?.cancel();
+        // }
+        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
+          print("--- Timer Stopped ---");
+          countdownTimer?.cancel();
+          Navigator.pushReplacementNamed(context, "error_bike");
+        }
+      });
+    });
+  }
+
 
   @override
   void dispose() {
@@ -89,7 +169,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   Widget build(BuildContext context) {
     List fd = fareDetails;
     List sd = widget.stationDetails;
-    print("fd ${jsonEncode(fd)}");
     return Scaffold(
         appBar: AppBar(
           surfaceTintColor: Colors.white,
@@ -283,7 +362,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   price: (fd[0]['offer']['perKmPaisa'] / 100).toString(),
                 ),
                 const SizedBox(height: 10),
-                if (!isReservedDone) ...[
+                if (!isReservedDone && !timerRunning) ...[
                   if (isReserve) ...[
                     Align(
                       alignment: Alignment.centerLeft,
@@ -723,16 +802,16 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     } else {
       alertServices.showLoading();
       double amount = double.parse(reserveMins) * reserve;
-      print("Reserve Amount -> $amount");
+      // print("Reserve Amount -> $amount");
       bookingServices.getWalletBalance(mobile).then((r) {
         balance = r['balance'];
-        print("Available Balance -> $balance");
+        // print("Available Balance -> $balance");
         Map<String, Object> params = {
           "contact": secureStorage.get("mobile").toString(),
           "vehicleId": fareDetails[0]['vehicleId'].toString(),
           "duration": reserveMins.toString()
         };
-        print("params $params");
+        // print("params $params");
         bookingServices.blockBike(params).then((r2) async {
           alertServices.hideLoading();
           if (amount > balance) {
@@ -740,22 +819,23 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                 r2["message"], widget.stationDetails, "", []);
           } else {
             // alertServices.showLoading();
-            print("blockBike --> $r2");
+            // print("blockBike --> $r2");
             if (r2 != null) {
               setState(() {
                 blockId = r2['blockId'].toString();
                 enableChasingTime = false;
                 _start = int.parse(reserveMins.toString()) * 60;
                 isReservedDone = true;
+                timerRunning = true;
               });
-              var time1 = DateTime.parse(r2['blockedOn'].toString());
-              var time2 = DateTime.parse(r2['blockedTill'].toString());
-              print(DateFormat.jm()
-                  .format(DateTime.parse(r2['blockedOn'].toString())));
-              print(DateFormat.jm()
-                  .format(DateTime.parse(r2['blockedTill'].toString())));
-              Duration difference = time2.difference(time1);
-              print("difference $difference");
+              // var time1 = DateTime.parse(r2['blockedOn'].toString());
+              // var time2 = DateTime.parse(r2['blockedTill'].toString());
+              // print(DateFormat.jm()
+              //     .format(DateTime.parse(r2['blockedOn'].toString())));
+              // print(DateFormat.jm()
+              //     .format(DateTime.parse(r2['blockedTill'].toString())));
+              // Duration difference = time2.difference(time1);
+              // print("difference $difference");
               countDownTime(r2['blockedTill'].toString());
               _startTimer();
             }
@@ -763,45 +843,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         });
       });
     }
-    // List a =
-    //     reserveTime.where((e) => e['selected'].toString() == "true").toList();
-    // print("a $a");
-    // String b = reserveTimeCtrl.text.toString();
-    // if (b.isNotEmpty) {
-    //   // selectedMin = a[0]['mins'];
-    //   double amount = double.parse(b) * reserve;
-    //   bookingServices.getWalletBalance(mobile).then((r) {
-    //     alertServices.hideLoading();
-    //     balance = r['balance'];
-    //     if (amount > balance) {
-    //       alertServices.insufficientBalanceAlert(context, balance.toString());
-    //     } else {
-    //       if (reserveMins.isEmpty) {
-    //         alertServices.errorToast("Invalid Time!!!");
-    //       } else {
-    //         alertServices.showLoading();
-    //         Map<String, Object> params = {
-    //           "contact": secureStorage.get("mobile").toString(),
-    //           "vehicleId": fareDetails[0]['vehicleId'].toString(),
-    //           "duration": reserveMins.toString()
-    //         };
-    //         print("params $params");
-    //         bookingServices.blockBike(params).then((r) {
-    //           alertServices.hideLoading();
-    //           if (r != null) {
-    //             setState(() {
-    //               blockId = r['blockId'].toString();
-    //               enableChasingTime = false;
-    //               _start = int.parse(reserveMins.toString()) * 60;
-    //               isReservedDone = true;
-    //             });
-    //             _startTimer();
-    //           }
-    //         });
-    //       }
-    //     }
-    //   });
-    // }
   }
 
   void _startTimer() {
@@ -817,37 +858,12 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         if (percentage > _start) {
           enableChasingTime = true;
         }
-        print("_start $_start");
-        print("enableChasingTime $enableChasingTime");
+        // print("_start $_start");
+        // print("enableChasingTime $enableChasingTime");
       });
     });
   }
 
-  countDownTime(String blockedTill) {
-    _cancelTimer();
-    DateTime targetDateTime = DateTime.parse(blockedTill);
-    print("targetDateTime $targetDateTime");
-    Duration remainingTime = const Duration();
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      setState(() {
-        remainingTime = targetDateTime.difference(DateTime.now());
-        print("remainingTime $remainingTime");
-        int minutes = remainingTime.inMinutes % 60;
-        int seconds = remainingTime.inSeconds % 60;
-        formattedMinutes = minutes.toString().padLeft(2, '0');
-        formattedSeconds = seconds.toString().padLeft(2, '0');
-        print("'Time remaining: $formattedMinutes:$formattedSeconds'");
-        // if (remainingTime.isNegative) {
-        //   countdownTimer?.cancel();
-        // }
-        if ("$formattedMinutes:$formattedSeconds" == "00:00") {
-          print("--- Timer Stopped ---");
-          countdownTimer?.cancel();
-          Navigator.pushReplacementNamed(context, "error_bike");
-        }
-      });
-    });
-  }
 
   void _cancelTimer() {
     if (countdownTimer != null) {
@@ -880,6 +896,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
             _start = blockStart + _start;
             print("_start --> $_start");
             isReservedDone = true;
+            timerRunning = true;
             // do {
             //   countdownTimer.cancel();
             // } while (countdownTimer.isActive);

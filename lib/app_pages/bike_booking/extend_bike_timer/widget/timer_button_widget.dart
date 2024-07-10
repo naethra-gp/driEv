@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../app_themes/app_colors.dart';
 
@@ -18,16 +17,20 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget> {
   String formattedSeconds = "";
   Timer? countdownTimer;
   int _start = 0;
-  late Timer _timer;
   bool enableChasingTime = false;
 
   @override
   void initState() {
     getBlockDetails();
-    // TODO: implement initState
     super.initState();
   }
-
+  @override
+  void dispose() {
+    // _timeController.dispose();
+    debugPrint("---- End Time Button Widget ---");
+    countdownTimer?.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -63,54 +66,33 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget> {
   }
 
   getBlockDetails() {
+    _cancelTimer();
     List block = widget.data;
     var time1 = DateTime.parse(block[0]['blockedOn'].toString());
     var time2 = DateTime.parse(block[0]['blockedTill'].toString());
-    countDownTime(block[0]['blockedTill'].toString());
-  }
-
-  countDownTime(String blockedTill) {
-
-    _cancelTimer();
+    Duration difference = time2.difference(time1);
     Duration remainingTime = const Duration();
+    _start = difference.inMinutes * 60;
+    double percentage = _start * 0.20;
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      DateTime targetDateTime = DateTime.parse(blockedTill).toLocal();
+      DateTime targetDateTime = DateTime.parse(time2.toString()).toLocal();
       remainingTime = targetDateTime.difference(DateTime.now());
       int minutes = remainingTime.inMinutes % 60;
       int seconds = remainingTime.inSeconds % 60;
+      int remainInSec = remainingTime.inMinutes * 60;
       formattedMinutes = minutes.toString().padLeft(2, '0');
       formattedSeconds = seconds.toString().padLeft(2, '0');
-      print("Time : $formattedMinutes:$formattedSeconds");
+      if (percentage > remainInSec) {
+        enableChasingTime = true;
+      }
       if (remainingTime.isNegative) {
-        // formattedMinutes = "00";
-        // formattedSeconds = "00";
         countdownTimer?.cancel();
       }
       if ("$formattedMinutes:$formattedSeconds" == "00:00") {
-        print("--- Timer Stopped ---");
         countdownTimer?.cancel();
         Navigator.pushReplacementNamed(context, "error_bike");
       }
       setState(() {});
-    });
-  }
-
-  void _startTimer() {
-    double percentage = _start * 0.20;
-    print("percentage $percentage");
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_start > 0) {
-          _start--;
-        } else {
-          _timer.cancel();
-        }
-        if (percentage > _start) {
-          enableChasingTime = true;
-        }
-        print("_start $_start");
-        print("enableChasingTime $enableChasingTime");
-      });
     });
   }
 

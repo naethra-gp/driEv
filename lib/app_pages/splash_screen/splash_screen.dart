@@ -47,8 +47,8 @@ class _SplashScreenState extends State<SplashScreen> {
   getRoute() async {
     var mobile = await secureStorage.get("mobile");
     bool isLogin = await secureStorage.get("isLogin") ?? false;
-    print("mobile $mobile");
-    print("isLogin $isLogin");
+    // print("mobile $mobile");
+    // print("isLogin $isLogin");
     if (isLogin && mobile != null) {
       getActiveRides(mobile);
       // Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen> {
       alertServices.hideLoading();
       if (r != null) {
         if (r.isNotEmpty) {
-          print("getBlockRides ---> $r");
+          // print("getBlockRides ---> $r");
           Navigator.pushNamed(context, "extend_bike", arguments: r);
         } else {
           Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);

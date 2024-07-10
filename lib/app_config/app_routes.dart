@@ -58,8 +58,9 @@ class AppRoute {
           return const ProfilePage();
         // Vehicle Routes
         case "select_vehicle":
-          Map args = settings.arguments as Map;
-          return SelectVehiclePage(stationDetails: args['params']);
+          List args = settings.arguments as List;
+          return SelectVehicleCloserMatches(params: args);
+          // return SelectVehiclePage(stationDetails: args['params']);
         case "error_bike":
           return const ErrorBikes();
         case "bike_fare_details":

@@ -48,6 +48,10 @@ class _HomeState extends State<Home> {
   List categoryList = [];
   String selectedPlan = "";
 
+  List vehicleList = [];
+  List filterVehicleList = [];
+  List closedVehicleList = [];
+
   @override
   void initState() {
     getLocation();
@@ -301,18 +305,6 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
-  }
-
-  String _formatDuration(Duration duration) {
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes.remainder(60);
-    int seconds = duration.inSeconds.remainder(60);
-
-    return '${_twoDigits(hours)}:${_twoDigits(minutes)}:${_twoDigits(seconds)}';
-  }
-
-  String _twoDigits(int n) {
-    return n.toString().padLeft(2, '0');
   }
 
   getLocation() async {
@@ -584,14 +576,9 @@ class _HomeState extends State<Home> {
                     'distance': distance.toString().replaceAll(".0", ""),
                   },
                 ];
-                Navigator.pushNamed(context, "select_vehicle",
-                    arguments: {"params": list});
-                // Navigator.pushNamed(context, "extend_bike");
-
-                // int milliseconds = 355468;
-                // Duration duration = Duration(milliseconds: milliseconds);
-                // String formattedTime = _formatDuration(duration);
-                // print("formattedTime $formattedTime");
+                // Navigator.pushNamed(context, "select_vehicle",
+                //     arguments: {"params": list});
+                getVehiclesByPlan(list);
               },
       ),
     );
@@ -613,5 +600,136 @@ class _HomeState extends State<Home> {
         );
       },
     );
+  }
+
+  // VEHICLE FILTRATION
+  getVehiclesByPlan(List list) async {
+    alertServices.showLoading();
+    vehicleService
+        .getVehiclesByPlan(list[0]['sId'], list[0]['plan'])
+        .then((response) async {
+      alertServices.hideLoading();
+      filterVehicleList = [];
+      closedVehicleList = [];
+      // response = [
+      //   {
+      //     "vehicleId": "492",
+      //     "liveVoltage": 48.65,
+      //     "kmPerVoltage": 0,
+      //     "status": "Y",
+      //     "lastOdometerReading": 0.0,
+      //     "todaysRideCount": 0,
+      //     "distanceRange": "15-20"
+      //   },
+      //   {
+      //     "vehicleId": "492",
+      //     "liveVoltage": 48.65,
+      //     "kmPerVoltage": 0,
+      //     "status": "Y",
+      //     "lastOdometerReading": 0.0,
+      //     "todaysRideCount": 0,
+      //     "distanceRange": "60-70"
+      //   },
+      //   {
+      //     "vehicleId": "492",
+      //     "liveVoltage": 48.65,
+      //     "kmPerVoltage": 0,
+      //     "status": "Y",
+      //     "lastOdometerReading": 0.0,
+      //     "todaysRideCount": 0,
+      //     "distanceRange": "20-40"
+      //   }
+      // ];
+      vehicleList = response.where((i) => i['distanceRange'] != null).toList();
+      print("vehicleList length: ${vehicleList.length}");
+      for (int i = 0; i < vehicleList.length; i++) {
+        List dis = vehicleList[i]['distanceRange'].toString().split("-");
+        if (dis.length == 2) {
+          int minDistance = int.parse(dis[0]);
+          int maxDistance = int.parse(dis[1]);
+          int userDistance = int.parse(list[0]['distance']);
+          // int lowerBound = userDistance - 20;
+          // int upperBound = userDistance + 20;
+
+          String result =
+              checkConditions(minDistance, maxDistance, userDistance);
+          setState(() {
+            if (result == "exact") {
+              filterVehicleList.add(vehicleList[i]);
+            }
+            if (result == "withRange") {
+              closedVehicleList.add(vehicleList[i]);
+            }
+          });
+          // print("filterVehicleList -- $filterVehicleList");
+          // print("closedVehicleList -- $closedVehicleList");
+
+          // if (userDistance >= minDistance && userDistance <= maxDistance) {
+          //   debugPrint("--- Exact Matched Vehicles --- ");
+          //   setState(() {
+          //     filterVehicleList.add(vehicleList[i]);
+          //   });
+          //   if ((minDistance >= lowerBound && minDistance <= upperBound) ||
+          //       (maxDistance >= lowerBound && maxDistance <= upperBound) ||
+          //       (minDistance <= lowerBound && maxDistance >= upperBound)) {
+          //     debugPrint("--- Closed Matched ---");
+          //     setState(() {
+          //       closedVehicleList.add(vehicleList[i]);
+          //     });
+          //     var params = [
+          //       {
+          //         "sId": list[0]['sId'],
+          //         "sName": list[0]['sName'],
+          //         "plan": list[0]['plan'],
+          //         "distanceText": list[0]['distanceText'],
+          //         "distance": list[0]['distance'],
+          //         "filterVehicleList": filterVehicleList,
+          //         "closedVehicleList": closedVehicleList,
+          //       }
+          //     ];
+          //     // List newArray = [...list, ...params];
+          //     print("params $params");
+          //     // Navigator.pushNamed(context, "select_vehicle");
+          //   }
+          // } else {
+          //   debugPrint("--- Not Matched ---");
+          //   Navigator.pushNamed(context, "error_bike");
+          // }
+        }
+      }
+      if (closedVehicleList.isEmpty && filterVehicleList.isEmpty) {
+        Navigator.pushNamed(context, "error_bike");
+      } else {
+        List params = [
+          {
+            "sId": list[0]['sId'],
+            "sName": list[0]['sName'],
+            "plan": list[0]['plan'],
+            "distanceText": list[0]['distanceText'],
+            "distance": list[0]['distance'],
+            "filterVehicleList": filterVehicleList,
+            "closedVehicleList": closedVehicleList,
+          }
+        ];
+        Navigator.pushNamed(context, "select_vehicle", arguments: params);
+      }
+
+
+    });
+  }
+
+  String checkConditions(int a, int b, int c) {
+    if (c >= a && c <= b) {
+      return "exact";
+    } else if (isWithinRange(a, b, c, 20)) {
+      return "withRange";
+    } else {
+      return "Wrong number";
+    }
+  }
+
+  bool isWithinRange(int a, int b, int c, int range) {
+    return (c >= a - range && c <= a + range) ||
+        (c >= b - range && c <= b + range);
   }
 }

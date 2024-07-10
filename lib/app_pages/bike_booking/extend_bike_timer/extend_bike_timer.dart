@@ -37,14 +37,15 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   String formattedMinutes = "";
   String formattedSeconds = "";
   Timer? countdownTimer;
-  int _start = 0;
-  late Timer _timer;
   bool enableChasingTime = false;
   List data = [];
 
+  // final _childKey = GlobalKey<_TimerButtonWidgetState>();
+
+
   @override
   void initState() {
-    print("EX: ${widget.blockRide}");
+    // print("EX: ${widget.blockRide}");
     super.initState();
     debugPrint("--- EXTEND BLOCK TIMER ---");
     getBalance();
@@ -57,6 +58,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
 
   @override
   void dispose() {
+    // Cancel the child widget's timer when the parent is disposed
+    // _childKey.currentState?._cancelTimer();
     super.dispose();
   }
 
@@ -151,8 +154,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context, "wallet_summary");
+                                  // Navigator.pushNamed(
+                                  //     context, "wallet_summary");
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -261,7 +264,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                                       style: heading(AppColors.primary),
                                     ),
                                     TextSpan(
-                                      text: "${data[0]['planType'].toString()} ${data[0]['vehicleId'].toString()}",
+                                      text:
+                                          "${data[0]['planType'].toString()} ${data[0]['vehicleId'].toString()}",
                                       // "${rideDetails[0]['planType'].toString()}-${rideDetails[0]['vehicleId'].toString()}",
                                       // '${fd[0]['planType']}-${fd[0]['vehicleId']}',
                                       style: heading(Colors.black),
@@ -297,9 +301,9 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                const Column(
+                                Column(
                                   children: <Widget>[
-                                    Text(
+                                    const Text(
                                       "Estimated Range",
                                       style: TextStyle(
                                         color: Color(0xff626262),
@@ -308,8 +312,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                                       ),
                                     ),
                                     Text(
-                                      "45~34 KM",
-                                      style: TextStyle(
+                                      "${data[0]['estimatedRange']}",
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: AppColors.black,
                                       ),
@@ -334,6 +338,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                     ),
                     const SizedBox(height: 16),
                     TimerButtonWidget(
+                      // key: _childKey,
                       data: data,
                     ),
                     // SizedBox(
@@ -380,11 +385,14 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                           List params = [
                             {
                               "campus": data[0]['stationName'].toString(),
-                              "distance": "20",
+                              "distance": data[0]['distanceRange'].toString(),
                               "vehicleId": data[0]['vehicleId'].toString(),
+                              "via": "api",
+                              "data": data
                             }
                           ];
-                          Navigator.pushNamed(context, "bike_fare_details", arguments: {"query": params});
+                          Navigator.pushNamed(context, "bike_fare_details",
+                              arguments: {"query": params});
                         },
                       ),
                     ),
@@ -395,7 +403,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Icon(Icons.info_outline, color: Colors.red, size: 20),
+                          const Icon(Icons.info_outline,
+                              color: Colors.red, size: 20),
                           const SizedBox(width: 5),
                           Text(
                             "You can end your ride at the ${data[0]['stationName'].toString()} station only.",
@@ -496,3 +505,4 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     }
   }
 }
+
