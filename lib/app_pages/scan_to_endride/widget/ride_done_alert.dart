@@ -45,23 +45,24 @@ class RideDoneAlert extends StatelessWidget {
             bottom: 10,
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.green,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.close),
-                      color: Colors.white,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 50),
+                // SizedBox(
+                //   width: 50,
+                //   height: 50,
+                //   child: Container(
+                //     decoration: const BoxDecoration(
+                //       shape: BoxShape.circle,
+                //       color: Colors.green,
+                //     ),
+                //     child: IconButton(
+                //       icon: const Icon(Icons.close),
+                //       color: Colors.white,
+                //       onPressed: () {
+                //         Navigator.pop(context);
+                //       },
+                //     ),
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(
                     right: 50,
@@ -103,7 +104,7 @@ class RideDoneAlert extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: sliderWidget(rideDistance),
                 ),
                 const SizedBox(height: 10),

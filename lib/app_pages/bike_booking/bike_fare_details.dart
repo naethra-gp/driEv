@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:driev/app_services/index.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -29,6 +32,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   AlertServices alertServices = AlertServices();
   SecureStorage secureStorage = SecureStorage();
   BookingServices bookingServices = BookingServices();
+  VehicleService vehicleService = VehicleService();
   String notes =
       "Battery swap after the given range might be chargeable and depends on the availability of assets & resources";
   List fareDetails = [];
@@ -51,8 +55,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   int _start = 0;
   late Timer _timer;
-  String formattedMinutes = "";
-  String formattedSeconds = "";
+  String formattedMinutes = "00";
+  String formattedSeconds = "00";
   Timer? countdownTimer;
 
   /// timer continue
@@ -75,9 +79,68 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   @override
   void dispose() {
-    _timeController.dispose();
-    _timer.cancel();
+    // _timeController.dispose();
+    // _timer.cancel();
+    _cancelTimer();
     super.dispose();
+  }
+
+  apiBack() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: AlertDialog(
+            backgroundColor: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: const Text("Confirm"),
+            content: const Text(
+                "Timer is Running...\nApp will redirect to home page?"),
+            actions: [
+              TextButton(
+                child: const Text(
+                  "No",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: const Text(
+                  "Yes",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () async {
+                  var mobile = await secureStorage.get("mobile");
+                  alertServices.showLoading();
+                  vehicleService.getBlockedRides(mobile).then((r) {
+                    alertServices.hideLoading();
+                    if (r != null) {
+                      Navigator.pop(context);
+                      if (r.isNotEmpty) {
+                        Navigator.pushNamed(context, "extend_bike",
+                            arguments: r);
+                      } else {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, "home", (route) => false);
+                      }
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -85,72 +148,17 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     List fd = fareDetails;
     List sd = widget.stationDetails;
     return PopScope(
-      canPop: !timerRunning,
-      onPopInvoked : (didPop){
-        print("timerRunning $timerRunning");
+      canPop: false,
+      onPopInvoked: (didPop) {
         if (didPop) {
           return;
         }
-        if(timerRunning) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Confirm"),
-                content: const Text("Timer is Running... are you want to exit."),
-                actions: [
-                  TextButton(
-                    child: const Text("Yes"),
-                    onPressed: () { },
-                  ),
-                  TextButton(
-                    child: const Text("No"),
-                    onPressed: () { },
-                  ),
-                ],
-              );
-            },
-          );
+        if (timerRunning) {
+          apiBack();
         }
-        //
-        //   showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return AlertDialog(
-        //         title: const Text('Are you sure?'),
-        //         content: const Text('Do you want to proceed with this action?'),
-        //         actions: <Widget>[
-        //           TextButton(
-        //             onPressed: () {
-        //               Navigator.of(context).pop(false); // Return false when "No" is pressed
-        //             },
-        //             child: const Text('No'),
-        //           ),
-        //           TextButton(
-        //             onPressed: () {
-        //               Navigator.of(context).pop(true); // Return true when "Yes" is pressed
-        //             },
-        //             child: const Text('Yes'),
-        //           ),
-        //         ],
-        //       );
-        //     },
-        //   ).then((result) {
-        //     // Handle the result here
-        //     if (result == true) {
-        //       // User confirmed the action
-        //       ScaffoldMessenger.of(context).showSnackBar(
-        //         const SnackBar(content: Text('Action confirmed')),
-        //       );
-        //     } else {
-        //       // User cancelled the action
-        //       ScaffoldMessenger.of(context).showSnackBar(
-        //         const SnackBar(content: Text('Action cancelled')),
-        //       );
-        //     }
-        //   });
-        //
-        // }
+        if ("$formattedMinutes:$formattedSeconds" != "00:00") {
+          apiBack();
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -159,7 +167,10 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           leading: IconButton(
             icon: Image.asset(Constants.backButton),
             onPressed: () async {
-              Navigator.pop(context);
+              if (timerRunning) {
+                apiBack();
+              }
+              // Navigator.pop(context);
             },
           ),
         ),
@@ -441,15 +452,18 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide:
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide:
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide:
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -457,7 +471,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xffD2D2D2)),
+                          borderSide:
+                              const BorderSide(color: Color(0xffD2D2D2)),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -558,8 +573,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         backgroundColor: enableChasingTime
                             ? const Color(0xffFB8F80)
                             : const Color(0xffE1FFE6),
-                        side:
-                            const BorderSide(color: Color(0xffE1FFE6), width: 0),
+                        side: const BorderSide(
+                            color: Color(0xffE1FFE6), width: 0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -639,7 +654,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       }),
                     ),
                     const SizedBox(height: 4),
-      
+
                     Center(
                       child: Text(
                           "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
@@ -690,8 +705,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         foregroundColor: Colors.white,
                         backgroundColor: AppColors.primary,
-                        side:
-                            const BorderSide(color: AppColors.primary, width: 1),
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -718,8 +733,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.white,
-                        side:
-                            const BorderSide(color: AppColors.primary, width: 1),
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -746,8 +761,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                         foregroundColor: Colors.white,
                         backgroundColor: AppColors.primary,
-                        side:
-                            const BorderSide(color: AppColors.primary, width: 1),
+                        side: const BorderSide(
+                            color: AppColors.primary, width: 1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -993,9 +1008,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         int remainInSec = remainingTime.inMinutes * 60;
         formattedMinutes = minutes.toString().padLeft(2, '0');
         formattedSeconds = seconds.toString().padLeft(2, '0');
-        if (percentage > remainInSec) {
-          enableChasingTime = true;
-        }
         if (remainingTime.isNegative) {
           countdownTimer?.cancel();
         }
@@ -1003,6 +1015,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           countdownTimer?.cancel();
           Navigator.pushReplacementNamed(context, "error_bike");
         }
+
+        if (percentage > remainInSec) {
+          enableChasingTime = true;
+        }
+
       });
     });
   }

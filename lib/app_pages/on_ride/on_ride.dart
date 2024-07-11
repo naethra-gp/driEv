@@ -458,9 +458,9 @@ class _OnRideState extends State<OnRide> {
                                                 // const Spacer(),
                                                 Image.asset(
                                                   "assets/img/bike2.png",
-                                                  height: 150,
-                                                  width: 200,
-                                                  fit: BoxFit.fill,
+                                                  height: 140,
+                                                  width: 180,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ],
                                             ),
@@ -725,18 +725,18 @@ class _OnRideState extends State<OnRide> {
                               ),
                             ),
                             const SizedBox(height: 20.0),
-                            const Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.info_outline,
                                   color: Colors.red,
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text(
-                                  'You can end your ride at the KIIT station only',
-                                  style: TextStyle(
+                                  'You can end your ride at the ${widget.rideId.split("-").first} station only',
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 12,
                                   ),
