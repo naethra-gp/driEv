@@ -85,13 +85,33 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     List fd = fareDetails;
     List sd = widget.stationDetails;
     return PopScope(
-      canPop: false,
+      canPop: !timerRunning,
       onPopInvoked : (didPop){
         print("timerRunning $timerRunning");
         if (didPop) {
           return;
         }
-        // if(timerRunning) {
+        if(timerRunning) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Confirm"),
+                content: const Text("Timer is Running... are you want to exit."),
+                actions: [
+                  TextButton(
+                    child: const Text("Yes"),
+                    onPressed: () { },
+                  ),
+                  TextButton(
+                    child: const Text("No"),
+                    onPressed: () { },
+                  ),
+                ],
+              );
+            },
+          );
+        }
         //
         //   showDialog(
         //     context: context,

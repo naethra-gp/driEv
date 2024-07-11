@@ -38,11 +38,9 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   Timer? countdownTimer;
   bool enableChasingTime = false;
   List data = [];
-  // final _childKey = GlobalKey<_TimerButtonWidgetState>();
 
   @override
   void initState() {
-    // print("EX: ${widget.blockRide}");
     super.initState();
     debugPrint("--- EXTEND BLOCK TIMER ---");
     getBalance();
@@ -50,12 +48,10 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     setState(() {
       data = widget.blockRide;
     });
-    // getBlockDetails();
   }
 
   @override
   void dispose() {
-    // _childKey.currentState?._cancelTimer();
     super.dispose();
   }
 
@@ -328,15 +324,9 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                         ),
                       ),
                     ),
-                    const Divider(
-                      indent: 5,
-                      endIndent: 5,
-                    ),
+                    const Divider(indent: 5, endIndent: 5),
                     const SizedBox(height: 16),
-                    TimerButtonWidget(
-                      // key: _childKey,
-                      data: data,
-                    ),
+                    TimerButtonWidget(data: data),
                     const SizedBox(height: 25),
                     SizedBox(
                       height: 50,

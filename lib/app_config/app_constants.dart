@@ -26,6 +26,7 @@ class Constants {
   static const String bike="assets/img/bike2.png";
   static const String gift="assets/img/giftbox.png";
   static const String scooter="assets/img/scooter.png";
+  static const String defaultBike ="assets/img/bike2.png";
 
 
   static const String title1="Let's get you road-ready!";
