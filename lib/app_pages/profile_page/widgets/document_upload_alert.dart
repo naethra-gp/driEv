@@ -63,7 +63,7 @@ class DocumentUploadAlert extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      if(document['id'] == "selfi") {
+                      if (document['id'] == "selfi") {
                         uploadAction(ImageSource.gallery);
                       } else {
                         _pickFile();

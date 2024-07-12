@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_config/app_constants.dart';
+import 'package:driev/app_pages/app_common/logout_alert_dialog.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -554,9 +555,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Color(0xffD9D9D9),
                         ),
                         menuList("assets/img/logout.png", "Logout", () {
-                          secureStorage.save("isLogin", false);
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, "login_page", (route) => false);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const LogoutAlertDialog();
+                            },
+                          ).then((value) {
+                            if (value != null && value) {
+                              // Perform logout action here
+                              secureStorage.save("isLogin", false);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, "login_page", (route) => false);
+                            }
+                          });
                         }),
                       ],
                     ),

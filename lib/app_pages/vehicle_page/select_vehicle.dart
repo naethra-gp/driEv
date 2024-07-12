@@ -27,11 +27,11 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
   String stationName = '';
   String distance = '';
   String distanceText = '';
-  String plan="";
+  String plan = "";
   @override
   void initState() {
     String sId = widget.stationDetails[0]['sId'];
-     plan = widget.stationDetails[0]['plan'];
+    plan = widget.stationDetails[0]['plan'];
     setState(() {
       stationName = widget.stationDetails[0]['sName'];
       distance = widget.stationDetails[0]['distance'];
@@ -206,10 +206,12 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                         {
                           "campus": stationName.toString(),
                           "distance": distanceText.toString(),
-                          "vehicleId": filterVehicleList[index]['vehicleId'].toString(),
+                          "vehicleId":
+                              filterVehicleList[index]['vehicleId'].toString(),
                         }
                       ];
-                      Navigator.pushNamed(context, "bike_fare_details", arguments: {"query": params});
+                      Navigator.pushNamed(context, "bike_fare_details",
+                          arguments: {"query": params});
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(0),
@@ -260,7 +262,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                       ),
                                       TextSpan(
                                         text:
-                                           '$plan ${filterVehicleList[index]['vehicleId']}',
+                                            '$plan ${filterVehicleList[index]['vehicleId']}',
                                         style: const TextStyle(
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.bold,
@@ -277,8 +279,8 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: Row(
-                                   mainAxisAlignment: MainAxisAlignment.center,
-                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Column(
                                       mainAxisAlignment:
@@ -313,7 +315,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                         ),
                                       ],
                                     ),
-                                 /*   const Spacer(),
+                                    /*   const Spacer(),
                                     const Column(
                                       children: [
                                         Icon(LineAwesome.battery_full_solid),

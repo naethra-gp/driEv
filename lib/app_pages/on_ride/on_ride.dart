@@ -34,7 +34,7 @@ class _OnRideState extends State<OnRide> {
   double availableBalance = 0;
   Timer? countdownTimer;
   String rideDuration = "00:00:00";
- bool popShown=false;
+  bool popShown = false;
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -65,7 +65,7 @@ class _OnRideState extends State<OnRide> {
     getBalance();
     getRideDetails(widget.rideId);
     setState(() {
-      popShown=false;
+      popShown = false;
     });
   }
 
@@ -136,7 +136,7 @@ class _OnRideState extends State<OnRide> {
       }
       bookingServices.getWalletBalance(mobile).then((r) {
         double b = r['balance'];
-        double c=rideDetails[0]["payableAmount"];
+        double c = rideDetails[0]["payableAmount"];
         bookingServices.getRideEndPin(rideId).then((r2) {
           alertServices.hideLoading();
           print(b);
@@ -146,10 +146,7 @@ class _OnRideState extends State<OnRide> {
             setState(() {
               popShown = true;
               alertServices.insufficientBalanceAlert(
-                  context,
-                  "Uh-Oh!",
-                  r2["message"], [], widget.rideId,[]
-              );
+                  context, "Uh-Oh!", r2["message"], [], widget.rideId, []);
             });
           }
         });
@@ -367,7 +364,7 @@ class _OnRideState extends State<OnRide> {
                                       color: const Color(0xFFF5F5F5),
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            15, 5, 15, 5),
+                                            15, 5, 0, 5),
                                         child: Column(
                                           children: [
                                             Row(
@@ -429,38 +426,48 @@ class _OnRideState extends State<OnRide> {
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    const Text(
-                                                      "Estimated Range",
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff626262),
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                Flexible(
+                                                  flex: 3,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      const Text(
+                                                        "Estimated Range",
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xff626262),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Text(
-                                                      "${rideDetails[0]['estimatedRange'] ?? "0"} km",
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        color: AppColors.black,
+                                                      Text(
+                                                        "${rideDetails[0]['estimatedRange'] ?? "0"} km",
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-
                                                 // const Spacer(),
-                                                Image.asset(
-                                                  "assets/img/bike2.png",
-                                                  height: 140,
-                                                  width: 180,
-                                                  fit: BoxFit.cover,
+                                                Flexible(
+                                                  flex: 3,
+                                                  child: Image.asset(
+                                                    "assets/img/bike2.png",
+                                                    height: 140,
+                                                    width: 200,
+                                                    fit: BoxFit.fill,
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -725,18 +732,18 @@ class _OnRideState extends State<OnRide> {
                               ),
                             ),
                             const SizedBox(height: 20.0),
-                            Row(
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.info_outline,
                                   color: Colors.red,
                                 ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: 10),
                                 Text(
-                                  'You can end your ride at the ${widget.rideId.split("-").first} station only',
-                                  style: const TextStyle(
+                                  'You can end your ride at the KIIT station only',
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 12,
                                   ),

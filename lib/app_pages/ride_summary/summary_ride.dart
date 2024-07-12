@@ -16,7 +16,6 @@ import 'dart:io';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
-import '../../app_utils/app_widgets/app_button.dart';
 
 class RideSummary extends StatefulWidget {
   final String rideId;

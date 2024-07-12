@@ -247,10 +247,10 @@ class _FileUploadFormState extends State<FileUploadForm> {
       final String fileExtension = extension(filePath!);
       if (fileExtension.toString() != ".pdf") {
         /// IMAGES
-        _cropImage(File(filePath));
+        _cropImage(File(filePath!));
       } else {
         /// PDF
-        fileUpload(File(filePath));
+        fileUpload(File(filePath!));
       }
     } else {
       // print('File picking canceled.');

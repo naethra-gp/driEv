@@ -287,14 +287,14 @@ class _EndRideScannerState extends State<EndRideScanner> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return SizedBox(
-          height: height / 2.5,
+          height: height / 2, // Adjust the height here
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
                 top: height / 6.6 - 100,
                 child: Container(
-                  height: height,
+                  height: height / 2, // Adjust the height here
                   width: width,
                   decoration: const BoxDecoration(
                     color: Colors.white,

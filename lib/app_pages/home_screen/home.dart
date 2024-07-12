@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:driev/app_pages/app_common/back_press_handler.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
@@ -66,242 +67,245 @@ class _HomeState extends State<Home> {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            if (_currentPosition != null && stationLocation != null)
-              GoogleMap(
-                myLocationEnabled: false,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: true,
-                compassEnabled: false,
-                mapType: MapType.normal,
-                onMapCreated: (GoogleMapController controller) {
-                  mapController = controller;
-                },
-                polylines: _polyLines,
-                initialCameraPosition: CameraPosition(
-                  target: _currentPosition!,
-                  zoom: 15.0,
+        child: BackPressHandler(
+          child: Stack(
+            children: <Widget>[
+              if (_currentPosition != null && stationLocation != null)
+                GoogleMap(
+                  myLocationEnabled: false,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: true,
+                  compassEnabled: false,
+                  mapType: MapType.normal,
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController = controller;
+                  },
+                  polylines: _polyLines,
+                  initialCameraPosition: CameraPosition(
+                    target: _currentPosition!,
+                    zoom: 15.0,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId('1'),
+                      position: _currentPosition!,
+                      icon: customerMarker ?? BitmapDescriptor.defaultMarker,
+                    ),
+                    Marker(
+                      markerId: const MarkerId('2'),
+                      position: stationLocation!,
+                      icon: stationMarker ?? BitmapDescriptor.defaultMarker,
+                    ),
+                  },
                 ),
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('1'),
-                    position: _currentPosition!,
-                    icon: customerMarker ?? BitmapDescriptor.defaultMarker,
-                  ),
-                  Marker(
-                    markerId: const MarkerId('2'),
-                    position: stationLocation!,
-                    icon: stationMarker ?? BitmapDescriptor.defaultMarker,
-                  ),
-                },
-              ),
-            Positioned(
-              top: 10,
-              left: 15,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, "profile");
-                    },
-                    child: CachedNetworkImage(
-                      width: 41,
-                      height: 41,
-                      imageUrl: selfieUrl,
-                      errorWidget: (context, url, error) => Image.asset(
-                        "assets/img/profile_logo.png",
+              Positioned(
+                top: 10,
+                left: 15,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, "profile");
+                      },
+                      child: CachedNetworkImage(
                         width: 41,
                         height: 41,
-                        fit: BoxFit.cover,
-                      ),
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 1.5,
-                          ),
+                        imageUrl: selfieUrl,
+                        errorWidget: (context, url, error) => Image.asset(
+                          "assets/img/profile_logo.png",
+                          width: 41,
+                          height: 41,
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Container(
-                    width: 260,
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF5F5F5),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xffD9D9D9),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            const Icon(Icons.location_on_outlined),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                currentDistrict,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
                             ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, "wallet_summary");
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 40,
-                                width: 2,
-                                color: const Color(0xffDEDEDE),
-                              ),
-                              const SizedBox(width: 10),
-                              Image.asset(
-                                "assets/img/wallet.png",
-                                height: 25,
-                                width: 25,
-                              ),
-                              const SizedBox(width: 10),
-                              if (customer.isNotEmpty)
-                                Text(
-                                  "\u{20B9}${customer[0]['walletBalance']}",
-                                  style: TextStyle(
-                                    fontSize: width / 30,
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        getColor(customer[0]['walletBalance']),
-                                  ),
-                                ),
-                              const SizedBox(width: 10),
-                            ],
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 1.5,
+                            ),
                           ),
                         ),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Container(
+                      width: 260,
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xffF5F5F5),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: const Color(0xffD9D9D9),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              const Icon(Icons.location_on_outlined),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  currentDistrict,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, "wallet_summary");
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 2,
+                                  color: const Color(0xffDEDEDE),
+                                ),
+                                const SizedBox(width: 10),
+                                Image.asset(
+                                  "assets/img/wallet.png",
+                                  height: 25,
+                                  width: 25,
+                                ),
+                                const SizedBox(width: 10),
+                                if (customer.isNotEmpty)
+                                  Text(
+                                    "\u{20B9}${customer[0]['walletBalance']}",
+                                    style: TextStyle(
+                                      fontSize: width / 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: getColor(
+                                          customer[0]['walletBalance']),
+                                    ),
+                                  ),
+                                const SizedBox(width: 10),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                top: height / 2.10,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(25),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 40, 15, 10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "How long is your dream ride?",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        sliderWidget(),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Preferred Category",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        if (stationDetails.isNotEmpty) ...[
+                          Flexible(
+                            child: Wrap(
+                              spacing: 10.0,
+                              runSpacing: 5.0,
+                              alignment: WrapAlignment.start,
+                              children: [
+                                for (int i = 0;
+                                    i < stationDetails['plans'].length;
+                                    i++) ...[
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      surfaceTintColor: Colors.white,
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: categoryList[i]
+                                          ? Colors.white
+                                          : const Color(0xffF5F5F5),
+                                      side: BorderSide(
+                                        color: categoryList[i]
+                                            ? const Color(0xff3DB54A)
+                                            : const Color(0xffE1E1E1),
+                                        width: 1,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        categoryList = categoryList
+                                            .map((e) => e = false)
+                                            .toList();
+                                        categoryList[i] = true;
+                                        selectedPlan = stationDetails['plans']
+                                                [i]
+                                            .toString();
+                                      });
+                                    },
+                                    child: Text(
+                                      stationDetails['plans'][i].toString(),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 25),
+                          buttonWidget(),
+                        ],
+                        CustomTheme.defaultHeight10,
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              top: height / 2.10,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(25),
-                  ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 40, 15, 10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "How long is your dream ride?",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      sliderWidget(),
-                      const SizedBox(height: 15),
-                      const Text(
-                        "Preferred Category",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      if (stationDetails.isNotEmpty) ...[
-                        Flexible(
-                          child: Wrap(
-                            spacing: 10.0,
-                            runSpacing: 5.0,
-                            alignment: WrapAlignment.start,
-                            children: [
-                              for (int i = 0;
-                                  i < stationDetails['plans'].length;
-                                  i++) ...[
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    surfaceTintColor: Colors.white,
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: categoryList[i]
-                                        ? Colors.white
-                                        : const Color(0xffF5F5F5),
-                                    side: BorderSide(
-                                      color: categoryList[i]
-                                          ? const Color(0xff3DB54A)
-                                          : const Color(0xffE1E1E1),
-                                      width: 1,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      categoryList = categoryList
-                                          .map((e) => e = false)
-                                          .toList();
-                                      categoryList[i] = true;
-                                      selectedPlan =
-                                          stationDetails['plans'][i].toString();
-                                    });
-                                  },
-                                  child: Text(
-                                    stationDetails['plans'][i].toString(),
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        buttonWidget(),
-                      ],
-                      CustomTheme.defaultHeight10,
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -713,8 +717,6 @@ class _HomeState extends State<Home> {
         ];
         Navigator.pushNamed(context, "select_vehicle", arguments: params);
       }
-
-
     });
   }
 
