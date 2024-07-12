@@ -22,50 +22,55 @@ class _ErrorBikesState extends State<ErrorBikes> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                child: Center(
-                  child: Image.asset(
-                    "assets/app/error_otp.png",
-                    height: 150,
-                    width: 150,
-                    fit: BoxFit.contain,
+      body: PopScope(
+        canPop: false,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  child: Center(
+                    child: Image.asset(
+                      "assets/app/error_otp.png",
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              const Text(
-                "Oh Snap!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.primary,
+                const SizedBox(height: 30),
+                const Text(
+                  "Oh Snap!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "No EVs available for\nreservation at the moment!",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, color: Colors.black),
-              ),
-              const SizedBox(height: 30),
-              SizedBox(
-                height: 50,
-                child: AppButtonWidget(
-                  title: "Okay",
-                  onPressed: () {
-                    Navigator.pushNamed(context, "home");
-                  },
+                const SizedBox(height: 20),
+                const Text(
+                  "No EVs available for\nreservation at the moment!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-              ),
-            ],
+                const SizedBox(height: 30),
+                SizedBox(
+                  height: 50,
+                  child: AppButtonWidget(
+                    title: "Okay",
+                    onPressed: () {
+                      // Navigator.pushNamed(context, "home");
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "home", (route) => false);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

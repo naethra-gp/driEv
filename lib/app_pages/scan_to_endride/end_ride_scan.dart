@@ -254,6 +254,8 @@ class _EndRideScannerState extends State<EndRideScanner> {
           List rideDetails = [r1];
           double c = rideDetails[0]["payableAmount"];
           bookingServices.getRideEndPin(rideId).then((r2) {
+            print("rideId $rideId");
+            print("R@@@ $r2");
             alertServices.hideLoading();
             // print("rrr $r");
             // print(b);
@@ -262,7 +264,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
               QrMobileVision.stop();
               _cancelTimer();
               alertServices.insufficientBalanceAlert(
-                  context, "Uh-Oh!", r2["message"], [], "", widget.rideID);
+                  context, b.toString(), r2["message"], [], "", widget.rideID);
             } else if (r2 != null) {
               timer?.cancel();
               String stopPing = r2['stopPing'].toString();

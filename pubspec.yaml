@@ -87,6 +87,7 @@ flutter:
     - assets/
     - assets/app/
     - assets/img/
+    - lib/app_pages/on_ride/widget/
   fonts:
     - family: Roboto
       fonts:
@@ -98,3 +99,6 @@ flutter:
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
+    - family: Poppins-Bold
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf

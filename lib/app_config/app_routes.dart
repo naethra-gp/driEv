@@ -82,7 +82,8 @@ class AppRoute {
           return EndTimeOut(data: args);
         case "on_ride":
           String id = settings.arguments as String;
-          return OnRide(rideId: id);
+          return OnRidePage(rideId: id);
+          // return OnRide(rideId: id);
         case "ride_summary":
           String id = settings.arguments as String;
           return RideSummary(rideId: id);

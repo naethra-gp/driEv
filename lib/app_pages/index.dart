@@ -21,6 +21,7 @@ export 'scan_to_unlock/scan_to_unlock.dart';
 export 'bike_booking/pages/booking_failed.dart';
 export 'bike_booking/pages/booking_successful.dart';
 export 'on_ride/on_ride.dart';
+export 'on_ride/on_ride_page.dart';
 export 'home_screen/home.dart';
 export 'scan_to_unlock/widget/time_out_error.dart';
 export 'scan_to_unlock/widget/end_time_out.dart';

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
@@ -342,6 +343,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                               "data": data
                             }
                           ];
+                          print("More: ${jsonEncode(params)}");
                           // Navigator.pushNamed(context, "bike_fare_details",
                           //     arguments: {"query": params});
                           Navigator.pushNamedAndRemoveUntil(

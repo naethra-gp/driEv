@@ -1,6 +1,7 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_config/app_constants.dart';
-import 'package:driev/app_pages/app_common/logout_alert_dialog.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -191,7 +192,6 @@ class _ProfilePageState extends State<ProfilePage> {
       customerDetails = [response];
       documents = customerDetails[0]['documents'];
       rideDurationmilliSec = customerDetails[0]['rideDuration'];
-      print("documents ${documents.length}");
       selfieUrl = customerDetails[0]['selfi'] ?? "";
       alertServices.hideLoading();
       getSliderValues();
@@ -375,12 +375,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ),
                                             ),
                                             const SizedBox(height: 5),
-                                            const Align(
+                                            Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(
-                                                "0 kg",
+                                                "${customerDetails[0]['co2Saved']} kg",
                                                 textAlign: TextAlign.left,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 12,
                                                   color: AppColors.primary,
                                                 ),
@@ -390,13 +390,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ),
                                       const SizedBox(width: 100),
-                                      const Expanded(
+                                      Expanded(
                                         flex: 3,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
                                           children: [
-                                            Align(
+                                            const Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(
                                                 "KM Traveled",
@@ -406,12 +406,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 5),
+                                            const SizedBox(height: 5),
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(
-                                                "0 km",
-                                                style: TextStyle(
+                                                "${customerDetails[0]['rideDistance']} km",
+                                                style: const TextStyle(
                                                   fontSize: 12,
                                                   color: AppColors.primary,
                                                 ),
@@ -558,16 +558,50 @@ class _ProfilePageState extends State<ProfilePage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return const LogoutAlertDialog();
+                              return BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                child: AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  title: const Text("Confirm"),
+                                  content:
+                                      const Text("Do you want logout now?"),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text(
+                                        "No",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.redAccent,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: const Text(
+                                        "Yes",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        secureStorage.save("isLogin", false);
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            "login_page",
+                                            (route) => false);
+
+                                        // SystemNavigator.pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
-                          ).then((value) {
-                            if (value != null && value) {
-                              // Perform logout action here
-                              secureStorage.save("isLogin", false);
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, "login_page", (route) => false);
-                            }
-                          });
+                          );
                         }),
                       ],
                     ),
@@ -1043,7 +1077,7 @@ class _MyApp1State extends State<MyApp1> {
               ],
             );
           } else {
-            return SizedBox(); // Return an empty SizedBox for safety
+            return const SizedBox(); // Return an empty SizedBox for safety
           }
         },
       ),

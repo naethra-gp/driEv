@@ -84,20 +84,21 @@ class _RideSummaryState extends State<RideSummary> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
                 title: const Text("Alert"),
-                content: const Text("App will redirect to home page?"),
+                content:
+                    const Text("Do you redirect to home page without Rating?"),
                 actions: [
-                  // TextButton(
-                  //   child: const Text(
-                  //     "No",
-                  //     style: TextStyle(
-                  //       fontWeight: FontWeight.bold,
-                  //       color: Colors.redAccent,
-                  //     ),
-                  //   ),
-                  //   onPressed: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  // ),
+                  TextButton(
+                    child: const Text(
+                      "No",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                   TextButton(
                     child: const Text(
                       "Yes",
@@ -131,19 +132,17 @@ class _RideSummaryState extends State<RideSummary> {
                           controller: screenshotController,
                           child: Column(
                             children: [
-                              const SizedBox(
-                                height: 5,
-                              ),
+                              const SizedBox(height: 5),
                               const Text(
                                 "Ride Summary",
                                 style: TextStyle(
-                                    fontSize: 24,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
+                                  fontSize: 22,
+                                  fontFamily: "Poppins",
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
+                              const SizedBox(height: 10),
                               Container(
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 5),
@@ -167,29 +166,30 @@ class _RideSummaryState extends State<RideSummary> {
                                       Row(
                                         children: [
                                           Expanded(
-                                              flex: 8,
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'dri',
-                                                      style:
-                                                          heading(Colors.black),
-                                                    ),
-                                                    TextSpan(
-                                                      text: 'EV ',
-                                                      style: heading(
-                                                          AppColors.primary),
-                                                    ),
-                                                    TextSpan(
-                                                      text:
-                                                          "${rd[0]['planType']} ${rd[0]['vehicleId']}",
-                                                      style:
-                                                          heading(Colors.black),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )),
+                                            flex: 8,
+                                            child: RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: 'dri',
+                                                    style:
+                                                        heading(Colors.black),
+                                                  ),
+                                                  TextSpan(
+                                                    text: 'EV ',
+                                                    style: heading(
+                                                        AppColors.primary),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        "${rd[0]['planType']} ${rd[0]['vehicleId']}",
+                                                    style:
+                                                        heading(Colors.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                           Expanded(
                                             flex: 1,
                                             child: IconButton(
@@ -213,14 +213,17 @@ class _RideSummaryState extends State<RideSummary> {
                                               mainAxisSize: MainAxisSize.min,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
                                               children: <Widget>[
+                                                SizedBox(height: 30),
                                                 const Text(
                                                   "Payment Total",
                                                   style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500),
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
                                                 ),
                                                 Text(
                                                   "₹ ${rd[0]['payableAmount']}",
@@ -237,17 +240,18 @@ class _RideSummaryState extends State<RideSummary> {
                                             flex: 2,
                                             child: Image.asset(
                                               Constants.bike,
-                                              height: 110,
-                                              width: 160,
+                                              // height: 110,
+                                              // width: 150,
+                                              fit: BoxFit.contain,
                                             ),
                                           )
                                         ],
                                       ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
+                                      // const SizedBox(height: 10),
                                       const Divider(
                                         color: Color(0XffADADAD),
+                                        endIndent: 5,
+                                        indent: 5,
                                       ),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
@@ -258,8 +262,8 @@ class _RideSummaryState extends State<RideSummary> {
                                       // value: "${rd[0]['endTime']}"),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
-                                          label: "driEV {vehicle No.}",
-                                          value: "${rd[0]['vehicleId']}"),
+                                          label: "Vehicle no.",
+                                          value: "driEV ${rd[0]['vehicleId']}"),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Time",
@@ -345,8 +349,9 @@ class _RideSummaryState extends State<RideSummary> {
 
   TextStyle heading(Color color) {
     return TextStyle(
-      fontFamily: "Poppins",
-      fontWeight: FontWeight.bold,
+      // fontFamily: "Roboto",
+      fontFamily: "Poppins-Bold",
+      // fontWeight: FontWeight.w900,
       color: color,
       fontSize: 16,
     );

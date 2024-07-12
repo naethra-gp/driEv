@@ -1,8 +1,10 @@
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../app_services/vehicle_service.dart';
 import '../../app_storages/secure_storage.dart';
+import '../../app_utils/app_provider/location_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     debugPrint('--->>> Splash Screen <<<---');
     super.initState();
+    checkLocationService();
     Future.delayed(const Duration(seconds: 3), () {
       getRoute();
     });
@@ -84,5 +87,11 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
     });
+  }
+
+  checkLocationService() async {
+    final LocationService _locationService = LocationService();
+    Position position = await _locationService.determinePosition();
+    print("position $position");
   }
 }

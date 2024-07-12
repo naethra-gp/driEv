@@ -28,6 +28,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   TextEditingController otpCtrl = TextEditingController();
   CampusServices campusServices = CampusServices();
   SecureStorage secureStorage = SecureStorage();
+  VehicleService vehicleService = VehicleService();
 
   bool buttonEnabled = false;
   int _otpExpireTime = 30;
@@ -317,8 +318,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                                     alertServices.hideLoading();
                                     if (cResponse != null) {
                                       secureStorage.save("isLogin", true);
-                                      Navigator.pushNamedAndRemoveUntil(
-                                          context, "home", (route) => false);
+                                      getActiveRides(mobile);
                                     } else {
                                       Navigator.pushNamedAndRemoveUntil(context,
                                           "success_page", (route) => false);
@@ -425,5 +425,38 @@ class _VerifyOTPState extends State<VerifyOTP> {
         return false;
       }
     }
+  }
+
+
+  getActiveRides(String mobile) {
+    alertServices.showLoading();
+    vehicleService.getActiveRides(mobile).then((r) {
+      alertServices.hideLoading();
+      if (r != null) {
+        List rideList = [r][0]['rideList'];
+        List a =
+        rideList.where((e) => e['status'].toString() == "On Ride").toList();
+        if (a.isEmpty) {
+          getBlockRides(mobile);
+        } else {
+          Navigator.pushNamed(context, "on_ride",
+              arguments: a[0]['rideId'].toString());
+        }
+      }
+    });
+  }
+
+  getBlockRides(String mobile) {
+    alertServices.showLoading();
+    vehicleService.getBlockedRides(mobile).then((r) {
+      alertServices.hideLoading();
+      if (r != null) {
+        if (r.isNotEmpty) {
+          Navigator.pushNamed(context, "extend_bike", arguments: r);
+        } else {
+          Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+        }
+      }
+    });
   }
 }

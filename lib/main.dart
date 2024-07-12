@@ -13,11 +13,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-        // systemNavigationBarColor: Colors.white,
-        // statusBarColor: Colors.white,
-        // statusBarIconBrightness: Brightness.dark,
-        // statusBarBrightness: Brightness.dark,
-        ),
+      // systemNavigationBarColor: Colors.black,
+      // statusBarColor: Colors.white,
+      // statusBarIconBrightness: Brightness.dark,
+      // statusBarBrightness: Brightness.dark,
+    ),
   );
   await Hive.initFlutter();
   await Hive.openBox(Constants.storageBox);

@@ -67,7 +67,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     _cancelTimer();
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
-        if(remainingSeconds==20){
+        if (remainingSeconds == 20) {
           QrMobileVision.toggleFlash();
         }
         if (remainingSeconds > 0) {
@@ -99,7 +99,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
         print("---- Start ---- ");
         QrMobileVision.stop();
         String vId = widget.data[0]['vehicleId'].toString();
-        if (bikeNumberCtl.text.toString()==vId) {
+        if (bikeNumberCtl.text.toString() == vId) {
           startMyRide();
         } else {
           alertServices.errorToast(
@@ -112,136 +112,172 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 70,),
-            Padding(
-              padding: const EdgeInsets.all(15.0), // Adjust padding to align borders// Adjust the radius as needed
-              child:
-            ClipRRect(
-              borderRadius:
-                  BorderRadius.circular(10),child: Container(
-                width: 150, // adjust the size as needed
-                height: 150,
-                decoration: ShapeDecoration(
-                  shape: QrScannerOverlayShape(
-                    borderColor: AppColors.primary,
-                    borderRadius: 5,
-                    borderWidth: 5,
-                  ),
-                ),
-                child: QrCamera(
-                  onError: (context, error) => Text(
-                    error.toString(),
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  cameraDirection: CameraDirection.BACK,
-                  qrCodeCallback: (code) {
-                    if (code != null) {
-                      _onQRViewCreated(code);
-                    }
-                  },
-                ),
+    return PopScope(
+      canPop: true,
+      // canPop: false,
+      // onPopInvoked: (didPop) {
+      //   if (didPop) {
+      //     return;
+      //   }
+      //
+      //   if(widget.data[0]['bikeBlock']) {
+      //     List params = [
+      //       {
+      //         "campus": widget.data[0]['stationName'].toString(),
+      //         "distance": widget.data[0]['distanceRange'].toString(),
+      //         "vehicleId": widget.data[0]['vehicleId'].toString(),
+      //         "via": "api",
+      //         "data": widget.data[0]['stationDetails'][0]['data']
+      //       }
+      //     ];
+      //     print("params ${jsonEncode(params)}");
+      //     Navigator.pushNamedAndRemoveUntil(
+      //       context,
+      //       "bike_fare_details",
+      //       arguments: {"query": params},
+      //           (route) => false,
+      //     );
+      //   } else {
+      //     Navigator.pop(context);
+      //   }
+      //
+      // },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 70,
               ),
-            ),),
-            const SizedBox(height: 70),
-            const Text(
-              "Not feeling the scan vibe? No worries!",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const Text(
-              "Enter bike number and ride on!",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 190,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: TextField(
-                    controller: bikeNumberCtl,
-                    maxLength: 6,
-                    textAlign: TextAlign.left,
-                    textInputAction: TextInputAction.done,
-                    keyboardType: TextInputType.phone,
-                    onChanged: (value) {
-                     /* if (value.toString().isNotEmpty && value.toString().length<=6) {
-                        String vId = widget.data[0]['vehicleId'].toString();
-                         if (value.toString()==vId) {
-                           startMyRide();
-                         } else {
-                           alertServices.errorToast(
-                               "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
-                         }
-                      }*/
-                      print("Value: $value");
-                    },
-                    decoration: InputDecoration(
-                      counterText: "",
-                      hintText: 'Enter Bike Number',
-                      hintStyle:TextStyle(fontSize:12,color:Color(0Xff7A7A7A)),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.all(
+                    15.0), // Adjust padding to align borders// Adjust the radius as needed
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    width: 150, // adjust the size as needed
+                    height: 150,
+                    decoration: ShapeDecoration(
+                      shape: QrScannerOverlayShape(
+                        borderColor: AppColors.primary,
+                        borderRadius: 5,
+                        borderWidth: 5,
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    child: QrCamera(
+                      onError: (context, error) => Text(
+                        error.toString(),
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      cameraDirection: CameraDirection.BACK,
+                      qrCodeCallback: (code) {
+                        if (code != null) {
+                          _onQRViewCreated(code);
+                        }
+                      },
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 5,
+              ),
+              const SizedBox(height: 70),
+              const Text(
+                "Not feeling the scan vibe? No worries!",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
                 ),
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(8.0),
+                textAlign: TextAlign.center,
+              ),
+              const Text(
+                "Enter bike number and ride on!",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 190,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: TextField(
+                      controller: bikeNumberCtl,
+                      maxLength: 6,
+                      textAlign: TextAlign.left,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.phone,
+                      onChanged: (value) {
+                        /* if (value.toString().isNotEmpty && value.toString().length<=6) {
+                          String vId = widget.data[0]['vehicleId'].toString();
+                           if (value.toString()==vId) {
+                             startMyRide();
+                           } else {
+                             alertServices.errorToast(
+                                 "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+                           }
+                        }*/
+                        print("Value: $value");
+                      },
+                      decoration: InputDecoration(
+                        counterText: "",
+                        hintText: 'Enter Bike Number',
+                        hintStyle:
+                            TextStyle(fontSize: 12, color: Color(0Xff7A7A7A)),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                    ),
                   ),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,),
-                    onPressed: () async {
-                      if (bikeNumberCtl.text.toString().isNotEmpty && bikeNumberCtl.text.toString().length<=6) {
-                        String vId = widget.data[0]['vehicleId'].toString();
-                        if (bikeNumberCtl.text.toString()==vId) {
-                          startMyRide();
-                        } else {
-                          alertServices.errorToast(
-                              "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
+                      onPressed: () async {
+                        if (bikeNumberCtl.text.toString().isNotEmpty &&
+                            bikeNumberCtl.text.toString().length <= 6) {
+                          String vId = widget.data[0]['vehicleId'].toString();
+                          if (bikeNumberCtl.text.toString() == vId) {
+                            startMyRide();
+                          } else {
+                            alertServices.errorToast(
+                                "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
+                          }
                         }
-                      }
-                      print("Value:${bikeNumberCtl.text}");
-                    },
+                        print("Value:${bikeNumberCtl.text}");
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(height: 15),
-              ],
-            ),
-          ],
+                  const SizedBox(height: 15),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

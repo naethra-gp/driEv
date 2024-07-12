@@ -49,7 +49,7 @@ class _RideHistoryState extends State<RideHistory> {
   String formatTime(String dateTime) {
     try {
       DateTime parsedDate = DateTime.parse(dateTime);
-      return DateFormat('hh:mm ').format(parsedDate);
+      return DateFormat('hh:mm a').format(parsedDate);
     } catch (e) {
       return "Unknown Time";
     }
@@ -76,7 +76,7 @@ class _RideHistoryState extends State<RideHistory> {
               style: TextStyle(
                 fontSize: 20,
                 color: AppColors.black,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 10),

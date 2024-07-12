@@ -133,36 +133,78 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                         fontWeight: FontWeight.w500),
                   ),
                   Align(
-                    alignment: Alignment.center,
-                    child: Center(
-                      child: Padding(
+                      alignment: Alignment.center,
+                      child: Center(
+                          child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Container(
-                          width: 270,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1, color: Color(0xffD2D2D2)),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: TextFormField(
-                            controller: withdrawAmountCtl,
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.center,
-                            style: const TextStyle(
-                                fontSize: 22,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintStyle: CustomTheme.formFieldStyle,
+                        child: TextFormField(
+                          maxLength: 5,
+                          controller: withdrawAmountCtl,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.center,
+                          // readOnly: true,
+                          // controller: referCodeCtl,
+                          // textAlign: TextAlign.center,
+                          // textAlignVertical: TextAlignVertical.center,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
+                          decoration: InputDecoration(
+                            counterText: "",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  const BorderSide(color: Color(0xffD2D2D2)),
                             ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  const BorderSide(color: Color(0xffD2D2D2)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  const BorderSide(color: Color(0xffD2D2D2)),
+                            ),
+                            hintStyle: CustomTheme.formFieldStyle,
                           ),
                         ),
-                      ),
-                    ),
-                  ),
+                      ))),
+                  // Align(
+                  //   alignment: Alignment.center,
+                  //   child: Center(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(20),
+                  //       child: Container(
+                  //         width: 270,
+                  //         height: 40,
+                  //         decoration: BoxDecoration(
+                  //             border: Border.all(
+                  //                 width: 1, color: Color(0xffD2D2D2)),
+                  //             color: Colors.white,
+                  //             borderRadius: BorderRadius.circular(10)),
+                  //         child: TextFormField(
+                  //           controller: withdrawAmountCtl,
+                  //           keyboardType: TextInputType.number,
+                  //           textAlign: TextAlign.center,
+                  //           textAlignVertical: TextAlignVertical.center,
+                  //           style: const TextStyle(
+                  //               fontSize: 22,
+                  //               color: Colors.black,
+                  //               fontWeight: FontWeight.w500),
+                  //           decoration: InputDecoration(
+                  //             border: InputBorder.none,
+                  //             hintStyle: CustomTheme.formFieldStyle,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

@@ -233,6 +233,9 @@ class Connection {
         headers: header,
       );
       if (response.statusCode == 200) {
+        // final decodedResponse = utf8.decode(response.bodyBytes);
+        // final data = jsonDecode(decodedResponse);
+        // return data;
         return json
             .decode(utf8.decode(response.bodyBytes, allowMalformed: true));
       } else if (response.statusCode == 401) {
@@ -241,8 +244,10 @@ class Connection {
         return null;
       } else {
         if (error == null) {
-          var result = json.decode(response.body);
-          return result;
+          final decodedResponse = utf8.decode(response.bodyBytes);
+          final data = jsonDecode(decodedResponse);
+          // var result = json.decode(response.body);
+          return data;
         //  alertService.errorToast(
           //    "${response.statusCode}: ${result['message'].toString()}");
         }
