@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     checkLocationService();
     Future.delayed(const Duration(seconds: 3), () {
       getRoute();
+      // Navigator.pushNamedAndRemoveUntil(context, "validate_code", (r) => false);
     });
   }
 

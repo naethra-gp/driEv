@@ -21,11 +21,27 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
   SecureStorage secureStorage = SecureStorage();
   WalletServices walletServices = WalletServices();
   String mobile = "";
-  TextEditingController withdrawAmountCtl = TextEditingController();
+  TextEditingController _controller = TextEditingController();
+  FocusNode? _focusNode;
+
   @override
   void initState() {
     super.initState();
+    _focusNode = FocusNode();
     mobile = secureStorage.get("mobile") ?? "";
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _focusNode?.dispose();
+    _controller.dispose();
+  }
+
+  void _onPrefixIconTap() {
+    print('Prefix icon tapped');
+    _focusNode?.requestFocus();
   }
 
   @override
@@ -134,19 +150,15 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                   ),
                   Align(
                       alignment: Alignment.center,
-                      child: Center(
-                          child: Padding(
+                      child: Padding(
                         padding: const EdgeInsets.all(20),
                         child: TextFormField(
                           maxLength: 5,
-                          controller: withdrawAmountCtl,
+                          focusNode: _focusNode,
+                          controller: _controller,
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,
-                          // readOnly: true,
-                          // controller: referCodeCtl,
-                          // textAlign: TextAlign.center,
-                          // textAlignVertical: TextAlignVertical.center,
                           style: const TextStyle(
                             fontSize: 18,
                             color: AppColors.black,
@@ -155,6 +167,10 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                           ),
                           decoration: InputDecoration(
                             counterText: "",
+                            prefixIcon: GestureDetector(
+                              onTap: _onPrefixIconTap,
+                              child: Icon(Icons.currency_rupee_sharp),
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
@@ -173,7 +189,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                             hintStyle: CustomTheme.formFieldStyle,
                           ),
                         ),
-                      ))),
+                      )),
                   // Align(
                   //   alignment: Alignment.center,
                   //   child: Center(
@@ -188,7 +204,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                   //             color: Colors.white,
                   //             borderRadius: BorderRadius.circular(10)),
                   //         child: TextFormField(
-                  //           controller: withdrawAmountCtl,
+                  //           controller: _controller,
                   //           keyboardType: TextInputType.number,
                   //           textAlign: TextAlign.center,
                   //           textAlignVertical: TextAlignVertical.center,
@@ -208,12 +224,10 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
               decoration: BoxDecoration(
                 color: AppColors.walletColor,
                 borderRadius: BorderRadius.circular(20),
@@ -224,64 +238,62 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                   const Text(
                     "Pricing",
                     style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   const Text(
                     "For Money Withdrawal",
                     style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.green,
-                        fontWeight: FontWeight.w700),
+                      fontSize: 14,
+                      color: Colors.green,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   const Text(
-                    "One withdrawal/month is Free, post which the \n following charges will be incurred.",
+                    "One withdrawal a month is Free, post which the following charges will be incurred.",
                     style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400),
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   const Row(
                     children: [
                       Expanded(
-                          flex: 10,
-                          child: Text(
-                            "Upto ₹ 1000.00",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700),
-                          )),
+                        flex: 10,
+                        child: Text(
+                          "Upto ₹ 1000.00",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
                       Expanded(
-                          flex: 1,
-                          child: Text(
-                            "₹ 4",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700),
-                          )),
+                        flex: 1,
+                        child: Text(
+                          "₹ 4",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
                   const Row(
                     children: [
                       Expanded(
                           flex: 10,
                           child: Text(
-                            "₹ 1000.00 - ₹ 25,000.00 ",
+                            "₹ 1000.00 - ₹ 25,000.00",
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.black,
@@ -332,25 +344,27 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                     height: 42,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (withdrawAmountCtl.text == "") {
+                        if (_controller.text == "") {
                           alertServices.errorToast("Enter amount to Withdraw");
                         } else {
                           submitWithdrawal();
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        side: const BorderSide(color: Colors.green),
+                        elevation: 0,
+                        backgroundColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary, width: 1),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: BorderRadius.circular(25),
                         ),
                       ),
                       child: const Text(
                         "Proceed to Withdrawal",
                         style: TextStyle(
-                            fontSize: 14,
-                            color: AppColors.white,
-                            fontWeight: FontWeight.w500),
+                          fontSize: 14,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
@@ -368,7 +382,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
     alertServices.showLoading();
     var params = {
       "contact": mobile,
-      "transactionAmount": withdrawAmountCtl.text,
+      "transactionAmount": _controller.text,
       "orderId": "0126",
       "transactionStatus": "SUCCESS",
     };

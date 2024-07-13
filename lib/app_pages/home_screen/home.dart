@@ -16,6 +16,7 @@ import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_provider/location_service.dart';
 import '../../app_utils/app_widgets/app_button.dart';
+import '../app_common/need_help_widget.dart';
 import '../scan_to_endride/widget/ride_done_alert.dart';
 
 class Home extends StatefulWidget {
@@ -577,8 +578,6 @@ class _HomeState extends State<Home> {
                     'distance': distance.toString().replaceAll(".0", ""),
                   },
                 ];
-                // Navigator.pushNamed(context, "select_vehicle",
-                //     arguments: {"params": list});
                 getVehiclesByPlan(list);
               },
       ),
@@ -731,4 +730,5 @@ class _HomeState extends State<Home> {
     return (c >= a - range && c <= a + range) ||
         (c >= b - range && c <= b + range);
   }
+
 }

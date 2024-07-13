@@ -14,47 +14,39 @@ class ReferCodeApply extends StatefulWidget {
 }
 
 class _ReferCodeApplyState extends State<ReferCodeApply> {
-  SecureStorage secureStorage=SecureStorage();
-  CouponServices couponServices= CouponServices();
-  AlertServices alertServices= AlertServices();
-  TextEditingController referCtl= TextEditingController();
-  List referCodeStatusDetails=[];
+  SecureStorage secureStorage = SecureStorage();
+  CouponServices couponServices = CouponServices();
+  AlertServices alertServices = AlertServices();
+  TextEditingController referCtl = TextEditingController();
+  List referCodeStatusDetails = [];
+
   @override
   void initState() {
     super.initState();
-    String mobile = secureStorage.get("mobile");
-    alertServices.showLoading();
-    couponServices.getCouponCode(mobile).then((response) async {
-      alertServices.hideLoading();
-      setState(() {
-        referCodeStatusDetails = [response];
-        String code=referCodeStatusDetails[0]["uniqueReferralCode"];
-        secureStorage.save("referCode", code);
-      });
-    });
-
   }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    return MaterialApp(
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          alignment: AlignmentDirectional.bottomStart,
-          children: <Widget>[
-            Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: Container(
-                height: height / 1.5,
-                alignment: Alignment.bottomCenter,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
-                  color: Color(0XFFF6F6F6),
-                ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        alignment: AlignmentDirectional.bottomStart,
+        children: <Widget>[
+          Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: Container(
+              height: height / 1.5,
+              alignment: Alignment.bottomCenter,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+                color: Color(0XFFF6F6F6),
               ),
             ),
-            Column(
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(padding: EdgeInsets.all(height / 7.3)),
@@ -72,13 +64,14 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                 const Text(
                   "Do you have Referral Code?",
                   style: TextStyle(
-                      fontSize: 18,
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700),
+                    fontSize: 18,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 CustomTheme.defaultHeight10,
                 const Text(
-                  "Drop it like it's hot below and \n unlock the perks of rolling with us!",
+                  "Drop it like it's hot below and\nunlock the perks of rolling with us!",
                   style: TextStyle(
                     fontSize: 18,
                     color: AppColors.referColor,
@@ -87,36 +80,40 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                   textAlign: TextAlign.center,
                 ),
                 CustomTheme.defaultHeight10,
-                Align(
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Container(
-                        width: 220,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.1),borderRadius: BorderRadius.circular(6),
-                          color: Colors.white,
-                        ),
-                        child: TextFormField(
-                          controller: referCtl,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 18,
-                            color: AppColors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintStyle: CustomTheme.formFieldStyle,
-                          ),
-                        ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: TextFormField(
+                    controller: referCtl,
+                    maxLength: 15,
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    textCapitalization: TextCapitalization.characters,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      counterText: "",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color(0xffD2D2D2)),
                       ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color(0xffD2D2D2)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color(0xffD2D2D2)),
+                      ),
+                      hintStyle: CustomTheme.formFieldStyle,
                     ),
                   ),
                 ),
-                CustomTheme.defaultHeight10,
+                const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SizedBox(
@@ -127,6 +124,7 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                         validateCode();
                       },
                       style: ElevatedButton.styleFrom(
+                        elevation: 0,
                         textStyle: const TextStyle(
                           color: AppColors.white,
                           fontWeight: FontWeight.w500,
@@ -147,16 +145,20 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                     ),
                   ),
                 ),
-                CustomTheme.defaultHeight10,
-                CustomTheme.defaultHeight10,
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, "choose_your_campus");
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //     context, "choose_your_campus", (route) => false);
+                      },
                       style: ElevatedButton.styleFrom(
+                        elevation: 0,
                         textStyle: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w500,
@@ -179,29 +181,33 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   void validateCode() async {
-    String code = secureStorage.get("referCode") ?? "";
-    if(referCtl.text=="") {
+    // String code = secureStorage.get("referCode") ?? "";
+    if (referCtl.text == "") {
       alertServices.errorToast("Referral Code is empty");
-    }else {
+    } else {
+      alertServices.showLoading();
       couponServices.validateCouponCode(referCtl.text).then((response) {
-        print(response);
         referCodeStatusDetails = [response];
-        if( referCodeStatusDetails[0]['status']=="Valid"){
-          alertServices.successToast(referCodeStatusDetails[0]['message']);
-          Navigator.pushNamed(context, "home");
-        }
-        else{
-          alertServices.errorToast(referCodeStatusDetails[0]['message']);
+        String msg = referCodeStatusDetails[0]['message'].toString();
+        String status = referCodeStatusDetails[0]['status'].toString();
+        alertServices.hideLoading();
+        if (status == "Valid") {
+          secureStorage.save("referCode", referCtl.text.toString());
+          alertServices.successToast(msg);
+          Navigator.pushNamed(context, "choose_your_campus");
+        } else {
+          alertServices.errorToast(msg);
         }
         setState(() {});
       });
     }
   }
 }
+

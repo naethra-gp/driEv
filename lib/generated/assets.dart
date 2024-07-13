@@ -141,6 +141,7 @@ class Assets {
   static const String widgetFareDetailsWidget = 'lib/app_pages/bike_booking/widget/fare_details_widget.dart';
   static const String widgetListRideSummary = 'lib/app_pages/ride_summary/widget/list_ride_summary.dart';
   static const String widgetListWidget = 'lib/app_pages/campus_screens/widget/list_widget.dart';
+  static const String widgetNeedHelpButtonWidget = 'lib/app_pages/app_common/widget/need_help_button_widget.dart';
   static const String widgetOnRideTimerWidget = 'lib/app_pages/on_ride/widget/on_ride_timer_widget.dart';
   static const String widgetRegFileUploadForm = 'lib/app_pages/registration_page/widget/reg_file_upload_form.dart';
   static const String widgetRegTextFormWidget = 'lib/app_pages/registration_page/widget/reg_text_form_widget.dart';

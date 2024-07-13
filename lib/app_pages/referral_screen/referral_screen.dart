@@ -40,7 +40,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
       customerDetails = [response];
       referCode = customerDetails[0]['uniqueReferralCode'];
       secureStorage.save("referCode", referCode);
-      referCodeCtl.text = referCode.toUpperCase();
+      referCodeCtl.text = referCode;
       alertServices.hideLoading();
       setState(() {});
     });

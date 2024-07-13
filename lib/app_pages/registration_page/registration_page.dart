@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../app_config/app_constants.dart';
+import '../../app_services/Coupon_services.dart';
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -35,6 +36,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   List campusDetail = [];
   List campusDocList = [];
   List aadhaarDetails = [];
+  CouponServices couponServices = CouponServices();
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameCtrl = TextEditingController();
@@ -499,6 +501,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "storageUrl": docList[d]['url'],
       });
     }
+    var refer = secureStorage.get("referCode") ?? "";
     final request = {
       "name": nameCtrl.text,
       "gender": getGender(genderCtrl.text),
@@ -506,6 +509,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "altContact": altContactCtrl.text,
       "emailId": emailCtrl.text,
       "rollNo": rollNoCtrl.text,
+      "referralCode": refer.toString(),
       "aadharNo": aadhaarMask.getUnmaskedText(),
       "aadharVerificationStatus": isAadhaarVerified ? "Y" : "N",
       "organization": campusDetail[0]['campusName'].toString(),
@@ -518,6 +522,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       alertServices.hideLoading();
       alertServices.successToast(response['status']);
       secureStorage.save("isLogin", true);
+      getAssignCoupon();
       Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     });
   }
@@ -529,6 +534,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return "$name *";
     }
     return name;
+  }
+
+  getAssignCoupon() {
+    String mobile = secureStorage.get("mobile");
+    couponServices.getCouponCode(mobile).then((response) async {});
   }
 }
 

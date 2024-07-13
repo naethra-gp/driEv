@@ -105,7 +105,7 @@ class AppRoute {
         case "all_transaction":
           List id = settings.arguments as List;
           return AllTransaction(allTransaction: id);
-        case "validate_code":
+        case "referral_in_signup":
           return const ReferCodeApply();
         case "add_more_fund":
           final args = settings.arguments as Map<String, Object>;

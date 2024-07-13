@@ -20,6 +20,7 @@ import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
+import '../app_common/need_help_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -366,6 +367,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           const SizedBox(height: 5),
+
                           if (stationDetails.isNotEmpty) ...[
                             Wrap(
                               spacing: 10.0,
@@ -653,5 +655,18 @@ class _HomePageState extends State<HomePage> {
         CameraUpdate.zoomTo(zoomLevel),
       );
     }
+  }
+
+  needHelpAlert(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      enableDrag: false,
+      builder: (context) {
+        return const NeedHelpWidget();
+      },
+    );
   }
 }
