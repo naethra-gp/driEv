@@ -320,12 +320,12 @@ class AlertServices {
       enableDrag: false,
       builder: (context) {
         return SizedBox(
-          height: height / 2,
+          height: height,
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                top: height / 5.5 - 100,
+                top: height / 6 - 100,
                 child: Container(
                   height: height,
                   width: width,
@@ -338,7 +338,7 @@ class AlertServices {
                 ),
               ),
               Positioned(
-                top: height / 6.6 - 100,
+                top: height / 7.5 - 100,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -377,7 +377,7 @@ class AlertServices {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xff2c2c2c),
-                        fontSize: 26,
+                        fontSize: 30,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -385,9 +385,11 @@ class AlertServices {
                     Text(
                       balance,
                       style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 25),
                     SizedBox(
                       width: width * 0.9,
                       child: Text(
@@ -396,43 +398,46 @@ class AlertServices {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      child: SizedBox(
-                        width: 310,
-                        height: 42,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(
-                              context,
-                              "add_more_fund",
-                              arguments: {
-                                "stationDetails": stationDetails,
-                                "rideId": rideID,
-                                "rideID": scanEndRideId
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            side: const BorderSide(color: Colors.green),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
+                    const SizedBox(height: 50),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        child: SizedBox(
+                          width: width - 75,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(
+                                context,
+                                "add_more_fund",
+                                arguments: {
+                                  "stationDetails": stationDetails,
+                                  "rideId": rideID,
+                                  "rideID": scanEndRideId
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              side: const BorderSide(color: Colors.green),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            "Top Up Now",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w500),
+                            child: const Text(
+                              "Top Up Now",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ),
                       ),
@@ -444,6 +449,29 @@ class AlertServices {
             ],
           ),
         );
+        // return Padding(
+        //   padding: const EdgeInsets.all(16.0),
+        //   child: Column(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       // Content of the bottom sheet
+        //       Text('This is the content of the modal bottom sheet.'),
+        //       SizedBox(height: 20),
+        //       Expanded(
+        //         child: Align(
+        //           alignment: Alignment.bottomCenter,
+        //           child: ElevatedButton(
+        //             onPressed: () {
+        //               // Handle button press
+        //               Navigator.pop(context);
+        //             },
+        //             child: Text('Close'),
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // );
       },
     );
   }

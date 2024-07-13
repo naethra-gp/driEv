@@ -21,12 +21,12 @@ class RideDoneAlert extends StatelessWidget {
     // List result = result;
     double rideDistance = result[0]['totalRideDistance'];
     return SizedBox(
-      height: height / 1.8,
+      height: height,
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
           Positioned(
-            top: height / 5 - 100,
+            top: height / 6 - 100,
             child: Container(
               height: height,
               width: width,
@@ -39,13 +39,13 @@ class RideDoneAlert extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: height / 5 - 100,
+            top: height / 7.5 - 100,
             left: 0,
             right: 0,
             bottom: 10,
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 25),
+                const SizedBox(height: 75),
                 Padding(
                   padding: const EdgeInsets.only(
                     right: 50,
@@ -90,7 +90,7 @@ class RideDoneAlert extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: sliderWidget(rideDistance),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,

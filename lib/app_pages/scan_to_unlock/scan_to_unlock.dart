@@ -351,12 +351,11 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       "lattitude": currentLocation!.latitude.toString(),
       "longitude": currentLocation!.longitude.toString(),
     };
-    print("params ${jsonEncode(params)}");
     bookingServices.startMyRide(params).then((r) {
       alertServices.hideLoading();
       if (r != null) {
         String rideId = r['rideId'].toString();
-        Navigator.pushNamed(context, "booking_success", arguments: rideId);
+        Navigator.pushNamedAndRemoveUntil(context, "booking_success", arguments: rideId, (a) => false);
       }
     });
   }

@@ -289,12 +289,12 @@ class _EndRideScannerState extends State<EndRideScanner> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return SizedBox(
-          height: height / 2, // Adjust the height here
+          height: height, // Adjust the height here
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                top: height / 6.6 - 100,
+                top: height / 6 - 100,
                 child: Container(
                   height: height / 2, // Adjust the height here
                   width: width,
@@ -307,7 +307,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                 ),
               ),
               Positioned(
-                top: height / 8 - 100,
+                top: height / 7.5 - 100,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -328,22 +328,16 @@ class _EndRideScannerState extends State<EndRideScanner> {
                         ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        right: 50,
-                        left: 50,
-                        top: 50,
-                        bottom: 20,
-                      ),
-                      child: Text(
-                        "Please enter your OTP to\nconclude this ride.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    const SizedBox(height: 50),
+                    const Text(
+                      "Please enter your OTP to\nconclude this ride.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(height: 30),
                     const Text(
                       "Share this PIN with our station executive\nto end the ride",
                       textAlign: TextAlign.center,
@@ -352,14 +346,13 @@ class _EndRideScannerState extends State<EndRideScanner> {
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 50),
                     Text(
-                      otp,
+                      otp.toString(),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 30,
+                        fontSize: 32,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
                       ),
                     ),
                   ],
