@@ -100,8 +100,7 @@ class AppRoute {
         case "wallet_summary":
           return const WalletSummary();
         case "withdraw_amount":
-          String id = settings.arguments as String;
-          return WithdrawAmount(balance: id);
+          return const WithdrawAmount();
         case "all_transaction":
           List id = settings.arguments as List;
           return AllTransaction(allTransaction: id);

@@ -159,8 +159,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "withdraw_amount",
-                            arguments: walletBalance);
+                        Navigator.pushNamed(context, "withdraw_amount");
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -202,18 +201,19 @@ class _WalletSummaryState extends State<WalletSummary> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 25),
           Expanded(
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
               decoration: BoxDecoration(
                 color: AppColors.walletColor,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(25),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  const SizedBox(height: 10),
                   const Text(
                     "Wallet History",
                     style: TextStyle(
@@ -225,9 +225,9 @@ class _WalletSummaryState extends State<WalletSummary> {
                   const SizedBox(height: 5),
                   Expanded(
                     child: ListView.builder(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(0),
                       itemCount: min(
-                        4,
+                        5,
                         walletSummaryDetails.length,
                       ),
                       itemBuilder: (context, index) {
@@ -235,7 +235,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                         return Column(
                           children: [
                             const SizedBox(
-                              height: 10,
+                              height: 5
                             ),
                             WalletSummaryList(
                               title: transaction['description'],
@@ -244,14 +244,14 @@ class _WalletSummaryState extends State<WalletSummary> {
                                   .toStringAsFixed(2),
                               transactionType: transaction['transactionType'],
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 5),
                             const Divider(color: AppColors.centerAlign),
                           ],
                         );
                       },
                     ),
                   ),
-                  CustomTheme.defaultHeight10,
+                  // CustomTheme.defaultHeight10,
                   Align(
                     alignment: Alignment.center,
                     child: RichText(
@@ -275,7 +275,8 @@ class _WalletSummaryState extends State<WalletSummary> {
                       ),
                     ),
                   ),
-                  CustomTheme.defaultHeight10,
+                  // CustomTheme.defaultHeight10,
+                  const SizedBox(height: 30),
                   Align(
                     alignment: Alignment.center,
                     child: SizedBox(
@@ -354,10 +355,6 @@ class _WalletSummaryState extends State<WalletSummary> {
           result = value.toString();
         });
         List res = [value];
-        print("---------------------");
-        print("result ---> ${res[0]['STATUS']}");
-        print("---------------------");
-
         if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
           debugPrint("Transaction Success");
           Navigator.pushReplacementNamed(context, "transaction_success");
@@ -373,11 +370,6 @@ class _WalletSummaryState extends State<WalletSummary> {
           });
         }
         List response = [onError.details];
-        print("---------------------");
-        print("error result ---> ${response[0]['STATUS']}");
-        print("error result ---> ${response[0]['RESPMSG']}");
-        print("---------------------");
-
         if (response[0]['STATUS'].toString() == "TXN_FAILURE") {
           debugPrint("Transaction Failure");
           Navigator.pushReplacementNamed(context, "transaction_failure");
@@ -385,175 +377,6 @@ class _WalletSummaryState extends State<WalletSummary> {
       });
     });
   }
-
-  // CREDIT API CALL
-  // addMoreFunds(GlobalKey key) {
-  //   double height = MediaQuery.of(context).size.height;
-  //   double width = MediaQuery.of(context).size.width;
-  //   final renderBox = key.currentContext?.findRenderObject();
-  //   print("renderBox  $renderBox");
-  //
-  //   return showModalBottomSheet(
-  //     context: context,
-  //     barrierColor: Colors.black87,
-  //     backgroundColor: Colors.transparent,
-  //     isDismissible: true,
-  //     enableDrag: false,
-  //     builder: (context) {
-  //       return Wrap(children: <Widget>[
-  //         SizedBox(
-  //           // height: sheetHeight,
-  //           height: height / 2,
-  //           // height: SizeConfig.screenHeight * 0.6,
-  //           child: Stack(
-  //             alignment: Alignment.center,
-  //             children: <Widget>[
-  //               Positioned(
-  //                 top: height / 5.5 - 100,
-  //                 child: Container(
-  //                   height: height,
-  //                   width: width,
-  //                   decoration: const BoxDecoration(
-  //                     color: Colors.white,
-  //                     borderRadius: BorderRadius.vertical(
-  //                       top: Radius.circular(20),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: height / 6.6 - 100,
-  //                 child: Column(
-  //                   children: <Widget>[
-  //                     SizedBox(
-  //                       width: 50,
-  //                       height: 50,
-  //                       child: Container(
-  //                         decoration: const BoxDecoration(
-  //                           shape: BoxShape.circle,
-  //                           color: Colors.green,
-  //                         ),
-  //                         child: IconButton(
-  //                           icon: const Icon(Icons.close),
-  //                           color: Colors.white,
-  //                           onPressed: () {
-  //                             Navigator.pop(context);
-  //                           },
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     const SizedBox(height: 10),
-  //                     SizedBox(
-  //                       width: MediaQuery.of(context).size.width - 100,
-  //                       child: TextFormField(
-  //                         keyboardType: TextInputType.phone,
-  //                         textInputAction: TextInputAction.done,
-  //                         autofocus: false,
-  //                         autovalidateMode: AutovalidateMode.onUserInteraction,
-  //                         style: const TextStyle(
-  //                             fontSize: 12,
-  //                             fontWeight: FontWeight.normal,
-  //                             color: Colors.black),
-  //                         decoration: InputDecoration(
-  //                           prefix: IconButton(
-  //                             onPressed: (){},
-  //                             icon: const Icon(Icons.currency_rupee),
-  //                           ),
-  //                           // hintText: hintText ?? title,
-  //                           // counterText: counterText ?? '',
-  //                           // errorMaxLines: errorMaxLines ?? 2,
-  //                           // helperText: helperText,
-  //                           // filled: readOnly,
-  //                           // fillColor: Colors.grey[200],
-  //                           errorStyle: const TextStyle(
-  //                             color: Colors.redAccent,
-  //                             fontSize: 12,
-  //                             fontWeight: FontWeight.normal,
-  //                           ),
-  //                           // helperStyle: helperStyle,
-  //                           hintStyle: const TextStyle(
-  //                             fontSize: 12,
-  //                             color: Colors.grey,
-  //                           ),
-  //                           border: OutlineInputBorder(
-  //                             borderRadius: BorderRadius.circular(10),
-  //                             borderSide:
-  //                             const BorderSide(color: Color(0xffD2D2D2)),
-  //                           ),
-  //                           enabledBorder: OutlineInputBorder(
-  //                             borderRadius: BorderRadius.circular(10),
-  //                             borderSide:
-  //                             const BorderSide(color: Color(0xffD2D2D2)),
-  //                           ),
-  //                           focusedBorder: OutlineInputBorder(
-  //                             borderRadius: BorderRadius.circular(10),
-  //                             borderSide:
-  //                             const BorderSide(color: AppColors.primary),
-  //                           ),
-  //                           focusedErrorBorder: OutlineInputBorder(
-  //                             borderRadius: BorderRadius.circular(10),
-  //                             borderSide:
-  //                             const BorderSide(color: Colors.redAccent),
-  //                           ),
-  //                           disabledBorder: OutlineInputBorder(
-  //                             borderRadius: BorderRadius.circular(10),
-  //                             borderSide:
-  //                             const BorderSide(color: Color(0xffD2D2D2)),
-  //                           ),
-  //                           errorBorder: OutlineInputBorder(
-  //                             borderRadius: BorderRadius.circular(10),
-  //                             borderSide:
-  //                             const BorderSide(color: Colors.redAccent),
-  //                           ),
-  //                           contentPadding: const EdgeInsets.only(left: 15),
-  //                           isDense: false,
-  //                           // prefixIcon: prefixIcon != null
-  //                           //     ? Icon(
-  //                           //         prefixIcon,
-  //                           //         color: iconColor ?? themeColor,
-  //                           //         size: 26,
-  //                           //       )
-  //                           //     : null,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     const SizedBox(height: 20),
-  //                     Padding(
-  //                       padding: const EdgeInsets.symmetric(horizontal: 0),
-  //                       child: SizedBox(
-  //                         width: MediaQuery.of(context).size.width - 100,
-  //                         height: 45,
-  //                         child: ElevatedButton(
-  //                           onPressed: () {},
-  //                           style: ElevatedButton.styleFrom(
-  //                             backgroundColor: Colors.green,
-  //                             side: const BorderSide(color: Colors.green),
-  //                             shape: RoundedRectangleBorder(
-  //                               borderRadius: BorderRadius.circular(25.0),
-  //                             ),
-  //                           ),
-  //                           child: const Text(
-  //                             "Proceed",
-  //                             style: TextStyle(
-  //                               fontSize: 14,
-  //                               color: AppColors.white,
-  //                               fontWeight: FontWeight.w500,
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     const SizedBox(height: 10),
-  //                   ],
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         )
-  //       ]);
-  //     },
-  //   );
-  // }
 }
 
 class WalletSummaryList extends StatelessWidget {
