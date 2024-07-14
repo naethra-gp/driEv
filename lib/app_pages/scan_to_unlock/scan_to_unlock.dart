@@ -341,6 +341,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   }
 
   bookAndStartMyRide() {
+    FocusScope.of(context).unfocus();
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
     var params = {

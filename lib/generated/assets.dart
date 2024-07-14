@@ -45,6 +45,7 @@ class Assets {
   static const String appThemesAppTheme = 'lib/app_themes/app_theme.dart';
   static const String appThemesCustomTheme = 'lib/app_themes/custom_theme.dart';
   static const String appVoteForCampusLogo = 'assets/app/vote_for_campus_logo.png';
+  static const String appWidgetsAppBarWidget = 'lib/app_utils/app_widgets/app_bar_widget.dart';
   static const String appWidgetsAppButton = 'lib/app_utils/app_widgets/app_button.dart';
   static const String assetsAppGetStarted = 'assets/app/get_started.png';
   static const String bikeBookingBikeBooking = 'lib/app_pages/bike_booking/bike_booking.dart';
@@ -61,7 +62,6 @@ class Assets {
   static const String fontsRobotoRegular = 'assets/fonts/Roboto-Regular.ttf';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String homeScreenHome = 'lib/app_pages/home_screen/home.dart';
-  static const String homeScreenHomePage = 'lib/app_pages/home_screen/home_page.dart';
   static const String imgAnimm = 'assets/img/animm.png';
   static const String imgAppLogo = 'assets/img/app_logo.png';
   static const String imgAttachmentIcon = 'assets/img/attachment_icon.png';
@@ -150,7 +150,9 @@ class Assets {
   static const String widgetTimerButtonWidget = 'lib/app_pages/bike_booking/extend_bike_timer/widget/timer_button_widget.dart';
   static const String widgetsDocumentReUpload = 'lib/app_pages/profile_page/widgets/document_re_upload.dart';
   static const String widgetsDocumentUploadAlert = 'lib/app_pages/profile_page/widgets/document_upload_alert.dart';
+  static const String widgetsPlaceHolder = 'lib/app_pages/wallet_screens/widgets/place_holder.dart';
   static const String widgetsTransactionFailure = 'lib/app_pages/wallet_screens/widgets/transaction_failure.dart';
   static const String widgetsTransactionSuccess = 'lib/app_pages/wallet_screens/widgets/transaction_success.dart';
+  static const String widgetsWalletListWidget = 'lib/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 
 }

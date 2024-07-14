@@ -14,7 +14,6 @@ export 'vehicle_page/select_vehicle.dart';
 export 'vehicle_page/widget/error_bikes.dart';
 export 'no_internet/no_internet.dart';
 export 'profile_page/profile_page.dart';
-export 'home_screen/home_page.dart';
 export 'bike_booking/bike_booking.dart';
 export 'bike_booking/bike_fare_details.dart';
 export 'scan_to_unlock/scan_to_unlock.dart';

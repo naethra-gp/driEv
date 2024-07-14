@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -65,9 +66,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
           children: <Widget>[
             if (_currentPosition != null && stationLocation != null)
               GoogleMap(
@@ -192,8 +193,8 @@ class _HomeState extends State<Home> {
                                   style: TextStyle(
                                     fontSize: width / 30,
                                     fontWeight: FontWeight.bold,
-                                    color: getColor(
-                                        customer[0]['walletBalance']),
+                                    color:
+                                        getColor(customer[0]['walletBalance']),
                                   ),
                                 ),
                               const SizedBox(width: 10),
@@ -251,8 +252,8 @@ class _HomeState extends State<Home> {
                             alignment: WrapAlignment.start,
                             children: [
                               for (int i = 0;
-                              i < stationDetails['plans'].length;
-                              i++) ...[
+                                  i < stationDetails['plans'].length;
+                                  i++) ...[
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0,
@@ -277,9 +278,8 @@ class _HomeState extends State<Home> {
                                           .map((e) => e = false)
                                           .toList();
                                       categoryList[i] = true;
-                                      selectedPlan = stationDetails['plans']
-                                      [i]
-                                          .toString();
+                                      selectedPlan =
+                                          stationDetails['plans'][i].toString();
                                     });
                                   },
                                   child: Text(
@@ -730,5 +730,4 @@ class _HomeState extends State<Home> {
     return (c >= a - range && c <= a + range) ||
         (c >= b - range && c <= b + range);
   }
-
 }

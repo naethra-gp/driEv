@@ -924,7 +924,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   scanToUnlock() async {
     countdownTimer?.cancel();
-    alertServices.showLoading();
     String mobile = await secureStorage.get("mobile");
     double balance = 0;
     int selectedMin = 0;
@@ -934,6 +933,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     if (a.isNotEmpty) {
       selectedMin = a[0]['mins'];
       double amount = selectedMin * reserve;
+      alertServices.showLoading();
       bookingServices.getWalletBalance(mobile).then((r) {
         balance = r['balance'];
         Map<String, Object> params = {
@@ -964,43 +964,17 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         });
       });
     } else {
-      double baseFare = fareDetails[0]['offer']['basePrice'];
-      double perMinPaisa = fareDetails[0]['offer']['perMinPaisa'];
-      double perKmPaisa = fareDetails[0]['offer']['perKmPaisa'];
-      double amount = baseFare + perKmPaisa + perMinPaisa;
-      bookingServices.getWalletBalance(mobile).then((r) {
-        balance = r['balance'];
-        Map<String, Object> params = {
-          "contact": secureStorage.get("mobile").toString(),
-          "vehicleId": fareDetails[0]['vehicleId'].toString(),
-          "duration":
-              reserveMins.toString() == "" ? "0" : reserveMins.toString()
-        };
-        print("params $params");
-        bookingServices.blockBike(params).then((r2) async {
-          alertServices.hideLoading();
-          print("r2 $r2");
-          if (amount > balance) {
-            alertServices.insufficientBalanceAlert(context, "₹$balance",
-                r2["message"], widget.stationDetails, "", []);
-          } else {
-            print("Block Response 2: ${jsonEncode(r2)}");
-
-            /// BALANCE AVAILABLE arguments: list['campusId'].toString()
-            String campus = widget.stationDetails[0]['campus'].toString();
-            String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
-            List arg = [
-              {
-                "campus": campus,
-                "vehicleId": vehicleId,
-                // "stationDetails": widget.stationDetails,
-                // "bikeBlock": true
-              },
-            ];
-            Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
-          }
-        });
-      });
+      // double baseFare = fareDetails[0]['offer']['basePrice'];
+      // double perMinPaisa = fareDetails[0]['offer']['perMinPaisa'];
+      // double perKmPaisa = fareDetails[0]['offer']['perKmPaisa'];
+      // double amount = baseFare + perKmPaisa + perMinPaisa;
+      /// BALANCE AVAILABLE arguments: list['campusId'].toString()
+      String campus = widget.stationDetails[0]['campus'].toString();
+      String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+      List arg = [
+        {"campus": campus, "vehicleId": vehicleId}
+      ];
+      Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
     }
   }
 
