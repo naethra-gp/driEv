@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
+import '../../app_utils/app_widgets/app_bar_widget.dart';
 
 class RideHistory extends StatefulWidget {
   const RideHistory({super.key});
@@ -59,14 +60,7 @@ class _RideHistoryState extends State<RideHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: false,
-      appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Image.asset(Constants.backButton),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: const AppBarWidget(),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(

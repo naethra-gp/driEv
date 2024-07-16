@@ -28,7 +28,8 @@ class WalletListWidget extends StatelessWidget {
         title,
         style: const TextStyle(
           fontSize: 14,
-          fontFamily: "Poppins",
+          // fontFamily: "Poppins",
+          fontFamily: "Roboto",
           color: Colors.black,
           fontWeight: FontWeight.w500,
         ),
@@ -37,7 +38,8 @@ class WalletListWidget extends StatelessWidget {
         formattedTransactionTime,
         style: const TextStyle(
           fontSize: 12,
-          fontFamily: "Poppins",
+          // fontFamily: "Poppins",
+          fontFamily: "Roboto",
           color: AppColors.fontgrey,
         ),
       ),
@@ -46,9 +48,10 @@ class WalletListWidget extends StatelessWidget {
         textAlign: TextAlign.right,
         style: TextStyle(
           fontSize: 14,
-          fontFamily: "Poppins",
+          // fontFamily: "Poppins",
+          fontFamily: "Roboto",
           color: amountColor,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w800,
         ),
       ),
     );

@@ -4,17 +4,12 @@ import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
-import 'package:driev/app_services/booking_services.dart';
 
 import '../registration_page/widget/reg_text_form_widget.dart';
 import 'widget/fare_details_widget.dart';
@@ -69,7 +64,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     super.initState();
     setState(() {
       timerRunning = widget.stationDetails[0]['via'] == "api";
-      // enableChasingTime = true;
     });
     if (timerRunning) {
       getBlockDetails();
@@ -78,8 +72,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   @override
   void dispose() {
-    // _timeController.dispose();
-    // _timer.cancel();
     _cancelTimer();
     super.dispose();
   }
@@ -173,7 +165,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               } else {
                 Navigator.pop(context);
               }
-              // Navigator.pop(context);
             },
           ),
         ),

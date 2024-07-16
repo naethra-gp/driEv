@@ -40,12 +40,12 @@ class _WalletSummaryState extends State<WalletSummary> {
   }
 
   void getWalletSummary() async {
-    // alertServices.showLoading();
+    alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     walletServices.getWalletTransaction(mobile).then((response) {
       setState(() {
         walletSummaryDetails = List<Map<String, dynamic>>.from(response);
-        // alertServices.hideLoading();
+        alertServices.hideLoading();
       });
       walletBalance =
           walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2);

@@ -36,7 +36,7 @@ class _AllTransactionState extends State<AllTransaction> {
               "Wallet History",
               style: TextStyle(
                 fontSize: 18,
-                fontFamily: "Poppins",
+                // fontFamily: "Poppins",
                 color: AppColors.primary,
                 fontWeight: FontWeight.w500,
               ),
@@ -48,7 +48,7 @@ class _AllTransactionState extends State<AllTransaction> {
               "Your log of all Transaction",
               style: TextStyle(
                 fontSize: 14,
-                fontFamily: "Poppins",
+                // fontFamily: "Poppins",
                 color: AppColors.referColor,
                 fontWeight: FontWeight.w500,
               ),

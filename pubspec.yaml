@@ -57,6 +57,7 @@ dependencies:
   sleek_circular_slider: ^2.0.1
   cron: ^0.6.1
   shimmer: ^3.0.0
+  flutter_uxcam: ^2.5.2
 
 #  percent_indicator: ^4.2.3
   #  qrscan: ^0.3.3
@@ -71,6 +72,7 @@ dependencies:
   #  sms_autofill: ^2.3.1
   #  qr_scanner_overlay: ^0.0.2
   #  qr_mobile_vision: ^5.0.1
+#  flutter_uxcam: ^2.5.2
 
 dev_dependencies:
   flutter_test:

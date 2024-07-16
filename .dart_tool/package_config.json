@@ -326,6 +326,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "flutter_uxcam",
+      "rootUri": "file:///Users/naethra/.pub-cache/hosted/pub.dev/flutter_uxcam-2.5.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/naethra/Desktop/env/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
@@ -1046,6 +1052,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "visibility_detector",
+      "rootUri": "file:///Users/naethra/.pub-cache/hosted/pub.dev/visibility_detector-0.4.0+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "vm_service",
       "rootUri": "file:///Users/naethra/.pub-cache/hosted/pub.dev/vm_service-14.2.1",
       "packageUri": "lib/",
@@ -1094,7 +1106,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-07-14T18:11:08.960477Z",
+  "generated": "2024-07-14T19:07:44.796502Z",
   "generator": "pub",
   "generatorVersion": "3.4.3",
   "flutterRoot": "file:///Users/naethra/Desktop/env/flutter",

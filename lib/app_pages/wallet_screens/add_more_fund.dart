@@ -8,13 +8,18 @@ import '../../app_config/app_constants.dart';
 import '../../app_services/wallet_services.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_utils/app_loading/alert_services.dart';
+import '../../app_utils/app_widgets/app_bar_widget.dart';
 import '../registration_page/widget/reg_text_form_widget.dart';
 
 class AddMoreFund extends StatefulWidget {
   final List stationDetails;
   final String rideId;
   final List rideID;
-  const AddMoreFund({super.key,required this.stationDetails,required this.rideId,required this.rideID});
+  const AddMoreFund(
+      {super.key,
+      required this.stationDetails,
+      required this.rideId,
+      required this.rideID});
   @override
   State<AddMoreFund> createState() => _AddMoreFundState();
 }
@@ -27,18 +32,12 @@ class _AddMoreFundState extends State<AddMoreFund> {
   String walletBalance = "0";
   final TextEditingController amountCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  List stationDetails=[];
-  String rideId="";
-  List rideID=[];
+  List stationDetails = [];
+  String rideId = "";
+  List rideID = [];
 
   @override
   void initState() {
-    print("stationDetails---->");
-    print(widget.stationDetails);
-    print("rideId---->");
-    print(widget.rideId);
-    print("End Scan rideId---->");
-    print(widget.rideID);
     getWalletBalance();
     super.initState();
   }
@@ -47,39 +46,19 @@ class _AddMoreFundState extends State<AddMoreFund> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.red,
-            statusBarIconBrightness:
-                Brightness.dark, // For Android (dark icons)
-            statusBarBrightness: Brightness.light, // For iOS (dark icons)
-          ),
-        ),
+        appBar: const AppBarWidget(),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: <Widget>[
               const SizedBox(height: 16),
-              Image.asset(
-                "assets/img/oops.png",
-                height: 70,
-                width: 70,
-              ),
+              Image.asset("assets/img/oops.png", height: 70, width: 70),
               const SizedBox(height: 40),
-              const Text(
-                "Your Wallet Balance",
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              // const SizedBox(height: 10),
+              const Text("Your Wallet Balance", style: TextStyle(fontSize: 16)),
               Text(
                 "\u{20B9} $walletBalance",
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Form(
@@ -89,7 +68,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
                   controller: amountCtrl,
                   maxLength: 4,
                   required: true,
-                  prefixText: "\u{20B9}",
+                  prefixText: "\u{20B9} ",
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.phone,
                   prefixIcon: Icons.account_circle_outlined,
@@ -111,74 +90,81 @@ class _AddMoreFundState extends State<AddMoreFund> {
                   TextButton(
                     onPressed: () => addAmount(100),
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(Colors.transparent),
-                      side: MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return const BorderSide(color: AppColors.primary,width: 2);
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      side: WidgetStateProperty.resolveWith((states) {
+                        if (states.contains(WidgetState.pressed)) {
+                          return const BorderSide(
+                              color: AppColors.primary, width: 2);
                         }
                         return const BorderSide(color: Color(0xffDEDEDE));
                       }),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                            borderRadius: BorderRadius.circular(20)),
                       ),
                     ),
-                    child: const Text(" +100 ", style: TextStyle(color: Colors.black)),
+                    child: const Text(" +100 ",
+                        style: TextStyle(color: Colors.black)),
                   ),
                   TextButton(
                     onPressed: () => addAmount(200),
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(Colors.transparent),
-                      side: MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return const BorderSide(color: AppColors.primary,width: 2);
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      side: WidgetStateProperty.resolveWith((states) {
+                        if (states.contains(WidgetState.pressed)) {
+                          return const BorderSide(
+                              color: AppColors.primary, width: 2);
                         }
                         return const BorderSide(color: Color(0xffDEDEDE));
                       }),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
-                    child: const Text(" +200 ", style: TextStyle(color: Colors.black)),
+                    child: const Text(" +200 ",
+                        style: TextStyle(color: Colors.black)),
                   ),
                   TextButton(
                     onPressed: () => addAmount(500),
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(Colors.transparent),
-                      side: MaterialStateProperty.resolveWith((states) {
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      side: WidgetStateProperty.resolveWith((states) {
                         if (states.contains(MaterialState.pressed)) {
-                          return const BorderSide(color: AppColors.primary,width: 2);
+                          return const BorderSide(
+                              color: AppColors.primary, width: 2);
                         }
                         return const BorderSide(color: Color(0xffDEDEDE));
                       }),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
-                    child: const Text(" +500 ", style: TextStyle(color: Colors.black)),
+                    child: const Text(" +500 ",
+                        style: TextStyle(color: Colors.black)),
                   ),
                   TextButton(
                     onPressed: () => addAmount(1000),
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(Colors.transparent),
-                      side: MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return const BorderSide(color: AppColors.primary,width: 2);
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      side: WidgetStateProperty.resolveWith((states) {
+                        if (states.contains(WidgetState.pressed)) {
+                          return const BorderSide(
+                              color: AppColors.primary, width: 2);
                         }
                         return const BorderSide(color: Color(0xffDEDEDE));
                       }),
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
-                    child: const Text(" +1000 ", style: TextStyle(color: Colors.black)),
+                    child: const Text(" +1000 ",
+                        style: TextStyle(color: Colors.black)),
                   ),
                 ],
               ),
@@ -209,7 +195,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
     walletServices.getWalletBalance(mobile).then((dynamic response) {
       alertServices.hideLoading();
       if (response != null) {
-        // debugPrint("Balance --> ${response][0]['balance']}");
         setState(() {
           walletBalance = [response][0]['balance'].toString();
         });
@@ -226,10 +211,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
       "contact": mobile.toString(),
       "staging": Constants.isStagingMode,
     };
-    print(params);
     walletServices.initiateTransaction(params).then((dynamic res) {
       List token = [res];
-      print(token);
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
       String amt = amount.toString();
@@ -283,6 +266,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       });
     });
   }
+
   creditMoneyToWallet(amount, oId, status) async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
@@ -297,75 +281,73 @@ class _AddMoreFundState extends State<AddMoreFund> {
       if (response != null) {
         setState(() {
           walletBalance = [response][0]['closingBalance'].toString();
-          stationDetails=widget.stationDetails;
-          rideId=widget.rideId;
-          rideID=widget.rideID;
-          print("final-------->");
-          print(stationDetails);
-          print(rideId);
-          print(rideID);
+          stationDetails = widget.stationDetails;
+          rideId = widget.rideId;
+          rideID = widget.rideID;
         });
-        if(stationDetails.isNotEmpty||rideID.isNotEmpty||rideId.isNotEmpty) {
+        if (stationDetails.isNotEmpty ||
+            rideID.isNotEmpty ||
+            rideId.isNotEmpty) {
           AlertSuccess(context, "TRANSACTION SUCCESS");
-        }else{
+        } else {
           Navigator.pushNamed(context, "transaction_success");
         }
       }
     });
   }
+
   void addAmount(int amount) {
     int currentAmount = int.tryParse(amountCtrl.text.trim()) ?? 0;
     int newAmount = currentAmount + amount;
     amountCtrl.text = newAmount.toString();
   }
-  Future AlertSuccess(BuildContext context,String msg) async {
-     return showDialog(
+
+  Future AlertSuccess(BuildContext context, String msg) async {
+    return showDialog(
       barrierDismissible: false,
       context: context,
       builder: ((context) {
         return PopScope(
             canPop: false,
-        child: AlertDialog(
-          title: Text(
-            msg,
-            style:
-            const TextStyle(fontSize:18,fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            TextButton(
-                style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () {
-                  if(stationDetails.isNotEmpty) {
-                    print("GO TO --> BIKEFARE");
-                    Navigator.pushReplacementNamed(context, "bike_fare_details",
-                      arguments: {"query": stationDetails},
-                    );
-                  }
-                  else if(rideId.isNotEmpty){
-                    print("GO TO--> ONRIDE");
-                    Navigator.pushReplacementNamed(context, "on_ride",
-                        arguments: rideId);
-                  }
-                  else if(rideID.isNotEmpty){
-                    print("GO TO--> SCANTO END RIDE");
-                    Navigator.pushReplacementNamed(context, "scan_to_end_ride",
-                        arguments: rideID);
-                  }
-
-                }),
-          ],
-        ));
+            child: AlertDialog(
+              title: Text(
+                msg,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              actions: [
+                TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('OK',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      if (stationDetails.isNotEmpty) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          "bike_fare_details",
+                          arguments: {"query": stationDetails},
+                        );
+                      } else if (rideId.isNotEmpty) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          "on_ride",
+                          arguments: rideId,
+                        );
+                      } else if (rideID.isNotEmpty) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          "scan_to_end_ride",
+                          arguments: rideID,
+                        );
+                      }
+                    }),
+              ],
+            ));
       }),
     );
   }
-
 }
