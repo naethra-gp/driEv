@@ -22,6 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController mobileCtrl = TextEditingController();
   OtpServices otpServices = OtpServices();
   AlertServices alertServices = AlertServices();
+  final double smallDeviceHeight = 600;
+  final double largeDeviceHeight = 1024;
 
   @override
   void initState() {
@@ -43,6 +45,20 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double containerHeight;
+    double positionedHeight;
+
+    if (height < smallDeviceHeight) {
+      containerHeight = height / 1.2;
+      positionedHeight = height / 0.925;
+    } else if (height >= smallDeviceHeight && height < largeDeviceHeight) {
+      containerHeight = height / 1.35;
+      positionedHeight = height / 1.045;
+    } else {
+      containerHeight = height / 1.1;
+      positionedHeight = height / 0.95;
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -52,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             Align(
               alignment: FractionalOffset.bottomCenter,
               child: Container(
-                height: height / 1.35,
+                height: containerHeight,
                 alignment: Alignment.bottomCenter,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
@@ -60,389 +76,387 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(padding: EdgeInsets.all(height / 12.5)),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset(
-                    Constants.appLogo,
-                    fit: BoxFit.cover,
-                    height: 96,
-                    width: 96,
-                  ),
-                ),
-                SizedBox(height: height / 40),
-                const Text(
-                  Constants.divein,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text(
-                    Constants.popin,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0XFF6F6F6F),
+            Positioned(
+              height: positionedHeight,
+              width: width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(padding: EdgeInsets.all(height / 12.5)),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Image.asset(
+                      Constants.appLogo,
+                      fit: BoxFit.cover,
+                      height: 96,
+                      width: 96,
                     ),
                   ),
-                ),
-                const SizedBox(height: 25),
-                Form(
-                  key: _formKey,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          keyboardType: TextInputType.phone,
-                          maxLength: 10,
-                          autofocus: true,
-                          controller: mobileCtrl,
-                          textAlignVertical: TextAlignVertical.center,
-                          style: const TextStyle(fontSize: 14),
-                          decoration: const InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            counterText: "",
-                            isDense: false,
-                            contentPadding: EdgeInsets.only(bottom: 4),
-                            hintText: "Enter your mobile number",
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                              letterSpacing: 0,
-                              color: Color(0xffDEDEDE),
-                            ),
-                            errorStyle: TextStyle(
-                              color: Colors.redAccent,
-                            ),
-                            prefixIcon: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '+91',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
+                  SizedBox(height: height / 40),
+                  const Text(
+                    Constants.divein,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Text(
+                      Constants.popin,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0XFF6F6F6F),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  Form(
+                    key: _formKey,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          child: TextFormField(
+                            keyboardType: TextInputType.phone,
+                            maxLength: 10,
+                            autofocus: true,
+                            controller: mobileCtrl,
+                            textAlignVertical: TextAlignVertical.center,
+                            style: const TextStyle(fontSize: 14),
+                            decoration: const InputDecoration(
+                              fillColor: Colors.white,
+                              filled: true,
+                              counterText: "",
+                              isDense: false,
+                              contentPadding: EdgeInsets.only(bottom: 4),
+                              hintText: "Enter your mobile number",
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                letterSpacing: 0,
+                                color: Color(0xffDEDEDE),
+                              ),
+                              errorStyle: TextStyle(
+                                color: Colors.redAccent,
+                              ),
+                              prefixIcon: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '+91',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
-                                  // style: CustomTheme.headingStyle1,
+                                ],
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: Color(0xFFDEDEDE),
                                 ),
-                              ],
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Color(0xFFDEDEDE),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: Color(0xFFDEDEDE),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(25)),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(4)),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(4)),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: Colors.redAccent,
+                                ),
                               ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Color(0xFFDEDEDE),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(25)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Colors.redAccent,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(4)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Colors.redAccent,
-                              ),
-                            ),
+                            onChanged: (String value) {
+                              if (value.length == 10) {
+                                FocusScope.of(context).unfocus();
+                              }
+                            },
                           ),
-                          onChanged: (String value) {
-                            if (value.length == 10) {
-                              FocusScope.of(context).unfocus();
-                            }
-                          },
                         ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: AppButtonWidget(
-                            title: 'Send OTP',
-                            onPressed: mobileCtrl.text.length != 10
-                                ? null
-                                : submitLogin,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                const TextSpan(
-                                  text: Constants.termCon1,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                TextSpan(
-                                  text: Constants.termCon2,
-                                  style: const TextStyle(color: Colors.blue),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () async {
-                                      // OPEN BROWSER
-                                      openBrowser();
-                                    },
-                                ),
-                              ],
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: AppButtonWidget(
+                              title: 'Send OTP',
+                              onPressed: mobileCtrl.text.length != 10
+                                  ? null
+                                  : submitLogin,
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                children: <TextSpan>[
+                                  const TextSpan(
+                                    text: Constants.termCon1,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  TextSpan(
+                                    text: Constants.termCon2,
+                                    style: const TextStyle(color: Colors.blue),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        openBrowser();
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 50),
-              ],
+                  const SizedBox(height: 50),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
     // return Scaffold(
+    //   resizeToAvoidBottomInset: false,
     //   body: SafeArea(
-    //     child: SizedBox(
-    //       height: SizeConfig.safeBlockVertical * 100,
-    //       child: Stack(
-    //         alignment: AlignmentDirectional.bottomStart,
-    //         children: <Widget>[
-    //           Align(
-    //             alignment: FractionalOffset.bottomCenter,
-    //             child: Container(
-    //               height: height / 1.40,
-    //               alignment: Alignment.bottomCenter,
-    //               decoration: const BoxDecoration(
-    //                 borderRadius:
-    //                     BorderRadius.vertical(top: Radius.circular(26)),
-    //                 color: Color(0xFFF6F6F6),
-    //               ),
+    //     child: Stack(
+    //       alignment: AlignmentDirectional.bottomStart,
+    //       children: <Widget>[
+    //         Align(
+    //           alignment: FractionalOffset.bottomCenter,
+    //           child: Container(
+    //             height: containerHeight,
+    //             // height: height / 1.35,
+    //             alignment: Alignment.bottomCenter,
+    //             decoration: const BoxDecoration(
+    //               borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
+    //               color: Color(0XFFF6F6F6),
     //             ),
     //           ),
-    //           Column(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               Padding(padding: EdgeInsets.all(SizeConfig.safeBlockHorizontal * 17)),
-    //               Align(
-    //                 alignment: Alignment.topCenter,
-    //                 child: Image.asset(
-    //                   Constants.appLogo,
-    //                   fit: BoxFit.cover,
-    //                   height: 96,
-    //                   width: 96,
-    //                 ),
+    //         ),
+    //         Column(
+    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //           children: [
+    //             Padding(padding: EdgeInsets.all(height / 12.5)),
+    //             Align(
+    //               alignment: Alignment.topCenter,
+    //               child: Image.asset(
+    //                 Constants.appLogo,
+    //                 fit: BoxFit.cover,
+    //                 height: 96,
+    //                 width: 96,
     //               ),
-    //               SizedBox(height: height / 40),
-    //               Text(
-    //                 Constants.divein,
+    //             ),
+    //             SizedBox(height: height / 40),
+    //             const Text(
+    //               Constants.divein,
+    //               style: TextStyle(
+    //                 fontSize: 20,
+    //                 fontWeight: FontWeight.bold,
+    //                 color: Colors.black,
+    //               ),
+    //             ),
+    //             const SizedBox(height: 16),
+    //             const Padding(
+    //               padding: EdgeInsets.symmetric(horizontal: 25),
+    //               child: Text(
+    //                 Constants.popin,
+    //                 textAlign: TextAlign.center,
     //                 style: TextStyle(
-    //                   fontSize: SizeConfig.safeBlockHorizontal * 5.6,
-    //                   // fontSize: 20,
-    //                   fontWeight: FontWeight.bold,
-    //                   color: Colors.black,
+    //                   fontSize: 16,
+    //                   fontWeight: FontWeight.w500,
+    //                   color: Color(0XFF6F6F6F),
     //                 ),
     //               ),
-    //               const SizedBox(height: 16),
-    //               Padding(
-    //                 padding: const EdgeInsets.symmetric(horizontal: 25),
-    //                 child: Text(
-    //                   Constants.popin,
-    //                   textAlign: TextAlign.center,
-    //                   style: TextStyle(
-    //                     // fontSize: 16,
-    //                     fontSize: SizeConfig.safeBlockHorizontal * 3.6,
-    //                     fontWeight: FontWeight.w500,
-    //                     color: const Color(0xFF6F6F6F),
-    //                   ),
-    //                 ),
-    //               ),
-    //               const SizedBox(height: 16),
-    //               Form(
-    //                 key: _formKey,
-    //                 child: Align(
-    //                   alignment: Alignment.center,
-    //                   child: Center(
-    //                     child: Padding(
-    //                       padding: const EdgeInsets.symmetric(horizontal: 25),
-    //                       child: TextFormField(
-    //                         keyboardType: TextInputType.phone,
-    //                         maxLength: 10,
-    //                         autofocus: true,
-    //                         controller: mobileCtrl,
-    //                         textAlignVertical: TextAlignVertical.center,
-    //                         style: const TextStyle(fontSize: 14),
-    //                         decoration: const InputDecoration(
-    //                           fillColor: Colors.white,
-    //                           filled: true,
-    //                           counterText: "",
-    //                           isDense: false,
-    //                           contentPadding: EdgeInsets.only(bottom: 4),
-    //                           hintText: "Enter your mobile number",
-    //                           hintStyle: TextStyle(
-    //                             fontSize: 14,
-    //                             fontWeight: FontWeight.normal,
-    //                             letterSpacing: 0,
-    //                             color: Color(0xffDEDEDE),
-    //                           ),
-    //                           errorStyle: TextStyle(
-    //                             color: Colors.redAccent,
-    //                           ),
-    //                           prefixIcon: Column(
-    //                             mainAxisAlignment: MainAxisAlignment.center,
-    //                             crossAxisAlignment: CrossAxisAlignment.center,
-    //                             children: [
-    //                               Text(
-    //                                 '+91',
-    //                                 textAlign: TextAlign.center,
-    //                                 style: TextStyle(
-    //                                   fontSize: 14,
-    //                                   fontWeight: FontWeight.normal,
-    //                                 ),
-    //                                 // style: CustomTheme.headingStyle1,
+    //             ),
+    //             const SizedBox(height: 25),
+    //             Form(
+    //               key: _formKey,
+    //               child: Align(
+    //                 alignment: Alignment.center,
+    //                 child: Center(
+    //                   child: Padding(
+    //                     padding: const EdgeInsets.symmetric(horizontal: 25),
+    //                     child: TextFormField(
+    //                       keyboardType: TextInputType.phone,
+    //                       maxLength: 10,
+    //                       autofocus: true,
+    //                       controller: mobileCtrl,
+    //                       textAlignVertical: TextAlignVertical.center,
+    //                       style: const TextStyle(fontSize: 14),
+    //                       decoration: const InputDecoration(
+    //                         fillColor: Colors.white,
+    //                         filled: true,
+    //                         counterText: "",
+    //                         isDense: false,
+    //                         contentPadding: EdgeInsets.only(bottom: 4),
+    //                         hintText: "Enter your mobile number",
+    //                         hintStyle: TextStyle(
+    //                           fontSize: 14,
+    //                           fontWeight: FontWeight.normal,
+    //                           letterSpacing: 0,
+    //                           color: Color(0xffDEDEDE),
+    //                         ),
+    //                         errorStyle: TextStyle(
+    //                           color: Colors.redAccent,
+    //                         ),
+    //                         prefixIcon: Column(
+    //                           mainAxisAlignment: MainAxisAlignment.center,
+    //                           crossAxisAlignment: CrossAxisAlignment.center,
+    //                           children: [
+    //                             Text(
+    //                               '+91',
+    //                               textAlign: TextAlign.center,
+    //                               style: TextStyle(
+    //                                 fontSize: 14,
+    //                                 fontWeight: FontWeight.normal,
     //                               ),
-    //                             ],
-    //                           ),
-    //                           border: OutlineInputBorder(
-    //                             borderRadius:
-    //                             BorderRadius.all(Radius.circular(50)),
-    //                             borderSide: BorderSide(
-    //                               width: 1,
-    //                               color: Color(0xFFDEDEDE),
+    //                               // style: CustomTheme.headingStyle1,
     //                             ),
-    //                           ),
-    //                           enabledBorder: OutlineInputBorder(
-    //                             borderRadius:
-    //                             BorderRadius.all(Radius.circular(50)),
-    //                             borderSide: BorderSide(
-    //                               width: 1,
-    //                               color: Color(0xFFDEDEDE),
-    //                             ),
-    //                           ),
-    //                           focusedBorder: OutlineInputBorder(
-    //                             borderRadius:
-    //                             BorderRadius.all(Radius.circular(25)),
-    //                             borderSide: BorderSide(
-    //                               width: 1,
-    //                               color: AppColors.primary,
-    //                             ),
-    //                           ),
-    //                           errorBorder: OutlineInputBorder(
-    //                             borderRadius:
-    //                             BorderRadius.all(Radius.circular(4)),
-    //                             borderSide: BorderSide(
-    //                               width: 1,
-    //                               color: Colors.redAccent,
-    //                             ),
-    //                           ),
-    //                           focusedErrorBorder: OutlineInputBorder(
-    //                             borderRadius:
-    //                             BorderRadius.all(Radius.circular(4)),
-    //                             borderSide: BorderSide(
-    //                               width: 1,
-    //                               color: Colors.redAccent,
-    //                             ),
+    //                           ],
+    //                         ),
+    //                         border: OutlineInputBorder(
+    //                           borderRadius:
+    //                           BorderRadius.all(Radius.circular(50)),
+    //                           borderSide: BorderSide(
+    //                             width: 1,
+    //                             color: Color(0xFFDEDEDE),
     //                           ),
     //                         ),
-    //                         onChanged: (String value) {
-    //                           if (value.length == 10) {
-    //                             FocusScope.of(context).unfocus();
-    //                           }
-    //                         },
+    //                         enabledBorder: OutlineInputBorder(
+    //                           borderRadius:
+    //                           BorderRadius.all(Radius.circular(50)),
+    //                           borderSide: BorderSide(
+    //                             width: 1,
+    //                             color: Color(0xFFDEDEDE),
+    //                           ),
+    //                         ),
+    //                         focusedBorder: OutlineInputBorder(
+    //                           borderRadius:
+    //                           BorderRadius.all(Radius.circular(25)),
+    //                           borderSide: BorderSide(
+    //                             width: 1,
+    //                             color: AppColors.primary,
+    //                           ),
+    //                         ),
+    //                         errorBorder: OutlineInputBorder(
+    //                           borderRadius:
+    //                           BorderRadius.all(Radius.circular(4)),
+    //                           borderSide: BorderSide(
+    //                             width: 1,
+    //                             color: Colors.redAccent,
+    //                           ),
+    //                         ),
+    //                         focusedErrorBorder: OutlineInputBorder(
+    //                           borderRadius:
+    //                           BorderRadius.all(Radius.circular(4)),
+    //                           borderSide: BorderSide(
+    //                             width: 1,
+    //                             color: Colors.redAccent,
+    //                           ),
+    //                         ),
     //                       ),
+    //                       onChanged: (String value) {
+    //                         if (value.length == 10) {
+    //                           FocusScope.of(context).unfocus();
+    //                         }
+    //                       },
     //                     ),
     //                   ),
     //                 ),
     //               ),
-    //               Expanded(
-    //                 child: Align(
-    //                   alignment: Alignment.bottomCenter,
-    //                   child: Column(
-    //                     mainAxisSize: MainAxisSize.min,
-    //                     children: [
-    //                       Padding(
-    //                         padding: const EdgeInsets.symmetric(horizontal: 20),
-    //                         child: AppButtonWidget(
-    //                           title: 'Send OTP',
-    //                           onPressed: mobileCtrl.text.length != 10
-    //                               ? null
-    //                               : submitLogin,
+    //             ),
+    //             Expanded(
+    //               child: Align(
+    //                 alignment: Alignment.bottomCenter,
+    //                 child: Column(
+    //                   mainAxisSize: MainAxisSize.min,
+    //                   children: [
+    //                     Padding(
+    //                       padding: const EdgeInsets.symmetric(horizontal: 20),
+    //                       child: AppButtonWidget(
+    //                         title: 'Send OTP',
+    //                         onPressed: mobileCtrl.text.length != 10
+    //                             ? null
+    //                             : submitLogin,
+    //                       ),
+    //                     ),
+    //                     const SizedBox(height: 16),
+    //                     Padding(
+    //                       padding: const EdgeInsets.symmetric(horizontal: 30),
+    //                       child: RichText(
+    //                         textAlign: TextAlign.center,
+    //                         text: TextSpan(
+    //                           children: <TextSpan>[
+    //                             const TextSpan(
+    //                               text: Constants.termCon1,
+    //                               style: TextStyle(color: Colors.black),
+    //                             ),
+    //                             TextSpan(
+    //                               text: Constants.termCon2,
+    //                               style: const TextStyle(color: Colors.blue),
+    //                               recognizer: TapGestureRecognizer()
+    //                                 ..onTap = () async {
+    //                                   // OPEN BROWSER
+    //                                   openBrowser();
+    //                                 },
+    //                             ),
+    //                           ],
     //                         ),
     //                       ),
-    //                       const SizedBox(height: 16),
-    //                       Padding(
-    //                         padding: const EdgeInsets.symmetric(horizontal: 30),
-    //                         child: RichText(
-    //                           textAlign: TextAlign.center,
-    //                           text: TextSpan(
-    //                             children: <TextSpan>[
-    //                               const TextSpan(
-    //                                 text: Constants.termCon1,
-    //                                 style: TextStyle(color: Colors.black),
-    //                               ),
-    //                               TextSpan(
-    //                                 text: Constants.termCon2,
-    //                                 style: const TextStyle(color: Colors.blue),
-    //                                 recognizer: TapGestureRecognizer()
-    //                                   ..onTap = () async {
-    //                                     // OPEN BROWSER
-    //                                     openBrowser();
-    //                                   },
-    //                               ),
-    //                             ],
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
+    //                     ),
+    //                   ],
     //                 ),
     //               ),
-    //               const SizedBox(height: 50),
-    //             ],
-    //           ),
-    //         ],
-    //       ),
+    //             ),
+    //             const SizedBox(height: 50),
+    //           ],
+    //         ),
+    //       ],
     //     ),
     //   ),
     // );

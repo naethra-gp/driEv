@@ -63,9 +63,9 @@ class WalletListWidget extends StatelessWidget {
     if (time.year == now.year &&
         time.month == now.month &&
         time.day == now.day - 1) {
-      return "Yesterday, ${DateFormat('HH:mm a').format(time)}";
+      return "Yesterday, ${DateFormat('hh:mm a').format(time)}";
     } else {
-      return DateFormat('yyyy-MM-dd, HH:mm a').format(time);
+      return DateFormat('yyyy-MM-dd, hh:mm a').format(time);
     }
   }
 }
