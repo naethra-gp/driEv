@@ -1,4 +1,5 @@
 import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -37,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BaseScreen(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Center(

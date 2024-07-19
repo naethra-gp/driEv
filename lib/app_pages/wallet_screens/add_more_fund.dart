@@ -1,4 +1,5 @@
 import 'package:driev/app_themes/app_colors.dart';
+import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,7 +45,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BaseScreen(
       child: Scaffold(
         appBar: const AppBarWidget(),
         body: Padding(

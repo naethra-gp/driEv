@@ -1,5 +1,6 @@
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -59,10 +60,10 @@ class _LoginPageState extends State<LoginPage> {
       containerHeight = height / 1.1;
       positionedHeight = height / 0.95;
     }
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Stack(
+    return BaseScreen(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
           alignment: AlignmentDirectional.bottomStart,
           children: <Widget>[
             Align(
@@ -161,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               border: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(50)),
+                                    BorderRadius.all(Radius.circular(50)),
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFFDEDEDE),
@@ -169,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(50)),
+                                    BorderRadius.all(Radius.circular(50)),
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFFDEDEDE),
@@ -177,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(25)),
+                                    BorderRadius.all(Radius.circular(25)),
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: AppColors.primary,
@@ -185,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(4)),
+                                    BorderRadius.all(Radius.circular(4)),
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Colors.redAccent,
@@ -193,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               focusedErrorBorder: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(4)),
+                                    BorderRadius.all(Radius.circular(4)),
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Colors.redAccent,

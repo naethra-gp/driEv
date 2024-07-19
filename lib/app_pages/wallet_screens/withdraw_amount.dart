@@ -1,6 +1,8 @@
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
+import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../app_config/app_constants.dart';
@@ -51,41 +53,67 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BaseScreen(
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Image.asset(Constants.backButton),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.white,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Help",
-                    style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.black,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w300),
+        // appBar: AppBar(
+        //   leading: IconButton(
+        //     icon: Image.asset(Constants.backButton),
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //   ),
+        //   backgroundColor: Colors.white,
+        //   actions: [
+        //     IconButton(
+        //       onPressed: () {},
+        //       icon: Row(
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: [
+        //           const Text(
+        //             "Help",
+        //             style: TextStyle(
+        //                 fontSize: 11,
+        //                 color: Colors.black,
+        //                 fontStyle: FontStyle.italic,
+        //                 fontWeight: FontWeight.w300),
+        //           ),
+        //           const SizedBox(width: 5),
+        //           Image.asset(
+        //             "assets/img/vector.png", // Make sure this asset exists
+        //             width: 20,
+        //             height: 20,
+        //           ),
+        //           const SizedBox(width: 10),
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        appBar: AppBarWidget(
+          rightWidget: IconButton(
+            onPressed: () {},
+            icon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Help",
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w300,
                   ),
-                  const SizedBox(width: 5),
-                  Image.asset(
-                    "assets/img/vector.png", // Make sure this asset exists
-                    width: 20,
-                    height: 20,
-                  ),
-                  const SizedBox(width: 10),
-                ],
-              ),
+                ),
+                const SizedBox(width: 5),
+                Image.asset(
+                  "assets/img/vector.png", // Make sure this asset exists
+                  width: 20,
+                  height: 20,
+                ),
+                const SizedBox(width: 10),
+              ],
             ),
-          ],
+          ),
         ),
         body: SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
@@ -180,7 +208,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                           decoration: InputDecoration(
                             counterText: "",
                             contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 20),
+                                const EdgeInsets.symmetric(horizontal: 20),
                             prefixIcon: const Padding(
                               padding: EdgeInsets.all(10.0),
                               child: Row(
@@ -193,21 +221,20 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                                  const BorderSide(color: Color(0xffD2D2D2)),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                                  const BorderSide(color: Color(0xffD2D2D2)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                                  const BorderSide(color: Color(0xffD2D2D2)),
                             ),
                             hintStyle: CustomTheme.formFieldStyle,
                           ),
-
                         ),
                       ),
                     ],

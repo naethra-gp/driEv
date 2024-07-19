@@ -1,3 +1,4 @@
+import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -19,7 +20,7 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BaseScreen(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Center(

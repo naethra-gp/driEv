@@ -4,6 +4,7 @@ import 'package:driev/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,7 +58,7 @@ class _WalletSummaryState extends State<WalletSummary> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BaseScreen(
       child: Scaffold(
         appBar: const AppBarWidget(),
         body: Column(
@@ -228,36 +229,38 @@ class _WalletSummaryState extends State<WalletSummary> {
                     ),
                     const SizedBox(height: 15),
                     if (walletSummaryDetails.isEmpty)
-                      Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          enabled: true,
-                          child: const SingleChildScrollView(
-                            physics: NeverScrollableScrollPhysics(),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                              ],
-                            ),
-                          )),
+                      Expanded(
+                        child: Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            enabled: true,
+                            child: const SingleChildScrollView(
+                              physics: NeverScrollableScrollPhysics(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  SizedBox(height: 16.0),
+                                  ContentPlaceholder(
+                                      lineType: ContentLineType.threeLines),
+                                  Divider(color: AppColors.centerAlign),
+                                  SizedBox(height: 16.0),
+                                  ContentPlaceholder(
+                                      lineType: ContentLineType.threeLines),
+                                  Divider(color: AppColors.centerAlign),
+                                  SizedBox(height: 16.0),
+                                  ContentPlaceholder(
+                                      lineType: ContentLineType.threeLines),
+                                  Divider(color: AppColors.centerAlign),
+                                  SizedBox(height: 16.0),
+                                  ContentPlaceholder(
+                                      lineType: ContentLineType.threeLines),
+                                  Divider(color: AppColors.centerAlign),
+                                  SizedBox(height: 16.0),
+                                ],
+                              ),
+                            )),
+                      ),
                     if (walletSummaryDetails.isNotEmpty)
                       Expanded(
                         child: ListView.separated(

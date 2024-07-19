@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../app_config/app_constants.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarWidget({super.key});
+  final Widget? rightWidget;
+
+  const AppBarWidget({super.key, this.rightWidget});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -19,6 +21,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           Navigator.pop(context);
         },
       ),
+      actions: rightWidget != null ? [rightWidget!] : null,
     );
   }
 }
