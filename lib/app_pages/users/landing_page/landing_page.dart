@@ -1,6 +1,6 @@
-import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
 
 import '../../../app_utils/app_widgets/app_button.dart';
 
@@ -16,14 +16,20 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     getPermissions();
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white, // Set the status bar color here
+      statusBarIconBrightness:
+          Brightness.dark, // For Android to set the icons color
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
+    return Scaffold(
+      // backgroundColor: Colors.white,
+      body: Container(
+        color: Colors.white,
+        child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(

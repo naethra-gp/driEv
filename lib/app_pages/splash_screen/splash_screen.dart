@@ -2,6 +2,7 @@ import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/services.dart';
 
 import '../../app_services/vehicle_service.dart';
 import '../../app_storages/secure_storage.dart';
@@ -25,6 +26,11 @@ class _SplashScreenState extends State<SplashScreen> {
     debugPrint('--->>> Splash Screen <<<---');
     super.initState();
     checkLocationService();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white, // Set the status bar color here
+      statusBarIconBrightness:
+          Brightness.dark, // For Android to set the icons color
+    ));
     Future.delayed(const Duration(seconds: 3), () {
       getRoute();
       // Navigator.pushNamedAndRemoveUntil(context, "validate_code", (r) => false);
@@ -38,11 +44,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Image.asset("assets/img/logo.png"),
+    return Scaffold(
+      body: Container(
+        color: Colors.white, // Set your desired background color here
+        child: SafeArea(
+          child: Center(
+            child: Image.asset("assets/img/logo.png"),
+          ),
         ),
       ),
     );

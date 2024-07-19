@@ -60,10 +60,11 @@ class _LoginPageState extends State<LoginPage> {
       containerHeight = height / 1.1;
       positionedHeight = height / 0.95;
     }
-    return BaseScreen(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      // backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Stack(
           alignment: AlignmentDirectional.bottomStart,
           children: <Widget>[
             Align(
