@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
+import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +29,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   SecureStorage secureStorage = SecureStorage();
   BookingServices bookingServices = BookingServices();
   VehicleService vehicleService = VehicleService();
+
   String notes =
       "Battery swap after the given range might be chargeable and depends on the availability of assets & resources";
   List fareDetails = [];
@@ -36,18 +38,14 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     {"mins": 10, "selected": false, "disabled": false},
     {"mins": 15, "selected": false, "disabled": false},
   ];
-
   bool isReserve = false;
   bool isReserveReady = false;
   TextEditingController reserveTimeCtrl = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
-
   bool isInputDisabled = false;
   bool enableChasingTime = false;
   bool isReservedDone = false;
   String reserveMins = "";
   String blockId = "";
-
   int _start = 0;
   late Timer _timer;
   String formattedMinutes = "00";
@@ -154,20 +152,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: Colors.white,
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Image.asset(Constants.backButton),
-            onPressed: () async {
-              if ("$formattedMinutes:$formattedSeconds" != "00:00") {
-                apiBack();
-              } else {
-                Navigator.pop(context);
-              }
-            },
-          ),
-        ),
+        appBar: const AppBarWidget(),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -519,7 +504,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         height: MediaQuery.sizeOf(context).height / 16.8,
                         child: AppButtonWidget(
                           title:
-                              "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
+                              "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min) -- 1",
                           onPressed: () {
                             setState(() {
                               isReserve = true;
@@ -550,7 +535,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                               borderRadius: BorderRadius.circular(25),
                             ),
                           ),
-                          child: const Text("Scan to Unlock"),
+                          child: const Text("Scan to Unlock -- 1"),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -768,7 +753,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             borderRadius: BorderRadius.circular(50),
                           ),
                         ),
-                        child: const Text("Scan to Unlock"),
+                        child: const Text("Scan to Unlock -- 2"),
                       ),
                     ),
                   ],
@@ -781,6 +766,16 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       ),
     );
   }
+
+
+
+
+
+
+
+
+
+
 
   TextStyle heading(Color color) {
     return TextStyle(

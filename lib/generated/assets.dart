@@ -48,7 +48,6 @@ class Assets {
   static const String appWidgetsAppBarWidget = 'lib/app_utils/app_widgets/app_bar_widget.dart';
   static const String appWidgetsAppButton = 'lib/app_utils/app_widgets/app_button.dart';
   static const String assetsAppGetStarted = 'assets/app/get_started.png';
-  static const String bikeBookingBikeBooking = 'lib/app_pages/bike_booking/bike_booking.dart';
   static const String bikeBookingBikeFareDetails = 'lib/app_pages/bike_booking/bike_fare_details.dart';
   static const String campusScreensChooseYourCampus = 'lib/app_pages/campus_screens/choose_your_campus.dart';
   static const String campusScreensRankList = 'lib/app_pages/campus_screens/rank_list.dart';
