@@ -215,7 +215,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 onPressed: () {
                   Navigator.pushNamed(context, "home");
-                  // Navigator.of(context).pop();
                 },
               ),
       ),
@@ -266,7 +265,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           image: imageProvider,
                                           fit: BoxFit.cover,
                                         ),
-                                        // borderRadius: BorderRadius.circular(50),
                                         border: Border.all(
                                           color: const Color(0xffF5F5F5),
                                           width: 2,
@@ -288,7 +286,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       SizedBox(
                                         width: 140,
                                         child: Text(
-                                          // "Naethra Technologies PVT LTD",
                                           customerDetails[0]['name']
                                               .toString()
                                               .toUpperCase(),
@@ -300,10 +297,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      // const SizedBox(width: 20),
                                       SizedBox(
                                         height: 20,
-                                        // width: 100,
                                         child: ElevatedButton(
                                           onPressed: () {
                                             var selfie = {"id": "selfi"};
@@ -343,8 +338,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Expanded(
                                         flex: 2,
                                         child: Column(
-                                          // mainAxisAlignment: MainAxisAlignment.start,
-                                          // mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Align(
                                               alignment: Alignment.centerLeft,
@@ -488,15 +481,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // Stack(alignment: Alignment.center, children: [
                 _buildCategoriesGrid(),
-                //  Divider(
-                //   color: Colors.grey[200],
-                // thickness: 3,
-                // endIndent: 30,
-                //indent: 30,
-                // ),
-                // ]),
                 defaultHeight,
                 Card(
                   color: const Color(0xffF5F5F5),
@@ -511,9 +496,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         menuList("assets/img/wallet.png", "View Wallet", () {
-                          // Navigator.pushNamed(context, "transaction_success");
                           Navigator.pushNamed(context, "wallet_summary");
-                          // paytm("10.00");
                         }),
                         const Divider(
                           endIndent: 15,
@@ -593,8 +576,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                             context,
                                             "login_page",
                                             (route) => false);
-
-                                        // SystemNavigator.pop();
                                       },
                                     ),
                                   ],
@@ -714,47 +695,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 0),
-                    //   child: SfSliderTheme(
-                    //     data: const SfSliderThemeData(
-                    //       tooltipBackgroundColor: AppColors.primary,
-                    //       thumbColor: Colors.transparent,
-                    //       thumbRadius: 20,
-                    //       activeDividerColor: Colors.white,
-                    //     ),
-                    //     child: SfSlider(
-                    //       min: 10.0,
-                    //       max: 500.0,
-                    //       shouldAlwaysShowTooltip: false,
-                    //       thumbIcon: Image.asset(
-                    //         "assets/img/scooter_1.png",
-                    //         height: 20,
-                    //         width: 20,
-                    //       ),
-                    //       value: distance,
-                    //       inactiveColor: AppColors.primary.withOpacity(0.3),
-                    //       // labelPlacement: LabelPlacement.onTicks,
-                    //       thumbShape: const SfThumbShape(),
-                    //       semanticFormatterCallback: (dynamic value) {
-                    //         return '$value km';
-                    //       },
-                    //       enableTooltip: true,
-                    //       showLabels: false,
-                    //       showDividers: true,
-                    //       showTicks: false,
-                    //       tooltipTextFormatterCallback:
-                    //           (dynamic actualValue, String formattedText) {
-                    //         return "$formattedText km";
-                    //       },
-                    //       onChanged: (dynamic newValue) {
-                    //         setState(() {
-                    //           // distance = newValue;
-                    //         });
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 0),
                       child: Row(
@@ -1025,9 +965,7 @@ class _MyApp1State extends State<MyApp1> {
         totalHours -= rewardHours.toDouble();
         completedCount++;
 
-        // Check if additional items need to be added
         if (completedCount == 3 && i == 2) {
-          // Add two more items after the 3rd slider is filled
           itemCountCounter += 2;
         }
       } else {

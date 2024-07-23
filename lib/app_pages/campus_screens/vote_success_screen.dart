@@ -22,6 +22,7 @@ class _VoteSuccessPageState extends State<VoteSuccessPage> {
       Navigator.pushNamedAndRemoveUntil(context, "rank_list", (route) => false);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -49,36 +50,35 @@ class _VoteSuccessPageState extends State<VoteSuccessPage> {
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25),
-                child:Text(
-                "Thank you for the invite!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
+                child: Text(
+                  "Thank you for the invite!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),),
+              ),
               const SizedBox(height: 16),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 50),
-                child:Text(
-                "See you soon on your campus. Stay tuned for more updates.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
-                  fontSize: 20,
-                )
-              ),),
+                child: Text(
+                    "See you soon on your campus. Stay tuned for more updates.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black,
+                      fontSize: 20,
+                    )),
+              ),
               const SizedBox(height: 50),
               AppButtonWidget(
                 title: "Share With Your Friends",
                 onPressed: () async {
                   final result = await Share.share('https://driev.bike');
 
-                  if (result.status == ShareResultStatus.success) {
-                    // print('Thank you for sharing my website!');
-                  }
+                  if (result.status == ShareResultStatus.success) {}
                 },
               ),
             ],

@@ -70,7 +70,6 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
           }
         }
       }
-      // print("filterVehicleList $filterVehicleList");
       if (filterVehicleList.isEmpty) {
         Navigator.pushNamed(context, "error_bike");
       }
@@ -177,10 +176,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                     const Text(
                       'No DriEV Bike\'s found',
                       style: TextStyle(
-                        // fontSize: 1,
-                        // letterSpacing: 1,
                         color: Colors.grey,
-                        // fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
@@ -196,7 +192,6 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                   mainAxisSpacing: 8.0,
                   crossAxisSpacing: 8.0,
                   mainAxisExtent: 190,
-                  // mainAxisExtent: MediaQuery.of(context).size.height / 3,
                 ),
                 itemCount: filterVehicleList.length,
                 itemBuilder: (context, index) {
@@ -295,7 +290,6 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontSize: 8,
-                                              // fontWeight: FontWeight.bold,
                                               color: Color(0xff626262),
                                             ),
                                           ),
@@ -315,20 +309,6 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                         ),
                                       ],
                                     ),
-                                    /*   const Spacer(),
-                                    const Column(
-                                      children: [
-                                        Icon(LineAwesome.battery_full_solid),
-                                        Text(
-                                          "100%",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: "Poppins",
-                                          ),
-                                        ),
-                                      ],
-                                    ),*/
                                   ],
                                 ),
                               ),

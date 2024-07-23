@@ -1,5 +1,4 @@
 import 'package:driev/app_config/app_constants.dart';
-import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,14 +12,7 @@ import 'app_utils/app_provider/connectivity_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setSystemUIOverlayStyle(
-  //   const SystemUiOverlayStyle(
-  //     systemNavigationBarColor: Colors.black,
-  //     statusBarColor: Colors.white,
-  //     statusBarIconBrightness: Brightness.dark,
-  //     statusBarBrightness: Brightness.dark,
-  //   ),
-  // );
+
   SystemUiOverlayStyle.light.copyWith(
     statusBarColor: Colors.white,
     statusBarIconBrightness: Brightness.dark,

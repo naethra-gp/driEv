@@ -30,8 +30,11 @@ class ListWidget extends StatelessWidget {
             width: 40,
             height: 40,
             imageUrl: list[0]['logoUrl'].toString(),
-            errorWidget: (context, url, error) =>
-                Image.asset("assets/app/no-img.png", height: 50, width: 50,),
+            errorWidget: (context, url, error) => Image.asset(
+              "assets/app/no-img.png",
+              height: 50,
+              width: 50,
+            ),
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -42,18 +45,14 @@ class ListWidget extends StatelessWidget {
               ),
             ),
           ),
-          title: Text(list[0]['collegeName'].toString(),
+          title: Text(
+            list[0]['collegeName'].toString(),
             overflow: TextOverflow.clip,
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
           ),
-          // subtitle: Text(
-          //   list['BillName'],
-          //   overflow: TextOverflow.ellipsis,
-          //   style: Theme.of(context).textTheme.bodySmall,
-          // ),
           trailing: Image.asset(
             Constants.frwdArrow,
             fit: BoxFit.contain,

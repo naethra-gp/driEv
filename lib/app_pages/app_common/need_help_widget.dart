@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app_themes/app_colors.dart';
 import 'widget/need_help_button_widget.dart';
 
 class NeedHelpWidget extends StatelessWidget {

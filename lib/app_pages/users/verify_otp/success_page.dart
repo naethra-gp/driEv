@@ -42,7 +42,6 @@ class _SuccessScreenState extends State<SuccessScreen> {
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary,
               ),
-              // style: CustomTheme.headingStyle3,
             ),
             const SizedBox(height: 16),
             const Text(
@@ -59,8 +58,6 @@ class _SuccessScreenState extends State<SuccessScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: AppButtonWidget(
                 onPressed: () {
-                  // Navigator.pushNamedAndRemoveUntil(
-                  //     context, "choose_your_campus", (route) => false);
                   Navigator.pushNamedAndRemoveUntil(
                       context, "referral_in_signup", (route) => false);
                 },

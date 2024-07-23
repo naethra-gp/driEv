@@ -207,11 +207,12 @@ class _VoteForYourCampusState extends State<VoteForYourCampus> {
     campusServices.voteCollege(params, true).then(
       (r) async {
         alertServices.hideLoading();
-        if(r['collegeId'] != null) {
+        if (r['collegeId'] != null) {
           alertServices.successToast("Vote successfully.");
           Navigator.pushNamed(context, "vote_campus_success");
         } else {
-          Navigator.pushNamed(context, "vote_campus_error", arguments: {"params" : r});
+          Navigator.pushNamed(context, "vote_campus_error",
+              arguments: {"params": r});
         }
       },
     );
@@ -256,10 +257,6 @@ class SearchWidget extends StatelessWidget {
         hintStyle: MaterialStateProperty.all(
           const TextStyle(color: Colors.black54),
         ),
-        // leading: IconButton(
-        //   onPressed: () {},
-        //   icon: const Icon(Icons.search),
-        // ),
         trailing: [
           controller?.text != ''
               ? IconButton(

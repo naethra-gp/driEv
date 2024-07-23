@@ -218,36 +218,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                           const SizedBox(height: 16),
                           Theme(
-                            data: Theme.of(context).copyWith(
-                                // inputDecorationTheme: InputDecorationTheme(
-                                //   border: OutlineInputBorder(
-                                //     borderRadius: BorderRadius.circular(10),
-                                //     borderSide: const BorderSide(
-                                //       color: Color(0xffD2D2D2),
-                                //     ),
-                                //   ),
-                                //   errorStyle: const TextStyle(
-                                //     color: Colors.redAccent,
-                                //     fontSize: 12,
-                                //     fontWeight: FontWeight.normal,
-                                //   ),
-                                //   errorBorder: OutlineInputBorder(
-                                //     borderRadius: BorderRadius.circular(10),
-                                //     borderSide: const BorderSide(
-                                //         color: Colors.redAccent, width: 1),
-                                //   ),
-                                //   focusedBorder: const OutlineInputBorder(
-                                //     borderRadius: BorderRadius.all(
-                                //       Radius.circular(10),
-                                //     ),
-                                //     borderSide: BorderSide(
-                                //       color: Color(0xffD2D2D2),
-                                //     ),
-                                //   ),
-                                //   // contentPadding: const EdgeInsets.only(left: 5),
-                                //   isDense: false,
-                                // ),g
-                                ),
+                            data: Theme.of(context).copyWith(),
                             child: DropdownButtonFormField<String>(
                               dropdownColor: Colors.white,
                               autovalidateMode:
@@ -262,7 +233,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               decoration: InputDecoration(
                                 hintText: 'Gender',
                                 alignLabelWithHint: true,
-                                // isDense: true,
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 0),
                                 hintStyle: CustomTheme.formHintStyle,

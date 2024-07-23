@@ -151,9 +151,7 @@ class _AadhaarOtpFormFieldState extends State<AadhaarOtpFormField> {
         aadhaar = [response];
         widget.onConfirm(aadhaar);
         setState(() {});
-      } else {
-        // alertServices.errorToast("Invalid OTP");
-      }
+      } else {}
     });
   }
 }

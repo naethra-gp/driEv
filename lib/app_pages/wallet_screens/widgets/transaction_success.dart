@@ -74,7 +74,6 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
                     fontSize: 18,
                   ),
                 ),
-                // const SizedBox(height: 10),
                 Text(
                   "\u{20B9} $walletBalance",
                   style: const TextStyle(
@@ -90,7 +89,6 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigator.pushNamed(context, "wallet_summary");
                         Navigator.pushReplacementNamed(
                             context, "wallet_summary");
                       },
@@ -131,7 +129,6 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
     walletServices.getWalletBalance(mobile).then((dynamic response) {
       alertServices.hideLoading();
       if (response != null) {
-        // debugPrint("Balance --> ${response][0]['balance']}");
         setState(() {
           walletBalance = [response][0]['balance'].toString();
         });

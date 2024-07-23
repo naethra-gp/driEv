@@ -20,7 +20,6 @@ class SelectVehicleCloserMatches extends StatefulWidget {
 
 class _SelectVehicleCloserMatchesState
     extends State<SelectVehicleCloserMatches> {
-  // String stationName = "IR";
   List filterVehicleList = [];
   List data = [];
 
@@ -59,7 +58,6 @@ class _SelectVehicleCloserMatchesState
               padding: const EdgeInsets.symmetric(horizontal: 5),
               decoration: BoxDecoration(
                 color: Colors.white,
-                // color: const Color(0xffF5F5F5),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: AppColors.primary,
@@ -138,7 +136,6 @@ class _SelectVehicleCloserMatchesState
                     mainAxisSpacing: 8.0,
                     crossAxisSpacing: 8.0,
                     mainAxisExtent: 190,
-                    // mainAxisExtent: MediaQuery.of(context).size.height / 3,
                   ),
                   itemCount: fd.length,
                   itemBuilder: (context, index) {
@@ -239,7 +236,6 @@ class _SelectVehicleCloserMatchesState
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 8,
-                                                // fontWeight: FontWeight.bold,
                                                 color: Color(0xff626262),
                                               ),
                                             ),
@@ -312,7 +308,6 @@ class _SelectVehicleCloserMatchesState
                     mainAxisSpacing: 8.0,
                     crossAxisSpacing: 8.0,
                     mainAxisExtent: 190,
-                    // mainAxisExtent: MediaQuery.of(context).size.height / 3,
                   ),
                   itemCount: cd.length,
                   itemBuilder: (context, index) {
@@ -412,7 +407,6 @@ class _SelectVehicleCloserMatchesState
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 8,
-                                                // fontWeight: FontWeight.bold,
                                                 color: Color(0xff626262),
                                               ),
                                             ),

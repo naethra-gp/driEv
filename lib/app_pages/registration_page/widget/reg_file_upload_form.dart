@@ -105,7 +105,6 @@ class _FileUploadFormState extends State<FileUploadForm> {
                           ),
                           onPressed: () {
                             _pickFile();
-                            // uploadAction(ImageSource.gallery);
                           },
                         ),
                       if (widget.camera ?? true)
@@ -252,8 +251,6 @@ class _FileUploadFormState extends State<FileUploadForm> {
         /// PDF
         fileUpload(File(filePath!));
       }
-    } else {
-      // print('File picking canceled.');
-    }
+    } else {}
   }
 }

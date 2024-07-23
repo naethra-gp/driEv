@@ -45,13 +45,11 @@ class DocumentReUpload extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                   ),
-                  // style: CustomTheme.termStyle1,
                 ),
               ],
             ),
           ),
           const SizedBox(width: 10),
-          // const Spacer(),
           SizedBox(
             height: 30,
             child: ElevatedButton(

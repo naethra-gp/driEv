@@ -59,7 +59,7 @@ class _RankListState extends State<RankList> {
           surfaceTintColor: Colors.white,
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -157,7 +157,6 @@ class _RankListState extends State<RankList> {
                     style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      // color: AppColors.primary,
                     ),
                   ),
                 ],

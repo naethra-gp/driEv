@@ -26,7 +26,6 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
         child: Center(
@@ -36,7 +35,6 @@ class _LandingPageState extends State<LandingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // const SizedBox(height: 75),
                 Center(
                   child: Image.asset(
                     "assets/app/get_started.png",

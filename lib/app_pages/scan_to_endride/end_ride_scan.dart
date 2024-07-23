@@ -258,9 +258,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
             print("rideId $rideId");
             print("R@@@ $r2");
             alertServices.hideLoading();
-            // print("rrr $r");
-            // print(b);
-            // print(c);
+
             if (b < c) {
               QrMobileVision.stop();
               _cancelTimer();

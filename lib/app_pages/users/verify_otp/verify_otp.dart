@@ -216,7 +216,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
                       }
                     },
                     pastedTextStyle: const TextStyle(
-                      // color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -266,7 +265,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
                             color: !enableResend
                                 ? Colors.grey[600]
                                 : AppColors.primary,
-                            // decoration: TextDecoration.underline,
                             fontWeight: FontWeight.w700,
                           ),
                           recognizer: TapGestureRecognizer()
@@ -427,7 +425,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
     }
   }
 
-
   getActiveRides(String mobile) {
     alertServices.showLoading();
     vehicleService.getActiveRides(mobile).then((r) {
@@ -435,7 +432,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
       if (r != null) {
         List rideList = [r][0]['rideList'];
         List a =
-        rideList.where((e) => e['status'].toString() == "On Ride").toList();
+            rideList.where((e) => e['status'].toString() == "On Ride").toList();
         if (a.isEmpty) {
           getBlockRides(mobile);
         } else {

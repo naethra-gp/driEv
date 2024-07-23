@@ -5,7 +5,6 @@ import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
 
@@ -55,40 +54,6 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
   Widget build(BuildContext context) {
     return BaseScreen(
       child: Scaffold(
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //     icon: Image.asset(Constants.backButton),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   backgroundColor: Colors.white,
-        //   actions: [
-        //     IconButton(
-        //       onPressed: () {},
-        //       icon: Row(
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [
-        //           const Text(
-        //             "Help",
-        //             style: TextStyle(
-        //                 fontSize: 11,
-        //                 color: Colors.black,
-        //                 fontStyle: FontStyle.italic,
-        //                 fontWeight: FontWeight.w300),
-        //           ),
-        //           const SizedBox(width: 5),
-        //           Image.asset(
-        //             "assets/img/vector.png", // Make sure this asset exists
-        //             width: 20,
-        //             height: 20,
-        //           ),
-        //           const SizedBox(width: 10),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
         appBar: AppBarWidget(
           rightWidget: IconButton(
             onPressed: () {},
@@ -366,9 +331,6 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // if (_formKey.currentState!.validate()) {
-                            //   submitWithdrawal();
-                            // }
                             if (_controller.text == "") {
                               alertServices
                                   .errorToast("Enter amount to Withdraw");

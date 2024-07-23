@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -28,7 +27,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   Timer? timer;
   LatLng? currentLocation;
   String _locationMessage = "";
-  // final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
@@ -51,17 +49,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       countdownTimer = null;
     }
   }
-
-  /* @override
-  void reassemble() {
-    print(" --- reassemble --- ");
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }*/
 
   void _startCountdown() {
     _cancelTimer();
@@ -114,34 +101,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      // canPop: false,
-      // onPopInvoked: (didPop) {
-      //   if (didPop) {
-      //     return;
-      //   }
-      //
-      //   if(widget.data[0]['bikeBlock']) {
-      //     List params = [
-      //       {
-      //         "campus": widget.data[0]['stationName'].toString(),
-      //         "distance": widget.data[0]['distanceRange'].toString(),
-      //         "vehicleId": widget.data[0]['vehicleId'].toString(),
-      //         "via": "api",
-      //         "data": widget.data[0]['stationDetails'][0]['data']
-      //       }
-      //     ];
-      //     print("params ${jsonEncode(params)}");
-      //     Navigator.pushNamedAndRemoveUntil(
-      //       context,
-      //       "bike_fare_details",
-      //       arguments: {"query": params},
-      //           (route) => false,
-      //     );
-      //   } else {
-      //     Navigator.pop(context);
-      //   }
-      //
-      // },
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Center(
@@ -218,15 +177,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                       textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.phone,
                       onChanged: (value) {
-                        /* if (value.toString().isNotEmpty && value.toString().length<=6) {
-                          String vId = widget.data[0]['vehicleId'].toString();
-                           if (value.toString()==vId) {
-                             startMyRide();
-                           } else {
-                             alertServices.errorToast(
-                                 "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
-                           }
-                        }*/
                         print("Value: $value");
                       },
                       decoration: InputDecoration(
@@ -356,7 +306,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       alertServices.hideLoading();
       if (r != null) {
         String rideId = r['rideId'].toString();
-        Navigator.pushNamedAndRemoveUntil(context, "booking_success", arguments: rideId, (a) => false);
+        Navigator.pushNamedAndRemoveUntil(
+            context, "booking_success", arguments: rideId, (a) => false);
       }
     });
   }

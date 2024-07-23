@@ -17,7 +17,6 @@ import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_provider/location_service.dart';
 import '../../app_utils/app_widgets/app_button.dart';
-import '../app_common/need_help_widget.dart';
 import '../scan_to_endride/widget/ride_done_alert.dart';
 
 class Home extends StatefulWidget {
@@ -615,35 +614,7 @@ class _HomeState extends State<Home> {
       alertServices.hideLoading();
       filterVehicleList = [];
       closedVehicleList = [];
-      // response = [
-      //   {
-      //     "vehicleId": "492",
-      //     "liveVoltage": 48.65,
-      //     "kmPerVoltage": 0,
-      //     "status": "Y",
-      //     "lastOdometerReading": 0.0,
-      //     "todaysRideCount": 0,
-      //     "distanceRange": "15-20"
-      //   },
-      //   {
-      //     "vehicleId": "492",
-      //     "liveVoltage": 48.65,
-      //     "kmPerVoltage": 0,
-      //     "status": "Y",
-      //     "lastOdometerReading": 0.0,
-      //     "todaysRideCount": 0,
-      //     "distanceRange": "60-70"
-      //   },
-      //   {
-      //     "vehicleId": "492",
-      //     "liveVoltage": 48.65,
-      //     "kmPerVoltage": 0,
-      //     "status": "Y",
-      //     "lastOdometerReading": 0.0,
-      //     "todaysRideCount": 0,
-      //     "distanceRange": "20-40"
-      //   }
-      // ];
+
       vehicleList = response.where((i) => i['distanceRange'] != null).toList();
       print("vehicleList length: ${vehicleList.length}");
       for (int i = 0; i < vehicleList.length; i++) {
@@ -652,8 +623,6 @@ class _HomeState extends State<Home> {
           int minDistance = int.parse(dis[0]);
           int maxDistance = int.parse(dis[1]);
           int userDistance = int.parse(list[0]['distance']);
-          // int lowerBound = userDistance - 20;
-          // int upperBound = userDistance + 20;
 
           String result =
               checkConditions(minDistance, maxDistance, userDistance);
@@ -665,40 +634,6 @@ class _HomeState extends State<Home> {
               closedVehicleList.add(vehicleList[i]);
             }
           });
-          // print("filterVehicleList -- $filterVehicleList");
-          // print("closedVehicleList -- $closedVehicleList");
-
-          // if (userDistance >= minDistance && userDistance <= maxDistance) {
-          //   debugPrint("--- Exact Matched Vehicles --- ");
-          //   setState(() {
-          //     filterVehicleList.add(vehicleList[i]);
-          //   });
-          //   if ((minDistance >= lowerBound && minDistance <= upperBound) ||
-          //       (maxDistance >= lowerBound && maxDistance <= upperBound) ||
-          //       (minDistance <= lowerBound && maxDistance >= upperBound)) {
-          //     debugPrint("--- Closed Matched ---");
-          //     setState(() {
-          //       closedVehicleList.add(vehicleList[i]);
-          //     });
-          //     var params = [
-          //       {
-          //         "sId": list[0]['sId'],
-          //         "sName": list[0]['sName'],
-          //         "plan": list[0]['plan'],
-          //         "distanceText": list[0]['distanceText'],
-          //         "distance": list[0]['distance'],
-          //         "filterVehicleList": filterVehicleList,
-          //         "closedVehicleList": closedVehicleList,
-          //       }
-          //     ];
-          //     // List newArray = [...list, ...params];
-          //     print("params $params");
-          //     // Navigator.pushNamed(context, "select_vehicle");
-          //   }
-          // } else {
-          //   debugPrint("--- Not Matched ---");
-          //   Navigator.pushNamed(context, "error_bike");
-          // }
         }
       }
       if (closedVehicleList.isEmpty && filterVehicleList.isEmpty) {

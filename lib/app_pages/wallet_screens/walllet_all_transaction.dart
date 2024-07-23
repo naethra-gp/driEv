@@ -1,7 +1,5 @@
 import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import 'widgets/wallet_list_widget.dart';
 
@@ -36,7 +34,6 @@ class _AllTransactionState extends State<AllTransaction> {
               "Wallet History",
               style: TextStyle(
                 fontSize: 18,
-                // fontFamily: "Poppins",
                 color: AppColors.primary,
                 fontWeight: FontWeight.w500,
               ),
@@ -48,7 +45,6 @@ class _AllTransactionState extends State<AllTransaction> {
               "Your log of all Transaction",
               style: TextStyle(
                 fontSize: 14,
-                // fontFamily: "Poppins",
                 color: AppColors.referColor,
                 fontWeight: FontWeight.w500,
               ),

@@ -18,7 +18,6 @@ class RideDoneAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    // List result = result;
     double rideDistance = result[0]['totalRideDistance'];
     return SizedBox(
       height: height,
@@ -192,9 +191,7 @@ class RideDoneAlert extends StatelessWidget {
                 tooltipTextFormatterCallback: (av, ft) {
                   return "$ft km";
                 },
-                onChanged: (dynamic newValue) {
-                  // distance = newValue;
-                },
+                onChanged: (dynamic newValue) {},
               ),
             ),
             Padding(

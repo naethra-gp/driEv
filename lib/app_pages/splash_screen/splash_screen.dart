@@ -1,5 +1,4 @@
 import 'package:driev/app_utils/app_loading/alert_services.dart';
-import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
     ));
     Future.delayed(const Duration(seconds: 3), () {
       getRoute();
-      // Navigator.pushNamedAndRemoveUntil(context, "validate_code", (r) => false);
     });
   }
 

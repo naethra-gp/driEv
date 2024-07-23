@@ -52,7 +52,6 @@ class DocumentUploadAlert extends StatelessWidget {
                   ),
                 ],
               ),
-              // Spacer(),
               const SizedBox(width: 25),
               Column(
                 children: [
@@ -143,9 +142,7 @@ class DocumentUploadAlert extends StatelessWidget {
         /// PDF
         fileUpload(File(filePath));
       }
-    } else {
-      // print('File picking canceled.');
-    }
+    } else {}
   }
 
   fileUpload(File file) async {
@@ -181,28 +178,5 @@ class DocumentUploadAlert extends StatelessWidget {
         onDataReceived(false);
       }
     });
-    // CampusServices campusServices = CampusServices();
-    // AlertServices alertServices = AlertServices();
-    // String mobile = await secureStorage.get("mobile");
-    // final String fileExtension = extension(file.path);
-    // int lastIndex = file.path.lastIndexOf('/');
-    // String result1 = file.path.substring(0, lastIndex + 1);
-    // file.rename("$result1${widget.documentId}$fileExtension").then((_) {
-    //   // print('File renamed successfully.');
-    // }).catchError((error) {
-    //   // print('Error renaming file: $error');
-    // });
-    //
-    // alertServices.showLoading();
-    // final uploadFile = File("$result1${widget.documentId}$fileExtension");
-    // campusServices
-    //     .uploadImage(mobile.toString(), uploadFile)
-    //     .then((response) async {
-    //   alertServices.hideLoading();
-    //   var res = jsonDecode(response);
-    //   List array = res['url'].toString().split("/");
-    //   widget.controller.text = array[array.length - 1].toString();
-    //   widget.onDataReceived(res['url']);
-    // });
   }
 }

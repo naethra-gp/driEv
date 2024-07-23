@@ -4,7 +4,6 @@ import 'package:driev/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
-import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -124,7 +123,6 @@ class _WalletSummaryState extends State<WalletSummary> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ButtonTheme(
-                // minWidth: 140,
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
@@ -156,7 +154,6 @@ class _WalletSummaryState extends State<WalletSummary> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ButtonTheme(
-                    // minWidth: 140,
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
@@ -211,7 +208,6 @@ class _WalletSummaryState extends State<WalletSummary> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
               decoration: const BoxDecoration(
                 color: AppColors.walletColor,
-                // color: Colors.red,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
               ),
               child: Column(
@@ -278,7 +274,6 @@ class _WalletSummaryState extends State<WalletSummary> {
                         },
                       ),
                     ),
-                  // CustomTheme.defaultHeight10,
                   Align(
                     alignment: Alignment.center,
                     child: RichText(
@@ -302,7 +297,6 @@ class _WalletSummaryState extends State<WalletSummary> {
                       ),
                     ),
                   ),
-                  // CustomTheme.defaultHeight10,
                   const SizedBox(height: 30),
                   Align(
                     alignment: Alignment.center,
@@ -353,12 +347,7 @@ class _WalletSummaryState extends State<WalletSummary> {
     walletServices.initiateTransaction(params).then((dynamic res) {
       print("response --> $res");
       List token = [res];
-      // String mid = "cxAfAZ34251794799551";
-      // String tToken = "cc302ad05939411cbf77d4f2010e5d6c1718892040879";
-      // String amt = "1.00";
-      // String oId = "OD_59";
-      // String cbUrl = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=OD_59";
-      // bool staging = false;
+
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
       String amt = amount.toString();

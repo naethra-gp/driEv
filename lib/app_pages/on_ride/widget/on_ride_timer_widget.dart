@@ -20,7 +20,6 @@ class _OnRideTimerWidgetState extends State<OnRideTimerWidget> {
   late Timer _timer;
   late DateTime _startTime;
   Duration _elapsedTime = Duration.zero;
-  // String formattedTime = "";
 
   @override
   void initState() {

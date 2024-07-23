@@ -46,124 +46,123 @@ class _ChooseYourCampusState extends State<ChooseYourCampus> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        // leading: IconButton(
-        //   icon: Image.asset(Constants.backButton),
-        //   onPressed: () async {
-        //     Navigator.of(context).pop();
-        //   },
-        // ),
       ),
-      body:  Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Align(
-                alignment: Alignment.center,
-                child: Text(
-                  Constants.campavail,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                Constants.campusopt,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Align(
+              alignment: Alignment.center,
+              child: Text(
+                Constants.campavail,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  // fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      if (allCampus.isNotEmpty) ...[
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: allCampus.length,
-                          itemBuilder: (context, index) {
-                            return listView(allCampus[index]);
-                          },
-                        ),
-                      ],
-                      const SizedBox(height: 16),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          Constants.cantfind,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                            fontSize: 16,
-                            // wordSpacing: 5,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, "vote_your_campus");
+            ),
+            const SizedBox(height: 5),
+            const Text(
+              Constants.campusopt,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (allCampus.isNotEmpty) ...[
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: allCampus.length,
+                        itemBuilder: (context, index) {
+                          return listView(allCampus[index]);
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                          child: Container(
-                            decoration: CustomTheme.decoration,
-                            child: ListTile(
-                              contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
-                              leading: Image.asset(
-                                Constants.votecampus,
-                                width: 55,
-                                height: 55,
-                                fit: BoxFit.contain,
-                              ),
-                              title: Text(
-                                Constants.voteyorcamp,
-                                overflow: TextOverflow.clip,
-                                style: CustomTheme.listTittleStyle,
-                              ),
-                              trailing: IconButton(
-                                icon: Image.asset(Constants.frwdArrow, height: 16, width: 16),
-                                onPressed: () {
-                                  
-                                  Navigator.pushNamed(context, "vote_your_campus");
-                                },
-                              ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        Constants.cantfind,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontSize: 16,
+                          // wordSpacing: 5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, "vote_your_campus");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 5),
+                        child: Container(
+                          decoration: CustomTheme.decoration,
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 7),
+                            leading: Image.asset(
+                              Constants.votecampus,
+                              width: 55,
+                              height: 55,
+                              fit: BoxFit.contain,
+                            ),
+                            title: Text(
+                              Constants.voteyorcamp,
+                              overflow: TextOverflow.clip,
+                              style: CustomTheme.listTittleStyle,
+                            ),
+                            trailing: IconButton(
+                              icon: Image.asset(Constants.frwdArrow,
+                                  height: 16, width: 16),
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, "vote_your_campus");
+                              },
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
   Widget listView(Map<String, dynamic> list) {
     return GestureDetector(
       onTap: () {
         // Navigator.pushNamed(context, "rank_list");
-        Navigator.pushNamed(context, "registration", arguments: list['campusId'].toString());
+        Navigator.pushNamed(context, "registration",
+            arguments: list['campusId'].toString());
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
         child: Container(
           decoration: CustomTheme.decoration,
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 7,vertical: 7),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
             leading: CachedNetworkImage(
               width: 52,
               height: 52,
@@ -187,15 +186,19 @@ class _ChooseYourCampusState extends State<ChooseYourCampus> {
               list['campusName'].toString(),
               overflow: TextOverflow.clip,
               style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-                letterSpacing: 0.15
-              ),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  letterSpacing: 0.15),
             ),
             trailing: IconButton(
-              icon:Image.asset(Constants.frwdArrow,height: 16,width: 16,),
+              icon: Image.asset(
+                Constants.frwdArrow,
+                height: 16,
+                width: 16,
+              ),
               onPressed: () {
-                Navigator.pushNamed(context, "registration", arguments: list['campusId'].toString());
+                Navigator.pushNamed(context, "registration",
+                    arguments: list['campusId'].toString());
               },
             ),
           ),

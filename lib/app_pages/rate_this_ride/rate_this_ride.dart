@@ -10,7 +10,7 @@ import '../../app_utils/app_loading/alert_services.dart';
 
 class RateThisRide extends StatefulWidget {
   final String rideId;
-   const RateThisRide({super.key, required this.rideId});
+  const RateThisRide({super.key, required this.rideId});
 
   @override
   State<RateThisRide> createState() => _RateThisRideState();
@@ -62,11 +62,11 @@ class _RateThisRideState extends State<RateThisRide> {
                 ),
                 const Text(
                   "Give us the scoop!",
-                   style: TextStyle(
-                     fontSize: 20,
-                     color: AppColors.primary,
-                     fontWeight: FontWeight.w500,
-                   ),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
@@ -74,11 +74,11 @@ class _RateThisRideState extends State<RateThisRide> {
                 ),
                 const Text(
                   "We are all ears to hear from you",
-                   style: TextStyle(
-                     fontSize: 12,
-                     color: AppColors.fontgrey,
-                     fontWeight: FontWeight.w400,
-                   ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.fontgrey,
+                    fontWeight: FontWeight.w400,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
@@ -88,32 +88,32 @@ class _RateThisRideState extends State<RateThisRide> {
                   const Text(
                     "Rate your last ride with us",
                     style: TextStyle(
-                       fontSize: 14,
-                       color: AppColors.black,
-                       fontWeight: FontWeight.w500,
-                     ),
+                      fontSize: 14,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 1.0 || _rating == 2.0) ...[
                   const Text(
                     "What could be made better?",
-                     style: TextStyle(
-                       fontSize: 14,
-                       color: AppColors.black,
-                       fontWeight: FontWeight.w500,
-                     ),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 3.0 || _rating == 4.0) ...[
                   const Text(
                     "What services do you think could be improved?",
-                     style: TextStyle(
-                       fontSize: 14,
-                       color: AppColors.black,
-                       fontWeight: FontWeight.w500,
-                     ),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -235,176 +235,6 @@ class _RateThisRideState extends State<RateThisRide> {
                       ),
                     ),
                   ),
-
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  //   child: SizedBox(
-                  //     height: 48,
-                  //     width: double.infinity,
-                  //     child: ElevatedButton(
-                  //       style: ElevatedButton.styleFrom(
-                  //         backgroundColor: Colors.green,
-                  //         side: const BorderSide(color: Colors.green),
-                  //         shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(8.0),
-                  //         ),
-                  //       ),
-                  //       onPressed: () {
-                  //         showModalBottomSheet(
-                  //           context: context,
-                  //           backgroundColor: Colors.transparent,
-                  //           builder: (context) {
-                  //             return SizedBox(
-                  //               width: double.infinity,
-                  //               height:
-                  //               MediaQuery
-                  //                   .of(context)
-                  //                   .size
-                  //                   .height / 2.3,
-                  //               child: Stack(
-                  //                 alignment: Alignment.center,
-                  //                 children: <Widget>[
-                  //                   Positioned(
-                  //                     top: MediaQuery
-                  //                         .of(context)
-                  //                         .size
-                  //                         .height /
-                  //                         5.5 -
-                  //                         100,
-                  //                     child: Container(
-                  //                       height:
-                  //                       MediaQuery
-                  //                           .sizeOf(context)
-                  //                           .height,
-                  //                       width:
-                  //                       MediaQuery
-                  //                           .of(context)
-                  //                           .size
-                  //                           .width,
-                  //                       decoration: const BoxDecoration(
-                  //                         color: Colors.white,
-                  //                         borderRadius: BorderRadius.vertical(
-                  //                             top: Radius.circular(20)),
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                   Positioned(
-                  //                     top: MediaQuery
-                  //                         .of(context)
-                  //                         .size
-                  //                         .height /
-                  //                         6.5 -
-                  //                         100,
-                  //                     child: SizedBox(
-                  //                       width: 50,
-                  //                       height: 50,
-                  //                       child: Container(
-                  //                         decoration: const BoxDecoration(
-                  //                           shape: BoxShape.circle,
-                  //                           color: Colors.green,
-                  //                         ),
-                  //                         child: IconButton(
-                  //                           icon: const Icon(Icons.close),
-                  //                           color: Colors.white,
-                  //                           onPressed: () {
-                  //                             Navigator.pop(context);
-                  //                           },
-                  //                         ),
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                   Column(
-                  //                     mainAxisAlignment:
-                  //                     MainAxisAlignment.start,
-                  //                     children: <Widget>[
-                  //                       const SizedBox(
-                  //                         height: 80,
-                  //                       ),
-                  //                       Image.asset(
-                  //                         Constants.ques,
-                  //                         height: 42,
-                  //                         width: 36,
-                  //                       ),
-                  //                       Text(
-                  //                         "Need Help?",
-                  //                         textAlign: TextAlign.center,
-                  //                         style: GoogleFonts.roboto().copyWith(
-                  //                             fontSize: 24,
-                  //                             color: AppColors.black,
-                  //                             fontWeight: FontWeight.w500),
-                  //                       ),
-                  //                       const SizedBox(height: 10),
-                  //                       SizedBox(
-                  //                         width:
-                  //                         200,
-                  //                         child: OutlinedButton.icon(
-                  //                           onPressed: () {
-                  //                             whatsApp();
-                  //                           },
-                  //                           icon: Image.asset(Constants
-                  //                               .watsap),
-                  //                           label: const Text('Whatsapp Us'),
-                  //                           style: OutlinedButton.styleFrom(
-                  //                             foregroundColor:
-                  //                             AppColors.faqColor,
-                  //                             side: const BorderSide(
-                  //                                 color: AppColors
-                  //                                     .faqColor),
-                  //                           ),
-                  //                         ),
-                  //                       ),
-                  //                       SizedBox(
-                  //                         width:
-                  //                         200,
-                  //                         child: OutlinedButton.icon(
-                  //                           onPressed: () {
-                  //                             _makingPhoneCall();
-                  //                           },
-                  //                           icon: Image.asset(Constants
-                  //                               .call),
-                  //                           label: const Text('call us'),
-                  //                           style: OutlinedButton.styleFrom(
-                  //                             foregroundColor:
-                  //                             AppColors.faqColor,
-                  //                             side: const BorderSide(
-                  //                                 color: AppColors
-                  //                                     .faqColor),
-                  //                           ),
-                  //                         ),
-                  //                       ),
-                  //                       SizedBox(
-                  //                         width:
-                  //                         200,
-                  //                         child: OutlinedButton.icon(
-                  //                           onPressed: () {
-                  //                             _launchmail();
-                  //                           },
-                  //                           icon: Image.asset(Constants
-                  //                               .watsap),
-                  //                           label: const Text('Mail Us'),
-                  //                           style: OutlinedButton.styleFrom(
-                  //                             foregroundColor:
-                  //                             faqColor,
-                  //                             side: const BorderSide(
-                  //                                 color: faqColor),
-                  //                           ),
-                  //                         ),
-                  //                       ),
-                  //                     ],
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //             );
-                  //           },
-                  //         );
-                  //       },
-                  //       child: Text(
-                  //         'Submit',
-                  //         // style: CustomTheme.headingStyleWhite,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
                 const SizedBox(height: 20),
                 Padding(

@@ -68,15 +68,6 @@ class ContentPlaceholder extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Container(
-          //   width: 96.0,
-          //   height: 72.0,
-          //   decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.circular(12.0),
-          //     color: Colors.white,
-          //   ),
-          // ),
-          // const SizedBox(width: 12.0),
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -1,10 +1,3 @@
-/*
-* Date        : 29-05-2024
-* Page        : Error Bike
-* Description : Error widget for dynamic content
-* Created By  : GNANA PRAKASAM
-* Modified By : GNANA PRAKASAM
-*/
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
@@ -63,7 +56,6 @@ class _ErrorBikesState extends State<ErrorBikes> {
                   child: AppButtonWidget(
                     title: "Okay",
                     onPressed: () {
-                      // Navigator.pushNamed(context, "home");
                       Navigator.pushNamedAndRemoveUntil(
                           context, "home", (route) => false);
                     },

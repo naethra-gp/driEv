@@ -240,14 +240,11 @@ class _RideSummaryState extends State<RideSummary> {
                                             flex: 2,
                                             child: Image.asset(
                                               Constants.bike,
-                                              // height: 110,
-                                              // width: 150,
                                               fit: BoxFit.contain,
                                             ),
                                           )
                                         ],
                                       ),
-                                      // const SizedBox(height: 10),
                                       const Divider(
                                         color: Color(0XffADADAD),
                                         endIndent: 5,
@@ -259,7 +256,6 @@ class _RideSummaryState extends State<RideSummary> {
                                           value: DateFormat("dd MMM yyyy")
                                               .format(DateTime.parse(
                                                   rd[0]['endTime']))),
-                                      // value: "${rd[0]['endTime']}"),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Vehicle no.",
@@ -349,9 +345,7 @@ class _RideSummaryState extends State<RideSummary> {
 
   TextStyle heading(Color color) {
     return TextStyle(
-      // fontFamily: "Roboto",
       fontFamily: "Poppins-Bold",
-      // fontWeight: FontWeight.w900,
       color: color,
       fontSize: 16,
     );

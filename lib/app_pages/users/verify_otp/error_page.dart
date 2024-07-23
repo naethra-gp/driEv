@@ -39,7 +39,6 @@ class _OtpErrorPageState extends State<OtpErrorPage> {
                 fontSize: 30,
                 color: AppColors.primary,
               ),
-              // style: CustomTheme.headingStyle3,
             ),
             const SizedBox(height: 16),
             const Text(

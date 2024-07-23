@@ -18,7 +18,6 @@ class AadhaarFormField extends StatefulWidget {
   final IconData? prefixIcon;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
-  // final Function(bool, List) verified;
   final Function(bool, String) otpSent;
 
   const AadhaarFormField({
@@ -31,7 +30,6 @@ class AadhaarFormField extends StatefulWidget {
     this.prefixIcon,
     this.inputFormatters,
     this.maxLength,
-    // required this.verified,
     required this.otpSent,
     required this.readOnly,
   });
@@ -42,7 +40,6 @@ class AadhaarFormField extends StatefulWidget {
 
 class _AadhaarFormFieldState extends State<AadhaarFormField> {
   String verifyButton = "Send OTP";
-  // bool readOnly = false;
   AlertServices as = AlertServices();
 
   bool buttonEnabled = false;
@@ -59,33 +56,10 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
 
   @override
   Widget build(BuildContext context) {
-    // var themeColor = Theme.of(context).primaryColor;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // widget.required
-        //     ? RichText(
-        //         text: TextSpan(
-        //           text: widget.title,
-        //           style: CustomTheme.formLabelStyle,
-        //           children: const [
-        //             TextSpan(
-        //               text: ' *',
-        //               style: TextStyle(
-        //                 color: Colors.redAccent,
-        //               ),
-        //             )
-        //           ],
-        //         ),
-        //       )
-        //     : RichText(
-        //         text: TextSpan(
-        //           text: widget.title,
-        //           style: CustomTheme.formLabelStyle,
-        //         ),
-        //       ),
-        // const SizedBox(height: 5),
         TextFormField(
           controller: widget.controller,
           maxLength: widget.maxLength,
@@ -94,7 +68,6 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: widget.validator,
           readOnly: widget.readOnly,
-          // enabled: enabled,
           onChanged: widget.onChanged,
           inputFormatters: widget.inputFormatters,
           style: CustomTheme.formFieldStyle,
@@ -135,11 +108,6 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
             ),
             contentPadding: const EdgeInsets.only(left: 15.0),
             isDense: false,
-            // prefixIcon: Icon(
-            //   widget.prefixIcon,
-            //   color: themeColor,
-            //   size: 26,
-            // ),
             suffixIcon: TextButton(
               onPressed: () {
                 String? aadhaar =
@@ -149,23 +117,7 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
                 } else {
                   if (verifyButton == "Send OTP" && !widget.readOnly) {
                     sentOtp();
-                    // Navigator.of(context).push(MaterialPageRoute<void>(
-                    //   fullscreenDialog: true,
-                    //   builder: (BuildContext context) => AadhaarVerifyScreen(
-                    //     aadhaar: aadhaar.toString(),
-                    //     onConfirm: (List data) {
-                    //       if (data.isNotEmpty) {
-                    //         verifyButton = "Verified";
-                    //         readOnly = true;
-                    //         widget.verified(true, data);
-                    //         setState(() {});
-                    //       }
-                    //     },
-                    //   ),
-                    // ));
-                  } else {
-                    // as.errorToast("already aadhaar verified!");
-                  }
+                  } else {}
                 }
               },
               child: Text(
@@ -221,7 +173,6 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
   }
 
   String getFormattedTime(int seconds) {
-    // int minutes = seconds ~/ 60;
     int remainingSeconds = seconds % 60;
     return remainingSeconds.toString().padLeft(2, '0');
   }

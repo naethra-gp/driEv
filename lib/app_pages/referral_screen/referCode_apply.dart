@@ -154,8 +154,6 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamed(context, "choose_your_campus");
-                        // Navigator.pushNamedAndRemoveUntil(
-                        //     context, "choose_your_campus", (route) => false);
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
@@ -210,4 +208,3 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
     }
   }
 }
-

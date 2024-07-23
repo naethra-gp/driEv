@@ -83,27 +83,6 @@ class TextFormWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // required
-        //     ? RichText(
-        //         text: TextSpan(
-        //           text: title,
-        //           style: CustomTheme.formLabelStyle,
-        //           children: const [
-        //             TextSpan(
-        //               text: ' *',
-        //               style: TextStyle(
-        //                 color: Colors.redAccent,
-        //               ),
-        //             )
-        //           ],
-        //         ),
-        //       )
-        //     : RichText(
-        //         text: TextSpan(
-        //           text: title,
-        //           style: CustomTheme.formLabelStyle,
-        //         ),
-        //       ),
         const SizedBox(
           height: 5,
         ),
@@ -175,13 +154,6 @@ class TextFormWidget extends StatelessWidget {
                 ),
                 contentPadding: const EdgeInsets.only(left: 15),
                 isDense: false,
-                // prefixIcon: prefixIcon != null
-                //     ? Icon(
-                //         prefixIcon,
-                //         color: iconColor ?? themeColor,
-                //         size: 26,
-                //       )
-                //     : null,
               ),
         )
       ],

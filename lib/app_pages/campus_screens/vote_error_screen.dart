@@ -81,9 +81,7 @@ class _VoteErrorScreenState extends State<VoteErrorScreen> {
                 title: "Share With Your Friends",
                 onPressed: () async {
                   final result = await Share.share('https://driev.bike');
-                  if (result.status == ShareResultStatus.success) {
-                    // print('Thank you for sharing my website!');
-                  }
+                  if (result.status == ShareResultStatus.success) {}
                 },
               ),
             ],
