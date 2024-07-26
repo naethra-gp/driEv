@@ -56,9 +56,7 @@ class _WalletSummaryState extends State<WalletSummary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarWidget(
-        leadingIcon: false,
-      ),
+      appBar: const AppBarWidget(),
       body: Column(
         children: [
           Padding(

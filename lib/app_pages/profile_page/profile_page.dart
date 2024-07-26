@@ -129,18 +129,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top:
-                        50, // Adjust this value to move the text along the slider
-                    child: Text(
-                      "${initialValue.toInt()}",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
+                  // Positioned(
+                  //   top:
+                  //       50, // Adjust this value to move the text along the slider
+                  //   child: Text(
+                  //     "${initialValue.toInt()}",
+                  //     style: const TextStyle(
+                  //       fontSize: 14,
+                  //       fontWeight: FontWeight.bold,
+                  //       color: Colors.green,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               if (index != progressValues.length - 1)
@@ -454,19 +454,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             children: [
                               bottomUserDetail(
-                                Icons.mail_outline,
-                                customerDetails[0]['emailId'].toString(),
-                                Icons.phone_iphone_outlined,
-                                customerDetails[0]['contact'],12
-                              ),
+                                  Icons.mail_outline,
+                                  customerDetails[0]['emailId'].toString(),
+                                  Icons.phone_iphone_outlined,
+                                  customerDetails[0]['contact'],
+                                  fontSize),
                               // defaultHeight,
                               const SizedBox(height: 10),
                               bottomUserDetail(
-                                Icons.person,
-                                customerDetails[0]['rollNo'].toString(),
-                                LineAwesome.id_card,
-                                "ID Uploaded",12
-                              ),
+                                  Icons.person,
+                                  customerDetails[0]['rollNo'].toString(),
+                                  LineAwesome.id_card,
+                                  "ID Uploaded",
+                                  fontSize),
                             ],
                           ),
                         ),
