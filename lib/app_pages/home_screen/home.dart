@@ -478,20 +478,16 @@ class _HomeState extends State<Home> {
           alertServices.hideLoading();
           if (_currentPosition != null) {
             String distance = await _locationService.calculateDistance(
-              // _currentPosition!.latitude,
-              // _currentPosition!.longitude,
-              20.2993002, 85.8173442,20.248182, 85.80206
-              // stationLat,
-              // stationLon,
+              _currentPosition!.latitude,
+              _currentPosition!.longitude,
+              stationLat,
+              stationLon,
             );
             setState(() {
               distanceText = distance.toString();
             });
             _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
           }
-          // print("Station LatLon: $stationLat, $stationLon ");
-          // print("User LatLon: ${_currentPosition!.latitude }, ${_currentPosition!.longitude } ");
-          // print("distance: ${distance.toStringAsFixed(2)}");
         });
       },
     );
@@ -591,37 +587,18 @@ class _HomeState extends State<Home> {
         onPressed: selectedPlan == ""
             ? null
             : () {
-                // List list = [
-                //   {
-                //     'sId': stationDetails['stationId'],
-                //     'sName': stationDetails['stationName'],
-                //     'plan': selectedPlan,
-                //     'distanceText': distanceText,
-                //     'distance': distance.toString().replaceAll(".0", ""),
-                //   },
-                // ];
-                // getVehiclesByPlan(list);
-          print("Distance: $distanceText");
+                List list = [
+                  {
+                    'sId': stationDetails['stationId'],
+                    'sName': stationDetails['stationName'],
+                    'plan': selectedPlan,
+                    'distanceText': distanceText,
+                    'distance': distance.toString().replaceAll(".0", ""),
+                  },
+                ];
+                getVehiclesByPlan(list);
               },
       ),
-    );
-  }
-
-  rideDoneAlert(List res) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return showModalBottomSheet(
-      context: context,
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      isDismissible: true,
-      enableDrag: false,
-      builder: (context) {
-        return RideDoneAlert(
-          result: res,
-          rideId: "rideId",
-        );
-      },
     );
   }
 
@@ -636,7 +613,6 @@ class _HomeState extends State<Home> {
       closedVehicleList = [];
 
       vehicleList = response.where((i) => i['distanceRange'] != null).toList();
-      print("vehicleList length: ${vehicleList.length}");
       for (int i = 0; i < vehicleList.length; i++) {
         List dis = vehicleList[i]['distanceRange'].toString().split("-");
         if (dis.length == 2) {
