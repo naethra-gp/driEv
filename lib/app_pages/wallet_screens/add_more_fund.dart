@@ -48,143 +48,179 @@ class _AddMoreFundState extends State<AddMoreFund> {
     return BaseScreen(
       child: Scaffold(
         appBar: const AppBarWidget(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 16),
-              Image.asset("assets/img/oops.png", height: 70, width: 70),
-              const SizedBox(height: 40),
-              const Text("Your Wallet Balance", style: TextStyle(fontSize: 16)),
-              Text(
-                "\u{20B9} $walletBalance",
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Form(
-                key: formKey,
-                child: TextFormWidget(
-                  title: 'Enter Amount',
-                  controller: amountCtrl,
-                  maxLength: 4,
-                  required: true,
-                  prefixText: "\u{20B9} ",
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.phone,
-                  prefixIcon: Icons.account_circle_outlined,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  validator: (value) {
-                    if (value.toString().trim().isEmpty) {
-                      return "Amount is Mandatory!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    onPressed: () => addAmount(100),
-                    style: ButtonStyle(
-                      overlayColor: WidgetStateProperty.all(Colors.transparent),
-                      side: WidgetStateProperty.resolveWith((states) {
-                        if (states.contains(WidgetState.pressed)) {
-                          return const BorderSide(
-                              color: AppColors.primary, width: 2);
-                        }
-                        return const BorderSide(color: Color(0xffDEDEDE));
-                      }),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
                       ),
-                    ),
-                    child: const Text(" +100 ",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                  TextButton(
-                    onPressed: () => addAmount(200),
-                    style: ButtonStyle(
-                      overlayColor: WidgetStateProperty.all(Colors.transparent),
-                      side: WidgetStateProperty.resolveWith((states) {
-                        if (states.contains(WidgetState.pressed)) {
-                          return const BorderSide(
-                              color: AppColors.primary, width: 2);
-                        }
-                        return const BorderSide(color: Color(0xffDEDEDE));
-                      }),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          children: <Widget>[
+                            const SizedBox(height: 16),
+                            Image.asset("assets/img/oops.png",
+                                height: 70, width: 70),
+                            const SizedBox(height: 40),
+                            const Text("Your Wallet Balance",
+                                style: TextStyle(fontSize: 16)),
+                            Text(
+                              "\u{20B9} $walletBalance",
+                              style: const TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 16),
+                            Form(
+                              key: formKey,
+                              child: TextFormWidget(
+                                title: 'Enter Amount',
+                                controller: amountCtrl,
+                                maxLength: 4,
+                                required: true,
+                                prefixText: "\u{20B9} ",
+                                textInputAction: TextInputAction.done,
+                                keyboardType: TextInputType.phone,
+                                prefixIcon: Icons.account_circle_outlined,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                validator: (value) {
+                                  if (value.toString().trim().isEmpty) {
+                                    return "Amount is Mandatory!";
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                TextButton(
+                                  onPressed: () => addAmount(100),
+                                  style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    side: MaterialStateProperty.resolveWith(
+                                        (states) {
+                                      if (states
+                                          .contains(MaterialState.pressed)) {
+                                        return const BorderSide(
+                                            color: AppColors.primary, width: 2);
+                                      }
+                                      return const BorderSide(
+                                          color: Color(0xffDEDEDE));
+                                    }),
+                                    shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                    ),
+                                  ),
+                                  child: const Text(" +100 ",
+                                      style: TextStyle(color: Colors.black)),
+                                ),
+                                TextButton(
+                                  onPressed: () => addAmount(200),
+                                  style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    side: MaterialStateProperty.resolveWith(
+                                        (states) {
+                                      if (states
+                                          .contains(MaterialState.pressed)) {
+                                        return const BorderSide(
+                                            color: AppColors.primary, width: 2);
+                                      }
+                                      return const BorderSide(
+                                          color: Color(0xffDEDEDE));
+                                    }),
+                                    shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text(" +200 ",
+                                      style: TextStyle(color: Colors.black)),
+                                ),
+                                TextButton(
+                                  onPressed: () => addAmount(500),
+                                  style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    side: MaterialStateProperty.resolveWith(
+                                        (states) {
+                                      if (states
+                                          .contains(MaterialState.pressed)) {
+                                        return const BorderSide(
+                                            color: AppColors.primary, width: 2);
+                                      }
+                                      return const BorderSide(
+                                          color: Color(0xffDEDEDE));
+                                    }),
+                                    shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text(" +500 ",
+                                      style: TextStyle(color: Colors.black)),
+                                ),
+                                TextButton(
+                                  onPressed: () => addAmount(1000),
+                                  style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    side: MaterialStateProperty.resolveWith(
+                                        (states) {
+                                      if (states
+                                          .contains(MaterialState.pressed)) {
+                                        return const BorderSide(
+                                            color: AppColors.primary, width: 2);
+                                      }
+                                      return const BorderSide(
+                                          color: Color(0xffDEDEDE));
+                                    }),
+                                    shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text(" +1000 ",
+                                      style: TextStyle(color: Colors.black)),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 50),
+                            SizedBox(
+                              height: 42,
+                              width: double.maxFinite,
+                              child: AppButtonWidget(
+                                title: "Proceed",
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    formKey.currentState!.save();
+                                    paytm(amountCtrl.text.toString());
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    child: const Text(" +200 ",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                  TextButton(
-                    onPressed: () => addAmount(500),
-                    style: ButtonStyle(
-                      overlayColor: WidgetStateProperty.all(Colors.transparent),
-                      side: WidgetStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return const BorderSide(
-                              color: AppColors.primary, width: 2);
-                        }
-                        return const BorderSide(color: Color(0xffDEDEDE));
-                      }),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    child: const Text(" +500 ",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                  TextButton(
-                    onPressed: () => addAmount(1000),
-                    style: ButtonStyle(
-                      overlayColor: WidgetStateProperty.all(Colors.transparent),
-                      side: WidgetStateProperty.resolveWith((states) {
-                        if (states.contains(WidgetState.pressed)) {
-                          return const BorderSide(
-                              color: AppColors.primary, width: 2);
-                        }
-                        return const BorderSide(color: Color(0xffDEDEDE));
-                      }),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                    child: const Text(" +1000 ",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                ],
+                  );
+                },
               ),
-              const SizedBox(height: 50),
-              SizedBox(
-                height: 42,
-                width: double.maxFinite,
-                child: AppButtonWidget(
-                  title: "Proceed",
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-                      paytm(amountCtrl.text.toString());
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

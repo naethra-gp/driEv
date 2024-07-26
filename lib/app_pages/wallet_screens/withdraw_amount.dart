@@ -5,6 +5,7 @@ import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
 
@@ -23,6 +24,9 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
   final TextEditingController _controller = TextEditingController();
   String balance = "0";
   final _formKey = GlobalKey<FormState>();
+
+  final double smallDeviceHeight = 600;
+  final double largeDeviceHeight = 1024;
 
   @override
   void initState() {
@@ -52,6 +56,17 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    final ScrollPhysics scrollOption;
+
+    if (height < smallDeviceHeight) {
+      scrollOption = const AlwaysScrollableScrollPhysics();
+    } else if (height >= smallDeviceHeight && height < largeDeviceHeight) {
+      scrollOption = const NeverScrollableScrollPhysics();
+    } else {
+      scrollOption = const NeverScrollableScrollPhysics();
+    }
+
     return BaseScreen(
       child: Scaffold(
         appBar: AppBarWidget(
@@ -81,7 +96,8 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
           ),
         ),
         body: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: scrollOption,
+          scrollDirection: Axis.vertical,
           child: Form(
             key: _formKey,
             child: Column(
@@ -177,6 +193,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                             prefixIcon: const Padding(
                               padding: EdgeInsets.all(10.0),
                               child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(Icons.currency_rupee_sharp),
@@ -361,7 +378,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 100),
+                      // const SizedBox(height: 20),
                     ],
                   ),
                 ),

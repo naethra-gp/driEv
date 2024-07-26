@@ -45,6 +45,10 @@ class _ProfilePageState extends State<ProfilePage> {
   double distance = 50;
   String result = "";
   int rideDurationmilliSec = 0;
+
+  final double smallDeviceHeight = 600;
+  final double largeDeviceHeight = 1024;
+
   Widget _buildCategoriesGrid() {
     return SizedBox(
       height: 150.0,
@@ -59,84 +63,89 @@ class _ProfilePageState extends State<ProfilePage> {
         itemBuilder: (_, int index) {
           int rewardHours = (index + 1) * 100;
           double initialValue = progressValues[index];
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          return Column(
             children: [
-              SizedBox(
-                width: 110, // Ensure the widget fits within the Grid
-                child: GestureDetector(
-                  onTap: () {},
-                  child: SleekCircularSlider(
-                    min: 0,
-                    max: 100,
-                    initialValue: initialValue,
-                    appearance: CircularSliderAppearance(
-                      startAngle: 180,
-                      angleRange: 360,
-                      customWidths: CustomSliderWidths(
-                        trackWidth: 4,
-                        progressBarWidth: 6,
-                      ),
-                      size: 120,
-                      customColors: CustomSliderColors(
-                        trackColor: const Color(0xffF5F5F5),
-                        progressBarColors: [Colors.green, Colors.green],
-                      ),
-                      infoProperties: InfoProperties(
-                        topLabelText: "0",
-                        topLabelStyle: const TextStyle(
-                          fontSize: 240,
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    innerWidget: (double value) {
-                      String labelText =
-                          "Complete \n $rewardHours hrs \n to get rewards";
-                      String assetPath = Constants.scooter;
-                      Color backgroundColor = Colors.white;
-                      if (rewardHours.toDouble() >= value && value == 100.0) {
-                        labelText = "Completed \n $rewardHours hrs";
-                        assetPath = Constants.gift;
-                        backgroundColor = Colors.white;
-                      } else if (value <= 100 && value <= 0) {
-                        assetPath = Constants.gift;
-                        labelText = "Unlock \n $rewardHours hrs";
-                        backgroundColor = const Color(0xffF5F5F5);
-                      }
-                      return Center(
-                        child: CircleAvatar(
-                          backgroundColor: backgroundColor,
-                          radius: 50,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                assetPath,
-                                height: 26,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                labelText,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.clip,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 8,
-                                ),
-                              ),
-                            ],
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    width: 110,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: SleekCircularSlider(
+                        min: 0,
+                        max: 100,
+                        initialValue: initialValue,
+                        appearance: CircularSliderAppearance(
+                          startAngle: 180,
+                          angleRange: 360,
+                          customWidths: CustomSliderWidths(
+                            trackWidth: 4,
+                            progressBarWidth: 6,
+                          ),
+                          size: 120,
+                          customColors: CustomSliderColors(
+                            trackColor: const Color(0xffF5F5F5),
+                            progressBarColors: [Colors.green, Colors.green],
                           ),
                         ),
-                      );
-                    },
+                        innerWidget: (double value) {
+                          String labelText =
+                              "Complete \n $rewardHours hours \n to get rewards";
+                          String assetPath = Constants.scooter;
+                          Color backgroundColor = Colors.white;
+                          if (rewardHours.toDouble() >= value &&
+                              value == 100.0) {
+                            labelText = "Completed \n $rewardHours hours";
+                            assetPath = Constants.gift;
+                            backgroundColor = Colors.white;
+                          } else if (value <= 100 && value <= 0) {
+                            assetPath = Constants.gift;
+                            labelText = "Unlock \n $rewardHours hours";
+                            backgroundColor = const Color(0xffF5F5F5);
+                          }
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  assetPath,
+                                  height: 26,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  labelText,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.clip,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 8,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned(
+                    top:
+                        50, // Adjust this value to move the text along the slider
+                    child: Text(
+                      "${initialValue.toInt()}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              if (index != progressValues.length - 1) // Add this condition
+              if (index != progressValues.length - 1)
                 const SizedBox(
-                  width: 20, // Adjust the width as needed
+                  width: 20,
                   child: Divider(
                     color: Color(0xffF5F5F5),
                     thickness: 3,
@@ -201,6 +210,17 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double fontSize;
+
+    if (height < smallDeviceHeight) {
+      fontSize = 11.5;
+    } else if (height >= smallDeviceHeight && height < largeDeviceHeight) {
+      fontSize = 12;
+    } else {
+      fontSize = 12.5;
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -221,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
           physics: const ScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
             child: Column(
               children: [
                 defaultHeight,
@@ -333,10 +353,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
-                                        flex: 2,
+                                        flex: 3,
                                         child: Column(
                                           children: [
                                             Align(
@@ -384,7 +405,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       const SizedBox(width: 100),
                                       Expanded(
-                                        flex: 3,
+                                        flex: 4,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
@@ -433,19 +454,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             children: [
                               bottomUserDetail(
-                                Icons.mail_outline,
-                                customerDetails[0]['emailId'],
-                                Icons.phone_iphone_outlined,
-                                customerDetails[0]['contact'],
-                              ),
+                                  Icons.mail_outline,
+                                  customerDetails[0]['emailId'],
+                                  Icons.phone_iphone_outlined,
+                                  customerDetails[0]['contact'],
+                                  fontSize),
                               // defaultHeight,
                               const SizedBox(height: 10),
                               bottomUserDetail(
-                                Icons.person,
-                                customerDetails[0]['rollNo'],
-                                LineAwesome.id_card,
-                                "ID Uploaded",
-                              ),
+                                  Icons.person,
+                                  customerDetails[0]['rollNo'],
+                                  LineAwesome.id_card,
+                                  "ID Uploaded",
+                                  fontSize),
                             ],
                           ),
                         ),
@@ -474,7 +495,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ],
                 const Text(
-                  "DriEVantage Rewards",
+                  "driEVantage Rewards",
                   style: TextStyle(
                     color: AppColors.primary,
                     fontSize: 20,
@@ -588,7 +609,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                // const SizedBox(height: 30),
               ],
             ),
           )),
@@ -753,34 +774,36 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget bottomUserDetail(
-    fIcon,
-    fText,
-    sIcon,
-    sText,
-  ) {
+  Widget bottomUserDetail(fIcon, fText, sIcon, sText, fontSize) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Column(
-          children: [
-            Row(
-              children: [
-                Icon(fIcon, size: 15),
-                const SizedBox(width: 5),
-                Text(
-                  fText,
-                  overflow: TextOverflow.clip,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
+        Expanded(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(fIcon, size: 15),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      fText,
+                      overflow: TextOverflow.visible,
+                      softWrap: true,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
-        const Spacer(),
+        // const Spacer(),
         Column(
           children: [
             Row(

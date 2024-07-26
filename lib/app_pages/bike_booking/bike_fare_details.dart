@@ -350,7 +350,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                           textAlign: TextAlign.left,
                           style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                             // letterSpacing: 0.15,
                           ),
                         ),
@@ -766,16 +766,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       ),
     );
   }
-
-
-
-
-
-
-
-
-
-
 
   TextStyle heading(Color color) {
     return TextStyle(

@@ -58,7 +58,9 @@ class _WalletSummaryState extends State<WalletSummary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarWidget(),
+      appBar: const AppBarWidget(
+        leadingIcon: false,
+      ),
       body: Column(
         children: [
           Padding(
@@ -84,7 +86,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                       const Text(
                         "Current Wallet Balance",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           color: Colors.black,
                           fontWeight: FontWeight.w400,
                         ),
@@ -93,7 +95,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                         Text(
                           "₹ ${walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2)}",
                           style: const TextStyle(
-                            fontSize: 45,
+                            fontSize: 35,
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
                           ),
@@ -205,7 +207,7 @@ class _WalletSummaryState extends State<WalletSummary> {
           Expanded(
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
               decoration: const BoxDecoration(
                 color: AppColors.walletColor,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
@@ -324,7 +326,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                       ),
                     ),
                   ),
-                  CustomTheme.defaultHeight10
+                  // CustomTheme.defaultHeight10
                 ],
               ),
             ),

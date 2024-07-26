@@ -53,6 +53,9 @@ class _HomeState extends State<Home> {
   List filterVehicleList = [];
   List closedVehicleList = [];
 
+  final double smallDeviceHeight = 600;
+  final double mediumDeviceHeight = 800;
+
   @override
   void initState() {
     getLocation();
@@ -65,6 +68,19 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    double containerHeight;
+
+    if (height < smallDeviceHeight) {
+      print("Using small device height condition");
+      containerHeight = height / 2.95;
+    } else if (height < mediumDeviceHeight) {
+      print("Using medium device height condition");
+      containerHeight = height / 2.10;
+    } else {
+      print("Using large device height condition");
+      containerHeight = height / 1.8;
+    }
+
     return Scaffold(
       body: Container(
         color: Colors.white,
@@ -84,7 +100,7 @@ class _HomeState extends State<Home> {
                   polylines: _polyLines,
                   initialCameraPosition: CameraPosition(
                     target: _currentPosition!,
-                    zoom: 15.0,
+                    zoom: 13.5,
                   ),
                   markers: {
                     Marker(
@@ -212,7 +228,7 @@ class _HomeState extends State<Home> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                top: height / 2.10,
+                top: containerHeight,
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -299,7 +315,7 @@ class _HomeState extends State<Home> {
                           const SizedBox(height: 25),
                           buttonWidget(),
                         ],
-                        CustomTheme.defaultHeight10,
+                        // CustomTheme.defaultHeight10,
                       ],
                     ),
                   ),

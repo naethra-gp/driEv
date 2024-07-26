@@ -71,29 +71,30 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 35),
               const Text(
                 Constants.sharefreinds,
                 style: TextStyle(
                   fontSize: 18,
                   color: AppColors.referColor,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w300,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Align(
                 alignment: Alignment.center,
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: TextFormField(
                       readOnly: true,
                       controller: referCodeCtl,
                       textAlign: TextAlign.center,
                       textAlignVertical: TextAlignVertical.center,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 12,
+                        fontFamily: "Poppins",
                         color: AppColors.black,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
@@ -129,7 +130,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 40),
               SizedBox(
                 width: 200,
                 height: 50,
