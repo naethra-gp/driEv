@@ -325,7 +325,7 @@ class AlertServices {
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                top: height / 6 - 100,
+                top: height / 6 - 70,
                 child: Container(
                   height: height,
                   width: width,
@@ -338,7 +338,7 @@ class AlertServices {
                 ),
               ),
               Positioned(
-                top: height / 7.5 - 100,
+                top: height / 7.5 - 70,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -358,13 +358,21 @@ class AlertServices {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 50,
-                        left: 50,
-                        top: 30,
-                        bottom: 0,
-                      ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //     right: 50,
+                    //     left: 50,
+                    //     top: 30,
+                    //     bottom: 0,
+                    //   ),
+                    //   child: Image.asset(
+                    //     "assets/img/oops.png",
+                    //     height: 60,
+                    //     width: 60,
+                    //   ),
+                    // ),
+                    const SizedBox(height: 25),
+                    Center(
                       child: Image.asset(
                         "assets/img/oops.png",
                         height: 60,
@@ -381,7 +389,7 @@ class AlertServices {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14),
                     Text(
                       balance,
                       style: const TextStyle(
@@ -389,21 +397,21 @@ class AlertServices {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 18),
                     SizedBox(
                       width: width * 0.9,
                       child: Text(
                         balSub,
                         textAlign: TextAlign.center,
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.visible,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 30),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
@@ -442,7 +450,7 @@ class AlertServices {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 25),
                   ],
                 ),
               )
