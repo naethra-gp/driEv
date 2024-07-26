@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
@@ -246,16 +248,19 @@ class _AddMoreFundState extends State<AddMoreFund> {
     var params = {
       "amount": amount.toString(),
       "contact": mobile.toString(),
-      "staging": Constants.isStagingMode,
+      "staging": false,
+      // "staging": Constants.isStagingMode,
     };
     walletServices.initiateTransaction(params).then((dynamic res) {
+      print("Res--> ${jsonEncode(res)}");
       List token = [res];
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
       String amt = amount.toString();
       String oId = token[0]['orderId'].toString();
       String cbUrl = token[0]['callbackUrl'].toString();
-      bool staging = Constants.isStagingMode;
+      bool staging = false;
+      // bool staging = Constants.isStagingMode;
       bool rai = false;
       debugPrint("-------------- PAYTM Payment ---------------------");
       debugPrint("mid: $mid");

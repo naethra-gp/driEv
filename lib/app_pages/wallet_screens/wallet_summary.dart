@@ -9,12 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_widgets/app_bar_widget.dart';
-import 'widgets/place_holder.dart';
 
 class WalletSummary extends StatefulWidget {
   const WalletSummary({super.key});
@@ -101,17 +99,17 @@ class _WalletSummaryState extends State<WalletSummary> {
                           ),
                         ),
                       ] else ...[
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          enabled: true,
-                          child: Container(
-                            width: 100,
-                            height: 40.0,
-                            color: Colors.white,
-                            margin: const EdgeInsets.only(bottom: 8.0),
-                          ),
-                        ),
+                        // Shimmer.fromColors(
+                        //   baseColor: Colors.grey.shade300,
+                        //   highlightColor: Colors.grey.shade100,
+                        //   enabled: true,
+                        //   child: Container(
+                        //     width: 100,
+                        //     height: 40.0,
+                        //     color: Colors.white,
+                        //     margin: const EdgeInsets.only(bottom: 8.0),
+                        //   ),
+                        // ),
                       ],
                     ],
                   ),
@@ -224,39 +222,39 @@ class _WalletSummaryState extends State<WalletSummary> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  if (walletSummaryDetails.isEmpty)
-                    Expanded(
-                      child: Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          enabled: true,
-                          child: const SingleChildScrollView(
-                            physics: NeverScrollableScrollPhysics(),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                                ContentPlaceholder(
-                                    lineType: ContentLineType.threeLines),
-                                Divider(color: AppColors.centerAlign),
-                                SizedBox(height: 16.0),
-                              ],
-                            ),
-                          )),
-                    ),
+                  // if (walletSummaryDetails.isEmpty)
+                  //   Expanded(
+                  //     child: Shimmer.fromColors(
+                  //         baseColor: Colors.grey.shade300,
+                  //         highlightColor: Colors.grey.shade100,
+                  //         enabled: true,
+                  //         child: const SingleChildScrollView(
+                  //           physics: NeverScrollableScrollPhysics(),
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             mainAxisSize: MainAxisSize.max,
+                  //             children: [
+                  //               SizedBox(height: 16.0),
+                  //               ContentPlaceholder(
+                  //                   lineType: ContentLineType.threeLines),
+                  //               Divider(color: AppColors.centerAlign),
+                  //               SizedBox(height: 16.0),
+                  //               ContentPlaceholder(
+                  //                   lineType: ContentLineType.threeLines),
+                  //               Divider(color: AppColors.centerAlign),
+                  //               SizedBox(height: 16.0),
+                  //               ContentPlaceholder(
+                  //                   lineType: ContentLineType.threeLines),
+                  //               Divider(color: AppColors.centerAlign),
+                  //               SizedBox(height: 16.0),
+                  //               ContentPlaceholder(
+                  //                   lineType: ContentLineType.threeLines),
+                  //               Divider(color: AppColors.centerAlign),
+                  //               SizedBox(height: 16.0),
+                  //             ],
+                  //           ),
+                  //         )),
+                  //   ),
                   if (walletSummaryDetails.isNotEmpty)
                     Expanded(
                       child: ListView.separated(

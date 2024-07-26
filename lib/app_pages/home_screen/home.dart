@@ -473,22 +473,25 @@ class _HomeState extends State<Home> {
           categoryList.add(false);
         }
         alertServices.showLoading("Finding best route...");
-        Future.delayed(const Duration(seconds: 5), () {
-          print("delay logic");
+        Future.delayed(const Duration(seconds: 5), () async {
+          // print("delay logic");
           alertServices.hideLoading();
           if (_currentPosition != null) {
-            double distance = _locationService.calculateDistance(
-              _currentPosition!.latitude,
-              _currentPosition!.longitude,
-              stationLat,
-              stationLon,
+            String distance = await _locationService.calculateDistance(
+              // _currentPosition!.latitude,
+              // _currentPosition!.longitude,
+              20.2993002, 85.8173442,20.248182, 85.80206
+              // stationLat,
+              // stationLon,
             );
             setState(() {
-              distanceText = distance.toStringAsFixed(2);
+              distanceText = distance.toString();
             });
             _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
           }
-          print("distance: ${distance.toStringAsFixed(2)}");
+          // print("Station LatLon: $stationLat, $stationLon ");
+          // print("User LatLon: ${_currentPosition!.latitude }, ${_currentPosition!.longitude } ");
+          // print("distance: ${distance.toStringAsFixed(2)}");
         });
       },
     );
@@ -582,22 +585,23 @@ class _HomeState extends State<Home> {
 
   buttonWidget() {
     return SizedBox(
-      height: 50,
+      height: 45,
       child: AppButtonWidget(
         title: "Proceed",
         onPressed: selectedPlan == ""
             ? null
             : () {
-                List list = [
-                  {
-                    'sId': stationDetails['stationId'],
-                    'sName': stationDetails['stationName'],
-                    'plan': selectedPlan,
-                    'distanceText': distanceText,
-                    'distance': distance.toString().replaceAll(".0", ""),
-                  },
-                ];
-                getVehiclesByPlan(list);
+                // List list = [
+                //   {
+                //     'sId': stationDetails['stationId'],
+                //     'sName': stationDetails['stationName'],
+                //     'plan': selectedPlan,
+                //     'distanceText': distanceText,
+                //     'distance': distance.toString().replaceAll(".0", ""),
+                //   },
+                // ];
+                // getVehiclesByPlan(list);
+          print("Distance: $distanceText");
               },
       ),
     );

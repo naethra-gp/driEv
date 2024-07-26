@@ -19,7 +19,7 @@ class AlertServices {
     return await EasyLoading.show(
       status: title ?? 'Please wait...',
       maskType: EasyLoadingMaskType.black,
-      dismissOnTap: true,
+      dismissOnTap: false,
     );
   }
 

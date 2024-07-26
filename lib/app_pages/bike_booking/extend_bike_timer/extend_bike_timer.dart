@@ -230,7 +230,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 40, 15, 10),
+                padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -316,8 +316,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                                 Image.asset(
                                   "assets/img/bike2.png",
                                   height: 150,
-                                  width: 200,
-                                  fit: BoxFit.contain,
+                                  width: 170,
+                                  fit: BoxFit.cover,
                                 ),
                               ],
                             ),
@@ -326,11 +326,12 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                       ),
                     ),
                     const Divider(indent: 5, endIndent: 5),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     TimerButtonWidget(data: data),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 10),
                     SizedBox(
-                      height: 50,
+                      height: 45,
+                      // height: MediaQuery.of(context).size.height / 3,
                       child: AppButtonWidget(
                         title: "More",
                         onPressed: () {

@@ -34,7 +34,7 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 45,
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(

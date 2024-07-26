@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as loc;
+import 'dart:math';
 
 class LocationService {
   final String _apiKey = 'AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA';
@@ -38,11 +40,23 @@ class LocationService {
     return place.first;
   }
 
-  double calculateDistance(double startLatitude, double startLongitude,
-      double endLatitude, double endLongitude) {
-    double distanceInMeters = Geolocator.distanceBetween(
-        startLatitude, startLongitude, endLatitude, endLongitude);
-    return distanceInMeters / 1000; // Convert meters to kilometers
+  calculateDistance(double startLatitude, double startLongitude,
+      double endLatitude, double endLongitude) async {
+    String url =
+        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$startLatitude,$startLongitude&origins=$endLatitude,$endLongitude&key=$_apiKey';
+    try {
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        String res = jsonDecode(response.body)['rows'][0]['elements'][0]
+                ['distance']['text']
+            .toString();
+        return res;
+      } else {
+        return "0";
+      }
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   Future<List<LatLng>> getDirections(LatLng origin, LatLng destination) async {

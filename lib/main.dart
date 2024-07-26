@@ -3,7 +3,6 @@ import 'package:driev/app_themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
@@ -28,11 +27,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterUxcam
-        .optIntoSchematicRecordings(); // Confirm that you have user permission for screen recording
-    FlutterUxConfig config = FlutterUxConfig(
-        userAppKey: "jw96pdzp024ijde", enableAutomaticScreenNameTagging: false);
-    FlutterUxcam.startWithConfiguration(config);
     return ChangeNotifierProvider(
       create: (context) => ConnectivityProvider(),
       child: MaterialApp(

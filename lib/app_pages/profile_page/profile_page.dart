@@ -454,19 +454,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             children: [
                               bottomUserDetail(
-                                  Icons.mail_outline,
-                                  customerDetails[0]['emailId'],
-                                  Icons.phone_iphone_outlined,
-                                  customerDetails[0]['contact'],
-                                  fontSize),
+                                Icons.mail_outline,
+                                customerDetails[0]['emailId'].toString(),
+                                Icons.phone_iphone_outlined,
+                                customerDetails[0]['contact'],12
+                              ),
                               // defaultHeight,
                               const SizedBox(height: 10),
                               bottomUserDetail(
-                                  Icons.person,
-                                  customerDetails[0]['rollNo'],
-                                  LineAwesome.id_card,
-                                  "ID Uploaded",
-                                  fontSize),
+                                Icons.person,
+                                customerDetails[0]['rollNo'].toString(),
+                                LineAwesome.id_card,
+                                "ID Uploaded",12
+                              ),
                             ],
                           ),
                         ),
