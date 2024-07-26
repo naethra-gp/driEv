@@ -46,6 +46,7 @@ class Assets {
   static const String appThemesCustomTheme = 'lib/app_themes/custom_theme.dart';
   static const String appVoteForCampusLogo = 'assets/app/vote_for_campus_logo.png';
   static const String appWidgetsAppBarWidget = 'lib/app_utils/app_widgets/app_bar_widget.dart';
+  static const String appWidgetsAppBaseScreen = 'lib/app_utils/app_widgets/app_base_screen.dart';
   static const String appWidgetsAppButton = 'lib/app_utils/app_widgets/app_button.dart';
   static const String assetsAppGetStarted = 'assets/app/get_started.png';
   static const String bikeBookingBikeFareDetails = 'lib/app_pages/bike_booking/bike_fare_details.dart';
@@ -140,6 +141,7 @@ class Assets {
   static const String widgetFareDetailsWidget = 'lib/app_pages/bike_booking/widget/fare_details_widget.dart';
   static const String widgetListRideSummary = 'lib/app_pages/ride_summary/widget/list_ride_summary.dart';
   static const String widgetListWidget = 'lib/app_pages/campus_screens/widget/list_widget.dart';
+  static const String widgetMainCardWidget = 'lib/app_pages/bike_booking/widget/main_card_widget.dart';
   static const String widgetNeedHelpButtonWidget = 'lib/app_pages/app_common/widget/need_help_button_widget.dart';
   static const String widgetOnRideTimerWidget = 'lib/app_pages/on_ride/widget/on_ride_timer_widget.dart';
   static const String widgetRegFileUploadForm = 'lib/app_pages/registration_page/widget/reg_file_upload_form.dart';
