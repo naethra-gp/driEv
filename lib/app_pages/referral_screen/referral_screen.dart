@@ -38,7 +38,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
     String mobile = secureStorage.get("mobile") ?? "";
     customerService.getCustomer(mobile).then((response) {
       customerDetails = [response];
-      referCode = customerDetails[0]['uniqueReferralCode'];
+      referCode = customerDetails[0]['uniqueReferralCode'].toString();
       secureStorage.save("referCode", referCode);
       referCodeCtl.text = referCode;
       alertServices.hideLoading();
@@ -66,12 +66,12 @@ class _ReferralScreenState extends State<ReferralScreen> {
               const Text(
                 Constants.spreadword,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   color: AppColors.black,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 35),
+              const SizedBox(height: 30),
               const Text(
                 Constants.sharefreinds,
                 style: TextStyle(
@@ -132,10 +132,11 @@ class _ReferralScreenState extends State<ReferralScreen> {
               ),
               const SizedBox(height: 40),
               SizedBox(
-                width: 200,
-                height: 50,
+                width: 180,
+                height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    elevation: 0,
                     backgroundColor: Colors.green,
                     side: const BorderSide(color: Colors.green),
                     shape: RoundedRectangleBorder(
@@ -144,7 +145,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   ),
                   onPressed: () async {
                     final box = context.findRenderObject() as RenderBox?;
-                    await Share.share(referCodeCtl.text,
+                    String msg = "Spreading the word means sharing the perks! Use my referral code ${referCodeCtl.text.toString()} to sign up with Let’s driEV and start enjoying the perks right away! It’s a win-win!";
+                    await Share.share(msg,
                         subject: "",
                         sharePositionOrigin:
                             box!.localToGlobal(Offset.zero) & box.size);

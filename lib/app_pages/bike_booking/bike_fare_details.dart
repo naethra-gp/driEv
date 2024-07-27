@@ -524,7 +524,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             ),
                           ),
                           child: const Text(
-                            "Extend to reserve your bike",
+                            "Extend to reserve your bike -- 3",
                             style: TextStyle(color: AppColors.primary),
                           ),
                         ),
@@ -552,7 +552,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             borderRadius: BorderRadius.circular(50),
                           ),
                         ),
-                        child: const Text("Scan to Unlock"),
+                        child: const Text("Scan to Unlock --  3"),
                       ),
                     ),
                   ],
@@ -581,7 +581,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                           ),
                         ),
                         child: const Text(
-                          "Proceed to reserve your bike",
+                          "Proceed to reserve your bike -- 2 ",
                           style: TextStyle(color: AppColors.primary),
                         ),
                       ),
@@ -667,14 +667,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                 isReservedDone = true;
                 timerRunning = true;
               });
-              // var time1 = DateTime.parse(r2['blockedOn'].toString());
-              // var time2 = DateTime.parse(r2['blockedTill'].toString());
-              // print(DateFormat.jm()
-              //     .format(DateTime.parse(r2['blockedOn'].toString())));
-              // print(DateFormat.jm()
-              //     .format(DateTime.parse(r2['blockedTill'].toString())));
-              // Duration difference = time2.difference(time1);
-              // print("difference $difference");
               countDownTime(r2['blockedTill'].toString());
               _startTimer();
             }
@@ -686,7 +678,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   void _startTimer() {
     double percentage = _start * 0.20;
-    print("percentage $percentage");
+    if (mounted) return;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_start > 0) {
@@ -697,8 +689,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         if (percentage > _start) {
           enableChasingTime = true;
         }
-        // print("_start $_start");
-        // print("enableChasingTime $enableChasingTime");
       });
     });
   }

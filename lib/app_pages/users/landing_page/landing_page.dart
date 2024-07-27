@@ -16,11 +16,12 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     getPermissions();
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.white, // Set the status bar color here
-      statusBarIconBrightness:
-          Brightness.dark, // For Android to set the icons color
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
   }
 
   @override
@@ -52,20 +53,27 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  "Get set to zip through the city, uncover hidden hotspots, and transform every journey into an epic adventure with our eco-friendly rides. Let's hit the road!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xff6F6F6F),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    "Get set to zip through the city, uncover hidden hotspots, and transform every journey into an epic adventure with our eco-friendly rides. Let's hit the road!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "Roboto",
+                      fontSize: 16,
+                      color: Color(0xff6F6F6F),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),
-                AppButtonWidget(
-                  title: "Sign In / Sign Up",
-                  onPressed: () {
-                    Navigator.pushNamed(context, "login");
-                  },
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: AppButtonWidget(
+                    title: "Sign In / Sign Up",
+                    onPressed: () {
+                      Navigator.pushNamed(context, "login");
+                    },
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -86,6 +94,5 @@ class _LandingPageState extends State<LandingPage> {
       Permission.mediaLibrary,
       Permission.notification,
     ].request();
-    print(status);
   }
 }

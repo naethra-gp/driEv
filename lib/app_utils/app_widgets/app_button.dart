@@ -12,24 +12,25 @@ class AppButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 42,
+      height: 52,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          textStyle: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-            // fontSize: 15,
-          ),
+          elevation: 0,
           foregroundColor: Colors.white,
-          backgroundColor: AppColors.primary,
-          // side: const BorderSide(
-          //     color: AppColors.primary, width: 1),
+          backgroundColor: const Color(0xFF3DB54A),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
         ),
-        child: Text(title.toString(),),
+        child: Text(
+          title.toString(),
+        ),
       ),
     );
   }

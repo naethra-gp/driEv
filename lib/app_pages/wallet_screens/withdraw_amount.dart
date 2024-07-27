@@ -27,6 +27,8 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
 
   final double smallDeviceHeight = 600;
   final double largeDeviceHeight = 1024;
+  static const IconData currency_rupee_outlined =
+      IconData(0xf05db, fontFamily: 'MaterialIcons');
 
   @override
   void initState() {
@@ -127,16 +129,36 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                             const Text(
                               "Current Wallet Balance",
                               style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            Text(
-                              balance,
-                              style: const TextStyle(
-                                fontSize: 46,
+                                fontSize: 16,
                                 color: Colors.black,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text.rich(
+                                TextSpan(
+                                  text: "",
+                                  style: const TextStyle(color: Colors.black),
+                                  children: <InlineSpan>[
+                                    const WidgetSpan(
+                                      child: Icon(
+                                        Icons.currency_rupee_rounded,
+                                        size: 34,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: balance.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 35,
+                                        fontFamily: "Roboto",
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],

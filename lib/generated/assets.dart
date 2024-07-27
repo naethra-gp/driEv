@@ -119,6 +119,7 @@ class Assets {
   static const String referralScreenReferCodeApply = 'lib/app_pages/referral_screen/referCode_apply.dart';
   static const String referralScreenReferralScreen = 'lib/app_pages/referral_screen/referral_screen.dart';
   static const String registrationPageRegistrationPage = 'lib/app_pages/registration_page/registration_page.dart';
+  static const String rideHistoryRideDetails = 'lib/app_pages/ride_history/ride_details.dart';
   static const String rideHistoryRideHistory = 'lib/app_pages/ride_history/ride_history.dart';
   static const String rideSummarySummaryRide = 'lib/app_pages/ride_summary/summary_ride.dart';
   static const String scanToEndrideEndRideScan = 'lib/app_pages/scan_to_endride/end_ride_scan.dart';
@@ -136,6 +137,7 @@ class Assets {
   static const String walletScreensWithdrawAmount = 'lib/app_pages/wallet_screens/withdraw_amount.dart';
   static const String widgetAadhaarFormField = 'lib/app_pages/registration_page/widget/aadhaar_form_field.dart';
   static const String widgetAadhaarOtpFormField = 'lib/app_pages/registration_page/widget/aadhaar_otp_form_field.dart';
+  static const String widgetDraggableBottomSheet = 'lib/app_pages/home_screen/widget/draggable_bottom_sheet.dart';
   static const String widgetEndTimeOut = 'lib/app_pages/scan_to_unlock/widget/end_time_out.dart';
   static const String widgetErrorBikes = 'lib/app_pages/vehicle_page/widget/error_bikes.dart';
   static const String widgetFareDetailsWidget = 'lib/app_pages/bike_booking/widget/fare_details_widget.dart';

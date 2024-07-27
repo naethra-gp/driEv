@@ -54,7 +54,7 @@ class Constants {
   static const String apikey = "AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA";
   static const String spreadword = "Spread the word, earn rewards!";
   static const String sharefreinds =
-      "Share your referral code with \n friends and get 20% off when they \n take their first ride.";
+      "Share your referral code with\nfriends and get 20% off when they\ntake their first ride.";
 
   static String bikeBookingNotes =
       "Battery swap after the given range might be chargeable and depends on the availability of assets & resources";

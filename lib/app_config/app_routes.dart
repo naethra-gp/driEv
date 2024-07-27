@@ -116,6 +116,9 @@ class AppRoute {
           return const TransactionSuccess();
         case "transaction_failure":
           return const TransactionFailure();
+        case "ride_details":
+          List args = settings.arguments as List;
+          return RideDetails(rideId: args);
       }
       return const LandingPage();
     });
