@@ -60,7 +60,7 @@ class AppRoute {
         case "select_vehicle":
           List args = settings.arguments as List;
           return SelectVehicleCloserMatches(params: args);
-          // return SelectVehiclePage(stationDetails: args['params']);
+        // return SelectVehiclePage(stationDetails: args['params']);
         case "error_bike":
           return const ErrorBikes();
         case "bike_fare_details":
@@ -83,7 +83,7 @@ class AppRoute {
         case "on_ride":
           String id = settings.arguments as String;
           return OnRidePage(rideId: id);
-          // return OnRide(rideId: id);
+        // return OnRide(rideId: id);
         case "ride_summary":
           String id = settings.arguments as String;
           return RideSummary(rideId: id);
@@ -111,7 +111,11 @@ class AppRoute {
           final stationDetails = args['stationDetails'] as List;
           final rideId = args['rideId'] as String;
           final rideID = args['rideID'] as List;
-          return AddMoreFund(stationDetails: stationDetails, rideId: rideId,rideID: rideID,);
+          return AddMoreFund(
+            stationDetails: stationDetails,
+            rideId: rideId,
+            rideID: rideID,
+          );
         case "transaction_success":
           return const TransactionSuccess();
         case "transaction_failure":

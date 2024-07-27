@@ -526,7 +526,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         menuList("assets/img/ride_history.png", "Ride History",
                             () {
-                          Navigator.pushNamed(context, "ride_history");
+                          Navigator.pushNamed(
+                            context,
+                            "ride_history",
+                          );
                         }),
                         const Divider(
                           endIndent: 15,
