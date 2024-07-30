@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:driev/app_dialogs/test_dialog.dart';
 import 'package:driev/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
@@ -11,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
-import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_widgets/app_bar_widget.dart';
 
 class WalletSummary extends StatefulWidget {
@@ -96,18 +95,6 @@ class _WalletSummaryState extends State<WalletSummary> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ] else ...[
-                        // Shimmer.fromColors(
-                        //   baseColor: Colors.grey.shade300,
-                        //   highlightColor: Colors.grey.shade100,
-                        //   enabled: true,
-                        //   child: Container(
-                        //     width: 100,
-                        //     height: 40.0,
-                        //     color: Colors.white,
-                        //     margin: const EdgeInsets.only(bottom: 8.0),
-                        //   ),
-                        // ),
                       ],
                     ],
                   ),
@@ -129,6 +116,13 @@ class _WalletSummaryState extends State<WalletSummary> {
                       "rideId": "",
                       "rideID": []
                     });
+                    // showModalBottomSheet(
+                    //   context: context,
+                    //   barrierColor: Colors.black.withOpacity(.8),
+                    //   backgroundColor: Colors.white,
+                    //   elevation: 0,
+                    //   builder: (context) => TestDialog(),
+                    // );
                   },
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
@@ -393,78 +387,78 @@ class _WalletSummaryState extends State<WalletSummary> {
   }
 }
 
-class WalletSummaryList extends StatelessWidget {
-  final String title;
-  final String subTitle;
-  final String amount;
-  final String transactionType;
-
-  const WalletSummaryList({
-    super.key,
-    required this.title,
-    required this.subTitle,
-    required this.amount,
-    required this.transactionType,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    String symbol = transactionType == "Credit" ? "+" : "-";
-    Color amountColor = transactionType == "Credit" ? Colors.green : Colors.red;
-    String formattedTransactionTime = _formatTransactionTime(subTitle);
-
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 5,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Text(
-                formattedTransactionTime,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.fontgrey,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            "$symbol ${amount.toString()}",
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontSize: 14,
-              color: amountColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  String _formatTransactionTime(String timeString) {
-    final DateTime time = DateTime.parse(timeString);
-    final now = DateTime.now();
-    if (time.year == now.year &&
-        time.month == now.month &&
-        time.day == now.day - 1) {
-      return "Yesterday, ${DateFormat('HH:mm a').format(time)}";
-    } else {
-      return DateFormat('yyyy-MM-dd, HH:mm a').format(time);
-    }
-  }
-}
+// class WalletSummaryList extends StatelessWidget {
+//   final String title;
+//   final String subTitle;
+//   final String amount;
+//   final String transactionType;
+//
+//   const WalletSummaryList({
+//     super.key,
+//     required this.title,
+//     required this.subTitle,
+//     required this.amount,
+//     required this.transactionType,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     String symbol = transactionType == "Credit" ? "+" : "-";
+//     Color amountColor = transactionType == "Credit" ? Colors.green : Colors.red;
+//     String formattedTransactionTime = _formatTransactionTime(subTitle);
+//
+//     return Row(
+//       children: <Widget>[
+//         Expanded(
+//           flex: 5,
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: <Widget>[
+//               Text(
+//                 title,
+//                 style: const TextStyle(
+//                   fontSize: 14,
+//                   color: Colors.black,
+//                   fontWeight: FontWeight.w400,
+//                 ),
+//               ),
+//               Text(
+//                 formattedTransactionTime,
+//                 style: const TextStyle(
+//                   fontSize: 12,
+//                   color: AppColors.fontgrey,
+//                   fontWeight: FontWeight.w400,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//         Expanded(
+//           flex: 2,
+//           child: Text(
+//             "$symbol ${amount.toString()}",
+//             textAlign: TextAlign.right,
+//             style: TextStyle(
+//               fontSize: 14,
+//               color: amountColor,
+//               fontWeight: FontWeight.w500,
+//             ),
+//           ),
+//         )
+//       ],
+//     );
+//   }
+//
+//   String _formatTransactionTime(String timeString) {
+//     final DateTime time = DateTime.parse(timeString);
+//     final now = DateTime.now();
+//     if (time.year == now.year &&
+//         time.month == now.month &&
+//         time.day == now.day - 1) {
+//       return "Yesterday, ${DateFormat('hh:mm a').format(time)}";
+//     } else {
+//       return DateFormat('yyyy-MM-dd, hh:mm a').format(time);
+//     }
+//   }
+// }

@@ -1,6 +1,5 @@
+import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
-
-import '../../../app_themes/app_colors.dart';
 
 class TransactionFailure extends StatefulWidget {
   const TransactionFailure({super.key});
@@ -58,29 +57,39 @@ class _TransactionFailureState extends State<TransactionFailure> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                        foregroundColor: Colors.white,
-                        backgroundColor: AppColors.primary,
-                        side: const BorderSide(
-                            color: AppColors.primary, width: 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      child: const Text(
-                        "Retry Payment",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
+                    child: AppButtonWidget(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "add_more_fund", arguments: {
+                          "stationDetails": [],
+                          "rideId": "",
+                          "rideID": []
+                        });
+                      },
+                      title: "Retry Payment",
                     ),
+                    // child: ElevatedButton(
+                    //   onPressed: () {},
+                    //   style: ElevatedButton.styleFrom(
+                    //     textStyle: const TextStyle(
+                    //       color: Colors.black,
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 14,
+                    //     ),
+                    //     foregroundColor: Colors.white,
+                    //     backgroundColor: AppColors.primary,
+                    //     side: const BorderSide(
+                    //         color: AppColors.primary, width: 1),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(25),
+                    //     ),
+                    //   ),
+                    //   child: const Text(
+                    //     "Retry Payment",
+                    //     style: TextStyle(
+                    //       fontSize: 18,
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                 ),
               ],

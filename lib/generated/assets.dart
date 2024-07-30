@@ -14,6 +14,8 @@ class Assets {
   static const String appConfigAppSizeConfig = 'lib/app_config/app_size_config.dart';
   static const String appCurrentloc = 'assets/app/currentloc.png';
   static const String appDest = 'assets/app/dest.png';
+  static const String appDialogsAppDialogs = 'lib/app_dialogs/app_dialogs.dart';
+  static const String appDialogsTestDialog = 'lib/app_dialogs/test_dialog.dart';
   static const String appErrorOtp = 'assets/app/error_otp.png';
   static const String appExcellence1 = 'assets/app/excellence1.png';
   static const String appForwardArrow = 'assets/app/forward_arrow.png';

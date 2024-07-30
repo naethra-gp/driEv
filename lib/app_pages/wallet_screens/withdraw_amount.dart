@@ -3,6 +3,8 @@ import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
+import 'package:driev/app_utils/app_widgets/app_button.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -27,8 +29,6 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
 
   final double smallDeviceHeight = 600;
   final double largeDeviceHeight = 1024;
-  static const IconData currency_rupee_outlined =
-      IconData(0xf05db, fontFamily: 'MaterialIcons');
 
   @override
   void initState() {
@@ -134,7 +134,6 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text.rich(
@@ -244,15 +243,14 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 150),
                 Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 30,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
                   decoration: const BoxDecoration(
-                    color: AppColors.walletColor,
+                    // color: AppColors.walletColor,
+                    color: Colors.red,
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(25),
                     ),
@@ -260,10 +258,11 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      const SizedBox(height: 25),
                       const Text(
                         "Pricing",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontFamily: "Poppins",
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
@@ -290,85 +289,16 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      const Row(
-                        children: [
-                          Expanded(
-                            flex: 10,
-                            child: Text(
-                              "Upto ₹ 1000.00",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              "₹ 4",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildPricingRow("Upto ₹ 1000.00", "₹ 4"),
                       const SizedBox(height: 15),
-                      const Row(
-                        children: [
-                          Expanded(
-                              flex: 10,
-                              child: Text(
-                                "₹ 1000.00 - ₹ 25,000.00",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
-                              )),
-                          Expanded(
-                              flex: 1,
-                              child: Text(
-                                "₹ 6",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
-                              )),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Row(
-                        children: [
-                          Expanded(
-                              flex: 10,
-                              child: Text(
-                                "Above ₹ 25,000.00 ",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
-                              )),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              "₹ 9",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildPricingRow("₹ 1000.00 - ₹ 25,000.00", "₹ 6"),
+                      const SizedBox(height: 15),
+                      _buildPricingRow("Above ₹ 25,000.00", "₹ 9"),
                       const SizedBox(height: 50),
                       SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
+                        height: 50,
+                        child: AppButtonWidget(
                           onPressed: () {
                             if (_controller.text == "") {
                               alertServices
@@ -381,26 +311,9 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                               submitWithdrawal();
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: AppColors.primary,
-                            side: const BorderSide(
-                                color: AppColors.primary, width: 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                          child: const Text(
-                            "Proceed to Withdrawal",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          title: "Proceed to Withdrawal",
                         ),
                       ),
-                      // const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -430,5 +343,34 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
 
   convert(String amount) {
     return double.parse(amount);
+  }
+
+  Widget _buildPricingRow(String title, String price) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: "Roboto",
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          Text(
+            price,
+            style: const TextStyle(
+              fontFamily: "Roboto",
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

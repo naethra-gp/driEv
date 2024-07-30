@@ -202,12 +202,13 @@ class _AddMoreFundState extends State<AddMoreFund> {
                             ),
                             const SizedBox(height: 50),
                             SizedBox(
-                              height: 42,
-                              width: double.maxFinite,
+                              height: 50,
+                              width: double.infinity,
                               child: AppButtonWidget(
                                 title: "Proceed",
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
+                                    FocusScope.of(context).unfocus();
                                     formKey.currentState!.save();
                                     paytm(amountCtrl.text.toString());
                                   }
@@ -248,8 +249,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
     var params = {
       "amount": amount.toString(),
       "contact": mobile.toString(),
-      "staging": false,
-      // "staging": Constants.isStagingMode,
+      "staging": Constants.isStagingMode,
     };
     walletServices.initiateTransaction(params).then((dynamic res) {
       print("Res--> ${jsonEncode(res)}");
@@ -259,8 +259,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       String amt = amount.toString();
       String oId = token[0]['orderId'].toString();
       String cbUrl = token[0]['callbackUrl'].toString();
-      bool staging = false;
-      // bool staging = Constants.isStagingMode;
+      bool staging = Constants.isStagingMode;
       bool rai = false;
       debugPrint("-------------- PAYTM Payment ---------------------");
       debugPrint("mid: $mid");

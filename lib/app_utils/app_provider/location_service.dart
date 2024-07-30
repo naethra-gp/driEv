@@ -1,12 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as loc;
-import 'dart:math';
 
 class LocationService {
   final String _apiKey = 'AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA';

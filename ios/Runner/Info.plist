@@ -45,33 +45,25 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-    <key>NSCameraUsageDescription</key>
-    <string> Upload Profile Picture & Documents </string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Always and when in use!</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Can I have location always?</string>
-    <key>NSLocationUsageDescription</key>
-    <string>Older devices need location.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Need location when in use</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>microphone</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs photos access to get QR code from photo library</string>
-    <key>UIViewControllerBasedStatusBarAppearance</key>
-    <false/>
-    <key>io.flutter.embedded_views_preview</key>
-    <true/>
-    <key>kTCCServiceMediaLibrary</key>
-    <string>media</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app needs camera access to scan QR codes</string>
-<key>NSLocationWhenInUseUsageDescription</key>
-<string>This app needs access to your location to show your position on the map.</string>
-<key>NSLocationAlwaysUsageDescription</key>
-<string>This app needs access to your location to show your position on the map.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs photos access to get QR code from photo library</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to scan QR codes</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Always and when in use</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to your location to show your position on the map.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Older devices need location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to show your position on the map.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs to Microphone</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>this app needs to access photo</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app access apple music</string>
 </dict>
 </plist>
