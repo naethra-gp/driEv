@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,10 +12,8 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../app_services/index.dart';
 import '../../app_themes/app_colors.dart';
-import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_provider/location_service.dart';
 import '../../app_utils/app_widgets/app_button.dart';
-import '../scan_to_endride/widget/ride_done_alert.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -79,6 +75,7 @@ class _HomeState extends State<Home> {
     } else {
       print("Using large device height condition");
       containerHeight = height / 1.8;
+      print("Height $containerHeight");
     }
 
     return Scaffold(
@@ -343,11 +340,11 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _loadCustomIcons() async {
-    stationMarker = await BitmapDescriptor.fromAssetImage(
+    stationMarker = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/img/map_station_icon.png',
     );
-    customerMarker = await BitmapDescriptor.fromAssetImage(
+    customerMarker = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(48, 48)),
       'assets/img/map_user_icon.png',
     );
@@ -414,7 +411,7 @@ class _HomeState extends State<Home> {
       if (response != null) {
         customer = [response];
         String station = customer[0]['registeredStation'].toString();
-        print("customer --> ${jsonEncode(customer)}");
+        // print("customer --> ${jsonEncode(customer)}");
         if (station.isNotEmpty) {
           getPlansByStation(station);
         } else {
@@ -427,7 +424,7 @@ class _HomeState extends State<Home> {
   }
 
   void _addPolyline(List<LatLng> polylineCoordinates) {
-    print("_addPolyline");
+    // print("_addPolyline");
     Polyline polyline = Polyline(
       polylineId: const PolylineId("polyLines"),
       color: Colors.black,
@@ -438,10 +435,6 @@ class _HomeState extends State<Home> {
         PatternItem.gap(10),
       ],
     );
-    if (mapController == null) {
-      alertServices.errorToast('GoogleMapController is not yet initialized.');
-      return;
-    }
     setState(() {
       _polyLines.add(polyline);
     });
@@ -449,6 +442,7 @@ class _HomeState extends State<Home> {
     Future.delayed(const Duration(seconds: 3), () {
       print("_zoomToFitPositions");
       alertServices.hideLoading();
+      // TODO: UNCOMMENT THIS LINE
       _zoomToFitPositions();
     });
   }

@@ -85,11 +85,14 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 required: true,
                                 prefixText: "\u{20B9} ",
                                 textInputAction: TextInputAction.done,
-                                keyboardType: TextInputType.phone,
-                                prefixIcon: Icons.account_circle_outlined,
-                                inputFormatters: <TextInputFormatter>[
+                                // keyboardType: TextInputType.phone,
+                                keyboardType: const TextInputType.numberWithOptions(
+                                  signed: true,
+                                ),
+                                inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
+                                prefixIcon: Icons.account_circle_outlined,
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty) {
                                     return "Amount is Mandatory!";
@@ -105,19 +108,19 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 TextButton(
                                   onPressed: () => addAmount(100),
                                   style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.all(
+                                    overlayColor: WidgetStateProperty.all(
                                         Colors.transparent),
-                                    side: MaterialStateProperty.resolveWith(
+                                    side: WidgetStateProperty.resolveWith(
                                         (states) {
                                       if (states
-                                          .contains(MaterialState.pressed)) {
+                                          .contains(WidgetState.pressed)) {
                                         return const BorderSide(
                                             color: AppColors.primary, width: 2);
                                       }
                                       return const BorderSide(
                                           color: Color(0xffDEDEDE));
                                     }),
-                                    shape: MaterialStateProperty.all(
+                                    shape: WidgetStateProperty.all(
                                       RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20)),
@@ -129,19 +132,19 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 TextButton(
                                   onPressed: () => addAmount(200),
                                   style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.all(
+                                    overlayColor: WidgetStateProperty.all(
                                         Colors.transparent),
-                                    side: MaterialStateProperty.resolveWith(
+                                    side: WidgetStateProperty.resolveWith(
                                         (states) {
                                       if (states
-                                          .contains(MaterialState.pressed)) {
+                                          .contains(WidgetState.pressed)) {
                                         return const BorderSide(
                                             color: AppColors.primary, width: 2);
                                       }
                                       return const BorderSide(
                                           color: Color(0xffDEDEDE));
                                     }),
-                                    shape: MaterialStateProperty.all(
+                                    shape: WidgetStateProperty.all(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -153,19 +156,19 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 TextButton(
                                   onPressed: () => addAmount(500),
                                   style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.all(
+                                    overlayColor: WidgetStateProperty.all(
                                         Colors.transparent),
-                                    side: MaterialStateProperty.resolveWith(
+                                    side: WidgetStateProperty.resolveWith(
                                         (states) {
                                       if (states
-                                          .contains(MaterialState.pressed)) {
+                                          .contains(WidgetState.pressed)) {
                                         return const BorderSide(
                                             color: AppColors.primary, width: 2);
                                       }
                                       return const BorderSide(
                                           color: Color(0xffDEDEDE));
                                     }),
-                                    shape: MaterialStateProperty.all(
+                                    shape: WidgetStateProperty.all(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -177,19 +180,19 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 TextButton(
                                   onPressed: () => addAmount(1000),
                                   style: ButtonStyle(
-                                    overlayColor: MaterialStateProperty.all(
+                                    overlayColor: WidgetStateProperty.all(
                                         Colors.transparent),
-                                    side: MaterialStateProperty.resolveWith(
+                                    side: WidgetStateProperty.resolveWith(
                                         (states) {
                                       if (states
-                                          .contains(MaterialState.pressed)) {
+                                          .contains(WidgetState.pressed)) {
                                         return const BorderSide(
                                             color: AppColors.primary, width: 2);
                                       }
                                       return const BorderSide(
                                           color: Color(0xffDEDEDE));
                                     }),
-                                    shape: MaterialStateProperty.all(
+                                    shape: WidgetStateProperty.all(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -207,6 +210,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
                               child: AppButtonWidget(
                                 title: "Proceed",
                                 onPressed: () {
+
                                   if (formKey.currentState!.validate()) {
                                     FocusScope.of(context).unfocus();
                                     formKey.currentState!.save();
