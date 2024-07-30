@@ -279,7 +279,8 @@ class _SelectVehicleCloserMatchesState
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25),
                 child: Text(
-                  "No EVs available for the selected\npreference at the moment!",
+                  "Bikes of your preference are currently on an adventure. Why not try other options?",
+                  // "No EVs available for the selected\npreference at the moment!",
                   textAlign: TextAlign.center,
                 ),
               ),

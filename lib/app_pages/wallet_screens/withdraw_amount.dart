@@ -306,7 +306,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                             } else if (convert(balance) <
                                 convert(_controller.text)) {
                               alertServices
-                                  .errorToast("Enter below wallet amount!");
+                                  .errorToast("Insufficient funds for withdrawal.");
                             } else {
                               submitWithdrawal();
                             }
