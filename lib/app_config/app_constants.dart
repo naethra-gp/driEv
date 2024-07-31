@@ -9,6 +9,7 @@ class Constants {
 
   /// ASSETS IMAGES
   static const String getStarted = "assets/app/getStarted.png";
+  static const String defaultUser = "assets/img/default_icon.png";
   // static const String sorrylogo = "assets/app/sorry1.png";
   static const String excelogo = "assets/app/excellence1.png";
   static const String backButton = "assets/app/reply.png";

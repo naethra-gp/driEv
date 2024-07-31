@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     double containerHeight;
-
+    double textScaleFactor = 1.2;
     if (height < smallDeviceHeight) {
       print("Using small device height condition");
       containerHeight = height / 2.95;
@@ -257,10 +257,10 @@ class _HomeState extends State<Home> {
                         const SizedBox(height: 16),
                         sliderWidget(),
                         const SizedBox(height: 15),
-                        const Text(
+                        Text(
                           "Preferred Category",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14 * textScaleFactor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -306,8 +306,9 @@ class _HomeState extends State<Home> {
                                     },
                                     child: Text(
                                       stationDetails['plans'][i].toString(),
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.black,
+                                        fontSize: 14 * textScaleFactor,
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
@@ -451,7 +452,7 @@ class _HomeState extends State<Home> {
       print("_zoomToFitPositions");
       alertServices.hideLoading();
       // TODO: UNCOMMENT THIS LINE
-      _zoomToFitPositions();
+      // _zoomToFitPositions();
     });
   }
 

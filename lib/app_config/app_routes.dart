@@ -29,7 +29,7 @@ class AppRoute {
         // case "home":
         //   return const HomePage();
         case "home":
-          return const Home();
+          return const HomePage();
         case "verify_otp":
           String mobile = settings.arguments as String;
           return VerifyOTP(mobileNumber: mobile);

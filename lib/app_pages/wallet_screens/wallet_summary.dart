@@ -1,13 +1,12 @@
 import 'dart:math';
-import 'package:driev/app_dialogs/test_dialog.dart';
 import 'package:driev/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
@@ -33,20 +32,34 @@ class _WalletSummaryState extends State<WalletSummary> {
   @override
   void initState() {
     super.initState();
+    getBalance();
     getWalletSummary();
+  }
+
+  getBalance() {
+    alertServices.showLoading();
+    String mobile = secureStorage.get("mobile");
+    walletServices.getWalletBalance(mobile).then((response) {
+      alertServices.hideLoading();
+      List result = [response];
+      print("response $response");
+      if (response != null) {
+        setState(() {
+          walletBalance = result[0]['balance'].toStringAsFixed(2);
+        });
+      }
+      print("walletBalance $walletBalance");
+    });
   }
 
   void getWalletSummary() async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     walletServices.getWalletTransaction(mobile).then((response) {
+      alertServices.hideLoading();
       setState(() {
         walletSummaryDetails = List<Map<String, dynamic>>.from(response);
-        alertServices.hideLoading();
       });
-      walletBalance =
-          walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2);
-      setState(() {});
     }).catchError((error) {
       alertServices.hideLoading();
     });
@@ -57,6 +70,9 @@ class _WalletSummaryState extends State<WalletSummary> {
     return Scaffold(
       appBar: const AppBarWidget(),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -86,16 +102,15 @@ class _WalletSummaryState extends State<WalletSummary> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      if (walletSummaryDetails.isNotEmpty) ...[
-                        Text(
-                          "₹ ${walletSummaryDetails[0]["closingBalance"].toStringAsFixed(2)}",
-                          style: const TextStyle(
-                            fontSize: 35,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      Text(
+                        "₹ $walletBalance",
+                        style: const TextStyle(
+                          fontSize: 35,
+                          fontFamily: "Roboto",
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
                         ),
-                      ],
+                      ),
                     ],
                   ),
                 ],
@@ -116,26 +131,26 @@ class _WalletSummaryState extends State<WalletSummary> {
                       "rideId": "",
                       "rideID": []
                     });
-                    // showModalBottomSheet(
-                    //   context: context,
-                    //   barrierColor: Colors.black.withOpacity(.8),
-                    //   backgroundColor: Colors.white,
-                    //   elevation: 0,
-                    //   builder: (context) => TestDialog(),
-                    // );
                   },
+                  focusNode: FocusNode(skipTraversal: true),
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
-                    backgroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.primary),
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF3DB54A),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
                     ),
                   ),
                   child: const Text(
                     "Add More Fund",
                     style: TextStyle(
                       fontSize: 14,
+                      fontFamily: "Roboto",
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),
@@ -145,27 +160,32 @@ class _WalletSummaryState extends State<WalletSummary> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ButtonTheme(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "withdraw_amount");
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor: AppColors.primary,
-                        side: const BorderSide(color: AppColors.primary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "withdraw_amount");
+                    },
+                    focusNode: FocusNode(skipTraversal: true),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF3DB54A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                      child: const Text(
-                        "Withdraw Fund",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+
+                    child: const Text(
+                      "Withdraw Fund",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: "Roboto",
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -194,134 +214,123 @@ class _WalletSummaryState extends State<WalletSummary> {
             ],
           ),
           const SizedBox(height: 25),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
-              decoration: const BoxDecoration(
-                color: AppColors.walletColor,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text(
-                    "Wallet History",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  // if (walletSummaryDetails.isEmpty)
-                  //   Expanded(
-                  //     child: Shimmer.fromColors(
-                  //         baseColor: Colors.grey.shade300,
-                  //         highlightColor: Colors.grey.shade100,
-                  //         enabled: true,
-                  //         child: const SingleChildScrollView(
-                  //           physics: NeverScrollableScrollPhysics(),
-                  //           child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             mainAxisSize: MainAxisSize.max,
-                  //             children: [
-                  //               SizedBox(height: 16.0),
-                  //               ContentPlaceholder(
-                  //                   lineType: ContentLineType.threeLines),
-                  //               Divider(color: AppColors.centerAlign),
-                  //               SizedBox(height: 16.0),
-                  //               ContentPlaceholder(
-                  //                   lineType: ContentLineType.threeLines),
-                  //               Divider(color: AppColors.centerAlign),
-                  //               SizedBox(height: 16.0),
-                  //               ContentPlaceholder(
-                  //                   lineType: ContentLineType.threeLines),
-                  //               Divider(color: AppColors.centerAlign),
-                  //               SizedBox(height: 16.0),
-                  //               ContentPlaceholder(
-                  //                   lineType: ContentLineType.threeLines),
-                  //               Divider(color: AppColors.centerAlign),
-                  //               SizedBox(height: 16.0),
-                  //             ],
-                  //           ),
-                  //         )),
-                  //   ),
-                  if (walletSummaryDetails.isNotEmpty)
-                    Expanded(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.all(0),
-                        itemCount: min(4, walletSummaryDetails.length),
-                        itemBuilder: (context, index) {
-                          final td = walletSummaryDetails[index];
-                          return WalletListWidget(
-                            title: td['description'],
-                            subTitle: td['transactionTime'],
-                            amount: td['transactionAmount'].toStringAsFixed(2),
-                            transactionType: td['transactionType'],
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Divider();
-                        },
-                      ),
-                    ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: "See All Transactions",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              decoration: TextDecoration.underline,
-                              color: AppColors.transacColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushNamed(context, "all_transaction",
-                                    arguments: walletSummaryDetails);
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      height: 42,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, "home");
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          side: const BorderSide(color: Colors.green),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
-                        child: const Text(
-                          "Proceed to Booking",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // CustomTheme.defaultHeight10
-                ],
+          walletTransaction(),
+        ],
+      ),
+    );
+  }
+
+  Widget walletTransaction() {
+    return Expanded(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(25, 15, 25, 30),
+        decoration: const BoxDecoration(
+          color: AppColors.walletColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Text(
+              "Wallet History",
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 15),
+            if (walletSummaryDetails.isNotEmpty) ...[
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(0),
+                  itemCount: min(4, walletSummaryDetails.length),
+                  itemBuilder: (context, index) {
+                    final td = walletSummaryDetails[index];
+                    return WalletListWidget(
+                      title: td['description'],
+                      subTitle: td['transactionTime'],
+                      amount: td['transactionAmount'].toStringAsFixed(2),
+                      transactionType: td['transactionType'],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider();
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: RichText(
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: "See All Transactions",
+                        style: const TextStyle(
+                          fontSize: 12,
+                          decoration: TextDecoration.underline,
+                          color: AppColors.transacColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.pushNamed(context, "all_transaction",
+                                arguments: walletSummaryDetails);
+                          },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ] else ...[
+              const Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    child: Text(
+                      "Take a ride and your transactions will appear here.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14,
+                        fontFamily: "Roboto",
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 30),
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                height: 42,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "home");
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    side: const BorderSide(color: Colors.green),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  child: const Text(
+                    "Proceed to Booking",
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+            ),
+            // CustomTheme.defaultHeight10
+          ],
+        ),
       ),
     );
   }
@@ -386,79 +395,3 @@ class _WalletSummaryState extends State<WalletSummary> {
     });
   }
 }
-
-// class WalletSummaryList extends StatelessWidget {
-//   final String title;
-//   final String subTitle;
-//   final String amount;
-//   final String transactionType;
-//
-//   const WalletSummaryList({
-//     super.key,
-//     required this.title,
-//     required this.subTitle,
-//     required this.amount,
-//     required this.transactionType,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     String symbol = transactionType == "Credit" ? "+" : "-";
-//     Color amountColor = transactionType == "Credit" ? Colors.green : Colors.red;
-//     String formattedTransactionTime = _formatTransactionTime(subTitle);
-//
-//     return Row(
-//       children: <Widget>[
-//         Expanded(
-//           flex: 5,
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: <Widget>[
-//               Text(
-//                 title,
-//                 style: const TextStyle(
-//                   fontSize: 14,
-//                   color: Colors.black,
-//                   fontWeight: FontWeight.w400,
-//                 ),
-//               ),
-//               Text(
-//                 formattedTransactionTime,
-//                 style: const TextStyle(
-//                   fontSize: 12,
-//                   color: AppColors.fontgrey,
-//                   fontWeight: FontWeight.w400,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//         Expanded(
-//           flex: 2,
-//           child: Text(
-//             "$symbol ${amount.toString()}",
-//             textAlign: TextAlign.right,
-//             style: TextStyle(
-//               fontSize: 14,
-//               color: amountColor,
-//               fontWeight: FontWeight.w500,
-//             ),
-//           ),
-//         )
-//       ],
-//     );
-//   }
-//
-//   String _formatTransactionTime(String timeString) {
-//     final DateTime time = DateTime.parse(timeString);
-//     final now = DateTime.now();
-//     if (time.year == now.year &&
-//         time.month == now.month &&
-//         time.day == now.day - 1) {
-//       return "Yesterday, ${DateFormat('hh:mm a').format(time)}";
-//     } else {
-//       return DateFormat('yyyy-MM-dd, hh:mm a').format(time);
-//     }
-//   }
-// }

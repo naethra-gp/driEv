@@ -117,7 +117,7 @@ class _SelectVehicleCloserMatchesState
                         width: 20,
                       ),
                       Text(
-                        "${data[0]['distanceText']} km",
+                        "${data[0]['distanceText']}",
                         style: const TextStyle(fontSize: 12),
                       ),
                       const SizedBox(width: 10),

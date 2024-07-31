@@ -5,7 +5,7 @@ import 'app_colors.dart';
 class AppThemes {
   static ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: Colors.white,
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Roboto",
     primaryColor: const Color(0xff3DB54A),
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,

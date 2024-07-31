@@ -503,13 +503,15 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       const SizedBox(height: 25),
                       SizedBox(
                         width: double.infinity,
-                        height: height / 16.8,
+                        height: 50,
+
                         child: ElevatedButton(
                           onPressed: () {
                             /// --- Start
                             extendBlocking();
                           },
                           style: ElevatedButton.styleFrom(
+                            elevation: 0,
                             textStyle: const TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w500,
@@ -533,12 +535,14 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     const SizedBox(height: 25),
                     SizedBox(
                       width: double.infinity,
-                      height: height / 16.8,
+                      height: 50,
+
                       child: ElevatedButton(
                         onPressed: () {
                           scanToUnlock();
                         },
                         style: ElevatedButton.styleFrom(
+                          elevation: 0,
                           textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -560,13 +564,15 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   if (isReserveReady && !isReservedDone) ...[
                     SizedBox(
                       width: double.infinity,
-                      height: height / 16.8,
+                      height: 50,
+
                       child: ElevatedButton(
                         onPressed: () {
                           /// --- Start
                           reserveBike();
                         },
                         style: ElevatedButton.styleFrom(
+                          elevation: 0,
                           textStyle: const TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w500,
@@ -589,12 +595,15 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     const SizedBox(height: 15),
                     SizedBox(
                       width: double.infinity,
-                      height: height / 16.8,
+                      height: 50,
+                      // height: height / 16.8,
                       child: ElevatedButton(
                         onPressed: () {
                           scanToUnlock();
                         },
                         style: ElevatedButton.styleFrom(
+                          elevation: 0,
+
                           textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -637,6 +646,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     String mobile = await secureStorage.get("mobile");
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
     if (reserveMins.isEmpty) {
+      alertServices.errorToast("Please select/enter valid mins!");
+    } else if(double.parse(reserveMins) > 60) {
       alertServices.errorToast("Please select/enter valid mins!");
     } else {
       alertServices.showLoading();

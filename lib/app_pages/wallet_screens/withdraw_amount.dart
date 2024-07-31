@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
@@ -105,7 +107,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Container(
                     padding: const EdgeInsets.all(30),
                     decoration: BoxDecoration(
@@ -188,7 +190,10 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                         child: TextFormField(
                           maxLength: 5,
                           controller: _controller,
-                          keyboardType: TextInputType.number,
+                          keyboardType: Platform.isIOS
+                              ? const TextInputType.numberWithOptions(
+                                  signed: true)
+                              : TextInputType.phone,
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,
                           validator: (String? value) {
@@ -290,11 +295,11 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                       ),
                       const SizedBox(height: 30),
                       _buildPricingRow("Upto ₹ 1000.00", "₹ 4"),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
                       _buildPricingRow("₹ 1000.00 - ₹ 25,000.00", "₹ 6"),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
                       _buildPricingRow("Above ₹ 25,000.00", "₹ 9"),
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 25),
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -303,6 +308,10 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                             if (_controller.text == "") {
                               alertServices
                                   .errorToast("Enter amount to Withdraw");
+                            } else if (RegExp(r'^0+$')
+                                .hasMatch(_controller.text)) {
+                              alertServices
+                                  .errorToast("Enter valid amount to Withdraw");
                             } else if (convert(balance) <
                                 convert(_controller.text)) {
                               alertServices.errorToast(
@@ -336,7 +345,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
           balance = result[0]['closingBalance'].toString();
           _controller.text = "";
         });
-        alertServices.successToast(result[0]['description'].toString());
+        alertServices.successToast(result[0]['message'].toString());
       }
     });
   }

@@ -30,3 +30,4 @@ export 'wallet_screens/add_more_fund.dart';
 export 'bike_booking/extend_bike_timer/extend_bike_timer.dart';
 export 'vehicle_page/select_vehicle_closer_matches.dart';
 export 'ride_history/ride_details.dart';
+export 'home_screen/home_page.dart';

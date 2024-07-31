@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,8 +26,8 @@ class LocationService {
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      AppSettings.openAppSettings(type: AppSettingsType.location);
+      return Future.error('Permission denied, we cannot request again.');
     }
     return await Geolocator.getCurrentPosition();
   }

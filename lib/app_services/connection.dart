@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +23,15 @@ class Connection {
             "${response.statusCode}: ${result['message'].toString()}");
       }
     } catch (e) {
-      alertService.errorToast("Error: ${e.toString()}");
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast('Request timed out. Please try again later.');
+      } else {
+        alertService.errorToast('An unknown error occurred');
+      }
+      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
       // print('API request completed');
     }
@@ -42,7 +52,15 @@ class Connection {
             "${response.statusCode}: ${result['message'].toString()}");
       }
     } catch (e) {
-      alertService.errorToast("Error: ${e.toString()}");
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast('Request timed out. Please try again later.');
+      } else {
+        alertService.errorToast('An unknown error occurred');
+      }
+      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
       print('API request completed');
     }
@@ -75,7 +93,15 @@ class Connection {
         alertService.errorToast(result['message'].toString());
       }
     } catch (e) {
-      alertService.errorToast("Error: ${e.toString()}");
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast('Request timed out. Please try again later.');
+      } else {
+        alertService.errorToast('An unknown error occurred');
+      }
+      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
       print('API request completed');
     }
@@ -108,7 +134,15 @@ class Connection {
       }
     } catch (e) {
       if (error == null) {
-        alertService.errorToast("Error: ${e.toString()}");
+        if (e is SocketException) {
+          alertService
+              .errorToast('No Internet Connection. Please try again later.');
+        } else if (e is TimeoutException) {
+          alertService.errorToast('Request timed out. Please try again later.');
+        } else {
+          alertService.errorToast('An unknown error occurred');
+        }
+        // alertService.errorToast("Error: ${e.toString()}");
       }
     } finally {
       print('API request completed');
@@ -134,7 +168,15 @@ class Connection {
             .errorToast('Failed to upload file: ${response.reasonPhrase}');
       }
     } catch (e) {
-      alertService.errorToast("Error: ${e.toString()}");
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast('Request timed out. Please try again later.');
+      } else {
+        alertService.errorToast('An unknown error occurred');
+      }
+      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
       print('API request completed');
       final cacheDir = await getTemporaryDirectory();
@@ -169,7 +211,15 @@ class Connection {
             .errorToast('Failed to upload file: ${response.reasonPhrase}');
       }
     } catch (e) {
-      alertService.errorToast("Error: ${e.toString()}");
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast('Request timed out. Please try again later.');
+      } else {
+        alertService.errorToast('An unknown error occurred');
+      }
+      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
       print('API request completed');
       final cacheDir = await getTemporaryDirectory();
@@ -188,6 +238,7 @@ class Connection {
       (route) => false,
     );
   }
+
   postWithTokenAlert(String url, request, [error]) async {
     SecureStorage secureStorage = SecureStorage();
     final header = {
@@ -216,11 +267,20 @@ class Connection {
         alertService.errorToast(result['message'].toString());
       }
     } catch (e) {
-      alertService.errorToast("Error: ${e.toString()}");
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast('Request timed out. Please try again later.');
+      } else {
+        alertService.errorToast('An unknown error occurred');
+      }
+      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
       print('API request completed');
     }
   }
+
   getWithTokenAlert(String url, [error]) async {
     SecureStorage secureStorage = SecureStorage();
     final header = {
@@ -248,17 +308,24 @@ class Connection {
           final data = jsonDecode(decodedResponse);
           // var result = json.decode(response.body);
           return data;
-        //  alertService.errorToast(
+          //  alertService.errorToast(
           //    "${response.statusCode}: ${result['message'].toString()}");
         }
       }
     } catch (e) {
       if (error == null) {
-        alertService.errorToast("Error: ${e.toString()}");
+        if (e is SocketException) {
+          alertService
+              .errorToast('No Internet Connection. Please try again later.');
+        } else if (e is TimeoutException) {
+          alertService.errorToast('Request timed out. Please try again later.');
+        } else {
+          alertService.errorToast('An unknown error occurred');
+        }
+        // alertService.errorToast("Error: ${e.toString()}");
       }
     } finally {
       print('API request completed');
     }
   }
-
 }

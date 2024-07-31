@@ -29,6 +29,7 @@ class AppColors {
   static const Color walletColor =Color(0XffF6F6F6);
   static const Color centerAlign =Color(0XffE1E1E1);
   static const Color transacColor =Color(0Xff112C8C);
+  static const Color backgroundColor =Color(0XFFF6F6F6);
 
   // List of primary colors
   static List<Color> primaryColorOptions = const [
