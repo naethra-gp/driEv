@@ -22,7 +22,7 @@ class _RateThisRideState extends State<RateThisRide> {
   AlertServices alertServices = AlertServices();
   FeedbackServices feedbackServices = FeedbackServices();
 
-  final items = [
+  final List<String> lowRatingItems = [
     "battery issue",
     "Employees misbehaving",
     "payment issue",
@@ -30,8 +30,23 @@ class _RateThisRideState extends State<RateThisRide> {
     "Short range",
     "Others"
   ];
+  final List<String> midRatingItems = [
+    "Increase Vehicles",
+    "More driEV Stations",
+    "Smoother App",
+    "Quick Support",
+    "Vehicle Quality",
+    "Others"
+  ];
   List<String> selectedItem = [];
   TextEditingController commentCtl = TextEditingController();
+
+  List<String> get items {
+    if (_rating == 3.0 || _rating == 4.0) {
+      return midRatingItems;
+    }
+    return lowRatingItems;
+  }
 
   @override
   void initState() {
@@ -61,11 +76,11 @@ class _RateThisRideState extends State<RateThisRide> {
                   height: 15,
                 ),
                 const Text(
-                  "Give us the scoop!",
+                  "Thank you for riding with us!",
                   style: TextStyle(
                     fontSize: 20,
                     color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -73,7 +88,7 @@ class _RateThisRideState extends State<RateThisRide> {
                   height: 10,
                 ),
                 const Text(
-                  "We are all ears to hear from you",
+                  "Your feedback is greately appreciated",
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.fontgrey,
@@ -86,44 +101,44 @@ class _RateThisRideState extends State<RateThisRide> {
                 ),
                 if (_rating == 0) ...[
                   const Text(
-                    "Rate your last ride with us",
+                    "How was your experience with us?",
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.black,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 1.0 || _rating == 2.0) ...[
                   const Text(
-                    "What could be made better?",
+                    "What went Wrong?",
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.black,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 3.0 || _rating == 4.0) ...[
                   const Text(
-                    "What services do you think could be improved?",
+                    "How can we improve our service?",
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.black,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],
                 if (_rating == 5.0) ...[
                   const Text(
-                    "Thank you for rating us the best!",
+                    "Thanks for the 5 star ratings",
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.black,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -137,12 +152,16 @@ class _RateThisRideState extends State<RateThisRide> {
                   direction: Axis.horizontal,
                   itemCount: 5,
                   itemSize: 30.0,
-                  unratedColor: Colors.grey,
+                  unratedColor: Colors.black,
                   itemPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  itemBuilder: (context, _) => const ImageIcon(
-                    AssetImage("assets/img/feedback_star.png"),
-                    color: Colors.yellow,
-                  ),
+                  itemBuilder: (context, index) {
+                    return Icon(
+                      index < _rating!
+                          ? Icons.star_rate_rounded
+                          : Icons.star_outline_rounded,
+                      color: index < _rating! ? Colors.yellow : Colors.black,
+                    );
+                  },
                   onRatingUpdate: (rating) {
                     setState(() {
                       _rating = rating;
@@ -205,7 +224,7 @@ class _RateThisRideState extends State<RateThisRide> {
                     _rating == 4.0 ||
                     _rating == 5.0) ...[
                   const SizedBox(
-                    height: 15,
+                    height: 25,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -231,14 +250,15 @@ class _RateThisRideState extends State<RateThisRide> {
                               fontWeight: FontWeight.w400,
                             ),
                           ),
+                          controller: commentCtl,
                         ),
                       ),
                     ),
                   ),
                 ],
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -246,6 +266,12 @@ class _RateThisRideState extends State<RateThisRide> {
                       onPressed: () {
                         submitRideFeedback();
                       },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              10), // Adjust the radius as needed
+                        ),
+                      ),
                       child: const Text("Submit"),
                     ),
                   ),

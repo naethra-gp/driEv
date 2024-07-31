@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
   final LocationService _locationService = LocationService();
   late GoogleMapController mapController;
   LatLng? _currentPosition;
-  String selfieUrl = "";
+  String selfieUrl = "assets/img/profile_logo.png";
   double distance = 20;
   String currentDistrict = "";
   String distanceText = "";
@@ -57,7 +57,13 @@ class _HomeState extends State<Home> {
     getLocation();
     getCustomerDetails();
     _loadCustomIcons();
+
     super.initState();
+  }
+
+  updateProfile() async {
+    selfieUrl = await customer[0]['selfi'];
+    print('profile update $selfieUrl');
   }
 
   @override
@@ -128,6 +134,7 @@ class _HomeState extends State<Home> {
                         width: 41,
                         height: 41,
                         imageUrl: selfieUrl,
+                        // imageUrl: selfieUrl,
                         errorWidget: (context, url, error) => Image.asset(
                           "assets/img/profile_logo.png",
                           width: 41,
@@ -410,6 +417,7 @@ class _HomeState extends State<Home> {
       alertServices.hideLoading();
       if (response != null) {
         customer = [response];
+        await updateProfile();
         String station = customer[0]['registeredStation'].toString();
         // print("customer --> ${jsonEncode(customer)}");
         if (station.isNotEmpty) {

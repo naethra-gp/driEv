@@ -243,14 +243,14 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 150),
+                const SizedBox(height: 30),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.5,
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   decoration: const BoxDecoration(
-                    // color: AppColors.walletColor,
-                    color: Colors.red,
+                    color: AppColors.walletColor,
+                    // color: Colors.red,
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(25),
                     ),
@@ -305,8 +305,8 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                                   .errorToast("Enter amount to Withdraw");
                             } else if (convert(balance) <
                                 convert(_controller.text)) {
-                              alertServices
-                                  .errorToast("Insufficient funds for withdrawal.");
+                              alertServices.errorToast(
+                                  "Insufficient funds for withdrawal.");
                             } else {
                               submitWithdrawal();
                             }

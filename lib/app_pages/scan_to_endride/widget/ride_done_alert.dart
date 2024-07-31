@@ -25,7 +25,7 @@ class RideDoneAlert extends StatelessWidget {
         alignment: Alignment.center,
         children: <Widget>[
           Positioned(
-            top: height / 6 - 100,
+            top: height / 6 - 10,
             child: Container(
               height: height,
               width: width,
@@ -38,7 +38,7 @@ class RideDoneAlert extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: height / 7.5 - 100,
+            top: height / 7.5 - 40,
             left: 0,
             right: 0,
             bottom: 10,
@@ -66,7 +66,7 @@ class RideDoneAlert extends StatelessWidget {
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 15),
                 RichText(
                   text: TextSpan(
                     text: 'Great job on your ',
@@ -89,31 +89,28 @@ class RideDoneAlert extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: sliderWidget(rideDistance),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10, left: 10),
-                      child: SizedBox(
-                        width: width / 2.3,
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                "ride_summary",
-                                arguments: rideId,
-                                (route) => false);
-                          },
-                          child: const Text("View Ride Summary",
-                              style: TextStyle(fontSize: 14)),
-                        ),
+                    SizedBox(
+                      width: width / 2.38,
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              "ride_summary",
+                              arguments: rideId,
+                              (route) => false);
+                        },
+                        child: const Text("View Ride Summary",
+                            style: TextStyle(fontSize: 13)),
                       ),
                     ),
                     SizedBox(
-                      width: width / 2.3,
+                      width: width / 2.38,
                       height: 40,
                       child: ElevatedButton(
                         onPressed: () {
@@ -122,7 +119,7 @@ class RideDoneAlert extends StatelessWidget {
                         },
                         child: const Text(
                           "Rate This Ride",
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: 13),
                         ),
                       ),
                     ),
@@ -174,8 +171,6 @@ class RideDoneAlert extends StatelessWidget {
                   ),
                   child: Image.asset(
                     "assets/img/scooter_2.png",
-                    width: 13,
-                    height: 13,
                   ),
                 ),
                 value: rideDistance,
@@ -220,16 +215,16 @@ class RideDoneAlert extends StatelessWidget {
               const Text(
                 '0',
                 style: TextStyle(
-                  color: Color(0xff7B7B7B),
-                  fontWeight: FontWeight.bold,
-                ),
+                    color: Color(0xff7B7B7B),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13),
               ),
               Text(
                 '${roundToNearest500(rideDistance).toStringAsFixed(0)} km',
                 style: const TextStyle(
-                  color: Color(0xff7B7B7B),
-                  fontWeight: FontWeight.bold,
-                ),
+                    color: Color(0xff7B7B7B),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13),
               ),
             ],
           ),
