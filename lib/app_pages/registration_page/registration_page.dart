@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:driev/app_utils/app_form/custom_dropdown.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -217,71 +218,92 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             },
                           ),
                           const SizedBox(height: 16),
-                          Theme(
-                            data: Theme.of(context).copyWith(),
-                            child: DropdownButtonFormField<String>(
-                              dropdownColor: Colors.white,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              alignment: Alignment.center,
-                              validator: (value) {
-                                if (value == null) {
-                                  return "Gender is Mandatory!";
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Gender',
-                                alignLabelWithHint: true,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 0),
-                                hintStyle: CustomTheme.formHintStyle,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffD2D2D2)),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffD2D2D2)),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: AppColors.primary),
-                                ),
-                                disabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffD2D2D2)),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Colors.red),
-                                ),
-                              ),
-                              style: CustomTheme.formFieldStyle,
-                              isExpanded: false,
-                              items: <String>['Male', 'Female', 'Others']
-                                  .map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: CustomTheme.formFieldStyle,
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  genderCtrl.text = value!;
-                                });
-                              },
-                            ),
+                          CustomDropdown(
+                            dropdownMenuEntries: ['Male', 'Female', 'Others']
+                                .map((e) => e)
+                                .toList()
+                                .map<DropdownMenuEntry<String>>((value) {
+                              return DropdownMenuEntry<String>(
+                                value: value,
+                                label: value,
+                              );
+                            }).toList(),
+                            title: "Gender",
+                            onSelected:  (value) {
+                              setState(() {
+                                genderCtrl.text = value!.toString();
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
+                          // Theme(
+                          //   data: Theme.of(context).copyWith(),
+                          //   child: DropdownButtonFormField<String>(
+                          //     dropdownColor: Colors.white,
+                          //     autovalidateMode:
+                          //         AutovalidateMode.onUserInteraction,
+                          //     alignment: Alignment.center,
+                          //     validator: (value) {
+                          //       if (value == null) {
+                          //         return "Gender is Mandatory!";
+                          //       }
+                          //       return null;
+                          //     },
+                          //     decoration: InputDecoration(
+                          //       hintText: 'Gender',
+                          //       alignLabelWithHint: true,
+                          //       contentPadding: const EdgeInsets.symmetric(
+                          //           horizontal: 15, vertical: 10),
+                          //       hintStyle: const TextStyle(
+                          //         fontSize: 14,
+                          //         color: Colors.grey,
+                          //       ),
+                          //       border: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(10.0),
+                          //         borderSide: const BorderSide(
+                          //             color: Color(0xffD2D2D2)),
+                          //       ),
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         borderSide: const BorderSide(
+                          //             color: Color(0xffD2D2D2)),
+                          //       ),
+                          //       focusedBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         borderSide: const BorderSide(
+                          //             color: AppColors.primary),
+                          //       ),
+                          //       disabledBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         borderSide: const BorderSide(
+                          //             color: Color(0xffD2D2D2)),
+                          //       ),
+                          //       errorBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         borderSide:
+                          //             const BorderSide(color: Colors.red),
+                          //       ),
+                          //     ),
+                          //     style: CustomTheme.formFieldStyle,
+                          //     isExpanded: true,
+                          //     items: <String>['Male', 'Female', 'Others']
+                          //         .map((String value) {
+                          //       return DropdownMenuItem<String>(
+                          //         value: value,
+                          //         child: Text(
+                          //           value,
+                          //           style: CustomTheme.formFieldStyle,
+                          //         ),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (String? value) {
+                          //       setState(() {
+                          //         genderCtrl.text = value!;
+                          //       });
+                          //     },
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 16),
                           TextFormWidget(
                             title: 'College Email ID',
                             controller: emailCtrl,
