@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
         itemBuilder: (_, int index) {
           int rewardHours = (index + 1) * 100;
           double initialValue = progressValues[index];
-          return Column(
+          return Row(
             children: [
               Stack(
                 alignment: Alignment.center,
@@ -269,9 +269,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: CachedNetworkImage(
                                   width: 50,
                                   height: 50,
-                                  imageUrl: selfieUrl == ""
-                                      ? "assets/img/profile_logo.png"
-                                      : selfieUrl,
+                                  imageUrl: selfieUrl,
                                   errorWidget: (context, url, error) =>
                                       Image.asset(
                                     "assets/img/profile_logo.png",
