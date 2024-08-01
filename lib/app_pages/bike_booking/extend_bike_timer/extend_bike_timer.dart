@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:driev/app_dialogs/test_dialog.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -325,10 +326,96 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                         ),
                       ),
                     ),
+                    // IntrinsicHeight(
+                    //   child: Card(
+                    //     surfaceTintColor: Colors.transparent,
+                    //     color: const Color(0xffF5F5F5),
+                    //     elevation: 0,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //     ),
+                    //     clipBehavior: Clip.antiAlias,
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.all(15),
+                    //       child: Row(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         mainAxisAlignment: MainAxisAlignment.start,
+                    //         children: [
+                    //           Expanded(
+                    //             flex: 3,
+                    //             child: Column(
+                    //               mainAxisAlignment: MainAxisAlignment.start,
+                    //               crossAxisAlignment: CrossAxisAlignment.start,
+                    //               children: [
+                    //                 Row(
+                    //                   crossAxisAlignment: CrossAxisAlignment.start,
+                    //                   mainAxisSize: MainAxisSize.min,
+                    //                   children: [
+                    //                     Align(
+                    //                       alignment: Alignment.centerLeft,
+                    //                       child: RichText(
+                    //                         text: TextSpan(
+                    //                           children: [
+                    //                             TextSpan(
+                    //                               text: 'dri',
+                    //                               style: heading(Colors.black),
+                    //                             ),
+                    //                             TextSpan(
+                    //                               text: 'EV ',
+                    //                               style: heading(AppColors.primary),
+                    //                             ),
+                    //                           ],
+                    //                         ),
+                    //                       ),
+                    //                     ),
+                    //                     Text(
+                    //                       '${data[0]['planType'].toString()} ${data[0]['vehicleId'].toString()}',
+                    //                       style: heading(Colors.black),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //                 const SizedBox(height: 16),
+                    //                 const Text(
+                    //                   "Estimated Range",
+                    //                   style: TextStyle(
+                    //                     fontSize: 12,
+                    //                     color: Color(0xff626262),
+                    //                   ),
+                    //                 ),
+                    //                 Text(
+                    //                   "${data[0]['estimatedRange'] ?? "0"} km",
+                    //                   style: const TextStyle(
+                    //                     fontSize: 12,
+                    //                     // fontFamily: "Poppins",
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           Expanded(
+                    //             flex: 3,
+                    //             child: Column(
+                    //               mainAxisAlignment: MainAxisAlignment.center,
+                    //               crossAxisAlignment: CrossAxisAlignment.center,
+                    //               children: [
+                    //                 const SizedBox(height: 5),
+                    //                 data[0]['imageUrl'] != null
+                    //                     ? Image.network(data[0]['imageUrl'].toString(),
+                    //                     width: 200, height: 130, fit: BoxFit.contain)
+                    //                     : Image.asset("assets/img/bike2.png",
+                    //                     fit: BoxFit.cover),
+                    //               ],
+                    //             ),
+                    //           )
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const Divider(indent: 5, endIndent: 5),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 25),
                     TimerButtonWidget(data: data),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 50),
                     SizedBox(
                       height: 45,
                       // height: MediaQuery.of(context).size.height / 3,
@@ -377,6 +464,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 16),
+
                   ],
                 ),
               )),
@@ -421,7 +510,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
       desiredAccuracy: LocationAccuracy.high,
     );
     BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(48, 48)),
+      const ImageConfiguration(size: Size(20, 25)),
       'assets/img/map_user_icon.png',
     );
 

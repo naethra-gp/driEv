@@ -18,7 +18,7 @@ class NeedHelpButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return SizedBox(
-      width: width - 200,
+      width: width - 150,
       height: 40,
       child: ElevatedButton(
         onPressed: onPressed,

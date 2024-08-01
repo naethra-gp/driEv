@@ -56,6 +56,7 @@ dependencies:
   sleek_circular_slider: ^2.0.1
   cron: ^0.6.1
   app_settings: ^5.1.1
+  flutter_statusbarcolor_ns: ^0.5.0
   #  mobile_scanner: ^5.1.1
   #  shimmer: ^3.0.0
   #  flutter_uxcam: ^2.5.2

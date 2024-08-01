@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:driev/app_config/app_constants.dart';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:driev/app_pages/home_screen/widget/home_top_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,7 +14,6 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
-import '../../app_themes/custom_theme.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 import '../../app_utils/app_provider/location_service.dart';
 import '../../app_utils/app_widgets/app_button.dart';
@@ -38,18 +38,17 @@ class _HomePageState extends State<HomePage> {
   final LatLng _center = const LatLng(20.2993002, 85.8173442);
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-    getUserLocation();
   }
 
   LatLng? _currentPosition;
+  BitmapDescriptor? customerMarker;
+  BitmapDescriptor? stationMarker;
+  final Set<Polyline> _polyLines = {};
 
   //
   List customer = [];
   Map<String, dynamic> stationDetails = {};
   LatLng? stationLocation;
-  BitmapDescriptor? customerMarker;
-  BitmapDescriptor? stationMarker;
-  final Set<Polyline> _polyLines = {};
   List categoryList = [];
   String selectedPlan = "";
   List vehicleList = [];
@@ -63,7 +62,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getUserLocation();
     getCustomerDetails();
+    _loadCustomIcons();
   }
 
   @override
@@ -74,8 +75,6 @@ class _HomePageState extends State<HomePage> {
   getUserLocation() async {
     Position position = await _locationService.determinePosition();
     Placemark place = await _locationService.getPlaceMark(position);
-    print("Position: $position");
-    print("place: ${place.locality}");
     location = place.locality.toString();
     _currentPosition = LatLng(position.latitude, position.longitude);
     mapController?.animateCamera(
@@ -86,6 +85,16 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  Future<void> _loadCustomIcons() async {
+    stationMarker = await BitmapDescriptor.asset(
+      const ImageConfiguration(size: Size(20, 30)),
+      'assets/img/map_station_icon.png',
+    );
+    customerMarker = await BitmapDescriptor.asset(
+      const ImageConfiguration(size: Size(20, 25)),
+      'assets/img/map_user_icon.png',
+    );
+  }
   @override
   Widget build(BuildContext context) {
     double textScaleFactor = 1.1;
@@ -95,6 +104,7 @@ class _HomePageState extends State<HomePage> {
           fit: StackFit.loose,
           clipBehavior: Clip.antiAliasWithSaveLayer,
           children: [
+            if (_currentPosition != null && stationLocation != null)
             GoogleMap(
               myLocationEnabled: false,
               myLocationButtonEnabled: false,
@@ -107,116 +117,24 @@ class _HomePageState extends State<HomePage> {
                 target: _center,
                 zoom: 11.0,
               ),
+              markers: {
+                Marker(
+                  markerId: const MarkerId('1'),
+                  position: _currentPosition!,
+                  icon: customerMarker ?? BitmapDescriptor.defaultMarker,
+                ),
+                Marker(
+                  markerId: const MarkerId('2'),
+                  position: stationLocation!,
+                  icon: stationMarker ?? BitmapDescriptor.defaultMarker,
+                ),
+              },
             ),
-            Positioned(
-              top: 10,
-              left: 15,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, "profile");
-                    },
-                    child: CachedNetworkImage(
-                      width: 41,
-                      height: 41,
-                      imageUrl: "selfieUrl",
-                      errorWidget: (context, url, error) => Image.asset(
-                        Constants.defaultUser,
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.fill,
-                      ),
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 1.5,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Container(
-                    width: 260,
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF5F5F5),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xffD9D9D9),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            const Icon(Icons.location_on_outlined),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                location,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, "wallet_summary");
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 40,
-                                width: 2,
-                                color: const Color(0xffDEDEDE),
-                              ),
-                              const SizedBox(width: 10),
-                              Image.asset(
-                                "assets/img/wallet.png",
-                                height: 25,
-                                width: 25,
-                              ),
-                              const SizedBox(width: 10),
-                              // if (customer.isNotEmpty)
-                              //   Text(
-                              //     "\u{20B9}${customer[0]['walletBalance']}",
-                              //     style: TextStyle(
-                              //       fontSize: width / 30,
-                              //       fontWeight: FontWeight.bold,
-                              //       color: getColor(
-                              //           customer[0]['walletBalance']),
-                              //     ),
-                              //   ),
-                              const SizedBox(width: 10),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            if (customer.isNotEmpty)
+              HomeTopWidget(
+                location: location.toString(),
+                balance: double.parse(customer[0]['walletBalance'].toString()),
               ),
-            ),
             Positioned(
               bottom: 0,
               left: 0,
@@ -226,30 +144,30 @@ class _HomePageState extends State<HomePage> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(25),
+                    top: Radius.circular(20),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 40, 15, 10),
+                  padding: const EdgeInsets.fromLTRB(10, 25, 10, 5),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "How long is your dream ride?",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 16,
+                          fontSize: 15 * textScaleFactor,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 25),
                       sliderWidget(),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 25),
                       Text(
                         "Preferred Category",
                         style: TextStyle(
-                          fontSize: 14 * textScaleFactor,
+                          fontSize: 15 * textScaleFactor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -258,9 +176,21 @@ class _HomePageState extends State<HomePage> {
                         Flexible(
                           child: Wrap(
                             spacing: 10.0,
-                            runSpacing: 5.0,
+                            runSpacing: 1.0,
                             alignment: WrapAlignment.start,
                             children: [
+                              if (stationDetails['plans'].length == 0) ...[
+                                const SizedBox(height: 16),
+                                const Text(
+                                  "Bummer! No bikes available right now. Check back later.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: "Roboto",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
                               for (int i = 0;
                                   i < stationDetails['plans'].length;
                                   i++) ...[
@@ -296,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                                     stationDetails['plans'][i].toString(),
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 14 * textScaleFactor,
+                                      fontSize: 12 * textScaleFactor,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   ),
@@ -305,10 +235,18 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 25),
-                        buttonWidget(),
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              margin: const EdgeInsets.all(5),
+                              width: double.infinity,
+                              child: buttonWidget(),
+                            ),
+                          ),
+                        ),
                       ],
-                      CustomTheme.defaultHeight10,
                     ],
                   ),
                 ),
@@ -403,10 +341,10 @@ class _HomePageState extends State<HomePage> {
       if (response != null) {
         customer = [response];
         String station = customer[0]['registeredStation'].toString();
-        // print("customer --> ${jsonEncode(customer)}");
         if (station.isNotEmpty) {
           getPlansByStation(station);
         } else {
+          alertServices.errorToast("Registered Station is missing.");
           gotoLogin();
         }
       } else {
@@ -424,6 +362,7 @@ class _HomePageState extends State<HomePage> {
         double stationLat = stationDetails['lattitude'];
         double stationLon = stationDetails['longitude'];
         stationLocation = LatLng(stationLat, stationLon);
+        // stationDetails['plans'] = [];
 
         for (var list in stationDetails['plans']) {
           categoryList.add(false);
@@ -459,54 +398,49 @@ class _HomePageState extends State<HomePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
       children: [
-        Stack(
-          children: [
-            SfSliderTheme(
-              data: const SfSliderThemeData(
-                tooltipBackgroundColor: AppColors.primary,
-                thumbColor: Colors.transparent,
-                thumbRadius: 20,
-                activeDividerColor: Color(0xff3DB54A),
-                inactiveDividerStrokeColor: Color(0xff3DB54A),
-                activeTrackHeight: 12,
-                inactiveTrackHeight: 12,
-                inactiveDividerColor: Colors.transparent,
-                inactiveTickColor: Colors.transparent,
-                activeTrackColor: Color(0xff3DB54A),
-                trackCornerRadius: 20,
-              ),
-              child: Center(
-                child: SfSlider(
-                  min: 10.0,
-                  max: 100.0,
-                  interval: 10,
-                  shouldAlwaysShowTooltip: false,
-                  stepSize: 10,
-                  thumbIcon: Image.asset("assets/img/slider1.png",
-                      width: 16, height: 20),
-                  value: distance,
-                  labelPlacement: LabelPlacement.onTicks,
-                  thumbShape: const SfThumbShape(),
-                  semanticFormatterCallback: (dynamic value) {
-                    return '$value km';
-                  },
-                  enableTooltip: true,
-                  showLabels: false,
-                  showDividers: true,
-                  showTicks: false,
-                  tooltipTextFormatterCallback: (av, ft) {
-                    return "$ft km";
-                  },
-                  onChanged: (dynamic newValue) {
-                    setState(() {
-                      distance = newValue;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ],
+        SfSliderTheme(
+          data: const SfSliderThemeData(
+            tooltipBackgroundColor: AppColors.primary,
+            thumbColor: Colors.transparent,
+            thumbRadius: 20,
+            activeDividerColor: Color(0xff3DB54A),
+            inactiveDividerStrokeColor: Color(0xff3DB54A),
+            activeTrackHeight: 12,
+            inactiveTrackHeight: 12,
+            inactiveDividerColor: Colors.transparent,
+            inactiveTickColor: Colors.transparent,
+            activeTrackColor: Color(0xff3DB54A),
+            trackCornerRadius: 20,
+          ),
+          child: SfSlider(
+            min: 10.0,
+            max: 100.0,
+            interval: 10,
+            shouldAlwaysShowTooltip: false,
+            stepSize: 10,
+            thumbIcon:
+                Image.asset("assets/img/slider1.png", width: 16, height: 20),
+            value: distance,
+            labelPlacement: LabelPlacement.onTicks,
+            thumbShape: const SfThumbShape(),
+            semanticFormatterCallback: (dynamic value) {
+              return '$value km';
+            },
+            enableTooltip: true,
+            showLabels: false,
+            showDividers: true,
+            showTicks: false,
+            tooltipTextFormatterCallback: (av, ft) {
+              return "$ft km";
+            },
+            onChanged: (dynamic newValue) {
+              setState(() {
+                distance = newValue;
+              });
+            },
+          ),
         ),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
