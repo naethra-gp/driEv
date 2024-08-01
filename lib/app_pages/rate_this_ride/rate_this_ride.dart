@@ -175,7 +175,7 @@ class _RateThisRideState extends State<RateThisRide> {
                     _rating == 3.0 ||
                     _rating == 4.0) ...[
                   Wrap(
-                    spacing: 10.0, // horizontal spacing between chips
+                    spacing: 25.0, // horizontal spacing between chips
                     runSpacing: 5.0, // vertical spacing between rows
                     children: items
                         .map(
@@ -187,7 +187,10 @@ class _RateThisRideState extends State<RateThisRide> {
                               Icons.check,
                               color: AppColors.chipText,
                             ),
-                            label: Text(e),
+                            label: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                              child: Text(e),
+                            ),
                             labelStyle: const TextStyle(
                               fontSize: 12,
                               color: AppColors.chipText,

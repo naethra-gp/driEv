@@ -87,44 +87,47 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: TextFormField(
-                      readOnly: true,
-                      controller: referCodeCtl,
-                      textAlign: TextAlign.center,
-                      textAlignVertical: TextAlignVertical.center,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontFamily: "Poppins",
-                        color: AppColors.black,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
+                    child: SizedBox(
+                      height: 44,
+                      child: TextFormField(
+                        readOnly: true,
+                        controller: referCodeCtl,
+                        textAlign: TextAlign.center,
+                        // textAlignVertical: TextAlignVertical.center,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontFamily: "Roboto",
+                          color: AppColors.black,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Color(0xffD2D2D2)),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(
-                            Icons.copy,
-                            color: Color(0XffB0B0B0),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                const BorderSide(color: Color(0xffD2D2D2)),
                           ),
-                          onPressed: () {
-                            clickToCopy();
-                          },
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                const BorderSide(color: Color(0xffD2D2D2)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                const BorderSide(color: Color(0xffD2D2D2)),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(
+                              Icons.copy,
+                              color: Color(0XffB0B0B0),
+                            ),
+                            onPressed: () {
+                              clickToCopy();
+                            },
+                          ),
+                          hintStyle: CustomTheme.formFieldStyle,
                         ),
-                        hintStyle: CustomTheme.formFieldStyle,
                       ),
                     ),
                   ),
@@ -145,7 +148,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   ),
                   onPressed: () async {
                     final box = context.findRenderObject() as RenderBox?;
-                    String msg = "Spreading the word means sharing the perks! Use my referral code ${referCodeCtl.text.toString()} to sign up with Let’s driEV and start enjoying the perks right away! It’s a win-win!";
+                    String msg =
+                        "Spreading the word means sharing the perks! Use my referral code ${referCodeCtl.text.toString()} to sign up with Let’s driEV and start enjoying the perks right away! It’s a win-win!";
                     await Share.share(msg,
                         subject: "",
                         sharePositionOrigin:
