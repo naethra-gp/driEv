@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:driev/app_pages/app_common/need_help_widget.dart';
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
@@ -75,7 +76,9 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
       child: Scaffold(
         appBar: AppBarWidget(
           rightWidget: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              needHelpAlert(context);
+            },
             icon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -380,6 +383,19 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
           ),
         ],
       ),
+    );
+  }
+
+  needHelpAlert(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      enableDrag: false,
+      builder: (context) {
+        return const NeedHelpWidget();
+      },
     );
   }
 }

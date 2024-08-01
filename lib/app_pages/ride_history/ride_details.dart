@@ -64,8 +64,7 @@ class _RideDetailsState extends State<RideDetails> {
           child: widget.rideId == null || widget.rideId.isEmpty
               ? const Text("Please wait...")
               : Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Column(
                     children: [
                       Screenshot(
