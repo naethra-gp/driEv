@@ -69,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 alignment: Alignment.center,
                 children: [
                   SizedBox(
-                    width: 110,
+                    width: 99,
                     child: GestureDetector(
                       onTap: () {},
                       child: SleekCircularSlider(
@@ -269,7 +269,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: CachedNetworkImage(
                                   width: 50,
                                   height: 50,
-                                  imageUrl: selfieUrl,
+                                  imageUrl: selfieUrl == ""
+                                      ? "assets/img/profile_logo.png"
+                                      : selfieUrl,
                                   errorWidget: (context, url, error) =>
                                       Image.asset(
                                     "assets/img/profile_logo.png",

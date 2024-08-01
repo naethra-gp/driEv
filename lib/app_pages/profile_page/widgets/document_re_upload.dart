@@ -24,13 +24,13 @@ class DocumentReUpload extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
             "assets/img/error_alert_logo.png",
-            height: 40,
-            width: 40,
+            height: 30,
+            width: 30,
           ),
           const SizedBox(width: 10),
           SizedBox(
@@ -43,7 +43,7 @@ class DocumentReUpload extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.red,
                     fontSize: 14,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -71,6 +71,12 @@ class DocumentReUpload extends StatelessWidget {
               child: const Text(
                 "Re-upload",
                 style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(10), // Change the value as needed
+                ),
               ),
             ),
           ),
