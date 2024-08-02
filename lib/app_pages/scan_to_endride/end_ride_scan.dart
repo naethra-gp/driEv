@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cron/cron.dart';
 import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
@@ -244,10 +245,17 @@ class _EndRideScannerState extends State<EndRideScanner> {
     );
   }
 
-  submitBikeNUmber() {
+  submitBikeNUmber() async {
     String mobile = secureStorage.get("mobile");
     alertServices.showLoading();
     _cancelTimer();
+    // ON-RIDE CRON JOB
+    final cron = Cron();
+    try {
+      await cron.close();
+    } on ScheduleParseException {
+      await cron.close();
+    }
     bookingServices.getRideEndPin(rideId).then((r) {
       bookingServices.getWalletBalance(mobile).then((r) {
         double b = r['balance'];
@@ -370,6 +378,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
     bookingServices.rideEndConfirmation(mobile.toString()).then((r) {
       if (r != null) {
         if (rideId.toString() == r['rideId'].toString()) {
+          // Navigator.pop(context);
           rideDoneAlert([r]);
           timer?.cancel();
         }
@@ -378,15 +387,41 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   rideDoneAlert(List res) {
+    print(" ---- Stop Watching ----");
+    Navigator.pop(context);
     return showModalBottomSheet(
+      //   context: context,
+      //   barrierColor: Colors.black87,
+      //   backgroundColor: Colors.white,
+      //   isDismissible: false,
+      //   enableDrag: false,
+      //   builder: (context) {
+      //     return PopScope(
+      //       canPop: false,
+      //       child: RideDoneAlert(
+      //         result: res,
+      //         rideId: rideId,
+      //       ),
+      //     );
+      //   },
       context: context,
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       isDismissible: false,
+      isScrollControlled: true,
+      useSafeArea: true,
       enableDrag: false,
+      backgroundColor: Colors.white,
+      barrierColor: Colors.black.withOpacity(.8),
       builder: (context) {
         return PopScope(
           canPop: false,
+          onPopInvoked: (didPop) async {
+            if (didPop) {
+              return;
+            }
+          },
           child: RideDoneAlert(
             result: res,
             rideId: rideId,

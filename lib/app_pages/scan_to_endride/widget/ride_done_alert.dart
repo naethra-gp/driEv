@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
@@ -19,32 +20,21 @@ class RideDoneAlert extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     double rideDistance = result[0]['totalRideDistance'];
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
     return SizedBox(
-      height: height,
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Positioned(
-            top: height / 6 - 10,
-            child: Container(
-              height: height,
-              width: width,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: height / 7.5 - 40,
-            left: 0,
-            right: 0,
-            bottom: 10,
+      width: double.infinity,
+      height: mediaQueryData.size.height / 2.2,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: mediaQueryData.viewInsets.bottom),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
             child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 75),
+                const SizedBox(height: 25),
                 Padding(
                   padding: const EdgeInsets.only(
                     right: 50,
@@ -54,19 +44,20 @@ class RideDoneAlert extends StatelessWidget {
                   ),
                   child: Image.asset(
                     "assets/img/ride_end.png",
-                    height: 60,
-                    width: 60,
+                    height: 40,
+                    width: 40,
                   ),
                 ),
                 const Text(
                   "Ride done!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Color(0xff2c2c2c),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold),
+                    color: Color(0xff2c2c2c),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
                 RichText(
                   text: TextSpan(
                     text: 'Great job on your ',
@@ -86,16 +77,16 @@ class RideDoneAlert extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: sliderWidget(rideDistance),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     SizedBox(
-                      width: width / 2.50,
+                      width: width / 2.5,
                       height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -117,6 +108,7 @@ class RideDoneAlert extends StatelessWidget {
                             style: TextStyle(fontSize: 12)),
                       ),
                     ),
+                    const Spacer(),
                     SizedBox(
                       width: width / 2.50,
                       height: 40,
@@ -143,8 +135,8 @@ class RideDoneAlert extends StatelessWidget {
                 ),
               ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
@@ -154,6 +146,20 @@ class RideDoneAlert extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 10),
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Total Ride Distance: $rideDistance KM',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: "Roboto",
+              color: AppColors.primary,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ),
         Stack(
           alignment: Alignment.centerRight,
           children: [
@@ -161,7 +167,7 @@ class RideDoneAlert extends StatelessWidget {
               data: const SfSliderThemeData(
                 tooltipBackgroundColor: AppColors.primary,
                 thumbColor: Colors.transparent,
-                thumbRadius: 20,
+                thumbRadius: 12,
                 activeDividerColor: Color(0xff3DB54A),
                 inactiveDividerStrokeColor: Color(0xff3DB54A),
                 activeTrackHeight: 12,
@@ -175,19 +181,15 @@ class RideDoneAlert extends StatelessWidget {
                 min: 10.0,
                 max: roundToNearest500(rideDistance),
                 interval: 10,
-                shouldAlwaysShowTooltip: true,
+                shouldAlwaysShowTooltip: false,
                 stepSize: 10,
                 thumbIcon: Container(
                   decoration: BoxDecoration(
-                    color: Colors.green, // Background color
-                    border: Border.all(
-                        color: Colors.white, width: 2), // White border
-                    borderRadius: BorderRadius.circular(
-                        20), // Adjust border radius as needed
+                    color: Colors.green,
+                    border: Border.all(color: Colors.white, width: 2),
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  child: Image.asset(
-                    "assets/img/scooter_2.png",
-                  ),
+                  child: Image.asset("assets/img/scooter.png"),
                 ),
                 value: rideDistance,
                 labelPlacement: LabelPlacement.onTicks,
@@ -210,14 +212,19 @@ class RideDoneAlert extends StatelessWidget {
               child: Container(
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.black,
+                  color: Colors.black87,
                 ),
                 padding: const EdgeInsets.all(5), // Adjust padding as needed
                 child: Image.asset(
-                  "assets/img/giftbox.png",
+                  "assets/img/gift_box_ride.png",
                   width: 10,
                   height: 10,
                 ),
+                // child: SvgPicture.asset(
+                //   'assets/img/giftbox 1.svg',
+                //   height: 10,
+                //   width: 10,
+                // ),
               ),
             )
           ],
@@ -235,6 +242,8 @@ class RideDoneAlert extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 13),
               ),
+              // SizedBox(width: 5),
+
               Text(
                 '${roundToNearest500(rideDistance).toStringAsFixed(0)} km',
                 style: const TextStyle(

@@ -115,36 +115,36 @@ class _OnRidePageState extends State<OnRidePage> {
   }
 
   getRideDetails1(String id) {
-    print("Calling api --- getRideDetails1");
-    String rideId = widget.rideId.toString();
-    String mobile = secureStorage.get("mobile");
+    print("Calling api ---> getRideDetails1");
+    // String rideId = widget.rideId.toString();
+    // String mobile = secureStorage.get("mobile");
     bookingServices.getRideDetails(id).then((r) {
-      if(!mounted) return;
+      if (!mounted) return;
       if (r != null) {
         setState(() {
           rideDetails = [r];
         });
       }
-      bookingServices.getWalletBalance(mobile).then((r) {
-        double b = r['balance'];
-        double c = rideDetails[0]["payableAmount"];
-        bookingServices.getRideEndPin(rideId).then((r2) {
-          alertServices.hideLoading();
-          if (!popShown && b < c) {
-            // setState(() {
-            popShown = true;
-            alertServices.insufficientBalanceAlert(
-              context,
-              currentBalance.toString(),
-              r2["message"],
-              [],
-              widget.rideId,
-              [],
-            );
-            // });
-          }
-        });
-      });
+      // bookingServices.getWalletBalance(mobile).then((r) {
+      //   double b = r['balance'];
+      //   double c = rideDetails[0]["payableAmount"];
+      //   bookingServices.getRideEndPin(rideId).then((r2) {
+      //     alertServices.hideLoading();
+      //     if (!popShown && b < c) {
+      //       // setState(() {
+      //       popShown = true;
+      //       alertServices.insufficientBalanceAlert(
+      //         context,
+      //         currentBalance.toString(),
+      //         r2["message"],
+      //         [],
+      //         widget.rideId,
+      //         [],
+      //       );
+      //       // });
+      //     }
+      //   });
+      // });
     });
   }
 

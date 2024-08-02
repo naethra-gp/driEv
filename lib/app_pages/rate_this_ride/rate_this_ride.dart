@@ -314,8 +314,8 @@ class _RateThisRideState extends State<RateThisRide> {
     feedbackServices.rideFeedBack(params).then((response) {
       alertServices.hideLoading();
       if (response != null) {
-        alertServices.successToast(response['messageEndStatus'].toString());
-        Navigator.pushNamed(context, "home");
+        // alertServices.successToast(response['messageEndStatus'].toString());
+        Navigator.pushNamedAndRemoveUntil(context, "home", (r) => false);
       }
     });
   }

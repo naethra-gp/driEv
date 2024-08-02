@@ -267,7 +267,7 @@ class OnRideBottomSheet extends StatelessWidget {
                   child: const Text('End Ride'),
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -286,7 +286,7 @@ class OnRideBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 5.0),
+              const SizedBox(height: 16),
             ],
           ),
         ),
