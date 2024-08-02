@@ -207,8 +207,8 @@ class _WalletSummaryState extends State<WalletSummary> {
                   itemBuilder: (context, index) {
                     final td = walletSummaryDetails[index];
                     return WalletListWidget(
-                      title: td['description'],
-                      subTitle: td['transactionTime'],
+                      title: td['description'] ?? "",
+                      subTitle: td['transactionTime'] ?? "",
                       amount: td['transactionAmount'].toStringAsFixed(2),
                       transactionType: td['transactionType'],
                     );

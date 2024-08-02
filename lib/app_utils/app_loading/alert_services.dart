@@ -6,6 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../app_dialogs/widgets/block_user_content.dart';
+import '../../app_dialogs/widgets/kyc_block_widget.dart';
+import '../../app_dialogs/widgets/kyc_hold_widget.dart';
 import '../../app_themes/app_colors.dart';
 
 class AlertServices {
@@ -69,16 +72,33 @@ class AlertServices {
         return AlertDialog(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          title: const Text('Exit App'),
+          title: const Text(
+            'Exit App',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: "Roboto",
+            ),
+          ),
           content: const Text(
             'Are you sure you want to exit app?',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontFamily: "Roboto-Bold",
+              fontSize: 16,
+            ),
           ),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Roboto",
+                ),
+              ),
               onPressed: () {
                 Navigator.pop(context, false);
               },
@@ -87,7 +107,13 @@ class AlertServices {
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              child: const Text('Exit'),
+              child: const Text(
+                'Exit',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Roboto",
+                ),
+              ),
               onPressed: () {
                 if (Platform.isAndroid) {
                   SystemNavigator.pop();
@@ -104,161 +130,29 @@ class AlertServices {
   }
 
   holdKycAlert(context) {
-    return showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
-      ),
-      isDismissible: false,
-      enableDrag: false,
-      backgroundColor: Colors.white,
-      barrierColor: Colors.black.withOpacity(.75),
-      builder: (context) {
-        return PopScope(
-            canPop: false,
-            onPopInvoked: (didPop) async {
-              if (didPop) {
-                return;
-              }
-              final bool shouldPop = await _showBackDialog(context) ?? false;
-              if (context.mounted && shouldPop) {
-                Navigator.pop(context);
-              }
-            },
-            child: SizedBox(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * .45,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 16),
-                  Image.asset(
-                    "assets/img/kyc_hold_logo.png",
-                    height: 100,
-                    width: 100,
-                  ),
-                  const SizedBox(height: 25),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Text(
-                      "Hold on! Your KYC verification is in process",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ));
-      },
-    );
+    return kycMainModel(context, const KycHoldWidget());
   }
 
   rejectKycAlert(context) {
-    return showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
-      ),
-      isDismissible: false,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.white,
-      barrierColor: Colors.black.withOpacity(.75),
-      enableDrag: false,
-      builder: (context) {
-        return PopScope(
-          canPop: false,
-          onPopInvoked: (didPop) async {
-            if (didPop) {
-              return;
-            }
-            final bool shouldPop = await _showBackDialog(context) ?? false;
-            if (context.mounted && shouldPop) {
-              Navigator.pop(context);
-            }
-          },
-          child: SizedBox(
-            width: double.infinity,
-            height: 400,
-            // height: MediaQuery.of(context).size.height * .60,
-            child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    const SizedBox(
-                      height: 25,
-                      // height: MediaQuery.of(context).size.height * .050,
-                    ),
-                    Image.asset("assets/img/kyc_reject.png",
-                        height: 100, width: 100),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "KYC Rejected.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff020B01),
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .020,
-                    ),
-                    const Text(
-                      "Looks like the documents you uploaded has some issue.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 14,
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .020,
-                    ),
-                    const Text(
-                      "Please visit your profile page to try recapturing a clearer image",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .030,
-                    ),
-                    AppButtonWidget(
-                      title: "Go to Profile",
-                      onPressed: () {
-                        Navigator.pushNamed(context, "profile");
-                      },
-                    ),
-                  ],
-                )),
-          ),
-        );
-      },
-    );
+    return kycMainModel(context, const KycBlockWidget());
   }
 
   blockedKycAlert(BuildContext context, String reason) {
+    return kycMainModel(context, const BlockUserContent());
+  }
+
+  kycMainModel(BuildContext context, Widget child) {
     return showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(21)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
       isDismissible: false,
       isScrollControlled: true,
       useSafeArea: true,
       enableDrag: false,
       backgroundColor: Colors.white,
-      barrierColor: Colors.black.withOpacity(.2),
+      barrierColor: Colors.black.withOpacity(.8),
       builder: (context) {
         return PopScope(
           canPop: false,
@@ -271,38 +165,7 @@ class AlertServices {
               Navigator.pop(context);
             }
           },
-          child: SizedBox(
-            width: double.infinity,
-            height: 400,
-            // height: MediaQuery.of(context).size.height * .50,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Image.asset(
-                    "assets/img/kyc_error_alert_logo.png",
-                    height: 100,
-                    width: 100,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "Uh-oh! Looks like we've spotted some irregular activity on your account. Hang tight while we sort it out! ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    // style: CustomTheme.termStyle1,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: child,
         );
       },
     );

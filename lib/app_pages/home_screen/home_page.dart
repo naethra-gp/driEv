@@ -56,9 +56,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getUserLocation();
     getCustomerDetails();
-    _loadCustomIcons();
   }
 
   @override
@@ -89,6 +87,7 @@ class _HomePageState extends State<HomePage> {
       'assets/img/map_user_icon.png',
     );
   }
+
   @override
   Widget build(BuildContext context) {
     double textScaleFactor = 1.1;
@@ -98,34 +97,50 @@ class _HomePageState extends State<HomePage> {
           fit: StackFit.loose,
           clipBehavior: Clip.antiAliasWithSaveLayer,
           children: [
-            if (_currentPosition != null && stationLocation != null)
-            GoogleMap(
-              myLocationEnabled: false,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: true,
-              compassEnabled: false,
-              mapType: MapType.normal,
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-              },
-              polylines: _polyLines,
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: 13.5,
+            if (_currentPosition != null && stationLocation != null) ...[
+              GoogleMap(
+                myLocationEnabled: false,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: true,
+                compassEnabled: false,
+                mapType: MapType.normal,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                },
+                polylines: _polyLines,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 13.5,
+                ),
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('1'),
+                    position: _currentPosition!,
+                    icon: customerMarker ?? BitmapDescriptor.defaultMarker,
+                  ),
+                  Marker(
+                    markerId: const MarkerId('2'),
+                    position: stationLocation!,
+                    icon: stationMarker ?? BitmapDescriptor.defaultMarker,
+                  ),
+                },
               ),
-              markers: {
-                Marker(
-                  markerId: const MarkerId('1'),
-                  position: _currentPosition!,
-                  icon: customerMarker ?? BitmapDescriptor.defaultMarker,
+            ] else ...[
+              GoogleMap(
+                myLocationEnabled: false,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: true,
+                compassEnabled: false,
+                mapType: MapType.normal,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                },
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 13.5,
                 ),
-                Marker(
-                  markerId: const MarkerId('2'),
-                  position: stationLocation!,
-                  icon: stationMarker ?? BitmapDescriptor.defaultMarker,
-                ),
-              },
-            ),
+              ),
+            ],
             if (customer.isNotEmpty)
               HomeTopWidget(
                 imgUrl: customer[0]['selfi'],
@@ -336,15 +351,31 @@ class _HomePageState extends State<HomePage> {
     customerService.getCustomer(mobile.toString(), true).then((response) async {
       alertServices.hideLoading();
       if (response != null) {
-        customer = [response];
-        print("customer ${jsonEncode(customer)}");
+        setState(() {
+          customer = [response];
+        });
+        print("Customer Details -> ${jsonEncode(customer)}");
         String station = customer[0]['registeredStation'].toString();
-        selfieUrl = customer[0]['selfi'] ?? "";
-        if (station.isNotEmpty) {
-          getPlansByStation(station);
+        String kyc = customer[0]['kycStatus'] ?? "";
+        String block = customer[0]['blockStatus'] ?? "";
+        if (block == "Y") {
+          alertServices.blockedKycAlert(
+              context, customer[0]['comment'].toString());
         } else {
-          alertServices.errorToast("Registered Station is missing.");
-          gotoLogin();
+          if (kyc == "") {
+            alertServices.holdKycAlert(context);
+          } else if (kyc == "N") {
+            alertServices.rejectKycAlert(context);
+          } else {
+            if (station.isNotEmpty) {
+              getUserLocation();
+              _loadCustomIcons();
+              getPlansByStation(station);
+            } else {
+              alertServices.errorToast("Registered Station is missing.");
+              gotoLogin();
+            }
+          }
         }
       } else {
         gotoLogin();
