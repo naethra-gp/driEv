@@ -27,9 +27,11 @@ class Connection {
         alertService
             .errorToast('No Internet Connection. Please try again later.');
       } else if (e is TimeoutException) {
-        alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
       } else {
-        alertService.errorToast('Something went wrong. Please try again in a bit.');
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
       }
       // alertService.errorToast("Error: ${e.toString()}");
     } finally {
@@ -56,9 +58,11 @@ class Connection {
         alertService
             .errorToast('No Internet Connection. Please try again later.');
       } else if (e is TimeoutException) {
-        alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
       } else {
-        alertService.errorToast('Something went wrong. Please try again in a bit.');
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
       }
       // alertService.errorToast("Error: ${e.toString()}");
     } finally {
@@ -97,9 +101,11 @@ class Connection {
         alertService
             .errorToast('No Internet Connection. Please try again later.');
       } else if (e is TimeoutException) {
-        alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
       } else {
-        alertService.errorToast('Something went wrong. Please try again in a bit.');
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
       }
       // alertService.errorToast("Error: ${e.toString()}");
     } finally {
@@ -138,9 +144,11 @@ class Connection {
           alertService
               .errorToast('No Internet Connection. Please try again later.');
         } else if (e is TimeoutException) {
-          alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+          alertService.errorToast(
+              'Oops! it\'s taking a little longer than expected. Please try again soon.');
         } else {
-          alertService.errorToast('Something went wrong. Please try again in a bit.');
+          alertService
+              .errorToast('Something went wrong. Please try again in a bit.');
         }
         // alertService.errorToast("Error: ${e.toString()}");
       }
@@ -172,9 +180,11 @@ class Connection {
         alertService
             .errorToast('No Internet Connection. Please try again later.');
       } else if (e is TimeoutException) {
-        alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
       } else {
-        alertService.errorToast('Something went wrong. Please try again in a bit.');
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
       }
       // alertService.errorToast("Error: ${e.toString()}");
     } finally {
@@ -210,14 +220,18 @@ class Connection {
         alertService
             .errorToast('Failed to upload file: ${response.reasonPhrase}');
       }
+    } on FileSystemException catch (e) {
+      alertService.errorToast('Something went wrong. Please try again in a bit.');
     } catch (e) {
       if (e is SocketException) {
         alertService
             .errorToast('No Internet Connection. Please try again later.');
       } else if (e is TimeoutException) {
-        alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
       } else {
-        alertService.errorToast('Something went wrong. Please try again in a bit.');
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
       }
       // alertService.errorToast("Error: ${e.toString()}");
     } finally {
@@ -271,9 +285,11 @@ class Connection {
         alertService
             .errorToast('No Internet Connection. Please try again later.');
       } else if (e is TimeoutException) {
-        alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
       } else {
-        alertService.errorToast('Something went wrong. Please try again in a bit.');
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
       }
       // alertService.errorToast("Error: ${e.toString()}");
     } finally {
@@ -318,9 +334,11 @@ class Connection {
           alertService
               .errorToast('No Internet Connection. Please try again later.');
         } else if (e is TimeoutException) {
-          alertService.errorToast('Oops! it\'s taking a little longer than expected. Please try again soon.');
+          alertService.errorToast(
+              'Oops! it\'s taking a little longer than expected. Please try again soon.');
         } else {
-          alertService.errorToast('Something went wrong. Please try again in a bit.');
+          alertService
+              .errorToast('Something went wrong. Please try again in a bit.');
         }
         // alertService.errorToast("Error: ${e.toString()}");
       }

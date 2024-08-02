@@ -86,47 +86,48 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 alignment: Alignment.center,
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: SizedBox(
-                      height: 44,
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: referCodeCtl,
-                        textAlign: TextAlign.center,
-                        // textAlignVertical: TextAlignVertical.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontFamily: "Roboto",
-                          color: AppColors.black,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: TextFormField(
+                      readOnly: true,
+                      minLines: 1,
+                      maxLines: 1,
+                      controller: referCodeCtl,
+                      textAlign: TextAlign.center,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: "Roboto",
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w900,
+                      ),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        alignLabelWithHint: true,
+                        contentPadding: const EdgeInsets.only(left: 50),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                          const BorderSide(color: Color(0xffD2D2D2)),
                         ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                const BorderSide(color: Color(0xffD2D2D2)),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                          const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                          const BorderSide(color: Color(0xffD2D2D2)),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                            Icons.copy,
+                            color: Color(0XffB0B0B0),
+                            size: 20,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                const BorderSide(color: Color(0xffD2D2D2)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                const BorderSide(color: Color(0xffD2D2D2)),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: const Icon(
-                              Icons.copy,
-                              color: Color(0XffB0B0B0),
-                            ),
-                            onPressed: () {
-                              clickToCopy();
-                            },
-                          ),
-                          hintStyle: CustomTheme.formFieldStyle,
+                          onPressed: () {
+                            clickToCopy();
+                          },
                         ),
                       ),
                     ),

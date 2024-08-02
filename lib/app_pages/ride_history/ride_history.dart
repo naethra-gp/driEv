@@ -81,6 +81,21 @@ class _RideHistoryState extends State<RideHistory> {
                 ),
                 textAlign: TextAlign.center),
             const SizedBox(height: 20),
+            if (rideHistoryDetails.isEmpty) ...[
+              const SizedBox(height: 200),
+              const Center(
+                child: Text(
+                  "No data found!",
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 2,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                    fontFamily: "Poppins",
+                  ),
+                ),
+              )
+            ],
             Flexible(
               child: ListView.builder(
                 physics: const ScrollPhysics(),

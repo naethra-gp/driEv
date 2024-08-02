@@ -19,13 +19,14 @@ class DocumentReUpload extends StatelessWidget {
         color: Colors.white,
         border: Border.all(
           color: const Color(0xffFF0000).withOpacity(0.4),
-          width: 1.5,
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         children: [
           Image.asset(
             "assets/img/error_alert_logo.png",
@@ -52,9 +53,11 @@ class DocumentReUpload extends StatelessWidget {
           const SizedBox(width: 10),
           SizedBox(
             height: 30,
+            // width: double.minPositive,
             child: ElevatedButton(
               onPressed: () async {
                 showDialog(
+                  barrierColor: Colors.black.withOpacity(0.7),
                   context: context,
                   builder: (BuildContext context) {
                     return DocumentUploadAlert(
@@ -68,15 +71,15 @@ class DocumentReUpload extends StatelessWidget {
                   },
                 );
               },
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               child: const Text(
                 "Re-upload",
                 style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-              ),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(10), // Change the value as needed
-                ),
               ),
             ),
           ),

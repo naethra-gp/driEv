@@ -48,7 +48,11 @@ class DocumentUploadAlert extends StatelessWidget {
                   ),
                   const Text(
                     'Camera',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
@@ -71,7 +75,11 @@ class DocumentUploadAlert extends StatelessWidget {
                   ),
                   const Text(
                     'Gallery',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
