@@ -11,6 +11,7 @@ import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_widgets/app_bar_widget.dart';
+import 'widgets/wallet_balance_widget.dart';
 
 class WalletSummary extends StatefulWidget {
   const WalletSummary({super.key});
@@ -74,49 +75,7 @@ class _WalletSummaryState extends State<WalletSummary> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Container(
-              padding: const EdgeInsets.all(30),
-              decoration: BoxDecoration(
-                color: AppColors.customGrey,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    "assets/img/savemoney.png",
-                    height: 70,
-                    width: 70,
-                  ),
-                  const SizedBox(width: 25),
-                  Column(
-                    children: <Widget>[
-                      const Text(
-                        "Current Wallet Balance",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Text(
-                        "₹ $walletBalance",
-                        style: const TextStyle(
-                          fontSize: 35,
-                          fontFamily: "Roboto",
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+          WalletBalanceWidget(balance: walletBalance),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -178,7 +137,6 @@ class _WalletSummaryState extends State<WalletSummary> {
                         fontSize: 16,
                       ),
                     ),
-
                     child: const Text(
                       "Withdraw Fund",
                       style: TextStyle(
@@ -240,7 +198,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 15),
+            // const SizedBox(height: 15),
             if (walletSummaryDetails.isNotEmpty) ...[
               Expanded(
                 child: ListView.separated(
@@ -260,26 +218,22 @@ class _WalletSummaryState extends State<WalletSummary> {
                   },
                 ),
               ),
+              if (walletSummaryDetails.length > 4)
               Align(
                 alignment: Alignment.center,
-                child: RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: "See All Transactions",
-                        style: const TextStyle(
-                          fontSize: 12,
-                          decoration: TextDecoration.underline,
-                          color: AppColors.transacColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.pushNamed(context, "all_transaction",
-                                arguments: walletSummaryDetails);
-                          },
-                      ),
-                    ],
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "all_transaction",
+                        arguments: walletSummaryDetails);
+                  },
+                  child: const Text(
+                    "See All Transactions",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                      color: AppColors.transacColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -301,7 +255,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                 ),
               ),
             ],
-            const SizedBox(height: 30),
+            const SizedBox(height: 5),
             Align(
               alignment: Alignment.center,
               child: SizedBox(

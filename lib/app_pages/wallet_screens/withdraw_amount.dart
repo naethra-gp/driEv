@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
+import 'widgets/wallet_balance_widget.dart';
 
 class WithdrawAmount extends StatefulWidget {
   const WithdrawAmount({super.key});
@@ -109,68 +110,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
             key: _formKey,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(30),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF5F5F5),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/img/savemoney.png",
-                          height: 57,
-                          width: 57,
-                        ),
-                        const SizedBox(width: 15),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const Text(
-                              "Current Wallet Balance",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text.rich(
-                                TextSpan(
-                                  text: "",
-                                  style: const TextStyle(color: Colors.black),
-                                  children: <InlineSpan>[
-                                    const WidgetSpan(
-                                      child: Icon(
-                                        Icons.currency_rupee_rounded,
-                                        size: 34,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: balance.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 35,
-                                        fontFamily: "Roboto",
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                WalletBalanceWidget(balance: balance.toString()),
                 const SizedBox(height: 50),
                 Center(
                   child: Column(
@@ -181,48 +121,49 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
+                          fontFamily: "Roboto",
                           color: Colors.black,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 50,
+                          horizontal: 35,
                           vertical: 10,
                         ),
                         child: TextFormField(
                           maxLength: 5,
                           controller: _controller,
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.center,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           keyboardType: Platform.isIOS
                               ? const TextInputType.numberWithOptions(
                                   signed: true)
                               : TextInputType.phone,
-                          textAlign: TextAlign.center,
-                          textAlignVertical: TextAlignVertical.center,
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontFamily: "Roboto",
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold,
+                            textBaseline: TextBaseline.alphabetic,
+                          ),
                           validator: (String? value) {
-                            print(value.toString().trim());
                             if (value.toString().trim().isEmpty) {
                               return "Please enter valid amount!";
                             }
                             return null;
                           },
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                          ),
                           decoration: InputDecoration(
                             counterText: "",
                             contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20),
+                                const EdgeInsets.symmetric(horizontal: 50),
                             prefixIcon: const Padding(
-                              padding: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.all(10),
                               child: Row(
-                                // mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(Icons.currency_rupee_sharp),
@@ -244,7 +185,11 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
                               borderSide:
                                   const BorderSide(color: Color(0xffD2D2D2)),
                             ),
-                            hintStyle: CustomTheme.formFieldStyle,
+                            hintStyle: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
@@ -349,6 +294,7 @@ class _WithdrawAmountState extends State<WithdrawAmount> {
           _controller.text = "";
         });
         alertServices.successToast(result[0]['message'].toString());
+        Navigator.pushReplacementNamed(context, "wallet_summary");
       }
     });
   }

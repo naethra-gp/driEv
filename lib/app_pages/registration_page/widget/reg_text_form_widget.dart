@@ -38,6 +38,7 @@ class TextFormWidget extends StatelessWidget {
   final TextCapitalization? textCapitalization;
   final int? maxLines;
   final InputDecoration? decoration;
+  final TextStyle? style;
   const TextFormWidget({
     super.key,
     required this.title,
@@ -74,7 +75,7 @@ class TextFormWidget extends StatelessWidget {
     this.initialValue,
     this.textCapitalization,
     this.maxLines,
-    this.decoration,
+    this.decoration, this.style,
   });
 
   @override
@@ -107,7 +108,7 @@ class TextFormWidget extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           focusNode: focusNode,
           maxLines: maxLines,
-          style: const TextStyle(
+          style: style ?? const TextStyle(
               fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black),
           decoration: decoration ??
               InputDecoration(

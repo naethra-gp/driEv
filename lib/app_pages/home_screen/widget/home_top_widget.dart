@@ -5,13 +5,14 @@ import '../../../app_config/app_constants.dart';
 import '../../../app_themes/app_colors.dart';
 
 class HomeTopWidget extends StatelessWidget {
+  final String imgUrl;
   final String location;
   final double balance;
 
   const HomeTopWidget({
     super.key,
     required this.location,
-    required this.balance,
+    required this.balance, required this.imgUrl,
   });
 
   @override
@@ -34,7 +35,7 @@ class HomeTopWidget extends StatelessWidget {
             child: CachedNetworkImage(
               width: 50,
               height: 50,
-              imageUrl: "selfieUrl",
+              imageUrl: imgUrl,
               errorWidget: (context, url, error) => Container(
                 decoration: BoxDecoration(
                   color: Colors.white,

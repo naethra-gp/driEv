@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
@@ -83,15 +84,58 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 controller: amountCtrl,
                                 maxLength: 4,
                                 required: true,
-                                prefixText: "\u{20B9} ",
+                                // prefixText: "\u{20B9} ",
+                                decoration: InputDecoration(
+                                  counterText: "",
+                                  contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 50),
+                                  prefixIcon: const Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.currency_rupee_sharp),
+                                      ],
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                    const BorderSide(color: Color(0xffD2D2D2)),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                    const BorderSide(color: Color(0xffD2D2D2)),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                    const BorderSide(color: Color(0xffD2D2D2)),
+                                  ),
+                                  hintStyle: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
                                 textInputAction: TextInputAction.done,
                                 // keyboardType: TextInputType.phone,
-                                keyboardType: const TextInputType.numberWithOptions(
-                                  signed: true,
-                                ),
+                                keyboardType: Platform.isIOS
+                                    ? const TextInputType.numberWithOptions(
+                                    signed: true)
+                                    : TextInputType.phone,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontFamily: "Roboto",
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.bold,
+                                  textBaseline: TextBaseline.alphabetic,
+                                ),
                                 prefixIcon: Icons.account_circle_outlined,
                                 validator: (value) {
                                   if (value.toString().trim().isEmpty) {
@@ -101,106 +145,15 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 },
                               ),
                             ),
-                            const SizedBox(height: 15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            const SizedBox(height: 25),
+                            Wrap(
+                              runSpacing: 5,
+                              spacing: 5,
                               children: [
-                                TextButton(
-                                  onPressed: () => addAmount(100),
-                                  style: ButtonStyle(
-                                    overlayColor: WidgetStateProperty.all(
-                                        Colors.transparent),
-                                    side: WidgetStateProperty.resolveWith(
-                                        (states) {
-                                      if (states
-                                          .contains(WidgetState.pressed)) {
-                                        return const BorderSide(
-                                            color: AppColors.primary, width: 2);
-                                      }
-                                      return const BorderSide(
-                                          color: Color(0xffDEDEDE));
-                                    }),
-                                    shape: WidgetStateProperty.all(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                    ),
-                                  ),
-                                  child: const Text(" +100 ",
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                                TextButton(
-                                  onPressed: () => addAmount(200),
-                                  style: ButtonStyle(
-                                    overlayColor: WidgetStateProperty.all(
-                                        Colors.transparent),
-                                    side: WidgetStateProperty.resolveWith(
-                                        (states) {
-                                      if (states
-                                          .contains(WidgetState.pressed)) {
-                                        return const BorderSide(
-                                            color: AppColors.primary, width: 2);
-                                      }
-                                      return const BorderSide(
-                                          color: Color(0xffDEDEDE));
-                                    }),
-                                    shape: WidgetStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                  ),
-                                  child: const Text(" +200 ",
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                                TextButton(
-                                  onPressed: () => addAmount(500),
-                                  style: ButtonStyle(
-                                    overlayColor: WidgetStateProperty.all(
-                                        Colors.transparent),
-                                    side: WidgetStateProperty.resolveWith(
-                                        (states) {
-                                      if (states
-                                          .contains(WidgetState.pressed)) {
-                                        return const BorderSide(
-                                            color: AppColors.primary, width: 2);
-                                      }
-                                      return const BorderSide(
-                                          color: Color(0xffDEDEDE));
-                                    }),
-                                    shape: WidgetStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                  ),
-                                  child: const Text(" +500 ",
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                                TextButton(
-                                  onPressed: () => addAmount(1000),
-                                  style: ButtonStyle(
-                                    overlayColor: WidgetStateProperty.all(
-                                        Colors.transparent),
-                                    side: WidgetStateProperty.resolveWith(
-                                        (states) {
-                                      if (states
-                                          .contains(WidgetState.pressed)) {
-                                        return const BorderSide(
-                                            color: AppColors.primary, width: 2);
-                                      }
-                                      return const BorderSide(
-                                          color: Color(0xffDEDEDE));
-                                    }),
-                                    shape: WidgetStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                  ),
-                                  child: const Text(" +1000 ",
-                                      style: TextStyle(color: Colors.black)),
-                                ),
+                                addFundTextButton(100),
+                                addFundTextButton(200),
+                                addFundTextButton(500),
+                                addFundTextButton(1000),
                               ],
                             ),
                             const SizedBox(height: 50),
@@ -210,7 +163,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
                               child: AppButtonWidget(
                                 title: "Proceed",
                                 onPressed: () {
-
                                   if (formKey.currentState!.validate()) {
                                     FocusScope.of(context).unfocus();
                                     formKey.currentState!.save();
@@ -228,6 +180,42 @@ class _AddMoreFundState extends State<AddMoreFund> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  addFundTextButton(amount) {
+    return SizedBox(
+      // width: 75,
+      // height: 40,
+      child: TextButton(
+        onPressed: () => addAmount(amount),
+        style: ButtonStyle(
+          elevation: WidgetStateProperty.all(0),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          padding: WidgetStateProperty.all(const EdgeInsets.only(top: 0, bottom: 0, right: 5, left: 5)),
+          minimumSize: WidgetStateProperty.all(const Size(75, 35)),
+          overlayColor: WidgetStateProperty.all(Colors.transparent),
+          side: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.pressed)) {
+              return const BorderSide(color: AppColors.primary, width: 2);
+            }
+            return const BorderSide(color: Color(0xffDEDEDE));
+          }),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+        ),
+        child: Text(
+          "+ ${amount.toString()}",
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontFamily: "Roboto",
+          ),
         ),
       ),
     );

@@ -1,10 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:driev/app_pages/home_screen/widget/home_top_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -112,10 +110,10 @@ class _HomePageState extends State<HomePage> {
               compassEnabled: false,
               mapType: MapType.normal,
               onMapCreated: _onMapCreated,
-              // polylines: _polyLines,
+              polylines: _polyLines,
               initialCameraPosition: CameraPosition(
                 target: _center,
-                zoom: 11.0,
+                zoom: 13.5,
               ),
               markers: {
                 Marker(
@@ -132,6 +130,7 @@ class _HomePageState extends State<HomePage> {
             ),
             if (customer.isNotEmpty)
               HomeTopWidget(
+                imgUrl: customer[0]['selfi'],
                 location: location.toString(),
                 balance: double.parse(customer[0]['walletBalance'].toString()),
               ),
@@ -139,7 +138,7 @@ class _HomePageState extends State<HomePage> {
               bottom: 0,
               left: 0,
               right: 0,
-              top: 350,
+              top: MediaQuery.of(context).size.height * 0.5,
               child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -340,7 +339,9 @@ class _HomePageState extends State<HomePage> {
       alertServices.hideLoading();
       if (response != null) {
         customer = [response];
+        print("customer ${jsonEncode(customer)}");
         String station = customer[0]['registeredStation'].toString();
+        selfieUrl = customer[0]['selfi'] ?? "";
         if (station.isNotEmpty) {
           getPlansByStation(station);
         } else {
