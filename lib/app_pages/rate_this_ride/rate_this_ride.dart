@@ -38,7 +38,9 @@ class _RateThisRideState extends State<RateThisRide> {
     "Vehicle Quality",
     "Others"
   ];
-  List<String> selectedItem = [];
+  List<String> selectedItem1 = [];
+  List<String> selectedItem2 = [];
+
   TextEditingController commentCtl = TextEditingController();
 
   List<String> get items {
@@ -202,19 +204,32 @@ class _RateThisRideState extends State<RateThisRide> {
                               borderRadius:
                                   BorderRadius.circular(7), // rounded corners
                               side: BorderSide(
-                                color: selectedItem.contains(e)
+                                color: selectedItem1.contains(e) ||
+                                        selectedItem2.contains(e)
                                     ? AppColors.primary
                                     : AppColors.commentColor, // grey border
                               ),
                             ),
-                            selected: selectedItem.contains(e),
+                            selected: selectedItem1.contains(e) ||
+                                selectedItem2.contains(e),
                             onSelected: (bool value) {
                               setState(
                                 () {
-                                  if (selectedItem.contains(e)) {
-                                    selectedItem.remove(e);
+                                  if (selectedItem1.contains(e) ||
+                                      selectedItem2.contains(e)) {
+                                    if (_rating! <= 2.0) {
+                                      selectedItem1.remove(e);
+                                    } else if (_rating! > 2.0 &&
+                                        _rating! <= 4.0) {
+                                      selectedItem2.remove(e);
+                                    }
                                   } else {
-                                    selectedItem.add(e);
+                                    if (_rating! <= 2.0) {
+                                      selectedItem1.add(e);
+                                    } else if (_rating! > 2.0 &&
+                                        _rating! <= 4.0) {
+                                      selectedItem2.add(e);
+                                    }
                                   }
                                 },
                               );
@@ -288,9 +303,10 @@ class _RateThisRideState extends State<RateThisRide> {
 
   void submitRideFeedback() {
     alertServices.showLoading();
+    print('selected item $selectedItem1 , $selectedItem2');
     var params = {
       "rideId": widget.rideId,
-      "feedBacks": selectedItem,
+      "feedBacks": _rating! <= 2.0 ? selectedItem1 : selectedItem2,
       "comments": commentCtl.text.toString(),
       "rating": _rating,
     };
