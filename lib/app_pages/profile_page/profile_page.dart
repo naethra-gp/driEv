@@ -145,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               if (index != progressValues.length - 1)
                 const SizedBox(
-                  width: 20,
+                  width: 30,
                   child: Divider(
                     color: Color(0xffF5F5F5),
                     thickness: 3,
