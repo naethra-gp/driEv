@@ -72,9 +72,7 @@ class _RateThisRideState extends State<RateThisRide> {
                     height: 106,
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 15),
                 const Text(
                   "Thank you for riding with us!",
                   style: TextStyle(
@@ -84,9 +82,7 @@ class _RateThisRideState extends State<RateThisRide> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 const Text(
                   "Your feedback is greately appreciated",
                   style: TextStyle(
@@ -96,9 +92,7 @@ class _RateThisRideState extends State<RateThisRide> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 if (_rating == 0) ...[
                   const Text(
                     "How was your experience with us?",
@@ -143,9 +137,7 @@ class _RateThisRideState extends State<RateThisRide> {
                     textAlign: TextAlign.center,
                   ),
                 ],
-                const SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 15),
                 RatingBar.builder(
                   initialRating: _rating!,
                   minRating: 1,
@@ -166,7 +158,6 @@ class _RateThisRideState extends State<RateThisRide> {
                     setState(() {
                       _rating = rating;
                     });
-                    print(_rating);
                   },
                 ),
                 const SizedBox(height: 20),
@@ -175,21 +166,32 @@ class _RateThisRideState extends State<RateThisRide> {
                     _rating == 3.0 ||
                     _rating == 4.0) ...[
                   Wrap(
-                    spacing: 25.0, // horizontal spacing between chips
-                    runSpacing: 5.0, // vertical spacing between rows
+                    spacing: 10.0,
+                    runSpacing: 2.0,
                     children: items
                         .map(
                           (e) => FilterChip(
-                            elevation: 5,
+                            elevation: 2,
                             backgroundColor: Colors.white,
                             showCheckmark: false,
+                            selectedColor: Colors.white,
+                            selectedShadowColor: AppColors.primary,
                             avatar: const Icon(
                               Icons.check,
                               color: AppColors.chipText,
                             ),
+                            labelPadding:
+                                const EdgeInsets.symmetric(horizontal: 5),
                             label: Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                              child: Text(e),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 0),
+                              child: Text(
+                                e.toString().toLowerCase(),
+                                style: const TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
                             ),
                             labelStyle: const TextStyle(
                               fontSize: 12,
@@ -198,9 +200,11 @@ class _RateThisRideState extends State<RateThisRide> {
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.circular(7.0), // rounded corners
-                              side: const BorderSide(
-                                color: AppColors.commentColor, // grey border
+                                  BorderRadius.circular(7), // rounded corners
+                              side: BorderSide(
+                                color: selectedItem.contains(e)
+                                    ? AppColors.primary
+                                    : AppColors.commentColor, // grey border
                               ),
                             ),
                             selected: selectedItem.contains(e),
@@ -214,7 +218,6 @@ class _RateThisRideState extends State<RateThisRide> {
                                   }
                                 },
                               );
-                              print(selectedItem);
                             },
                           ),
                         )
@@ -226,12 +229,9 @@ class _RateThisRideState extends State<RateThisRide> {
                     _rating == 3.0 ||
                     _rating == 4.0 ||
                     _rating == 5.0) ...[
-                  const SizedBox(
-                    height: 25,
-                  ),
+                  const SizedBox(height: 25),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    // Add your desired horizontal padding
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(width: 0.1),
@@ -239,14 +239,13 @@ class _RateThisRideState extends State<RateThisRide> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        // Add your desired horizontal padding
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           maxLines: 3,
                           minLines: 3,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: "  Comments..",
+                            hintText: "Comments..",
                             hintStyle: TextStyle(
                               fontSize: 12,
                               color: AppColors.commentColor,
@@ -270,9 +269,9 @@ class _RateThisRideState extends State<RateThisRide> {
                         submitRideFeedback();
                       },
                       style: ElevatedButton.styleFrom(
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              10), // Adjust the radius as needed
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: const Text("Submit"),
@@ -287,41 +286,6 @@ class _RateThisRideState extends State<RateThisRide> {
     );
   }
 
-  whatsApp() async {
-    try {
-      await launchUrl(
-        Uri.parse('whatsapp://send?phone=9600901981'),
-      );
-    } catch (e) {
-      print("Error launching WhatsApp: $e");
-      // Handle the error gracefully
-    }
-  }
-
-  _makingPhoneCall() async {
-    var url = "tel:+9600901981"; // Correct format for making a phone call
-    try {
-      await launchUrl(
-        Uri.parse(url),
-      );
-    } catch (e) {
-      print("Error launching WhatsApp: $e");
-      // Handle the error gracefully
-    }
-  }
-
-  void _launchmail() async {
-    const url = 'mailto:aasima@maintwiz.com';
-    try {
-      await launchUrl(
-        Uri.parse(url),
-      );
-    } catch (e) {
-      print("Error launching WhatsApp: $e");
-      // Handle the error gracefully
-    }
-  }
-
   void submitRideFeedback() {
     alertServices.showLoading();
     var params = {
@@ -330,10 +294,11 @@ class _RateThisRideState extends State<RateThisRide> {
       "comments": commentCtl.text.toString(),
       "rating": _rating,
     };
-    print("params ${jsonEncode(params)}");
+    print("params ---> ${jsonEncode(params)}");
     feedbackServices.rideFeedBack(params).then((response) {
       alertServices.hideLoading();
       if (response != null) {
+        alertServices.successToast(response['messageEndStatus'].toString());
         Navigator.pushNamed(context, "home");
       }
     });

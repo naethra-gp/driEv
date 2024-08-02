@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:driev/app_pages/ride_summary/widget/list_ride_summary.dart';
 import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
+import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
@@ -308,30 +309,12 @@ class _RideSummaryState extends State<RideSummary> {
                         SizedBox(
                           width: 150,
                           height: 42,
-                          child: ElevatedButton(
+                          child: AppButtonWidget(
                             onPressed: () {
                               Navigator.pushNamed(context, "rate_this_raid",
                                   arguments: widget.rideId);
                             },
-                            style: ElevatedButton.styleFrom(
-                              textStyle: const TextStyle(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                              ),
-                              foregroundColor: Colors.white,
-                              backgroundColor: AppColors.primary,
-                              side: const BorderSide(
-                                  color: AppColors.primary, width: 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            child: const Text(
-                              "Rate This Ride",
-                              style: TextStyle(
-                                  color: AppColors.white, fontSize: 14),
-                            ),
+                            title: "Rate This Ride",
                           ),
                         ),
                       ],

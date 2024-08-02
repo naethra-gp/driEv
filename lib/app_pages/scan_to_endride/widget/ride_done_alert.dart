@@ -95,9 +95,17 @@ class RideDoneAlert extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     SizedBox(
-                      width: width / 2.38,
+                      width: width / 2.50,
                       height: 40,
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Colors.green,
+                          side: const BorderSide(color: Colors.green),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                        ),
                         onPressed: () {
                           Navigator.pushNamedAndRemoveUntil(
                               context,
@@ -106,20 +114,28 @@ class RideDoneAlert extends StatelessWidget {
                               (route) => false);
                         },
                         child: const Text("View Ride Summary",
-                            style: TextStyle(fontSize: 13)),
+                            style: TextStyle(fontSize: 12)),
                       ),
                     ),
                     SizedBox(
-                      width: width / 2.38,
+                      width: width / 2.50,
                       height: 40,
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Colors.green,
+                          side: const BorderSide(color: Colors.green),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                        ),
                         onPressed: () {
                           Navigator.pushNamed(context, "rate_this_raid",
                               arguments: rideId);
                         },
                         child: const Text(
                           "Rate This Ride",
-                          style: TextStyle(fontSize: 13),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
                     ),

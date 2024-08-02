@@ -132,8 +132,8 @@ class _EndRideScannerState extends State<EndRideScanner> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                width: 150,
-                height: 150,
+                width: 250,
+                height: 250,
                 decoration: ShapeDecoration(
                   shape: QrScannerOverlayShape(
                     borderColor: AppColors.primary,

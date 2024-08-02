@@ -34,10 +34,6 @@ class _HomePageState extends State<HomePage> {
   String location = "";
   GoogleMapController? mapController;
   final LatLng _center = const LatLng(20.2993002, 85.8173442);
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
-
   LatLng? _currentPosition;
   BitmapDescriptor? customerMarker;
   BitmapDescriptor? stationMarker;
@@ -109,7 +105,9 @@ class _HomePageState extends State<HomePage> {
               zoomControlsEnabled: true,
               compassEnabled: false,
               mapType: MapType.normal,
-              onMapCreated: _onMapCreated,
+              onMapCreated: (GoogleMapController controller) {
+                mapController = controller;
+              },
               polylines: _polyLines,
               initialCameraPosition: CameraPosition(
                 target: _center,
@@ -258,7 +256,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _addPolyline(List<LatLng> polylineCoordinates) {
-    print("_addPolyline");
+    debugPrint("--- add Polyline ---");
     Polyline polyline = Polyline(
       polylineId: const PolylineId("polyLines"),
       color: Colors.black,
@@ -326,7 +324,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetchAndDisplayDirections(LatLng start, LatLng end) async {
-    print("add polyline");
+    debugPrint(" --- fetchAndDisplayDirections ---");
     List<LatLng> pc = await _locationService.getDirections(start, end);
     _addPolyline(pc);
   }
