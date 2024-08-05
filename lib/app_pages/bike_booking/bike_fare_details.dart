@@ -7,13 +7,12 @@ import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 
 import '../registration_page/widget/reg_text_form_widget.dart';
-import 'widget/fare_details_widget.dart';
+import 'widget/fare_list_widget.dart';
 import 'widget/main_card_widget.dart';
 
 class BikeFareDetails extends StatefulWidget {
@@ -30,6 +29,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   SecureStorage secureStorage = SecureStorage();
   BookingServices bookingServices = BookingServices();
   VehicleService vehicleService = VehicleService();
+  TextEditingController reserveTimeCtrl = TextEditingController();
 
   List fareDetails = [];
   List reserveTime = [
@@ -39,27 +39,24 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   ];
   bool isReserve = false;
   bool isReserveReady = false;
-  TextEditingController reserveTimeCtrl = TextEditingController();
   bool isInputDisabled = false;
   bool enableChasingTime = false;
   bool isReservedDone = false;
   String reserveMins = "";
   String blockId = "";
+  /// timer variables
+  bool timerRunning = false;
   int _start = 0;
   late Timer _timer;
   String formattedMinutes = "00";
   String formattedSeconds = "00";
   Timer? countdownTimer;
 
-  /// timer continue
-  bool timerRunning = false;
-
-
   @override
   void initState() {
+    super.initState();
     String id = widget.stationDetails[0]['vehicleId'];
     getFareDetails(id);
-    super.initState();
     setState(() {
       timerRunning = widget.stationDetails[0]['via'] == "api";
     });
@@ -173,28 +170,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   ),
                 ),
                 if (fd.isNotEmpty) ...[
-                  const SizedBox(height: 8.0),
-                  FareDetailsWidget(
-                    title: "Base fare",
-                    info: true,
-                    fareDetails: fd,
-                    price: fd[0]['offer']['basePrice'].toString(),
-                  ),
-                  const SizedBox(height: 8),
-                  FareDetailsWidget(
-                    title: "Ride charge per minute",
-                    info: false,
-                    fareDetails: fd,
-                    price: (fd[0]['offer']['perMinPaisa'] / 100).toString(),
-                  ),
-                  const SizedBox(height: 8),
-                  FareDetailsWidget(
-                    title: "Ride charge per km",
-                    info: false,
-                    fareDetails: fd,
-                    price: (fd[0]['offer']['perKmPaisa'] / 100).toString(),
-                  ),
-                  const SizedBox(height: 10),
+                  FareListWidget(fd: fd),
                   if (!isReservedDone && !timerRunning) ...[
                     if (isReserve) ...[
                       Align(
@@ -505,7 +481,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       SizedBox(
                         width: double.infinity,
                         height: 50,
-
                         child: ElevatedButton(
                           onPressed: () {
                             /// --- Start
@@ -537,7 +512,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     SizedBox(
                       width: double.infinity,
                       height: 50,
-
                       child: ElevatedButton(
                         onPressed: () {
                           scanToUnlock();
@@ -566,7 +540,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     SizedBox(
                       width: double.infinity,
                       height: 50,
-
                       child: ElevatedButton(
                         onPressed: () {
                           /// --- Start
@@ -604,7 +577,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
-
                           textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -648,7 +620,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
     if (reserveMins.isEmpty) {
       alertServices.errorToast("Please select/enter valid mins!");
-    } else if(double.parse(reserveMins) > 60) {
+    } else if (double.parse(reserveMins) > 60) {
       alertServices.errorToast("Please select/enter valid mins!");
     } else {
       alertServices.showLoading();

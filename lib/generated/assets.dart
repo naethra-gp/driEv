@@ -153,6 +153,7 @@ class Assets {
   static const String widgetErrorBikes = 'lib/app_pages/vehicle_page/widget/error_bikes.dart';
   static const String widgetErrorWidget = 'lib/app_pages/vehicle_page/widget/error_widget.dart';
   static const String widgetFareDetailsWidget = 'lib/app_pages/bike_booking/widget/fare_details_widget.dart';
+  static const String widgetFareListWidget = 'lib/app_pages/bike_booking/widget/fare_list_widget.dart';
   static const String widgetHomeTopWidget = 'lib/app_pages/home_screen/widget/home_top_widget.dart';
   static const String widgetListRideSummary = 'lib/app_pages/ride_summary/widget/list_ride_summary.dart';
   static const String widgetListWidget = 'lib/app_pages/campus_screens/widget/list_widget.dart';

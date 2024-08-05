@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_config/app_constants.dart';
@@ -26,7 +27,7 @@ class MainCardWidget extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -54,13 +55,14 @@ class MainCardWidget extends StatelessWidget {
                                       text: 'EV ',
                                       style: heading(AppColors.primary),
                                     ),
+                                    TextSpan(
+                                      text:
+                                          '${fd[0]['planType']} ${fd[0]['vehicleId']}',
+                                      style: heading(AppColors.black),
+                                    ),
                                   ],
                                 ),
                               ),
-                            ),
-                            Text(
-                              '${fd[0]['planType']} ${fd[0]['vehicleId']}',
-                              style: heading(Colors.black),
                             ),
                           ],
                         ),
@@ -103,15 +105,28 @@ class MainCardWidget extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Column(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 5),
-                        fd[0]['imageUrl'] != null
-                            ? Image.network(fd[0]['imageUrl'].toString(),
-                                width: 200, height: 130, fit: BoxFit.contain)
-                            : Image.asset("assets/img/bike2.png",
-                                fit: BoxFit.cover),
+                        CachedNetworkImage(
+                          imageUrl: "${fd[0]['imageUrl']}",
+                          progressIndicatorBuilder: (
+                            context,
+                            url,
+                            downloadProgress,
+                          ) =>
+                              CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                          ),
+                          errorWidget: (context, url, error) => Image.asset(
+                            "assets/img/bike2.png",
+                            fit: BoxFit.cover,
+                            // height: 100,
+                            // width: 150,
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -147,11 +162,6 @@ class MainCardWidget extends StatelessWidget {
   }
 
   TextStyle heading(Color color) {
-    return TextStyle(
-      fontFamily: "Poppins-Bold",
-      fontWeight: FontWeight.normal,
-      color: color,
-      fontSize: 16,
-    );
+    return TextStyle(fontFamily: "Poppins-Bold", color: color);
   }
 }
