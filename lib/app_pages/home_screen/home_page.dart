@@ -556,7 +556,7 @@ class _HomePageState extends State<HomePage> {
           {
             "sId": list[0]['sId'],
             "sName": list[0]['sName'],
-            "plan": list[0]['plan'],
+            // "plan": list[0]['plan'],
             "distanceText": list[0]['distanceText'],
             "distance": list[0]['distance'],
             "filterVehicleList": filterVehicleList,

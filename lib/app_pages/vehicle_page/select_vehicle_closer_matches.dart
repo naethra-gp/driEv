@@ -69,7 +69,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                   itemBuilder: (context, index) {
                     return DynamicCardWidget(
                       imageUrl: fd[index]['imageUrl'].toString(),
-                      plan: data[0]["plan"].toString(),
+                      plan: fd[index]["planType"].toString(),
                       distanceRange: fd[index]['distanceRange'].toString(),
                       vehicleId: fd[index]['vehicleId'].toString(),
                       onTap: () {
@@ -110,7 +110,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                   itemBuilder: (context, index) {
                     return DynamicCardWidget(
                       imageUrl: cd[index]['imageUrl'].toString(),
-                      plan: data[0]["plan"].toString(),
+                      plan: cd[index]["planType"].toString(),
                       distanceRange: cd[index]['distanceRange'].toString(),
                       vehicleId: cd[index]['vehicleId'].toString(),
                       onTap: () {
@@ -133,10 +133,10 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
         "campus": data[0]['sName'].toString(),
         "distance": data[0]['distanceText'].toString(),
         "vehicleId": vehicleId,
-        "via": "app",
+        "via": "app"
       }
     ];
-    Navigator.pushNamed(context, "bike_fare_details",
-        arguments: {"query": params});
+    var args = {"query": params};
+    Navigator.pushNamed(context, "bike_fare_details", arguments: args);
   }
 }
