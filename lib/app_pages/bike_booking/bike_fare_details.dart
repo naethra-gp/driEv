@@ -54,6 +54,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   /// timer continue
   bool timerRunning = false;
 
+
   @override
   void initState() {
     String id = widget.stationDetails[0]['vehicleId'];

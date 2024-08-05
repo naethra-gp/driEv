@@ -15,6 +15,7 @@ class EndPoints {
   static const createCustomer = 'createCommunityCustomer';
   static const getCustomer = 'customerDetails';
   static const getVehiclesByPlan = 'getVehiclesByPlan';
+  static const vehiclesByStation = 'vehiclesByStation';
   static const getPlansByStation = 'getPlansByStation';
   static const uploadDocument = 'uploadDocument';
   static const getBikeDetails = 'getBikeDetails';

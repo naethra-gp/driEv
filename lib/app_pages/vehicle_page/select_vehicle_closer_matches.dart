@@ -1,32 +1,31 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:driev/app_pages/vehicle_page/widget/campus_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_config/app_constants.dart';
-import '../../app_themes/app_colors.dart';
+import 'widget/dynamic_card_widget.dart';
+import 'widget/error_widget.dart';
 
-class SelectVehicleCloserMatches extends StatefulWidget {
+class VehicleCloserMatches extends StatefulWidget {
   final List params;
-  const SelectVehicleCloserMatches({
+  const VehicleCloserMatches({
     super.key,
     required this.params,
   });
 
   @override
-  State<SelectVehicleCloserMatches> createState() =>
-      _SelectVehicleCloserMatchesState();
+  State<VehicleCloserMatches> createState() => _VehicleCloserMatchesState();
 }
 
-class _SelectVehicleCloserMatchesState
-    extends State<SelectVehicleCloserMatches> {
+class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
   List filterVehicleList = [];
   List data = [];
 
   @override
   void initState() {
     super.initState();
-    debugPrint("--- Page Name: SELECT VEHICLE CLOSER MATCHES ---");
+    debugPrint("--- Page Name: VEHICLE CLOSER MATCHES ---");
     print("Params: ${jsonEncode(widget.params)}");
     setState(() {
       data = widget.params;
@@ -54,78 +53,7 @@ class _SelectVehicleCloserMatchesState
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: AppColors.primary,
-                  width: 1.5,
-                ),
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 1),
-                leading: Image.asset(
-                  "assets/app/no-img.png",
-                  height: 50,
-                  width: 50,
-                ),
-                title: data.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          "${data[0]['sName']} Campus",
-                          style: const TextStyle(
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                      )
-                    : null,
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    Image.asset(
-                      "assets/img/scooter.png",
-                      height: 20,
-                      width: 20,
-                    ),
-                    Text(
-                      "${fd.length} Rides Available",
-                      style: const TextStyle(
-                        fontFamily: "Poppins",
-                        fontWeight: FontWeight.normal,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                trailing: SizedBox(
-                  height: double.infinity,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Image.asset(
-                        "assets/img/slider_icon.png",
-                        height: 20,
-                        width: 20,
-                      ),
-                      Text(
-                        "${data[0]['distanceText']}",
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            CampusWidget(data: data),
             const SizedBox(height: 16),
             if (fd.isNotEmpty) ...[
               Expanded(
@@ -139,152 +67,20 @@ class _SelectVehicleCloserMatchesState
                   ),
                   itemCount: fd.length,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
+                    return DynamicCardWidget(
+                      imageUrl: fd[index]['imageUrl'].toString(),
+                      plan: data[0]["plan"].toString(),
+                      distanceRange: fd[index]['distanceRange'].toString(),
+                      vehicleId: fd[index]['vehicleId'].toString(),
                       onTap: () {
-                        List params = [
-                          {
-                            "campus": data[0]['sName'].toString(),
-                            "distance": data[0]['distanceText'].toString(),
-                            "vehicleId": fd[index]['vehicleId'].toString(),
-                            "via": "app",
-                            "data": [],
-                          }
-                        ];
-                        Navigator.pushNamed(context, "bike_fare_details",
-                            arguments: {"query": params});
+                        cardClick(fd[index]['vehicleId'].toString());
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Card(
-                          elevation: 0,
-                          surfaceTintColor: const Color(0xffF5F5F5),
-                          color: const Color(0xffF5F5F5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          clipBehavior: Clip.none,
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 5),
-                                Image.asset(
-                                  width: 135,
-                                  height: 90,
-                                  "assets/img/bike2.png",
-                                  fit: BoxFit.fill,
-                                ),
-                                const SizedBox(height: 10),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        const TextSpan(
-                                          text: 'dri',
-                                          style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.bold,
-                                            color: CupertinoColors.black,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        const TextSpan(
-                                          text: 'EV ',
-                                          style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.primary,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              '${data[0]["plan"]} ${fd[index]['vehicleId']}',
-                                          style: const TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.bold,
-                                            color: CupertinoColors.black,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "Estimated Range",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 8,
-                                                color: Color(0xff626262),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            fd[index]['distanceRange'] == null
-                                                ? "-"
-                                                : "${fd[index]['distanceRange']} KM",
-                                            style: const TextStyle(
-                                              fontSize: 10,
-                                              fontFamily: "Poppins",
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
                     );
                   },
                 ),
               ),
             ] else ...[
-              const SizedBox(height: 25),
-              const Text(
-                "Oh Snap!",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Text(
-                  "Bikes of your preference are currently on an adventure. Why not try other options?",
-                  // "No EVs available for the selected\npreference at the moment!",
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 25),
+              const NoMatches()
             ],
             if (cd.isNotEmpty) ...[
               const SizedBox(height: 16),
@@ -312,127 +108,14 @@ class _SelectVehicleCloserMatchesState
                   ),
                   itemCount: cd.length,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
+                    return DynamicCardWidget(
+                      imageUrl: cd[index]['imageUrl'].toString(),
+                      plan: data[0]["plan"].toString(),
+                      distanceRange: cd[index]['distanceRange'].toString(),
+                      vehicleId: cd[index]['vehicleId'].toString(),
                       onTap: () {
-                        List params = [
-                          {
-                            "campus": data[0]['sName'].toString(),
-                            "distance": data[0]['distanceText'].toString(),
-                            "vehicleId": cd[index]['vehicleId'].toString(),
-                            "via": "app",
-                          }
-                        ];
-                        Navigator.pushNamed(context, "bike_fare_details",
-                            arguments: {"query": params});
+                        cardClick(cd[index]['vehicleId'].toString());
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Card(
-                          elevation: 0,
-                          surfaceTintColor: const Color(0xffF5F5F5),
-                          color: const Color(0xffF5F5F5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          clipBehavior: Clip.none,
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 5),
-                                Image.asset(
-                                  width: 135,
-                                  height: 90,
-                                  "assets/img/bike2.png",
-                                  fit: BoxFit.fill,
-                                ),
-                                const SizedBox(height: 10),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        const TextSpan(
-                                          text: 'dri',
-                                          style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.bold,
-                                            color: CupertinoColors.black,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        const TextSpan(
-                                          text: 'EV ',
-                                          style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.primary,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              '${data[0]["plan"]} ${cd[index]['vehicleId']}',
-                                          style: const TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.bold,
-                                            color: CupertinoColors.black,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              "Estimated Range",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 8,
-                                                color: Color(0xff626262),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            cd[index]['distanceRange'] == null
-                                                ? "-"
-                                                : "${cd[index]['distanceRange']} KM",
-                                            style: const TextStyle(
-                                              fontSize: 10,
-                                              fontFamily: "Poppins",
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
                     );
                   },
                 ),
@@ -442,5 +125,18 @@ class _SelectVehicleCloserMatchesState
         ),
       ),
     );
+  }
+
+  cardClick(String vehicleId) {
+    List params = [
+      {
+        "campus": data[0]['sName'].toString(),
+        "distance": data[0]['distanceText'].toString(),
+        "vehicleId": vehicleId,
+        "via": "app",
+      }
+    ];
+    Navigator.pushNamed(context, "bike_fare_details",
+        arguments: {"query": params});
   }
 }

@@ -9,6 +9,13 @@ class VehicleService {
     return response;
   }
 
+  getVehiclesByStation(String sId) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.vehiclesByStation}/$sId';
+    var response = await connection.getWithToken(url);
+    return response;
+  }
+
   getPlansByStation(String sId) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.getPlansByStation}/$sId';
@@ -22,6 +29,7 @@ class VehicleService {
     var response = await connection.getWithToken(url);
     return response;
   }
+
   getBlockedRides(String mobileNo) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.blockedRides}/$mobileNo';

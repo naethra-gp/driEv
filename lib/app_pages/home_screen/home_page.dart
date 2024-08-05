@@ -392,14 +392,11 @@ class _HomePageState extends State<HomePage> {
         double stationLat = stationDetails['lattitude'];
         double stationLon = stationDetails['longitude'];
         stationLocation = LatLng(stationLat, stationLon);
-        // stationDetails['plans'] = [];
-
         for (var list in stationDetails['plans']) {
           categoryList.add(false);
         }
         alertServices.showLoading("Finding best route...");
         Future.delayed(const Duration(seconds: 5), () async {
-          // print("delay logic");
           alertServices.hideLoading();
           if (_currentPosition != null) {
             String distance = await _locationService.calculateDistance(
@@ -525,14 +522,14 @@ class _HomePageState extends State<HomePage> {
   // VEHICLE FILTRATION
   getVehiclesByPlan(List list) async {
     alertServices.showLoading();
-    vehicleService
-        .getVehiclesByPlan(list[0]['sId'], list[0]['plan'])
-        .then((response) async {
+    vehicleService.getVehiclesByStation(list[0]['sId']).then((response) async {
       alertServices.hideLoading();
+      print("Vehicle Length --> ${response.length}");
       filterVehicleList = [];
       closedVehicleList = [];
-
       vehicleList = response.where((i) => i['distanceRange'] != null).toList();
+      print("w/o Distance Vehicle Length --> ${vehicleList.length}");
+
       for (int i = 0; i < vehicleList.length; i++) {
         List dis = vehicleList[i]['distanceRange'].toString().split("-");
         if (dis.length == 2) {
@@ -543,15 +540,15 @@ class _HomePageState extends State<HomePage> {
           String result =
               checkConditions(minDistance, maxDistance, userDistance);
           setState(() {
-            if (result == "exact") {
+            if (result == "exact" || result == "withRange") {
               filterVehicleList.add(vehicleList[i]);
-            }
-            if (result == "withRange") {
+            } else {
               closedVehicleList.add(vehicleList[i]);
             }
           });
         }
       }
+
       if (closedVehicleList.isEmpty && filterVehicleList.isEmpty) {
         Navigator.pushNamed(context, "error_bike");
       } else {
