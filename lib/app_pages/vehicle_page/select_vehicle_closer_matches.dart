@@ -1,6 +1,6 @@
-import 'dart:convert';
-
 import 'package:driev/app_pages/vehicle_page/widget/campus_widget.dart';
+import 'package:driev/app_services/campus_services.dart';
+import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 
 import '../../app_config/app_constants.dart';
@@ -19,16 +19,31 @@ class VehicleCloserMatches extends StatefulWidget {
 }
 
 class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
+  CampusServices campusServices = CampusServices();
+  AlertServices alertServices = AlertServices();
+
   List filterVehicleList = [];
   List data = [];
+  String logoURL = "";
 
   @override
   void initState() {
     super.initState();
     debugPrint("--- Page Name: VEHICLE CLOSER MATCHES ---");
-    print("Params: ${jsonEncode(widget.params)}");
     setState(() {
       data = widget.params;
+    });
+    getAllCampus(widget.params[0]['sId'].toString());
+  }
+
+  getAllCampus(String id) {
+    campusServices.getAllCampus().then((response) async {
+      alertServices.hideLoading();
+      List list = response;
+      List campus = list.where((e) => e['stationId'] == id).toList();
+      logoURL = campus[0]['logoUrl'].toString();
+      data = widget.params;
+      setState(() {});
     });
   }
 
@@ -53,7 +68,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CampusWidget(data: data),
+            CampusWidget(data: data, logo: logoURL),
             const SizedBox(height: 16),
             if (fd.isNotEmpty) ...[
               Expanded(
@@ -133,7 +148,8 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
         "campus": data[0]['sName'].toString(),
         "distance": data[0]['distanceText'].toString(),
         "vehicleId": vehicleId,
-        "via": "app"
+        "via": "app",
+        "homeData": widget.params,
       }
     ];
     var args = {"query": params};

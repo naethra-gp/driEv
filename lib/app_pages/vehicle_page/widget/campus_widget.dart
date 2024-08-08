@@ -1,15 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_themes/app_colors.dart';
 
 class CampusWidget extends StatelessWidget {
   final List data;
-  const CampusWidget({super.key, required this.data});
+  final String logo;
+  const CampusWidget({super.key, required this.data, required this.logo});
 
   @override
   Widget build(BuildContext context) {
+    double logoSize = 50;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -20,14 +23,27 @@ class CampusWidget extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(vertical: 1),
-        leading: Image.asset(
-          "assets/app/no-img.png",
-          height: 50,
-          width: 50,
+        leading: CachedNetworkImage(
+          fit: BoxFit.fill,
+          imageUrl: logo,
+          width: logoSize,
+          height: logoSize,
+          progressIndicatorBuilder: (
+            BuildContext context,
+            String url,
+            DownloadProgress dp,
+          ) =>
+              CircularProgressIndicator(value: dp.progress),
+          errorWidget: (context, url, error) => Image.asset(
+            width: logoSize,
+            height: logoSize,
+            "assets/app/no-img.png",
+            fit: BoxFit.fill,
+          ),
         ),
         title: data.isNotEmpty
             ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                 child: Text(
                   "${data[0]['sName']} Campus",
                   style: const TextStyle(
@@ -37,12 +53,13 @@ class CampusWidget extends StatelessWidget {
                   ),
                 ),
               )
-            : null,
+            : const Text("N/A"),
         subtitle: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             Image.asset(
               "assets/img/scooter.png",
               height: 20,

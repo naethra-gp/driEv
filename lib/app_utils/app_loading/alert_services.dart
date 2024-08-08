@@ -10,6 +10,8 @@ import '../../app_dialogs/widgets/block_user_content.dart';
 import '../../app_dialogs/widgets/kyc_block_widget.dart';
 import '../../app_dialogs/widgets/kyc_hold_widget.dart';
 import '../../app_themes/app_colors.dart';
+import 'widgets/balance_alert_widget.dart';
+import 'widgets/vehicle_alert.dart';
 
 class AlertServices {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -171,6 +173,37 @@ class AlertServices {
     );
   }
 
+  balanceAlert(BuildContext context, message, List stationDetails,
+      String rideID, List scanEndRideId) {
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      enableDrag: false,
+      builder: (context) {
+        return BalanceAlertWidget(
+          message: message,
+          stationDetails: stationDetails,
+          rideID: rideID,
+          scanEndRideId: scanEndRideId,
+        );
+      },
+    );
+  }
+  vehicleAlert(BuildContext context, String message) {
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.white,
+      isDismissible: true,
+      enableDrag: false,
+      builder: (context) {
+        return VehicleAlert(message: message);
+      },
+    );
+  }
+
   insufficientBalanceAlert(BuildContext context, String balance, String balSub,
       List stationDetails, String rideID, List scanEndRideId) {
     double height = MediaQuery.of(context).size.height;
@@ -252,14 +285,14 @@ class AlertServices {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 14),
-                    Text(
-                      balance,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    // const SizedBox(height: 14),
+                    // Text(
+                    //   balance,
+                    //   style: const TextStyle(
+                    //     fontSize: 28,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                     const SizedBox(height: 18),
                     SizedBox(
                       width: width * 0.9,
@@ -277,39 +310,25 @@ class AlertServices {
                     const SizedBox(height: 30),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 0),
-                        child: SizedBox(
-                          width: width - 75,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pushNamed(
-                                context,
-                                "add_more_fund",
-                                arguments: {
-                                  "stationDetails": stationDetails,
-                                  "rideId": rideID,
-                                  "rideID": scanEndRideId
-                                },
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              side: const BorderSide(color: Colors.green),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                              ),
-                            ),
-                            child: const Text(
-                              "Top Up Now",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
+                      child: SizedBox(
+                        width: width - 25,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: AppButtonWidget(
+                              title: 'Top Up Now',
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                  context,
+                                  "add_more_fund",
+                                  arguments: {
+                                    "stationDetails": stationDetails,
+                                    "rideId": rideID,
+                                    "rideID": scanEndRideId
+                                  },
+                                );
+                              },
+                              height: 45),
                         ),
                       ),
                     ),
@@ -320,29 +339,6 @@ class AlertServices {
             ],
           ),
         );
-        // return Padding(
-        //   padding: const EdgeInsets.all(16.0),
-        //   child: Column(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       // Content of the bottom sheet
-        //       Text('This is the content of the modal bottom sheet.'),
-        //       SizedBox(height: 20),
-        //       Expanded(
-        //         child: Align(
-        //           alignment: Alignment.bottomCenter,
-        //           child: ElevatedButton(
-        //             onPressed: () {
-        //               // Handle button press
-        //               Navigator.pop(context);
-        //             },
-        //             child: Text('Close'),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // );
       },
     );
   }

@@ -293,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            // const SizedBox(width: 10),
                             Expanded(
                               flex: 8, // 70% width
                               child: Column(

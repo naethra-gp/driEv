@@ -51,8 +51,10 @@ class Assets {
   static const String appWidgetsAppBarWidget = 'lib/app_utils/app_widgets/app_bar_widget.dart';
   static const String appWidgetsAppBaseScreen = 'lib/app_utils/app_widgets/app_base_screen.dart';
   static const String appWidgetsAppButton = 'lib/app_utils/app_widgets/app_button.dart';
+  static const String appWidgetsAppOutlineButton = 'lib/app_utils/app_widgets/app_outline_button.dart';
   static const String assetsAppGetStarted = 'assets/app/get_started.png';
   static const String bikeBookingBikeFareDetails = 'lib/app_pages/bike_booking/bike_fare_details.dart';
+  static const String bikeBookingBikeFareDetailsCopy = 'lib/app_pages/bike_booking/bike_fare_details_copy.dart';
   static const String campusScreensChooseYourCampus = 'lib/app_pages/campus_screens/choose_your_campus.dart';
   static const String campusScreensRankList = 'lib/app_pages/campus_screens/rank_list.dart';
   static const String campusScreensVoteErrorScreen = 'lib/app_pages/campus_screens/vote_error_screen.dart';
@@ -145,6 +147,8 @@ class Assets {
   static const String walletScreensWithdrawAmount = 'lib/app_pages/wallet_screens/withdraw_amount.dart';
   static const String widgetAadhaarFormField = 'lib/app_pages/registration_page/widget/aadhaar_form_field.dart';
   static const String widgetAadhaarOtpFormField = 'lib/app_pages/registration_page/widget/aadhaar_otp_form_field.dart';
+  static const String widgetBikeFareReserveButtons = 'lib/app_pages/bike_booking/widget/bike_fare_reserve_buttons.dart';
+  static const String widgetBikeFareTextWidget = 'lib/app_pages/bike_booking/widget/bike_fare_text_widget.dart';
   static const String widgetCampusWidget = 'lib/app_pages/vehicle_page/widget/campus_widget.dart';
   static const String widgetDraggableBottomSheet = 'lib/app_pages/home_screen/widget/draggable_bottom_sheet.dart';
   static const String widgetDynamicCardWidget = 'lib/app_pages/vehicle_page/widget/dynamic_card_widget.dart';
@@ -166,6 +170,7 @@ class Assets {
   static const String widgetRideDoneAlert = 'lib/app_pages/scan_to_endride/widget/ride_done_alert.dart';
   static const String widgetTimeOutError = 'lib/app_pages/scan_to_unlock/widget/time_out_error.dart';
   static const String widgetTimerButtonWidget = 'lib/app_pages/bike_booking/extend_bike_timer/widget/timer_button_widget.dart';
+  static const String widgetsBalanceAlertWidget = 'lib/app_utils/app_loading/widgets/balance_alert_widget.dart';
   static const String widgetsBlockUserContent = 'lib/app_dialogs/widgets/block_user_content.dart';
   static const String widgetsDocumentReUpload = 'lib/app_pages/profile_page/widgets/document_re_upload.dart';
   static const String widgetsDocumentUploadAlert = 'lib/app_pages/profile_page/widgets/document_upload_alert.dart';
@@ -174,6 +179,7 @@ class Assets {
   static const String widgetsPlaceHolder = 'lib/app_pages/wallet_screens/widgets/place_holder.dart';
   static const String widgetsTransactionFailure = 'lib/app_pages/wallet_screens/widgets/transaction_failure.dart';
   static const String widgetsTransactionSuccess = 'lib/app_pages/wallet_screens/widgets/transaction_success.dart';
+  static const String widgetsVehicleAlert = 'lib/app_utils/app_loading/widgets/vehicle_alert.dart';
   static const String widgetsWalletBalanceWidget = 'lib/app_pages/wallet_screens/widgets/wallet_balance_widget.dart';
   static const String widgetsWalletListWidget = 'lib/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 

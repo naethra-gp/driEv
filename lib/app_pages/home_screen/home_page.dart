@@ -563,6 +563,7 @@ class _HomePageState extends State<HomePage> {
             "closedVehicleList": closedVehicleList,
           }
         ];
+        print("params ${jsonEncode(params)}");
         Navigator.pushNamed(context, "select_vehicle", arguments: params);
       }
     });

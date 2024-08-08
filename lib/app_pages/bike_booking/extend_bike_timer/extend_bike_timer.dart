@@ -415,7 +415,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                     const Divider(indent: 5, endIndent: 5),
                     const SizedBox(height: 25),
                     TimerButtonWidget(data: data),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 25),
                     SizedBox(
                       height: 45,
                       // height: MediaQuery.of(context).size.height / 3,

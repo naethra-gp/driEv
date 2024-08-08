@@ -2,38 +2,43 @@ import 'package:flutter/material.dart';
 
 import '../../app_themes/app_colors.dart';
 
-class AppButtonWidget extends StatelessWidget {
+class OutlineButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;
   final String title;
   final double? height;
+  final Color? foregroundColor;
 
-  const AppButtonWidget({
+  const OutlineButtonWidget({
     super.key,
     this.onPressed,
     required this.title,
     this.height,
+    this.foregroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: height ?? 52,
-      child: ElevatedButton(
+      height: height ?? 45,
+      child: OutlinedButton(
         onPressed: onPressed,
         focusNode: FocusNode(skipTraversal: true),
-        style: ElevatedButton.styleFrom(
+        style: OutlinedButton.styleFrom(
           elevation: 0,
-          foregroundColor: Colors.white,
-          backgroundColor: const Color(0xFF3DB54A),
-          overlayColor: AppColors.white,
+          textStyle: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+          ),
+          overlayColor: AppColors.primary,
+          foregroundColor: foregroundColor ?? Colors.black,
+          backgroundColor: Colors.white,
+          disabledForegroundColor: AppColors.gray,
+          disabledBackgroundColor: AppColors.primary.withOpacity(0.6),
+          side: const BorderSide(color: AppColors.primary, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
-          ),
-          textStyle: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
           ),
         ),
         child: Text(
