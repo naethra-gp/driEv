@@ -293,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                             ),
-                            // const SizedBox(width: 10),
+                            const SizedBox(width: 15),
                             Expanded(
                               flex: 8, // 70% width
                               child: Column(
@@ -357,7 +357,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
-                                        flex: 3,
+                                        flex: 5,
                                         child: Column(
                                           children: [
                                             Align(
@@ -403,9 +403,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(width: 100),
+                                      // const SizedBox(width: 100),
+                                      const Spacer(),
                                       Expanded(
-                                        flex: 4,
+                                        flex: 3,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
