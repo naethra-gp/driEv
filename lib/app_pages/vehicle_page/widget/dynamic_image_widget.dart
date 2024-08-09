@@ -8,7 +8,9 @@ class DynamicImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      fit: BoxFit.fill,
+      fit: BoxFit.cover,
+      width: 150,
+      height: 90,
       imageUrl: imageUrl,
       progressIndicatorBuilder: (
         BuildContext context,
@@ -18,9 +20,9 @@ class DynamicImageWidget extends StatelessWidget {
           CircularProgressIndicator(value: dp.progress),
       errorWidget: (context, url, error) => Image.asset(
         width: 135,
-        height: 90,
+        height: 80,
         "assets/img/bike2.png",
-        fit: BoxFit.fill,
+        // fit: BoxFit.cover,
       ),
     );
   }

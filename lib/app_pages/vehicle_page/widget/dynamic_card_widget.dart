@@ -24,7 +24,7 @@ class DynamicCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(0),
+        padding: const EdgeInsets.all(5),
         child: Card(
           elevation: 0,
           surfaceTintColor: const Color(0xffF5F5F5),
@@ -34,7 +34,7 @@ class DynamicCardWidget extends StatelessWidget {
           ),
           clipBehavior: Clip.none,
           child: Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -117,7 +117,7 @@ class DynamicCardWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                // const SizedBox(height: 12),
+                // const SizedBox(height: 5),
               ],
             ),
           ),

@@ -86,7 +86,7 @@ class RideDoneAlert extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     SizedBox(
-                      width: width / 2.5,
+                      width: width / 2.2,
                       height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -110,7 +110,7 @@ class RideDoneAlert extends StatelessWidget {
                     ),
                     const Spacer(),
                     SizedBox(
-                      width: width / 2.50,
+                      width: width / 2.2,
                       height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(

@@ -286,11 +286,12 @@ class _HomePageState extends State<HomePage> {
       _polyLines.add(polyline);
     });
     alertServices.showLoading("Calculate distance...");
+    _zoomToFitPositions();
     Future.delayed(const Duration(seconds: 3), () {
       print("_zoomToFitPositions");
       alertServices.hideLoading();
       // TODO: UNCOMMENT THIS LINE
-      _zoomToFitPositions();
+      // _zoomToFitPositions();
     });
   }
 
@@ -354,7 +355,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           customer = [response];
         });
-        print("Customer Details -> ${jsonEncode(customer)}");
+        // print("Customer Details -> ${jsonEncode(customer)}");
         String station = customer[0]['registeredStation'].toString();
         String kyc = customer[0]['kycStatus'] ?? "";
         String block = customer[0]['blockStatus'] ?? "";
@@ -540,14 +541,26 @@ class _HomePageState extends State<HomePage> {
           String result =
               checkConditions(minDistance, maxDistance, userDistance);
           setState(() {
-            if (result == "exact" || result == "withRange") {
-              filterVehicleList.add(vehicleList[i]);
+            if (result == "exact") {
+              if(vehicleList[i]['planType'].toString() == list[0]['plan'].toString()) {
+                filterVehicleList.add(vehicleList[i]);
+              }
+            } else if (result == "withRange") {
+              if(vehicleList[i]['planType'].toString() != list[0]['plan'].toString()) {
+                closedVehicleList.add(vehicleList[i]);
+              }
+              // closedVehicleList.add(vehicleList[i]);
             } else {
-              closedVehicleList.add(vehicleList[i]);
+              // closedVehicleList.add(vehicleList[i]);
             }
           });
         }
       }
+
+      print("filterVehicleList $filterVehicleList");
+      print("filterVehicleList Length: ${filterVehicleList.length}");
+      print("closedVehicleList $closedVehicleList");
+      print("closedVehicleList ${closedVehicleList.length}");
 
       if (closedVehicleList.isEmpty && filterVehicleList.isEmpty) {
         Navigator.pushNamed(context, "error_bike");

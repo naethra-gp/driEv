@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,6 +10,7 @@ import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
+import 'widget/screen_text_widget.dart';
 
 class ScanToUnlock extends StatefulWidget {
   final List data;
@@ -33,70 +35,34 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   QRViewController? controller;
   String qr = "";
 
-  int remainingSeconds = 30;
+  int remainingSeconds = 40;
   Timer? countdownTimer;
 
   @override
   void initState() {
-    print("Data: ${widget.data}");
+    debugPrint(" --- PAGE: SCAN TO UNLOCK --- ");
+    print("SCAN TO UNLOCK Data: ${widget.data}");
     _startCountdown();
     super.initState();
   }
 
-  void _cancelTimer() {
-    if (countdownTimer != null) {
-      countdownTimer!.cancel();
-      countdownTimer = null;
+  checkBikeNumber(String code) {
+    print("Code -> $code");
+    String vId = widget.data[0]['vehicleId'].toString();
+    QrMobileVision.stop();
+    if (code.toString() == vId) {
+      setState(() {
+        bikeNumberCtl.text = code.toString();
+      });
+      // startMyRide();
+    } else {
+      String msg =
+          "Wrong vehicle! Scan the code of the assigned vehicle to end the ride";
+      alertServices.errorToast(msg);
     }
   }
 
-  void _startCountdown() {
-    _cancelTimer();
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      setState(() {
-        if (remainingSeconds == 20) {
-          QrMobileVision.toggleFlash();
-        }
-        if (remainingSeconds > 0) {
-          remainingSeconds--;
-        } else {
-          _cancelTimer();
-          Navigator.pushReplacementNamed(context, "time_out",
-              arguments: widget.data);
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    bikeNumberCtl.dispose();
-    controller?.dispose();
-    _cancelTimer();
-    super.dispose();
-  }
-
-  void _onQRViewCreated(String code) {
-    setState(() {
-      qr = code;
-      bikeNumberCtl.text = qr.toString();
-      print("result-> $qr");
-      if (qr != "") {
-        print("---- Start ---- ");
-        QrMobileVision.stop();
-        String vId = widget.data[0]['vehicleId'].toString();
-        if (bikeNumberCtl.text.toString() == vId) {
-          startMyRide();
-        } else {
-          alertServices.errorToast(
-              "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
-        }
-      }
-    });
-    print("result $qr");
-  }
-
+  /// NEW PLUGIN
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -107,17 +73,14 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 70,
-              ),
+              const SizedBox(height: 70),
               Padding(
-                padding: const EdgeInsets.all(
-                    15.0), // Adjust padding to align borders// Adjust the radius as needed
+                padding: const EdgeInsets.all(15.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
-                    width: 250,
-                    height: 250,
+                    width: 200,
+                    height: 200,
                     decoration: ShapeDecoration(
                       shape: QrScannerOverlayShape(
                         borderColor: AppColors.primary,
@@ -126,6 +89,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                       ),
                     ),
                     child: QrCamera(
+                      fit: BoxFit.cover,
                       onError: (context, error) => Text(
                         error.toString(),
                         style: const TextStyle(color: Colors.red),
@@ -133,33 +97,18 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                       cameraDirection: CameraDirection.BACK,
                       qrCodeCallback: (code) {
                         if (code != null) {
-                          _onQRViewCreated(code);
+                          print("QR Scanned --> $code");
+                          QrMobileVision.stop();
+                          setState(() {
+                            bikeNumberCtl.text = code.toString();
+                          });
                         }
                       },
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 70),
-              const Text(
-                "Not feeling the scan vibe? No worries!",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const Text(
-                "Enter bike number and ride on!",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
+              const ScreenTextWidget(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -182,8 +131,10 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                       decoration: InputDecoration(
                         counterText: "",
                         hintText: 'Enter Bike Number',
-                        hintStyle:
-                            TextStyle(fontSize: 12, color: Color(0Xff7A7A7A)),
+                        hintStyle: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0Xff7A7A7A),
+                        ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10),
@@ -193,14 +144,12 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
+                  const SizedBox(width: 5),
                   Container(
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: IconButton(
@@ -209,17 +158,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                         color: Colors.white,
                       ),
                       onPressed: () async {
-                        if (bikeNumberCtl.text.toString().isNotEmpty &&
-                            bikeNumberCtl.text.toString().length <= 6) {
-                          String vId = widget.data[0]['vehicleId'].toString();
-                          if (bikeNumberCtl.text.toString() == vId) {
-                            startMyRide();
-                          } else {
-                            alertServices.errorToast(
-                                "Wrong vehicle!!! Scan the code of the assigned vehicle to end the ride");
-                          }
-                        }
-                        print("Value:${bikeNumberCtl.text}");
+                        submitButtonClicked();
                       },
                     ),
                   ),
@@ -231,6 +170,24 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
         ),
       ),
     );
+  }
+
+  submitButtonClicked() {
+    // startMyRide();
+    String bike = bikeNumberCtl.text.toString();
+    if (bike.isNotEmpty && bike.length <= 6) {
+      String vId = widget.data[0]['vehicleId'].toString();
+      if (bike == vId) {
+        print("Start my Ride");
+        startMyRide();
+      } else {
+        alertServices.errorToast(
+            "Wrong vehicle! Scan the code of the assigned vehicle to end the ride");
+        Navigator.pushReplacementNamed(context, "scan_to_unlock",
+            arguments: widget.data);
+      }
+    }
+    // print("Value:${bikeNumberCtl.text}");
   }
 
   Future<void> _getCurrentLocation() async {
@@ -276,7 +233,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   }
 
   startMyRide() {
-    _cancelTimer();
     if (widget.data[0]['vehicleId'].toString() != "null") {
       print("bikeNumberCtl.text -> ${bikeNumberCtl.text}");
       print("bikeNumberCtl.text -> ${bikeNumberCtl.text.toString() == ""}");
@@ -285,8 +241,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       } else {
         alertServices.errorToast("Please enter valid Bike Number!");
       }
-    } else {
-      alertServices.errorToast("Invalid Vehicle ID!");
     }
   }
 
@@ -294,6 +248,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     FocusScope.of(context).unfocus();
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
+    _cancelTimer();
     var params = {
       "vehicleId": widget.data[0]['vehicleId'].toString(),
       "scanCode": bikeNumberCtl.text.toString(),
@@ -302,13 +257,79 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       "lattitude": currentLocation!.latitude.toString(),
       "longitude": currentLocation!.longitude.toString(),
     };
+    print("params $params");
     bookingServices.startMyRide(params).then((r) {
       alertServices.hideLoading();
-      if (r != null) {
-        String rideId = r['rideId'].toString();
-        Navigator.pushNamedAndRemoveUntil(
-            context, "booking_success", arguments: rideId, (a) => false);
-      }
+      print("Response -> ${jsonEncode(r)}");
+      conditionCheck([r]);
     });
   }
+
+  conditionCheck(List res2) {
+    if (res2[0]['key'].toString() == "WALLET_ISSUE") {
+      alertServices.balanceAlert(
+          context, res2[0]['message'].toString(), [], "", []);
+    } else if (res2[0]['key'].toString() != "null" &&
+        res2[0]['message'].toString() != "null") {
+      alertServices.vehicleAlert(context, res2[0]['message'].toString());
+    } else {
+      String rideId = res2[0]['rideId'].toString();
+      if (rideId != "null") {
+        Navigator.pushNamedAndRemoveUntil(
+            context, "booking_success", arguments: rideId, (a) => false);
+      } else {
+        alertServices.errorToast("Something went wrong!");
+      }
+    }
+  }
+
+  void _cancelTimer() {
+    if (countdownTimer?.isActive ?? false) {
+      countdownTimer?.cancel();
+    }
+  }
+
+  void _startCountdown() {
+    // _cancelTimer();
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (remainingSeconds == 30) {
+          QrMobileVision.toggleFlash();
+        }
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+        } else {
+          _cancelTimer();
+          Navigator.pushReplacementNamed(context, "time_out",
+              arguments: widget.data);
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    bikeNumberCtl.dispose();
+    controller?.dispose();
+    _cancelTimer();
+    super.dispose();
+  }
+
+// _onQRViewCreated(String code) {
+//   print("Code ---> $code");
+//   if (code != "") {
+//     QrMobileVision.stop();
+//     String vId = widget.data[0]['vehicleId'].toString();
+//     if (code.toString() == vId) {
+//       setState(() {
+//         bikeNumberCtl.text = code.toString();
+//       });
+//       // startMyRide();
+//     } else {
+//       alertServices.errorToast(
+//           "Wrong vehicle! Scan the code of the assigned vehicle to end the ride");
+//     }
+//   }
+// }
 }

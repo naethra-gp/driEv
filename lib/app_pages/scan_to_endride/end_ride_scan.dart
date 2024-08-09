@@ -294,6 +294,10 @@ class _EndRideScannerState extends State<EndRideScanner> {
     return showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      barrierColor: Colors.black,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) {
         return SizedBox(
           height: height / 2, // Adjust the height here
@@ -389,21 +393,8 @@ class _EndRideScannerState extends State<EndRideScanner> {
   rideDoneAlert(List res) {
     print(" ---- Stop Watching ----");
     Navigator.pop(context);
+    QrMobileVision.stop();
     return showModalBottomSheet(
-      //   context: context,
-      //   barrierColor: Colors.black87,
-      //   backgroundColor: Colors.white,
-      //   isDismissible: false,
-      //   enableDrag: false,
-      //   builder: (context) {
-      //     return PopScope(
-      //       canPop: false,
-      //       child: RideDoneAlert(
-      //         result: res,
-      //         rideId: rideId,
-      //       ),
-      //     );
-      //   },
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -413,7 +404,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
       useSafeArea: true,
       enableDrag: false,
       backgroundColor: Colors.white,
-      barrierColor: Colors.black.withOpacity(.8),
+      barrierColor: Colors.black,
       builder: (context) {
         return PopScope(
           canPop: false,

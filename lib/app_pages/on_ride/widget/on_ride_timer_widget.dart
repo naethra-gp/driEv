@@ -33,6 +33,7 @@ class _OnRideTimerWidgetState extends State<OnRideTimerWidget> {
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
       setState(() {
         _calculateElapsedTime();
       });

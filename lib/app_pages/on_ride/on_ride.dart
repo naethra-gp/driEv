@@ -61,7 +61,7 @@ class _OnRideState extends State<OnRide> {
   @override
   void initState() {
     super.initState();
-    print("---- ON RIDE ----");
+    print("---- ON RIDE 1 ----");
     _getUserLocation();
     getBalance();
     getRideDetails(widget.rideId);

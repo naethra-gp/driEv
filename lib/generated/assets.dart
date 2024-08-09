@@ -168,6 +168,7 @@ class Assets {
   static const String widgetRegFileUploadForm = 'lib/app_pages/registration_page/widget/reg_file_upload_form.dart';
   static const String widgetRegTextFormWidget = 'lib/app_pages/registration_page/widget/reg_text_form_widget.dart';
   static const String widgetRideDoneAlert = 'lib/app_pages/scan_to_endride/widget/ride_done_alert.dart';
+  static const String widgetScreenTextWidget = 'lib/app_pages/scan_to_unlock/widget/screen_text_widget.dart';
   static const String widgetTimeOutError = 'lib/app_pages/scan_to_unlock/widget/time_out_error.dart';
   static const String widgetTimerButtonWidget = 'lib/app_pages/bike_booking/extend_bike_timer/widget/timer_button_widget.dart';
   static const String widgetsBalanceAlertWidget = 'lib/app_utils/app_loading/widgets/balance_alert_widget.dart';

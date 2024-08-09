@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:driev/app_services/index.dart';
 import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
@@ -67,8 +66,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   @override
   void dispose() {
-    countdownTimer!.cancel();
     super.dispose();
+    reserveTimeCtrl.dispose();
+    stopCountdown();
   }
 
   getFareDetails(String id) {
@@ -135,7 +135,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   defaultHeight,
                   OutlineButtonWidget(
                     height: buttonHeight,
-                    onPressed: () {},
+                    onPressed: () {
+                      scanToUnlock();
+                    },
                     title: 'Scan to Unlock',
                   ),
                   const SizedBox(height: 10),
@@ -188,6 +190,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                           i['selected'] = false;
                         }
                         reserveMins = value.toString();
+                        if (value.toString().length == 2) {
+                          FocusScope.of(context).unfocus();
+                        }
                         // reserveTimeCtrl.text = reserveMins;
                       });
                     },
@@ -197,6 +202,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     height: buttonHeight,
                     foregroundColor: AppColors.primary,
                     onPressed: () {
+                      FocusScope.of(context).unfocus();
                       print("User Selected or entered Mins: $reserveMins");
                       checkCondition();
                       // setState(() {
@@ -209,7 +215,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   AppButtonWidget(
                     height: buttonHeight,
                     title: "Scan to Unlock",
-                    onPressed: () {},
+                    onPressed: () {
+                      scanToUnlock();
+                    },
                   ),
                   const SizedBox(height: 10),
                 ],
@@ -242,12 +250,13 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                         ),
                       ),
                       child: Text(
-                        "$formattedMinutes:$formattedSeconds Minute to Ride Time!",
+                        "$formattedMinutes: $formattedSeconds Minute to Ride Time!",
                         style: TextStyle(
-                            color: enableChasingTime
-                                ? Colors.white
-                                : AppColors.primary,
-                            fontSize: 14),
+                          color: enableChasingTime
+                              ? Colors.white
+                              : AppColors.primary,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
@@ -312,6 +321,12 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       foregroundColor: AppColors.primary,
                       height: buttonHeight,
                       onPressed: () {
+                        setState(() {
+                          for (var i in reserveTime) {
+                            i['selected'] = false;
+                          }
+                        });
+
                         /// --- Extend Blocking
                         extendBikeBlocking();
                       },
@@ -323,10 +338,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                     height: buttonHeight,
                     title: "Scan to Unlock",
                     onPressed: () {
-                      setState(() {
-                        isOnCounter = false;
-                        isReserveClick = false;
-                      });
+                      scanToUnlock();
                     },
                   ),
                   const SizedBox(height: 10),
@@ -420,10 +432,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     bookingServices.blockBike(params).then((r2) async {
       alertServices.hideLoading();
       List res2 = [r2];
-      if (res2[0]['key'].toString() == "WALLET_ISSUE") {
+      if (res2[0]['key'].toString().contains("WALLET_ISSUE")) {
         alertServices.balanceAlert(context, res2[0]['message'].toString(),
             widget.stationDetails, "", []);
-      } else if (res2[0]['key'].toString() == "VEHICLE_ISSUE") {
+      } else if (res2[0]['key'].toString() != "null" &&
+          res2[0]['message'].toString() != "null") {
         alertServices.vehicleAlert(context, res2[0]['message'].toString());
       } else {
         if (res2[0]['blockedTill'] != null) {
@@ -449,9 +462,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     if (reserveMins.isEmpty) {
       alertServices.errorToast("Please select mins!");
     } else {
-      if (countdownTimer != null) {
-        countdownTimer!.cancel();
-      }
       alertServices.showLoading();
       Map<String, Object> params = {
         "blockId": blockId.toString(),
@@ -471,10 +481,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
             setState(() {
               enableChasingTime = false;
               reserveMins = "";
+              reserveTimeCtrl.text = "";
             });
-            do {
-              countdownTimer?.cancel();
-            } while (countdownTimer!.isActive);
+            stopCountdown();
             startCountdown(res2[0]['blockedTill'].toString());
           }
         }
@@ -490,7 +499,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     int min = rt.inMinutes * 60;
     int sec = rt.inSeconds;
     int time = (min + sec);
-    double percentage = time * 0.90;
+    double percentage = time * 0.25;
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       // setState(() {
       remainingTime = blockedTime.difference(DateTime.now());
@@ -513,12 +522,80 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           isOnCounter = false;
         });
         // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
-        // Navigator.pushNamed(context, "select_vehicle",
-        //     arguments: widget.stationDetails[0]['homeData']);
+        Navigator.pushNamed(context, "select_vehicle",
+            arguments: widget.stationDetails[0]['homeData']);
       }
       // });
 
       setState(() {});
     });
+  }
+
+  stopCountdown() {
+    if (countdownTimer?.isActive ?? false) {
+      countdownTimer?.cancel();
+    }
+  }
+
+  /// SCAN TO UNLOCK BIKE
+  scanToUnlock() async {
+    String campus = widget.stationDetails[0]['campus'].toString();
+    String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+    List arg = [
+      {"campus": campus, "vehicleId": vehicleId}
+    ];
+    stopCountdown();
+    Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+    // double balance = 0;
+    // int selectedMin = 0;
+    // double reserve = fareDetails[0]['offer']['blockAmountPerMin'];
+    // List a =
+    //     reserveTime.where((e) => e['selected'].toString() == "true").toList();
+    // if (a.isNotEmpty) {
+    //   selectedMin = a[0]['mins'];
+    //   double amount = selectedMin * reserve;
+    //   alertServices.showLoading();
+    //   bookingServices.getWalletBalance(mobile).then((r) {
+    //     balance = r['balance'];
+    //     Map<String, Object> params = {
+    //       "contact": secureStorage.get("mobile").toString(),
+    //       "vehicleId": fareDetails[0]['vehicleId'].toString(),
+    //       "duration": reserveMins.toString()
+    //     };
+    //     print("params $params");
+    //     bookingServices.blockBike(params).then((r2) async {
+    //       alertServices.hideLoading();
+    //       if (amount > balance) {
+    //         alertServices.insufficientBalanceAlert(context, "₹$balance",
+    //             r2["message"], widget.stationDetails, "", []);
+    //       } else {
+    //         /// BALANCE AVAILABLE
+    //         print("Block Response: ${jsonEncode(r2)}");
+    //         String campus = widget.stationDetails[0]['campus'].toString();
+    //         String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+    //         List arg = [
+    //           {
+    //             "campus": campus,
+    //             "vehicleId": vehicleId,
+    //             // "stationDetails": r2,
+    //           },
+    //         ];
+    //         Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+    //       }
+    //     });
+    //   });
+    // } else {
+    //   // double baseFare = fareDetails[0]['offer']['basePrice'];
+    //   // double perMinPaisa = fareDetails[0]['offer']['perMinPaisa'];
+    //   // double perKmPaisa = fareDetails[0]['offer']['perKmPaisa'];
+    //   // double amount = baseFare + perKmPaisa + perMinPaisa;
+    //   /// BALANCE AVAILABLE arguments: list['campusId'].toString()
+    //   String campus = widget.stationDetails[0]['campus'].toString();
+    //   String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
+    //   List arg = [
+    //     {"campus": campus, "vehicleId": vehicleId}
+    //   ];
+    //   Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+    // }
   }
 }

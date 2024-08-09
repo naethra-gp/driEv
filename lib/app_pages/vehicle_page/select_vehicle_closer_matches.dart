@@ -78,7 +78,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 8.0,
                     crossAxisSpacing: 8.0,
-                    mainAxisExtent: 190,
+                    mainAxisExtent: 200,
                   ),
                   itemCount: fd.length,
                   itemBuilder: (context, index) {
