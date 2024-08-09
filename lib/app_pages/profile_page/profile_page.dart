@@ -216,10 +216,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (height < smallDeviceHeight) {
       fontSize = 11.5;
+      print('small');
     } else if (height >= smallDeviceHeight && height < largeDeviceHeight) {
       fontSize = 12;
+      print('medium');
     } else {
       fontSize = 12.5;
+      print('large');
     }
     return Scaffold(
       appBar: AppBar(
@@ -293,7 +296,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 15),
+                            const SizedBox(width: 8),
                             Expanded(
                               flex: 8, // 70% width
                               child: Column(
@@ -349,7 +352,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 15),
+                                  const SizedBox(height: 10),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -360,33 +363,57 @@ class _ProfilePageState extends State<ProfilePage> {
                                         flex: 5,
                                         child: Column(
                                           children: [
-                                            Align(
+                                            const Align(
                                               alignment: Alignment.centerLeft,
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
+                                              child: Text.rich(
+                                                TextSpan(
+                                                  style: TextStyle(
                                                     fontSize: 12,
+                                                    color: Colors.black,
                                                   ),
                                                   children: [
-                                                    const TextSpan(text: 'CO'),
-                                                    WidgetSpan(
-                                                      child:
-                                                          Transform.translate(
-                                                        offset: const Offset(
-                                                            0.0, 4.0),
-                                                        child: const Text(
-                                                          '2',
-                                                          style: TextStyle(
-                                                              fontSize: 10),
-                                                        ),
-                                                      ),
+                                                    TextSpan(text: 'CO'),
+                                                    TextSpan(
+                                                      text: '₂',
+                                                      style: TextStyle(
+                                                          fontSize: 14),
                                                     ),
-                                                    const TextSpan(
-                                                        text: ' Saved'),
+                                                    TextSpan(text: ' Saved'),
                                                   ],
                                                 ),
                                               ),
+
+                                              //  RichText(
+                                              //   text: TextSpan(
+                                              //     style: const TextStyle(
+                                              //       color: Colors.black,
+                                              //       fontSize: 12,
+                                              //     ),
+                                              //     children: [
+                                              //       const TextSpan(
+                                              //         text: 'CO',
+                                              //         style: TextStyle(
+                                              //           color: Colors.black,
+                                              //           fontSize: 12,
+                                              //         ),
+                                              //       ),
+                                              //       WidgetSpan(
+                                              //         child:
+                                              //             Transform.translate(
+                                              //           offset: const Offset(
+                                              //               0.0, 4.0),
+                                              //           child: const Text(
+                                              //             '2',
+                                              //             style: TextStyle(
+                                              //                 fontSize: 10),
+                                              //           ),
+                                              //         ),
+                                              //       ),
+                                              //       const TextSpan(
+                                              //           text: ' Saved'),
+                                              //     ],
+                                              //   ),
+                                              // ),
                                             ),
                                             const SizedBox(height: 5),
                                             Align(
@@ -404,7 +431,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ),
                                       // const SizedBox(width: 100),
-                                      const Spacer(),
+                                      const Spacer(
+                                        flex: 2,
+                                      ),
                                       Expanded(
                                         flex: 3,
                                         child: Column(

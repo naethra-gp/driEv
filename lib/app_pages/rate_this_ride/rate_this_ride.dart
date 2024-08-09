@@ -23,9 +23,9 @@ class _RateThisRideState extends State<RateThisRide> {
   FeedbackServices feedbackServices = FeedbackServices();
 
   final List<String> lowRatingItems = [
-    "battery issue",
+    "Battery issue",
     "Employees misbehaving",
-    "payment issue",
+    "Payment issue",
     "Booking issue",
     "Short range",
     "Others"
@@ -167,76 +167,79 @@ class _RateThisRideState extends State<RateThisRide> {
                     _rating == 2.0 ||
                     _rating == 3.0 ||
                     _rating == 4.0) ...[
-                  Wrap(
-                    spacing: 10.0,
-                    runSpacing: 2.0,
-                    children: items
-                        .map(
-                          (e) => FilterChip(
-                            elevation: 2,
-                            backgroundColor: Colors.white,
-                            showCheckmark: false,
-                            selectedColor: Colors.white,
-                            selectedShadowColor: AppColors.primary,
-                            avatar: const Icon(
-                              Icons.check,
-                              color: AppColors.chipText,
-                            ),
-                            labelPadding:
-                                const EdgeInsets.symmetric(horizontal: 5),
-                            label: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 0),
-                              child: Text(
-                                e.toString().toLowerCase(),
-                                style: const TextStyle(
-                                  fontFamily: "Roboto",
-                                  fontWeight: FontWeight.normal,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Wrap(
+                      spacing: 30.0,
+                      runSpacing: 2.0,
+                      children: items
+                          .map(
+                            (e) => FilterChip(
+                              elevation: 2,
+                              backgroundColor: Colors.white,
+                              showCheckmark: false,
+                              selectedColor: Colors.white,
+                              selectedShadowColor: AppColors.primary,
+                              avatar: const Icon(
+                                Icons.check,
+                                color: AppColors.chipText,
+                              ),
+                              labelPadding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              label: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                child: Text(
+                                  e.toString(),
+                                  style: const TextStyle(
+                                    fontFamily: "Roboto",
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
-                            ),
-                            labelStyle: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.chipText,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(7), // rounded corners
-                              side: BorderSide(
-                                color: selectedItem1.contains(e) ||
-                                        selectedItem2.contains(e)
-                                    ? AppColors.primary
-                                    : AppColors.commentColor, // grey border
+                              labelStyle: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.chipText,
+                                fontWeight: FontWeight.w400,
                               ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(7), // rounded corners
+                                side: BorderSide(
+                                  color: selectedItem1.contains(e) ||
+                                          selectedItem2.contains(e)
+                                      ? AppColors.primary
+                                      : AppColors.commentColor, // grey border
+                                ),
+                              ),
+                              selected: selectedItem1.contains(e) ||
+                                  selectedItem2.contains(e),
+                              onSelected: (bool value) {
+                                setState(
+                                  () {
+                                    if (selectedItem1.contains(e) ||
+                                        selectedItem2.contains(e)) {
+                                      if (_rating! <= 2.0) {
+                                        selectedItem1.remove(e);
+                                      } else if (_rating! > 2.0 &&
+                                          _rating! <= 4.0) {
+                                        selectedItem2.remove(e);
+                                      }
+                                    } else {
+                                      if (_rating! <= 2.0) {
+                                        selectedItem1.add(e);
+                                      } else if (_rating! > 2.0 &&
+                                          _rating! <= 4.0) {
+                                        selectedItem2.add(e);
+                                      }
+                                    }
+                                  },
+                                );
+                              },
                             ),
-                            selected: selectedItem1.contains(e) ||
-                                selectedItem2.contains(e),
-                            onSelected: (bool value) {
-                              setState(
-                                () {
-                                  if (selectedItem1.contains(e) ||
-                                      selectedItem2.contains(e)) {
-                                    if (_rating! <= 2.0) {
-                                      selectedItem1.remove(e);
-                                    } else if (_rating! > 2.0 &&
-                                        _rating! <= 4.0) {
-                                      selectedItem2.remove(e);
-                                    }
-                                  } else {
-                                    if (_rating! <= 2.0) {
-                                      selectedItem1.add(e);
-                                    } else if (_rating! > 2.0 &&
-                                        _rating! <= 4.0) {
-                                      selectedItem2.add(e);
-                                    }
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                    ),
                   ),
                 ],
                 if (_rating == 1.0 ||
