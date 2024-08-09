@@ -178,7 +178,7 @@ class RideDoneAlert extends StatelessWidget {
                 trackCornerRadius: 20,
               ),
               child: SfSlider(
-                min: 10.0,
+                min: 0.0,
                 max: roundToNearest500(rideDistance),
                 interval: 10,
                 shouldAlwaysShowTooltip: false,

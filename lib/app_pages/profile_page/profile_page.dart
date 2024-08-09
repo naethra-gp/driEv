@@ -522,6 +522,19 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       defaultHeight,
                     ],
+                    if (documents[i]['uploaded'] == false) ...[
+                      DocumentReUpload(
+                        document: documents[i],
+                        onDataReceived: (bool status) {
+                          if (status) {
+                            alertServices
+                                .successToast("File Uploaded Successfully.");
+                            getCustomer();
+                          }
+                        },
+                      ),
+                      defaultHeight,
+                    ],
                   ],
                 ],
                 const Text(
