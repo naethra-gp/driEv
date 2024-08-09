@@ -12,7 +12,8 @@ class HomeTopWidget extends StatelessWidget {
   const HomeTopWidget({
     super.key,
     required this.location,
-    required this.balance, required this.imgUrl,
+    required this.balance,
+    required this.imgUrl,
   });
 
   @override

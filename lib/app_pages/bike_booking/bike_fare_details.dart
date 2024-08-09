@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
-import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
+import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
@@ -57,12 +57,27 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
 
   // EXTEND BLOCK
   String blockId = "";
+  bool timerRunning = false;
+  bool viaApi = false;
+  bool viaApp = false;
+
   @override
   void initState() {
     super.initState();
     String id = widget.stationDetails[0]['vehicleId'];
     getFareDetails(id); // GETTING BIKE FARE DETAILS
+    viaApi = widget.stationDetails[0]['via'] == "api";
+    viaApp = widget.stationDetails[0]['via'] == "app";
+    if (viaApi) {
+      isOnCounter = true;
+      List block = widget.stationDetails[0]['data'];
+      stopCountdown();
+      startCountdown(block[0]['blockedTill'].toString());
+    }
+    setState(() {});
   }
+
+  /// FLOW - 1 [TIMER RUNNING]
 
   @override
   void dispose() {
@@ -81,19 +96,40 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     });
   }
 
+  backButtonClick() {
+    if (isOnCounter) {
+      print("isOnCounter enable: $isOnCounter");
+      apiBack();
+    }
+    if (!isOnCounter && viaApp) {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List fd = fareDetails;
     List sd = widget.stationDetails;
     return PopScope(
-      // canPop: false,
-      // onPopInvoked: (didPop) {
-      //   if (didPop) {
-      //     return;
-      //   }
-      // },
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+        backButtonClick();
+      },
       child: Scaffold(
-        appBar: const AppBarWidget(),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          leading: IconButton(
+            icon: Image.asset(Constants.backButton),
+            onPressed: () {
+              backButtonClick();
+            },
+          ),
+          actions: [],
+        ),
         body: SingleChildScrollView(
           physics: const ScrollPhysics(),
           child: Padding(
@@ -160,7 +196,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   ),
                   const SizedBox(height: 8),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: List.generate(reserveTime.length, (index) {
                       return BikeFareReserveButtons(
                         onPressed: reserveTime[index]['disabled']
@@ -447,6 +483,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
             isOnCounter = true;
             reserveMins = "";
             enableChasingTime = false;
+            isOnCounter = true;
           });
           startCountdown(res2[0]['blockedTill'].toString());
         } else {
@@ -482,6 +519,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
               enableChasingTime = false;
               reserveMins = "";
               reserveTimeCtrl.text = "";
+              isOnCounter = true;
             });
             stopCountdown();
             startCountdown(res2[0]['blockedTill'].toString());
@@ -521,9 +559,18 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         setState(() {
           isOnCounter = false;
         });
-        // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
-        Navigator.pushNamed(context, "select_vehicle",
-            arguments: widget.stationDetails[0]['homeData']);
+
+        if (viaApi) {
+          Navigator.pushNamed(context, "error_bike");
+        }
+        if (viaApp) {
+          // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
+          Navigator.pushNamed(
+            context,
+            "select_vehicle",
+            arguments: widget.stationDetails[0]['homeData'],
+          );
+        }
       }
       // });
 

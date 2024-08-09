@@ -19,7 +19,7 @@ class BikeFareReserveButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height ?? 45,
+      height: height ?? 40,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -27,7 +27,7 @@ class BikeFareReserveButtons extends StatelessWidget {
           textStyle: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.normal,
-            fontSize: 16,
+            fontSize: 14,
           ),
           foregroundColor: Colors.black,
           backgroundColor: selected ? Colors.white : const Color(0xffF5F5F5),

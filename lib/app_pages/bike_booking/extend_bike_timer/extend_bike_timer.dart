@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:driev/app_dialogs/test_dialog.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +10,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../app_services/index.dart';
 import '../../../app_storages/secure_storage.dart';
 import '../../../app_utils/app_loading/alert_services.dart';
-import '../../app_common/need_help_widget.dart';
+import '../../home_screen/widget/home_top_widget.dart';
+import 'bike_card_widget.dart';
 import 'widget/timer_button_widget.dart';
 
 class ExtendBikeTimer extends StatefulWidget {
@@ -33,6 +32,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   AlertServices alertServices = AlertServices();
   BookingServices bookingServices = BookingServices();
   SecureStorage secureStorage = SecureStorage();
+  CustomerService customerService = CustomerService();
 
   // TIMER VARIABLES
   String formattedMinutes = "";
@@ -40,15 +40,32 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   Timer? countdownTimer;
   bool enableChasingTime = false;
   List data = [];
+  List customer = [];
 
   @override
   void initState() {
     super.initState();
     debugPrint("--- EXTEND BLOCK TIMER ---");
-    getBalance();
+    // getBalance();
     getLocation();
+    getCustomerDetails();
+
     setState(() {
       data = widget.blockRide;
+    });
+  }
+
+  getCustomerDetails() {
+    alertServices.showLoading("Getting user details...");
+    String mobile = secureStorage.get("mobile");
+    customerService.getCustomer(mobile.toString(), true).then((response) async {
+      alertServices.hideLoading();
+      if (response != null) {
+        customer = [response];
+        print("customer $customer");
+      } else {
+        alertServices.errorToast("Customer details not found!");
+      }
     });
   }
 
@@ -80,136 +97,17 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                       zoom: 15,
                     ),
                   ),
-                  Positioned(
-                    top: 5,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CachedNetworkImage(
-                          width: 41,
-                          height: 41,
-                          imageUrl: "selfieUrl",
-                          errorWidget: (context, url, error) => Image.asset(
-                            "assets/img/profile_logo.png",
-                            width: 41,
-                            height: 41,
-                            fit: BoxFit.cover,
-                          ),
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              // shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 1.5,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Container(
-                          width: 260,
-                          margin: const EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffF5F5F5),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: const Color(0xffD9D9D9),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  const SizedBox(width: 10),
-                                  const Icon(Icons.location_on_outlined),
-                                  const SizedBox(width: 5),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      currentLocation,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // Navigator.pushNamed(
-                                  //     context, "wallet_summary");
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 40,
-                                      width: 2,
-                                      color: const Color(0xffDEDEDE),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Image.asset(
-                                      "assets/img/wallet.png",
-                                      height: 25,
-                                      width: 25,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "\u{20B9} $availableBalance",
-                                      style: TextStyle(
-                                        fontSize: width / 30,
-                                        fontWeight: FontWeight.bold,
-                                        color: getColor(availableBalance),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                  if (customer.isNotEmpty) ...[
+                    HomeTopWidget(
+                      imgUrl: customer[0]['selfi'],
+                      location: currentLocation.toString(),
+                      balance:
+                          double.parse(customer[0]['walletBalance'].toString()),
                     ),
-                  ),
+                  ],
                 ],
               ),
       ),
-    );
-  }
-
-  TextStyle heading(Color color) {
-    return TextStyle(
-      fontFamily: "Poppins",
-      fontWeight: FontWeight.bold,
-      color: color,
-      fontSize: 18,
-    );
-  }
-
-  needHelpAlert(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      isDismissible: true,
-      enableDrag: false,
-      builder: (context) {
-        return const NeedHelpWidget();
-      },
     );
   }
 
@@ -224,251 +122,77 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
         return PopScope(
           canPop: false,
           child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(25),
-                ),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(25),
               ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Card(
-                      elevation: 0,
-                      color: const Color(0xffF5F5F5),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                RichText(
-                                    text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'dri',
-                                      style: heading(Colors.black),
-                                    ),
-                                    TextSpan(
-                                      text: 'EV ',
-                                      style: heading(AppColors.primary),
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          "${data[0]['planType'].toString()} ${data[0]['vehicleId'].toString()}",
-                                      // "${rideDetails[0]['planType'].toString()}-${rideDetails[0]['vehicleId'].toString()}",
-                                      // '${fd[0]['planType']}-${fd[0]['vehicleId']}',
-                                      style: heading(Colors.black),
-                                    ),
-                                  ],
-                                )),
-                                const Spacer(),
-                                IconButton(
-                                  onPressed: () {
-                                    needHelpAlert(context);
-                                  },
-                                  icon: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Container(
-                                      width: 25,
-                                      height: 25,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.headset_mic_outlined,
-                                          color: Colors.white,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                  children: <Widget>[
-                                    const Text(
-                                      "Estimated Range",
-                                      style: TextStyle(
-                                        color: Color(0xff626262),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${data[0]['estimatedRange']}",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Image.asset(
-                                  "assets/img/bike2.png",
-                                  height: 150,
-                                  width: 170,
-                                  fit: BoxFit.cover,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BikeCardWidget(data: data),
+                  const Divider(indent: 5, endIndent: 5),
+                  const SizedBox(height: 16),
+                  TimerButtonWidget(data: data),
+                  const SizedBox(height: 25),
+                  SizedBox(
+                    height: 45,
+                    // height: MediaQuery.of(context).size.height / 3,
+                    child: AppButtonWidget(
+                      title: "More",
+                      onPressed: () {
+                        List params = [
+                          {
+                            "campus": data[0]['stationName'].toString(),
+                            "distance": data[0]['distanceRange'].toString(),
+                            "vehicleId": data[0]['vehicleId'].toString(),
+                            "via": "api",
+                            "data": data
+                          }
+                        ];
+                        print("More: ${jsonEncode(params)}");
+                        // Navigator.pushNamed(context, "bike_fare_details",
+                        //     arguments: {"query": params});
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          "bike_fare_details",
+                          arguments: {"query": params},
+                          (route) => false,
+                        );
+                      },
                     ),
-                    // IntrinsicHeight(
-                    //   child: Card(
-                    //     surfaceTintColor: Colors.transparent,
-                    //     color: const Color(0xffF5F5F5),
-                    //     elevation: 0,
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //     ),
-                    //     clipBehavior: Clip.antiAlias,
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.all(15),
-                    //       child: Row(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         mainAxisAlignment: MainAxisAlignment.start,
-                    //         children: [
-                    //           Expanded(
-                    //             flex: 3,
-                    //             child: Column(
-                    //               mainAxisAlignment: MainAxisAlignment.start,
-                    //               crossAxisAlignment: CrossAxisAlignment.start,
-                    //               children: [
-                    //                 Row(
-                    //                   crossAxisAlignment: CrossAxisAlignment.start,
-                    //                   mainAxisSize: MainAxisSize.min,
-                    //                   children: [
-                    //                     Align(
-                    //                       alignment: Alignment.centerLeft,
-                    //                       child: RichText(
-                    //                         text: TextSpan(
-                    //                           children: [
-                    //                             TextSpan(
-                    //                               text: 'dri',
-                    //                               style: heading(Colors.black),
-                    //                             ),
-                    //                             TextSpan(
-                    //                               text: 'EV ',
-                    //                               style: heading(AppColors.primary),
-                    //                             ),
-                    //                           ],
-                    //                         ),
-                    //                       ),
-                    //                     ),
-                    //                     Text(
-                    //                       '${data[0]['planType'].toString()} ${data[0]['vehicleId'].toString()}',
-                    //                       style: heading(Colors.black),
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //                 const SizedBox(height: 16),
-                    //                 const Text(
-                    //                   "Estimated Range",
-                    //                   style: TextStyle(
-                    //                     fontSize: 12,
-                    //                     color: Color(0xff626262),
-                    //                   ),
-                    //                 ),
-                    //                 Text(
-                    //                   "${data[0]['estimatedRange'] ?? "0"} km",
-                    //                   style: const TextStyle(
-                    //                     fontSize: 12,
-                    //                     // fontFamily: "Poppins",
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           ),
-                    //           Expanded(
-                    //             flex: 3,
-                    //             child: Column(
-                    //               mainAxisAlignment: MainAxisAlignment.center,
-                    //               crossAxisAlignment: CrossAxisAlignment.center,
-                    //               children: [
-                    //                 const SizedBox(height: 5),
-                    //                 data[0]['imageUrl'] != null
-                    //                     ? Image.network(data[0]['imageUrl'].toString(),
-                    //                     width: 200, height: 130, fit: BoxFit.contain)
-                    //                     : Image.asset("assets/img/bike2.png",
-                    //                     fit: BoxFit.cover),
-                    //               ],
-                    //             ),
-                    //           )
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    const Divider(indent: 5, endIndent: 5),
-                    const SizedBox(height: 25),
-                    TimerButtonWidget(data: data),
-                    const SizedBox(height: 25),
-                    SizedBox(
-                      height: 45,
-                      // height: MediaQuery.of(context).size.height / 3,
-                      child: AppButtonWidget(
-                        title: "More",
-                        onPressed: () {
-                          List params = [
-                            {
-                              "campus": data[0]['stationName'].toString(),
-                              "distance": data[0]['distanceRange'].toString(),
-                              "vehicleId": data[0]['vehicleId'].toString(),
-                              "via": "api",
-                              "data": data
-                            }
-                          ];
-                          print("More: ${jsonEncode(params)}");
-                          // Navigator.pushNamed(context, "bike_fare_details",
-                          //     arguments: {"query": params});
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            "bike_fare_details",
-                            arguments: {"query": params},
-                            (route) => false,
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.info_outline,
-                              color: Colors.red, size: 20),
-                          const SizedBox(width: 5),
-                          Text(
-                            "You can end your ride at the ${data[0]['stationName'].toString()} station only.",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 10,
-                            ),
+                  ),
+                  const SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.info_outline,
+                            color: Colors.red, size: 20),
+                        const SizedBox(width: 5),
+                        Text(
+                          "You can end your ride at the ${data[0]['stationName'].toString()} station only.",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 10,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-
-                  ],
-                ),
-              )),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
@@ -535,16 +259,16 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   }
 
   // GET USER WALLET BALANCE
-  getBalance() async {
-    alertServices.showLoading();
-    String mobile = await secureStorage.get("mobile");
-    bookingServices.getWalletBalance(mobile).then((r) {
-      alertServices.hideLoading();
-      double balance = r['balance'];
-      availableBalance = balance;
-      setState(() {});
-    });
-  }
+  // getBalance() async {
+  //   alertServices.showLoading();
+  //   String mobile = await secureStorage.get("mobile");
+  //   bookingServices.getWalletBalance(mobile).then((r) {
+  //     alertServices.hideLoading();
+  //     double balance = r['balance'];
+  //     availableBalance = balance;
+  //     setState(() {});
+  //   });
+  // }
 
   getColor(double value) {
     if (value < 350) {

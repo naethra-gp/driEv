@@ -60,6 +60,7 @@ class Assets {
   static const String campusScreensVoteErrorScreen = 'lib/app_pages/campus_screens/vote_error_screen.dart';
   static const String campusScreensVoteForYourCampus = 'lib/app_pages/campus_screens/vote_for_your_campus.dart';
   static const String campusScreensVoteSuccessScreen = 'lib/app_pages/campus_screens/vote_success_screen.dart';
+  static const String extendBikeTimerBikeCardWidget = 'lib/app_pages/bike_booking/extend_bike_timer/bike_card_widget.dart';
   static const String extendBikeTimerExtendBikeTimer = 'lib/app_pages/bike_booking/extend_bike_timer/extend_bike_timer.dart';
   static const String fontsPoppinsBold = 'assets/fonts/Poppins-Bold.ttf';
   static const String fontsPoppinsRegular = 'assets/fonts/Poppins-Regular.ttf';
