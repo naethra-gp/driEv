@@ -195,7 +195,7 @@ class AlertServices {
     return showModalBottomSheet(
       context: context,
       barrierColor: Colors.black87,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       isDismissible: true,
       enableDrag: false,
       builder: (context) {

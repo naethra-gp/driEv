@@ -24,18 +24,18 @@ class _RateThisRideState extends State<RateThisRide> {
 
   final List<String> lowRatingItems = [
     "Battery issue",
-    "Employees misbehaving",
+    "Short range",
     "Payment issue",
     "Booking issue",
-    "Short range",
+    "Employees misbehaving",
     "Others"
   ];
   final List<String> midRatingItems = [
     "Increase Vehicles",
-    "More driEV Stations",
     "Smoother App",
     "Quick Support",
     "Vehicle Quality",
+    "More driEV Stations",
     "Others"
   ];
   List<String> selectedItem1 = [];
@@ -170,12 +170,12 @@ class _RateThisRideState extends State<RateThisRide> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Wrap(
-                      spacing: 30.0,
-                      runSpacing: 2.0,
+                      spacing: 10.0,
+                      runSpacing: 1.0,
                       children: items
                           .map(
                             (e) => FilterChip(
-                              elevation: 2,
+                              elevation: 0,
                               backgroundColor: Colors.white,
                               showCheckmark: false,
                               selectedColor: Colors.white,
@@ -194,11 +194,12 @@ class _RateThisRideState extends State<RateThisRide> {
                                   style: const TextStyle(
                                     fontFamily: "Roboto",
                                     fontWeight: FontWeight.normal,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
                               labelStyle: const TextStyle(
-                                fontSize: 13,
+                                fontSize: 12,
                                 color: AppColors.chipText,
                                 fontWeight: FontWeight.w400,
                               ),

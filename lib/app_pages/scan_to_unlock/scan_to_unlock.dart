@@ -56,8 +56,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       });
       // startMyRide();
     } else {
-      String msg =
-          "Wrong vehicle! Scan the code of the assigned vehicle to end the ride";
+      String msg = "Entered/Scanned Vehicle is invalid";
       alertServices.errorToast(msg);
     }
   }
@@ -181,8 +180,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
         print("Start my Ride");
         startMyRide();
       } else {
-        alertServices.errorToast(
-            "Wrong vehicle! Scan the code of the assigned vehicle to end the ride");
+        String msg = "Entered/Scanned Vehicle is invalid";
+        alertServices.errorToast(msg);
         Navigator.pushReplacementNamed(context, "scan_to_unlock",
             arguments: widget.data);
       }

@@ -221,7 +221,8 @@ class Connection {
             .errorToast('Failed to upload file: ${response.reasonPhrase}');
       }
     } on FileSystemException catch (e) {
-      alertService.errorToast('Something went wrong. Please try again in a bit.');
+      alertService
+          .errorToast('Something went wrong. Please try again in a bit.');
     } catch (e) {
       if (e is SocketException) {
         alertService

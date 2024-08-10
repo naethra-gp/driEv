@@ -112,8 +112,8 @@ class _EndRideScannerState extends State<EndRideScanner> {
       setState(() {
         bikeNumberCtl.text = "";
       });
-      alertServices
-          .errorToast("Wrong vehicle!!! Scan the code of the selected vehicle");
+      String msg = "Entered/Scanned Vehicle is invalid";
+      alertServices.errorToast(msg);
     } else {
       /// BIKE NUMBER VALID STATE
       FocusScope.of(context).unfocus();
