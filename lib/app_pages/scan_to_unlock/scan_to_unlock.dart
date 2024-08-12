@@ -173,6 +173,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
 
   submitButtonClicked() {
     // startMyRide();
+    FocusScope.of(context).unfocus();
     String bike = bikeNumberCtl.text.toString();
     if (bike.isNotEmpty && bike.length <= 6) {
       String vId = widget.data[0]['vehicleId'].toString();
@@ -244,7 +245,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   }
 
   bookAndStartMyRide() {
-    FocusScope.of(context).unfocus();
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
     _cancelTimer();

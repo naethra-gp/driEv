@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
             ],
             if (customer.isNotEmpty)
               HomeTopWidget(
-                imgUrl: customer[0]['selfi'],
+                imgUrl: customer[0]['selfi'].toString(),
                 location: location.toString(),
                 balance: double.parse(customer[0]['walletBalance'].toString()),
               ),

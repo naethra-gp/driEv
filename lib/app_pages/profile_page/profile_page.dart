@@ -454,7 +454,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(
-                                                "${customerDetails[0]['rideDistance']} km",
+                                                "${double.parse(customerDetails[0]['rideDistance'].toString()).toStringAsFixed(2)} km",
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   color: AppColors.primary,
