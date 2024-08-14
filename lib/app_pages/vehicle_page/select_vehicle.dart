@@ -257,7 +257,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                       ),
                                       TextSpan(
                                         text:
-                                            '$plan ${filterVehicleList[index]['vehicleId']}',
+                                            '$plan ${filterVehicleList[index]['vehicleId'].toString()}',
                                         style: const TextStyle(
                                           fontFamily: "Poppins",
                                           fontWeight: FontWeight.bold,
@@ -300,7 +300,7 @@ class _SelectVehicleState extends State<SelectVehiclePage> {
                                                       ['distanceRange'] ==
                                                   null
                                               ? "-"
-                                              : "${filterVehicleList[index]['distanceRange']} KM",
+                                              : "${filterVehicleList[index]['distanceRange'].toString()} KM",
                                           style: const TextStyle(
                                             fontSize: 10,
                                             fontFamily: "Poppins",
