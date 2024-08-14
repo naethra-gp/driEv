@@ -217,7 +217,7 @@ class OnRideBottomSheet extends StatelessWidget {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            '${rideDetails[0]['totalKm']} km',
+                            '${rideDetails[0]['totalKm'].toString()} km',
                             style: const TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold),
                           ),
@@ -251,7 +251,7 @@ class OnRideBottomSheet extends StatelessWidget {
                     List params = [
                       {
                         "rideId": widget.rideId.toString(),
-                        "scanCode": rideDetails[0]['scanCode'],
+                        "scanCode": rideDetails[0]['scanCode'].toString(),
                       }
                     ];
                     print(params);
@@ -278,7 +278,7 @@ class OnRideBottomSheet extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    'You can end your ride at the ${widget.rideId.split("-").first} station only',
+                    'You can end your ride at the ${widget.rideId.toString().split("-").first} station only',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 12,
