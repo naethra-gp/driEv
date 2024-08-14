@@ -68,10 +68,10 @@ class _AllTransactionState extends State<AllTransaction> {
                       itemBuilder: (context, index) {
                         final td = transactionDetails[index];
                         return WalletListWidget(
-                          title: td['description'],
-                          subTitle: td['transactionTime'],
+                          title: td['description'].toString(),
+                          subTitle: td['transactionTime'].toString(),
                           amount: td['transactionAmount'].toStringAsFixed(2),
-                          transactionType: td['transactionType'],
+                          transactionType: td['transactionType'].toString(),
                         );
                       },
                       separatorBuilder: (context, index) {
