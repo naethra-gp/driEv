@@ -43,13 +43,13 @@ class _VoteForYourCampusState extends State<VoteForYourCampus> {
   void search(String value) {
     if (value.isEmpty) {
       setState(() {
-        searchList = allColleges;
+        searchList = allColleges.toList();
       });
     } else {
       setState(() {
         searchList = allColleges.where((element) {
           final title = element['collegeName'].toString().toLowerCase();
-          final input = value.toLowerCase();
+          final input = value.toString().toLowerCase();
           return title.contains(input);
         }).toList();
       });
@@ -129,8 +129,8 @@ class _VoteForYourCampusState extends State<VoteForYourCampus> {
                   physics: const ScrollPhysics(),
                   itemCount: searchList.length,
                   itemBuilder: (context, index) {
-                    final item = searchList[index];
-                    return listView([item]);
+                    final item = searchList[index].toString();
+                    return listView([item].toList());
                   },
                 ),
               ),

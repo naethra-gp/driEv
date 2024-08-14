@@ -22,7 +22,7 @@ class _VoteErrorScreenState extends State<VoteErrorScreen> {
   void initState() {
     super.initState();
     setState(() {
-      message = widget.params['message'];
+      message = widget.params['message'].toString();
     });
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushNamedAndRemoveUntil(context, "rank_list", (route) => false);

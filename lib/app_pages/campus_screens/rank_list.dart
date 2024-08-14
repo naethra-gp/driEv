@@ -153,7 +153,7 @@ class _RankListState extends State<RankList> {
                     ),
                   ),
                   Text(
-                    "${list['votingCount']} Votes",
+                    "${list['votingCount'].toString()} Votes",
                     style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
