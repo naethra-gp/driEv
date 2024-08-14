@@ -119,7 +119,7 @@ class _RideDetailsState extends State<RideDetails> {
                                                 ),
                                                 TextSpan(
                                                   text:
-                                                      "${widget.rideId[0]['planType']} ${widget.rideId[0]['vehicleId']}",
+                                                      "${widget.rideId[0]['planType'].toString()} ${widget.rideId[0]['vehicleId'].toString()}",
                                                   style: heading(Colors.black),
                                                 ),
                                               ],
@@ -162,7 +162,7 @@ class _RideDetailsState extends State<RideDetails> {
                                                 ),
                                               ),
                                               Text(
-                                                "₹ ${widget.rideId[0]['payableAmount']}",
+                                                "₹ ${widget.rideId[0]['payableAmount'].toString()}",
                                                 style: const TextStyle(
                                                   fontSize: 34,
                                                   color: Colors.black,
@@ -190,19 +190,21 @@ class _RideDetailsState extends State<RideDetails> {
                                     ListViewWidget(
                                         label: "Date",
                                         value: DateFormat("dd MMM yyyy").format(
-                                            DateTime.parse(
-                                                widget.rideId[0]['endTime']))),
+                                            DateTime.parse(widget.rideId[0]
+                                                    ['endTime']
+                                                .toString()))),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Vehicle no.",
                                         value:
-                                            "driEV ${widget.rideId[0]['vehicleId']}"),
+                                            "driEV ${widget.rideId[0]['vehicleId'].toString()}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Time",
                                         value: DateFormat.jm().format(
-                                            DateTime.parse(
-                                                widget.rideId[0]['endTime']))),
+                                            DateTime.parse(widget.rideId[0]
+                                                    ['endTime']
+                                                .toString()))),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Base Charge",
@@ -212,32 +214,32 @@ class _RideDetailsState extends State<RideDetails> {
                                     ListViewWidget(
                                         label: "Ride Distance (KM)",
                                         value:
-                                            "${widget.rideId[0]['totalKm']}"),
+                                            "${widget.rideId[0]['totalKm'].toString()}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Billable Distance (KM)",
                                         value:
-                                            "${widget.rideId[0]['billableKm']}"),
+                                            "${widget.rideId[0]['billableKm'].toString()}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Ride Time",
                                         value:
-                                            "${widget.rideId[0]['duration']}"),
+                                            "${widget.rideId[0]['duration'].toString()}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Billable Time",
                                         value:
-                                            "${widget.rideId[0]['billableTime']}"),
+                                            "${widget.rideId[0]['billableTime'].toString()}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Total Amount (Incl.GST)",
                                         value:
-                                            "${widget.rideId[0]['payableAmount']}"),
+                                            "${widget.rideId[0]['payableAmount'].toString()}"),
                                     CustomTheme.defaultHeight10,
                                     ListViewWidget(
                                         label: "Total Amount (excl.GST)",
                                         value:
-                                            "${widget.rideId[0]['payableAmountExclGst']}"),
+                                            "${widget.rideId[0]['payableAmountExclGst'].toString()}"),
                                     CustomTheme.defaultHeight10,
                                   ],
                                 ),
