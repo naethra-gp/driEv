@@ -592,10 +592,10 @@ class _HomeState extends State<Home> {
             : () {
                 List list = [
                   {
-                    'sId': stationDetails['stationId'],
-                    'sName': stationDetails['stationName'],
-                    'plan': selectedPlan,
-                    'distanceText': distanceText,
+                    'sId': stationDetails['stationId'].toString(),
+                    'sName': stationDetails['stationName'].toString(),
+                    'plan': selectedPlan.toString(),
+                    'distanceText': distanceText.toString(),
                     'distance': distance.toString().replaceAll(".0", ""),
                   },
                 ];
@@ -609,7 +609,8 @@ class _HomeState extends State<Home> {
   getVehiclesByPlan(List list) async {
     alertServices.showLoading();
     vehicleService
-        .getVehiclesByPlan(list[0]['sId'], list[0]['plan'])
+        .getVehiclesByPlan(
+            list[0]['sId'].toString(), list[0]['plan'].toString())
         .then((response) async {
       alertServices.hideLoading();
       filterVehicleList = [];
@@ -640,11 +641,11 @@ class _HomeState extends State<Home> {
       } else {
         List params = [
           {
-            "sId": list[0]['sId'],
-            "sName": list[0]['sName'],
-            "plan": list[0]['plan'],
-            "distanceText": list[0]['distanceText'],
-            "distance": list[0]['distance'],
+            "sId": list[0]['sId'].toString(),
+            "sName": list[0]['sName'].toString(),
+            "plan": list[0]['plan'].toString(),
+            "distanceText": list[0]['distanceText'].toString(),
+            "distance": list[0]['distance'].toString(),
             "filterVehicleList": filterVehicleList,
             "closedVehicleList": closedVehicleList,
           }

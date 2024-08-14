@@ -507,10 +507,10 @@ class _HomePageState extends State<HomePage> {
             : () {
                 List list = [
                   {
-                    'sId': stationDetails['stationId'],
-                    'sName': stationDetails['stationName'],
-                    'plan': selectedPlan,
-                    'distanceText': distanceText,
+                    'sId': stationDetails['stationId'].toString(),
+                    'sName': stationDetails['stationName'].toString(),
+                    'plan': selectedPlan.toString(),
+                    'distanceText': distanceText.toString(),
                     'distance': distance.toString().replaceAll(".0", ""),
                   },
                 ];
@@ -523,7 +523,9 @@ class _HomePageState extends State<HomePage> {
   // VEHICLE FILTRATION
   getVehiclesByPlan(List list) async {
     alertServices.showLoading();
-    vehicleService.getVehiclesByStation(list[0]['sId']).then((response) async {
+    vehicleService
+        .getVehiclesByStation(list[0]['sId'].toString())
+        .then((response) async {
       alertServices.hideLoading();
       print("Vehicle Length --> ${response.length}");
       filterVehicleList = [];
@@ -542,12 +544,14 @@ class _HomePageState extends State<HomePage> {
               checkConditions(minDistance, maxDistance, userDistance);
           setState(() {
             if (result == "exact") {
-              if(vehicleList[i]['planType'].toString() == list[0]['plan'].toString()) {
-                filterVehicleList.add(vehicleList[i]);
+              if (vehicleList[i]['planType'].toString() ==
+                  list[0]['plan'].toString()) {
+                filterVehicleList.add(vehicleList[i].toString());
               }
             } else if (result == "withRange") {
-              if(vehicleList[i]['planType'].toString() != list[0]['plan'].toString()) {
-                closedVehicleList.add(vehicleList[i]);
+              if (vehicleList[i]['planType'].toString() !=
+                  list[0]['plan'].toString()) {
+                closedVehicleList.add(vehicleList[i].toString());
               }
               // closedVehicleList.add(vehicleList[i]);
             } else {
@@ -567,11 +571,11 @@ class _HomePageState extends State<HomePage> {
       } else {
         List params = [
           {
-            "sId": list[0]['sId'],
-            "sName": list[0]['sName'],
+            "sId": list[0]['sId'].toString(),
+            "sName": list[0]['sName'].toString(),
             // "plan": list[0]['plan'],
-            "distanceText": list[0]['distanceText'],
-            "distance": list[0]['distance'],
+            "distanceText": list[0]['distanceText'].toString(),
+            "distance": list[0]['distance'].toString(),
             "filterVehicleList": filterVehicleList,
             "closedVehicleList": closedVehicleList,
           }
