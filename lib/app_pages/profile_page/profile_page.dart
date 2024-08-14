@@ -419,7 +419,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(
-                                                "${customerDetails[0]['co2Saved']} kg",
+                                                "${customerDetails[0]['co2Saved'].toString()} kg",
                                                 textAlign: TextAlign.left,
                                                 style: const TextStyle(
                                                   fontSize: 12,
@@ -487,7 +487,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Icons.mail_outline,
                                   customerDetails[0]['emailId'].toString(),
                                   Icons.phone_iphone_outlined,
-                                  customerDetails[0]['contact'],
+                                  customerDetails[0]['contact'].toString(),
                                   fontSize),
                               // defaultHeight,
                               const SizedBox(height: 10),
@@ -511,7 +511,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   for (int i = 0; i < documents.length; i++) ...[
                     if (documents[i]['rejected'] == true) ...[
                       DocumentReUpload(
-                        document: documents[i],
+                        document: documents[i].toString(),
                         onDataReceived: (bool status) {
                           if (status) {
                             alertServices
@@ -524,7 +524,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                     if (documents[i]['uploaded'] == false) ...[
                       DocumentReUpload(
-                        document: documents[i],
+                        document: documents[i].toString(),
                         onDataReceived: (bool status) {
                           if (status) {
                             alertServices
@@ -752,7 +752,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               text: 'last trip covering',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           TextSpan(
-                            text: ' ${aa[0]['lastRideDistance']} kilometers!',
+                            text:
+                                ' ${aa[0]['lastRideDistance'].toString()} kilometers!',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,

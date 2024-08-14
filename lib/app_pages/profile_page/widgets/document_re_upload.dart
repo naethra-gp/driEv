@@ -39,7 +39,7 @@ class DocumentReUpload extends StatelessWidget {
             child: Wrap(
               children: [
                 Text(
-                  "${document['name']} - ${document['comment'] ?? "N/A"}",
+                  "${document['name'].toString()} - ${document['comment'] ?? "N/A"}",
                   overflow: TextOverflow.clip,
                   style: const TextStyle(
                     color: Colors.red,
