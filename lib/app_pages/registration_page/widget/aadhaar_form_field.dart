@@ -147,7 +147,7 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
       if (response != null) {
         print("aadhaar response -> $response");
         alertServices.successToast(response['message']);
-        clientId = response['data']['client_id'];
+        clientId = response['data']['client_id'].toString();
         widget.otpSent(true, clientId);
         _timer?.cancel();
         startTimer();

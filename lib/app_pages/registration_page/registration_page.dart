@@ -229,7 +229,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               );
                             }).toList(),
                             title: "Gender",
-                            onSelected:  (value) {
+                            onSelected: (value) {
                               setState(() {
                                 genderCtrl.text = value!.toString();
                               });
@@ -429,7 +429,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 validator: (value) {
                                   if (campusDocList[i]['mandatory'] == 'Y') {
                                     if (value.toString().trim().isEmpty) {
-                                      return "${campusDocList[i]['documentName']} Mandatory!";
+                                      return "${campusDocList[i]['documentName'].toString()} Mandatory!";
                                     }
                                   }
 
@@ -488,25 +488,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
     List uploadArray = [];
     for (int d = 0; d < docList.length; d++) {
       uploadArray.add({
-        "name": docList[d]['documentName'],
-        "id": docList[d]['documentId'],
-        "storageUrl": docList[d]['url'],
+        "name": docList[d]['documentName'].toString(),
+        "id": docList[d]['documentId'].toString(),
+        "storageUrl": docList[d]['url'].toString(),
       });
     }
     var refer = secureStorage.get("referCode") ?? "";
     final request = {
-      "name": nameCtrl.text,
-      "gender": getGender(genderCtrl.text),
-      "contact": contactCtrl.text,
-      "altContact": altContactCtrl.text,
-      "emailId": emailCtrl.text,
-      "rollNo": rollNoCtrl.text,
+      "name": nameCtrl.text.toString(),
+      "gender": getGender(genderCtrl.text).toString(),
+      "contact": contactCtrl.text.toString(),
+      "altContact": altContactCtrl.text.toString(),
+      "emailId": emailCtrl.text.toString(),
+      "rollNo": rollNoCtrl.text.toString(),
       "referralCode": refer.toString(),
-      "aadharNo": aadhaarMask.getUnmaskedText(),
+      "aadharNo": aadhaarMask.getUnmaskedText().toString(),
       "aadharVerificationStatus": isAadhaarVerified ? "Y" : "N",
       "organization": campusDetail[0]['campusName'].toString(),
-      "documents": uploadArray,
-      "aadharDetails": isAadhaarRequired ? aadhaarDetails[0] : {},
+      "documents": uploadArray.toString(),
+      "aadharDetails": isAadhaarRequired ? aadhaarDetails[0].toString() : {},
     };
     alertServices.showLoading();
     print(jsonEncode(request));
