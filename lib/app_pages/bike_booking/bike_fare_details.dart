@@ -591,8 +591,32 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     List arg = [
       {"campus": campus, "vehicleId": vehicleId}
     ];
+
     stopCountdown();
     Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+
+    // List params = [
+    //   {
+    //     "campus": data[0]['stationName'].toString(),
+    //     "distance": data[0]['distanceRange'].toString(),
+    //     "vehicleId": data[0]['vehicleId'].toString(),
+    //     "via": "api",
+    //     "data": data
+    //   }
+    // ];
+    // Navigator.pushNamedAndRemoveUntil(
+    //   context,
+    //   "bike_fare_details",
+    //   arguments: {"query": params},
+    //   (route) => false,
+    // );
+
+    if(isOnCounter) {
+
+    }
+
+
+
     // double balance = 0;
     // int selectedMin = 0;
     // double reserve = fareDetails[0]['offer']['blockAmountPerMin'];

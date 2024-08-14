@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -89,14 +90,26 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     ),
                     child: QrCamera(
                       fit: BoxFit.cover,
-                      onError: (context, error) => Text(
-                        error.toString(),
-                        style: const TextStyle(color: Colors.red),
+                      onError: (context, error) => const Center(
+                        child: Text(
+                          "Hey.! There may be an error with your camera due to multiple access attempts. Please try scanning it again.",
+                          textAlign: TextAlign.center,
+                          // error.toString(),
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
+                      // onError: (context, error) => AppButtonWidget(
+                      //   title: "Refresh",
+                      //   onPressed: () {
+                      //     setState(() {
+                      //
+                      //     });
+                      //   },
+                      // ),
                       cameraDirection: CameraDirection.BACK,
                       qrCodeCallback: (code) {
                         if (code != null) {
-                          print("QR Scanned --> $code");
+                          // print("QR Scanned --> $code");
                           QrMobileVision.stop();
                           setState(() {
                             bikeNumberCtl.text = code.toString();
@@ -183,8 +196,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       } else {
         String msg = "Entered/Scanned Vehicle is invalid";
         alertServices.errorToast(msg);
-        Navigator.pushReplacementNamed(context, "scan_to_unlock",
-            arguments: widget.data);
+        // Navigator.pushReplacementNamed(context, "scan_to_unlock",
+        //     arguments: widget.data);
       }
     }
     // print("Value:${bikeNumberCtl.text}");

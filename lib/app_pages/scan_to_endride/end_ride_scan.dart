@@ -143,9 +143,13 @@ class _EndRideScannerState extends State<EndRideScanner> {
                   ),
                 ),
                 child: QrCamera(
-                  onError: (context, error) => Text(
-                    error.toString(),
-                    style: const TextStyle(color: Colors.red),
+                  onError: (context, error) => const Center(
+                    child: Text(
+                      "Hey.! There may be an error with your camera due to multiple access attempts. Please try scanning it again.",
+                      textAlign: TextAlign.center,
+                      // error.toString(),
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
                   cameraDirection: CameraDirection.BACK,
                   qrCodeCallback: (code) {
