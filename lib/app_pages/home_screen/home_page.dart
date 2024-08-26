@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:driev/app_pages/home_screen/widget/home_top_widget.dart';
 import 'package:flutter/material.dart';
@@ -288,7 +287,7 @@ class _HomePageState extends State<HomePage> {
     alertServices.showLoading("Calculate distance...");
     // _zoomToFitPositions();
     Future.delayed(const Duration(seconds: 3), () {
-      print("_zoomToFitPositions");
+      debugPrint(" --- Zoom To Fit Positions --- ");
       alertServices.hideLoading();
       // TODO: UNCOMMENT THIS LINE
       // _zoomToFitPositions();
@@ -527,11 +526,9 @@ class _HomePageState extends State<HomePage> {
         .getVehiclesByStation(list[0]['sId'].toString())
         .then((response) async {
       alertServices.hideLoading();
-      print("Vehicle Length --> ${response.length}");
       filterVehicleList = [];
       closedVehicleList = [];
       vehicleList = response.where((i) => i['distanceRange'] != null).toList();
-      print("w/o Distance Vehicle Length --> ${vehicleList.length}");
 
       for (int i = 0; i < vehicleList.length; i++) {
         List dis = vehicleList[i]['distanceRange'].toString().split("-");
@@ -561,11 +558,6 @@ class _HomePageState extends State<HomePage> {
         }
       }
 
-      print("filterVehicleList $filterVehicleList");
-      print("filterVehicleList Length: ${filterVehicleList.length}");
-      print("closedVehicleList $closedVehicleList");
-      print("closedVehicleList ${closedVehicleList.length}");
-
       if (closedVehicleList.isEmpty && filterVehicleList.isEmpty) {
         Navigator.pushNamed(context, "error_bike");
       } else {
@@ -580,7 +572,6 @@ class _HomePageState extends State<HomePage> {
             "closedVehicleList": closedVehicleList,
           }
         ];
-        print("params ${jsonEncode(params)}");
         Navigator.pushNamed(context, "select_vehicle", arguments: params);
       }
     });

@@ -509,9 +509,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 defaultHeight,
                 if (documents.isNotEmpty) ...[
                   for (int i = 0; i < documents.length; i++) ...[
+
                     if (documents[i]['rejected'] == true) ...[
                       DocumentReUpload(
-                        document: documents[i].toString(),
+                        document: documents[i],
                         onDataReceived: (bool status) {
                           if (status) {
                             alertServices
