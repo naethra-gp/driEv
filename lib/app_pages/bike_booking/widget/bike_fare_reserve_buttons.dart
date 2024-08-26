@@ -24,16 +24,16 @@ class BikeFareReserveButtons extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          textStyle: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.normal,
-            fontSize: 14,
-          ),
+          // textStyle: const TextStyle(
+          //   color: Colors.black,
+          //   fontWeight: FontWeight.normal,
+          //   fontSize: 12,
+          // ),
           foregroundColor: Colors.black,
           backgroundColor: selected ? Colors.white : const Color(0xffF5F5F5),
           padding: const EdgeInsets.symmetric(
             horizontal: 20,
-            vertical: 14,
+            // vertical: 10,
           ),
           animationDuration: const Duration(seconds: 1),
           splashFactory: InkRipple.splashFactory,
@@ -45,7 +45,11 @@ class BikeFareReserveButtons extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text('$title mins', style: const TextStyle(fontSize: 14)),
+        child: Text('$title mins',
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.black,
+            )),
       ),
     );
   }

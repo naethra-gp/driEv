@@ -44,6 +44,7 @@ class Assets {
   static const String appServicesWalletServices = 'lib/app_services/wallet_services.dart';
   static const String appSorry1 = 'assets/app/sorry1.png';
   static const String appStoragesSecureStorage = 'lib/app_storages/secure_storage.dart';
+  static const String appTestAppTest = 'lib/app_test/app_test.dart';
   static const String appThemesAppColors = 'lib/app_themes/app_colors.dart';
   static const String appThemesAppTheme = 'lib/app_themes/app_theme.dart';
   static const String appThemesCustomTheme = 'lib/app_themes/custom_theme.dart';

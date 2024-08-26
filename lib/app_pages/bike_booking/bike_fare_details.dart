@@ -203,6 +203,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                             ? null
                             : () {
                                 setState(() {
+                                  FocusScope.of(context).unfocus();
                                   for (var i in reserveTime) {
                                     i['selected'] = false;
                                   }

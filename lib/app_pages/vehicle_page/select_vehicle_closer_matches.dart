@@ -35,7 +35,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
     setState(() {
       data = widget.params;
     });
-    getAllCampus(widget.params[0]['sId'].toString());
+    getAllCampus(data[0]['sId'].toString());
   }
 
   getAllCampus(String id) {
@@ -43,9 +43,10 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
       alertServices.hideLoading();
       List list = response;
       List campus = list.where((e) => e['stationId'] == id).toList();
-      logoURL = campus[0]['logoUrl'].toString();
-      data = widget.params;
-      setState(() {});
+
+      setState(() {
+        logoURL = campus[0]['logoUrl'].toString();
+      });
     });
   }
 
@@ -137,13 +138,15 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                     ),
                     itemCount: cd.length,
                     itemBuilder: (context, index) {
+                      print("cd length ${cd.length}");
+                      print("cd ${cd[0]['vehicleId']}");
                       return DynamicCardWidget(
-                        imageUrl: cd[index]['imageUrl'].toString(),
-                        plan: cd[index]["planType"].toString(),
-                        distanceRange: cd[index]['distanceRange'].toString(),
-                        vehicleId: cd[index]['vehicleId'].toString(),
+                        imageUrl: cd[index]['imageUrl'] ?? "",
+                        plan: cd[index]["planType"],
+                        distanceRange: cd[index]['distanceRange'],
+                        vehicleId: cd[index]['vehicleId'],
                         onTap: () {
-                          cardClick(cd[index]['vehicleId'].toString());
+                          cardClick(cd[index]['vehicleId']);
                         },
                       );
                     },

@@ -3,6 +3,7 @@ import 'package:driev/app_pages/ride_history/ride_history.dart';
 import 'package:driev/app_pages/wallet_screens/wallet_summary.dart';
 import 'package:driev/app_pages/wallet_screens/walllet_all_transaction.dart';
 import 'package:driev/app_pages/wallet_screens/withdraw_amount.dart';
+import 'package:driev/app_test/app_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../app_pages/index.dart';
@@ -123,6 +124,9 @@ class AppRoute {
         case "ride_details":
           List args = settings.arguments as List;
           return RideDetails(rideId: args);
+
+        case "test":
+          return const AppTest();
       }
       return const LandingPage();
     });

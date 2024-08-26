@@ -546,12 +546,12 @@ class _HomePageState extends State<HomePage> {
             if (result == "exact") {
               if (vehicleList[i]['planType'].toString() ==
                   list[0]['plan'].toString()) {
-                filterVehicleList.add(vehicleList[i].toString());
+                filterVehicleList.add(vehicleList[i]);
               }
             } else if (result == "withRange") {
               if (vehicleList[i]['planType'].toString() !=
                   list[0]['plan'].toString()) {
-                closedVehicleList.add(vehicleList[i].toString());
+                closedVehicleList.add(vehicleList[i]);
               }
               // closedVehicleList.add(vehicleList[i]);
             } else {
