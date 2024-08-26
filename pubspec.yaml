@@ -38,7 +38,7 @@ dependencies:
   syncfusion_flutter_sliders: ^25.1.41
   url_launcher: ^6.2.6
   provider: ^6.1.2
-  connectivity_plus: ^6.0.4
+#  connectivity_plus: ^6.0.4
   animate_do: ^3.3.4
   syncfusion_flutter_core: ^25.1.42
   pin_code_fields: ^8.0.1

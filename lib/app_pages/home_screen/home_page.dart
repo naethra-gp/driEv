@@ -286,7 +286,7 @@ class _HomePageState extends State<HomePage> {
       _polyLines.add(polyline);
     });
     alertServices.showLoading("Calculate distance...");
-    _zoomToFitPositions();
+    // _zoomToFitPositions();
     Future.delayed(const Duration(seconds: 3), () {
       print("_zoomToFitPositions");
       alertServices.hideLoading();
