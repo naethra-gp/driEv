@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:driev/app_pages/home_screen/widget/home_top_widget.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    debugPrint("--- PAGE: Home Page ---");
     super.initState();
     getCustomerDetails();
   }
@@ -284,14 +286,17 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _polyLines.add(polyline);
     });
-    alertServices.showLoading("Calculate distance...");
-    // _zoomToFitPositions();
-    Future.delayed(const Duration(seconds: 3), () {
-      debugPrint(" --- Zoom To Fit Positions --- ");
-      alertServices.hideLoading();
-      // TODO: UNCOMMENT THIS LINE
-      // _zoomToFitPositions();
-    });
+    print("Platform: ${!Platform.isIOS}");
+    if (!Platform.isIOS) {
+      alertServices.showLoading("Calculate distance...");
+      _zoomToFitPositions();
+      Future.delayed(const Duration(seconds: 3), () {
+        debugPrint(" --- Zoom To Fit Positions --- ");
+        // alertServices.hideLoading();
+        // TODO: UNCOMMENT THIS LINE
+        // _zoomToFitPositions();
+      });
+    }
   }
 
   void _zoomToFitPositions() {
@@ -318,12 +323,12 @@ class _HomePageState extends State<HomePage> {
       );
 
       double padding = 50.0;
-      mapController?.animateCamera(
-        CameraUpdate.newLatLngBounds(bounds, padding),
-      );
-      mapController?.animateCamera(
-        CameraUpdate.zoomTo(zoomLevel),
-      );
+      mapController
+          ?.animateCamera(CameraUpdate.newLatLngBounds(bounds, padding));
+      mapController?.animateCamera(CameraUpdate.zoomTo(zoomLevel));
+      alertServices.hideLoading();
+    } else {
+      alertServices.errorToast("User Location/Station Location is missing!");
     }
   }
 
