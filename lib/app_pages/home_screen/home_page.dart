@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
                 zoomControlsEnabled: true,
                 compassEnabled: false,
                 mapType: MapType.normal,
+                minMaxZoomPreference: const MinMaxZoomPreference(15, 19),
                 onMapCreated: (GoogleMapController controller) {
                   mapController = controller;
                 },
@@ -152,7 +153,7 @@ class _HomePageState extends State<HomePage> {
               bottom: 0,
               left: 0,
               right: 0,
-              top: MediaQuery.of(context).size.height * 0.5,
+              top: MediaQuery.of(context).size.height * 0.45,
               child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -253,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: Container(
-                              margin: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.all(0),
                               width: double.infinity,
                               child: buttonWidget(),
                             ),
@@ -287,16 +288,16 @@ class _HomePageState extends State<HomePage> {
       _polyLines.add(polyline);
     });
     print("Platform: ${!Platform.isIOS}");
-    if (!Platform.isIOS) {
-      alertServices.showLoading("Calculate distance...");
-      _zoomToFitPositions();
-      Future.delayed(const Duration(seconds: 3), () {
-        debugPrint(" --- Zoom To Fit Positions --- ");
-        // alertServices.hideLoading();
-        // TODO: UNCOMMENT THIS LINE
-        // _zoomToFitPositions();
-      });
-    }
+    // if (!Platform.isIOS) {
+    //   alertServices.showLoading("Calculate distance...");
+    //   _zoomToFitPositions();
+    //   Future.delayed(const Duration(seconds: 3), () {
+    //     debugPrint(" --- Zoom To Fit Positions --- ");
+    //     // alertServices.hideLoading();
+    //     // TODO: UNCOMMENT THIS LINE
+    //     // _zoomToFitPositions();
+    //   });
+    // }
   }
 
   void _zoomToFitPositions() {
@@ -503,7 +504,7 @@ class _HomePageState extends State<HomePage> {
 
   buttonWidget() {
     return SizedBox(
-      height: 50,
+      height: 45,
       child: AppButtonWidget(
         title: "Proceed",
         onPressed: selectedPlan == ""

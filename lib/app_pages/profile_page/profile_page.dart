@@ -525,7 +525,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                     if (documents[i]['uploaded'] == false) ...[
                       DocumentReUpload(
-                        document: documents[i].toString(),
+                        document: documents[i],
                         onDataReceived: (bool status) {
                           if (status) {
                             alertServices
