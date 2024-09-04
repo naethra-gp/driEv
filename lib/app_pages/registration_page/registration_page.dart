@@ -47,6 +47,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController contactCtrl = TextEditingController();
   TextEditingController altContactCtrl = TextEditingController();
   TextEditingController aadhaarCtrl = TextEditingController();
+  TextEditingController passportCtrl = TextEditingController();
   TextEditingController aadhaarOTPCtrl = TextEditingController();
   final List<TextEditingController> _controllers = [];
 
@@ -60,6 +61,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool isAadhaarRequired = false;
   bool aadhaarOtpSent = false;
   bool aadhaarField = false;
+  late String nationalitySelection;
+  bool showAadhaarField = false;
+  bool showOverseasField = false;
+  bool isAadhaarCtrlDisposed = false;
+
   String clientId = "";
   @override
   void initState() {
@@ -78,10 +84,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
     rollNoCtrl.dispose();
     altContactCtrl.dispose();
     contactCtrl.dispose();
-    aadhaarCtrl.dispose();
+    passportCtrl.dispose();
+
+    if (aadhaarCtrl != null) {
+      aadhaarCtrl.dispose();
+      isAadhaarCtrlDisposed = true;
+    }
+
     for (var controller in _controllers) {
       controller.dispose();
     }
+
     super.dispose();
   }
 
@@ -90,6 +103,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     campusServices.getCampusById(widget.campusId).then((response) async {
       alertServices.hideLoading();
       campusDetail = [response];
+      print('campus detail $campusDetail');
       campusDocList = campusDetail[0]['campusDocList'];
       print("campusDocList $campusDocList");
       var a =
@@ -351,7 +365,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                           const SizedBox(height: 16),
                           TextFormWidget(
-                            title: 'Alt Contact',
+                            title: 'Alternative Contact',
                             controller: altContactCtrl,
                             keyboardType: TextInputType.phone,
                             maxLength: 10,
@@ -359,58 +373,109 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             prefixIcon: Icons.phone_iphone_outlined,
                           ),
                           const SizedBox(height: 16),
-                          AadhaarFormField(
-                              title: 'Aadhaar Number',
-                              required: true,
-                              readOnly: aadhaarField,
-                              controller: aadhaarCtrl,
-                              prefixIcon: Icons.person_pin_outlined,
-                              inputFormatters: [aadhaarMask],
-                              maxLength: 14,
-                              onChanged: (String value) {
-                                if (value.toString().trim().length == 14) {
-                                  FocusScope.of(context).unfocus();
-                                }
-                              },
-                              validator: (value) {
-                                if (isAadhaarRequired) {
-                                  if (value.toString().trim().isEmpty) {
-                                    return "Aadhaar Number is Mandatory!";
+                          CustomDropdown(
+                            dropdownMenuEntries: ['Indian', 'Overseas']
+                                .map((e) => e)
+                                .toList()
+                                .map<DropdownMenuEntry<String>>((value) {
+                              return DropdownMenuEntry<String>(
+                                value: value,
+                                label: value,
+                              );
+                            }).toList(),
+                            title: "Nationality",
+                            onSelected: (value) {
+                              setState(() {
+                                nationalitySelection = value.toString();
+                                if (nationalitySelection == "Indian") {
+                                  showAadhaarField = true;
+                                  showOverseasField = false;
+
+                                  if (isAadhaarCtrlDisposed ||
+                                      aadhaarCtrl == null) {
+                                    aadhaarCtrl = TextEditingController();
+                                    isAadhaarCtrlDisposed = false;
                                   }
-                                  if (value.toString().trim().length != 14) {
-                                    return "Invalid aadhaar number!";
-                                  }
+                                } else if (nationalitySelection == "Overseas") {
+                                  showOverseasField = true;
+                                  showAadhaarField = false;
+
+                                  isAadhaarCtrlDisposed = true;
+                                } else {
+                                  showAadhaarField = false;
+                                  showOverseasField = false;
                                 }
-                                return null;
-                              },
-                              otpSent: (bool otpSent, String id) {
-                                setState(() {
-                                  aadhaarOtpSent = otpSent;
-                                  clientId = id;
-                                });
-                              }),
+                              });
+                            },
+                          ),
                           const SizedBox(height: 16),
-                          if (aadhaarOtpSent) ...[
-                            AadhaarOtpFormField(
-                              title: 'Verify OTP',
+                          if (showAadhaarField) ...[
+                            AadhaarFormField(
+                                title: 'Aadhaar Number',
+                                required: true,
+                                readOnly: aadhaarField,
+                                controller: aadhaarCtrl,
+                                prefixIcon: Icons.person_pin_outlined,
+                                inputFormatters: [aadhaarMask],
+                                maxLength: 14,
+                                onChanged: (String value) {
+                                  if (value.toString().trim().length == 14) {
+                                    FocusScope.of(context).unfocus();
+                                  }
+                                },
+                                validator: (value) {
+                                  if (isAadhaarRequired) {
+                                    if (value.toString().trim().isEmpty) {
+                                      return "Aadhaar Number is Mandatory!";
+                                    }
+                                    if (value.toString().trim().length != 14) {
+                                      return "Invalid aadhaar number!";
+                                    }
+                                  }
+                                  return null;
+                                },
+                                otpSent: (bool otpSent, String id) {
+                                  setState(() {
+                                    aadhaarOtpSent = otpSent;
+                                    clientId = id;
+                                  });
+                                }),
+                            const SizedBox(height: 16),
+                            if (aadhaarOtpSent) ...[
+                              AadhaarOtpFormField(
+                                title: 'Verify OTP',
+                                required: true,
+                                clientId: clientId,
+                                prefixIcon: Icons.pin_outlined,
+                                maxLength: 6,
+                                onChanged: (String value) {
+                                  if (value.toString().trim().length == 6) {
+                                    FocusScope.of(context).unfocus();
+                                  }
+                                },
+                                onConfirm: (List list) {
+                                  if (list.isNotEmpty) {
+                                    aadhaarOtpSent = false;
+                                    aadhaarField = true;
+                                    isAadhaarVerified = true;
+                                    aadhaarDetails = list;
+                                    setState(() {});
+                                  }
+                                },
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                          ],
+                          if (showOverseasField) ...[
+                            TextFormWidget(
+                              title: 'Passport Number',
+                              controller: passportCtrl,
+                              keyboardType: TextInputType.text,
+                              maxLength: 15,
                               required: true,
-                              clientId: clientId,
-                              prefixIcon: Icons.pin_outlined,
-                              maxLength: 6,
-                              onChanged: (String value) {
-                                if (value.toString().trim().length == 6) {
-                                  FocusScope.of(context).unfocus();
-                                }
-                              },
-                              onConfirm: (List list) {
-                                if (list.isNotEmpty) {
-                                  aadhaarOtpSent = false;
-                                  aadhaarField = true;
-                                  isAadhaarVerified = true;
-                                  aadhaarDetails = list;
-                                  setState(() {});
-                                }
-                              },
+                              prefixIcon: Icons.phone_iphone_outlined,
+                              validator: (value) =>
+                                  validatePassport(value.toString()),
                             ),
                             const SizedBox(height: 16),
                           ],
@@ -481,6 +546,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
     } else {
       return "Others";
     }
+  }
+
+  String? validatePassport(String? value) {
+    final passportRegExp = RegExp(r'^[A-PR-WYa-pr-wy][1-9]\d\s?\d{4}[1-9]$');
+    if (value == null || value.isEmpty) {
+      return 'Please enter your passport number';
+    } else if (!passportRegExp.hasMatch(value)) {
+      return 'Enter a valid passport number';
+    }
+    return null;
   }
 
   submitForm() {

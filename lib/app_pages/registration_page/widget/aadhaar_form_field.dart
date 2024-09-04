@@ -115,7 +115,8 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
                 if (aadhaar.length != 12) {
                   as.errorToast("Please enter valid aadhaar!");
                 } else {
-                  if (verifyButton == "Send OTP" && !widget.readOnly) {
+                  if (verifyButton == "Send OTP" ||
+                      verifyButton == "Resend OTP" && !widget.readOnly) {
                     sentOtp();
                   } else {}
                 }
@@ -144,12 +145,14 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
     print(aadhaarNo);
     otpServices.aadhaarSentOtp({"id_number": aadhaarNo}).then((response) async {
       alertServices.hideLoading();
+      print("aadhaar 1st response -> $response");
       if (response != null) {
         print("aadhaar response -> $response");
         alertServices.successToast(response['message']);
         clientId = response['data']['client_id'].toString();
         widget.otpSent(true, clientId);
         _timer?.cancel();
+        _otpExpireTime = 30;
         startTimer();
         setState(() {});
       } else {
@@ -165,7 +168,7 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
           _otpExpireTime--;
           verifyButton = "$_otpExpireTime s";
         } else {
-          verifyButton = "Send OTP";
+          verifyButton = "Resend OTP";
           _timer?.cancel();
         }
       });
