@@ -114,6 +114,7 @@ class Assets {
   static const String imgScooter3 = 'assets/img/scooter_3.png';
   static const String imgSlider1 = 'assets/img/slider1.png';
   static const String imgSliderIcon = 'assets/img/slider_icon.png';
+  static const String imgSliderLogo = 'assets/img/slider_logo.png';
   static const String imgSuccessLogo = 'assets/img/success_logo.png';
   static const String imgVector = 'assets/img/vector.png';
   static const String imgWallet = 'assets/img/wallet.png';

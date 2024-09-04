@@ -187,21 +187,24 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 5),
                       if (stationDetails.isNotEmpty) ...[
+                        const SizedBox(height: 15),
                         Flexible(
                           child: Wrap(
-                            spacing: 10.0,
-                            runSpacing: 1.0,
+                            spacing: 5.0,
+                            runSpacing: 0.0,
                             alignment: WrapAlignment.start,
                             children: [
                               if (stationDetails['plans'].length == 0) ...[
                                 const SizedBox(height: 16),
-                                const Text(
-                                  "Bummer! No bikes available right now. Check back later.",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: "Roboto",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
+                                const Center(
+                                  child: Text(
+                                    "Bummer! No bikes available right now. Check back later.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: "Roboto",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -232,8 +235,9 @@ class _HomePageState extends State<HomePage> {
                                           .map((e) => e = false)
                                           .toList();
                                       categoryList[i] = true;
-                                      selectedPlan =
-                                          stationDetails['plans'][i].toString();
+                                      selectedPlan = stationDetails['plans']
+                                              [i]
+                                          .toString();
                                     });
                                   },
                                   child: Text(
@@ -453,8 +457,8 @@ class _HomePageState extends State<HomePage> {
             interval: 10,
             shouldAlwaysShowTooltip: false,
             stepSize: 10,
-            thumbIcon:
-                Image.asset("assets/img/slider1.png", width: 16, height: 20),
+            thumbIcon: Image.asset("assets/img/slider_logo.png",
+                width: 10, height: 10),
             value: distance,
             labelPlacement: LabelPlacement.onTicks,
             thumbShape: const SfThumbShape(),
