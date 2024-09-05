@@ -479,7 +479,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             ),
                             const SizedBox(height: 16),
                           ],
-                          if (campusDetail.isNotEmpty)
+                          if (campusDetail.isNotEmpty) ...[
                             for (int i = 0; i < campusDocList.length; i++) ...[
                               FileUploadForm(
                                 controller: _controllers[i],
@@ -503,6 +503,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                               const SizedBox(height: 16),
                             ],
+                          ],
                         ],
                       ),
                     ),
@@ -516,7 +517,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     if (isAadhaarRequired) {
-                      if (isAadhaarVerified) {
+                      if (showOverseasField ? true : isAadhaarVerified) {
                         submitForm();
                       } else {
                         Fluttertoast.cancel();
@@ -561,6 +562,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   submitForm() {
     List docList = campusDocList;
     List uploadArray = [];
+
     for (int d = 0; d < docList.length; d++) {
       uploadArray.add({
         "name": docList[d]['documentName'].toString(),
@@ -568,6 +570,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "storageUrl": docList[d]['url'].toString(),
       });
     }
+
     var refer = secureStorage.get("referCode") ?? "";
     final request = {
       "name": nameCtrl.text.toString(),
@@ -577,11 +580,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "emailId": emailCtrl.text.toString(),
       "rollNo": rollNoCtrl.text.toString(),
       "referralCode": refer.toString(),
-      "aadharNo": aadhaarMask.getUnmaskedText().toString(),
+      "aadharNo": showOverseasField
+          ? passportCtrl.text.toString()
+          : aadhaarMask.getUnmaskedText().toString(),
+      "nationality": nationalitySelection.toString(),
       "aadharVerificationStatus": isAadhaarVerified ? "Y" : "N",
       "organization": campusDetail[0]['campusName'].toString(),
-      "documents": uploadArray.toString(),
-      "aadharDetails": isAadhaarRequired ? aadhaarDetails[0].toString() : {},
+      "documents": uploadArray,
+      "aadharDetails": showAadhaarField
+          ? isAadhaarRequired
+              ? aadhaarDetails[0].toString()
+              : {}
+          : {},
     };
     alertServices.showLoading();
     print(jsonEncode(request));

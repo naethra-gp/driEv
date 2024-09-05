@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:driev/app_config/app_constants.dart';
 import 'package:driev/app_themes/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,10 @@ Future<void> main() async {
   // }
 
   runApp(const MyApp());
+  // runApp(DevicePreview(
+  //   enabled: true,
+  //   builder: (context) => const MyApp(),
+  // ));
 }
 
 class MyApp extends StatelessWidget {
