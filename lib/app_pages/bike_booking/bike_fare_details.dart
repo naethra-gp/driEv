@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
 import 'package:flutter/material.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -61,6 +62,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   bool viaApi = false;
   bool viaApp = false;
 
+  final SuperTooltipController controller = SuperTooltipController();
+
   @override
   void initState() {
     super.initState();
@@ -96,7 +99,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     });
   }
 
-  backButtonClick() {
+  backButtonClick() async {
+    await controller.hideTooltip();
     if (isOnCounter) {
       print("isOnCounter enable: $isOnCounter");
       apiBack();
@@ -150,7 +154,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   ),
                 ),
                 if (fd.isNotEmpty) ...[
-                  FareListWidget(fd: fd),
+                  FareListWidget(fd: fd, controller: controller),
                 ],
                 const SizedBox(height: 16),
 
@@ -238,7 +242,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   OutlineButtonWidget(
                     height: buttonHeight,
                     foregroundColor: AppColors.primary,
-                    onPressed: () {
+                    onPressed: () async {
+                      await controller.hideTooltip();
                       FocusScope.of(context).unfocus();
                       print("User Selected or entered Mins: $reserveMins");
                       checkCondition();
@@ -612,11 +617,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     //   (route) => false,
     // );
 
-    if(isOnCounter) {
-
-    }
-
-
+    if (isOnCounter) {}
 
     // double balance = 0;
     // int selectedMin = 0;

@@ -6,6 +6,7 @@ class FareDetailsWidget extends StatelessWidget {
   final String price;
   final bool info;
   final List fareDetails;
+  final SuperTooltipController? controller;
 
   FareDetailsWidget({
     super.key,
@@ -13,8 +14,8 @@ class FareDetailsWidget extends StatelessWidget {
     required this.info,
     required this.fareDetails,
     required this.price,
+    this.controller,
   });
-  final SuperTooltipController _controller = SuperTooltipController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class FareDetailsWidget extends StatelessWidget {
               if (info)
                 SuperTooltip(
                   showBarrier: true,
-                  controller: _controller,
+                  controller: controller,
                   popupDirection: TooltipDirection.up,
                   content: Text(
                     "Receive a complimentary ${fareDetails[0]['offer']['discountMin'].toStringAsFixed(0)} minute ride spanning ${fareDetails[0]['offer']['discountKm'].toStringAsFixed(0)} kilometers",
@@ -53,7 +54,7 @@ class FareDetailsWidget extends StatelessWidget {
                   ),
                   child: GestureDetector(
                     onTap: () async {
-                      await _controller.showTooltip();
+                      await controller!.showTooltip();
                     },
                     child: const Padding(
                       padding: EdgeInsets.only(left: 4.0),

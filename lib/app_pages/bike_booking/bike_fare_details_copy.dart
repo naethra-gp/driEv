@@ -7,6 +7,7 @@ import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
@@ -52,6 +53,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   String formattedMinutes = "00";
   String formattedSeconds = "00";
   Timer? countdownTimer;
+  final SuperTooltipController controller = SuperTooltipController();
 
   @override
   void initState() {
@@ -171,7 +173,10 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                   ),
                 ),
                 if (fd.isNotEmpty) ...[
-                  FareListWidget(fd: fd),
+                  FareListWidget(
+                    fd: fd,
+                    controller: controller,
+                  ),
                   if (!isReservedDone && !timerRunning) ...[
                     if (isReserve) ...[
                       Align(

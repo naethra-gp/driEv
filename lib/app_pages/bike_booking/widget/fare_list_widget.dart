@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 import 'fare_details_widget.dart';
 
 class FareListWidget extends StatelessWidget {
   final List fd;
-  const FareListWidget({super.key, required this.fd});
+  final SuperTooltipController? controller;
+  const FareListWidget({super.key, required this.fd, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +14,7 @@ class FareListWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 8.0),
         FareDetailsWidget(
+          controller: controller,
           title: "Base fare",
           info: true,
           fareDetails: fd,
