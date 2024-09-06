@@ -326,6 +326,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             prefixIcon: Icons.alternate_email_outlined,
                             textCapitalization: TextCapitalization.none,
                             inputFormatters: [CustomTextInputFormatter()],
+                            onVerify: () {
+                              verifyEmail();
+                            },
                             validator: (value) {
                               if (value.toString().trim().isEmpty) {
                                 return "Email ID is Mandatory!";
@@ -616,6 +619,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
   getAssignCoupon() {
     String mobile = secureStorage.get("mobile");
     couponServices.getCouponCode(mobile).then((response) async {});
+  }
+
+  verifyEmail() {
+    var request = {"emailId": emailCtrl.text.toString()};
+    alertServices.showLoading();
+    print('email request ${json.encode(request)}');
+    customerService.verifyEmail(request).then((response) async {
+      alertServices.hideLoading();
+      alertServices.successToast('Please check your inbox and verify');
+      print('email response ${response['message']}');
+    });
   }
 }
 

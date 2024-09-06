@@ -4,6 +4,7 @@ class EndPoints {
   static const sendOtp = 'generateOTP';
   static const otpLength = '6';
   static const verifyOtp = 'verifyOtp';
+  static const verifyEmail = 'customers/sendVerificationLink';
   static const generatedToken = 'auth/token';
   static const getAllCampus = 'campus/fetchAllCampus';
   static const getAllColleges = 'college/fetchAllCollege';

@@ -39,6 +39,9 @@ class TextFormWidget extends StatelessWidget {
   final int? maxLines;
   final InputDecoration? decoration;
   final TextStyle? style;
+
+  final VoidCallback? onVerify;
+
   const TextFormWidget({
     super.key,
     required this.title,
@@ -75,7 +78,9 @@ class TextFormWidget extends StatelessWidget {
     this.initialValue,
     this.textCapitalization,
     this.maxLines,
-    this.decoration, this.style,
+    this.decoration,
+    this.style,
+    this.onVerify,
   });
 
   @override
@@ -108,8 +113,11 @@ class TextFormWidget extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           focusNode: focusNode,
           maxLines: maxLines,
-          style: style ?? const TextStyle(
-              fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black),
+          style: style ??
+              const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black),
           decoration: decoration ??
               InputDecoration(
                 prefixText: prefixText,
@@ -155,6 +163,19 @@ class TextFormWidget extends StatelessWidget {
                 ),
                 contentPadding: const EdgeInsets.only(left: 15),
                 isDense: false,
+                suffixIcon: onVerify != null
+                    ? TextButton(
+                        onPressed: onVerify,
+                        child: Text(
+                          'Verify Email',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      )
+                    : null,
               ),
         )
       ],
