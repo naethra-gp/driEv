@@ -39,6 +39,9 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   int remainingSeconds = 40;
   Timer? countdownTimer;
 
+  bool flashOn = false;
+  bool hasShownPopup = false;
+
   @override
   void initState() {
     debugPrint(" --- PAGE: SCAN TO UNLOCK --- ");
@@ -47,18 +50,47 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     super.initState();
   }
 
+  // checkBikeNumber(String code) {
+  //   print("Code -> $code");
+  //   String vId = widget.data[0]['vehicleId'].toString();
+  //   if (code.toString() == vId) {
+  //     QrMobileVision.stop();
+  //     setState(() {
+  //       bikeNumberCtl.text = code.toString();
+  //     });
+  //     // startMyRide();
+  //   } else {
+  //     String msg = "Entered/Scanned Vehicle is invalid";
+  //     alertServices.errorToast(msg);
+  //   }
+  // }
+
   checkBikeNumber(String code) {
+    if (hasShownPopup) {
+      return;
+    }
+
     print("Code -> $code");
     String vId = widget.data[0]['vehicleId'].toString();
-    QrMobileVision.stop();
     if (code.toString() == vId) {
+      QrMobileVision.stop();
       setState(() {
         bikeNumberCtl.text = code.toString();
       });
       // startMyRide();
     } else {
+      setState(() {
+        hasShownPopup = true;
+      });
+
       String msg = "Entered/Scanned Vehicle is invalid";
       alertServices.errorToast(msg);
+
+      Future.delayed(Duration(seconds: 5), () {
+        setState(() {
+          hasShownPopup = false;
+        });
+      });
     }
   }
 
@@ -74,6 +106,25 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 70),
+              GestureDetector(
+                onTap: () {
+                  QrMobileVision.toggleFlash();
+                  setState(() {
+                    flashOn = !flashOn;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.green),
+                  width: 30,
+                  height: 30,
+                  child: Icon(
+                    flashOn ? Icons.flash_off : Icons.flash_on,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: ClipRRect(
@@ -92,27 +143,17 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                       fit: BoxFit.cover,
                       onError: (context, error) => const Center(
                         child: Text(
-                          "Hey.! There may be an error with your camera due to multiple access attempts. Please try scanning it again.",
+                          "There may be an error with your camera. Try scanning again.",
                           textAlign: TextAlign.center,
-                          // error.toString(),
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
-                      // onError: (context, error) => AppButtonWidget(
-                      //   title: "Refresh",
-                      //   onPressed: () {
-                      //     setState(() {
-                      //
-                      //     });
-                      //   },
-                      // ),
                       cameraDirection: CameraDirection.BACK,
                       qrCodeCallback: (code) {
                         if (code != null) {
-                          // print("QR Scanned --> $code");
-                          QrMobileVision.stop();
                           setState(() {
                             bikeNumberCtl.text = code.toString();
+                            checkBikeNumber(code);
                           });
                         }
                       },
@@ -196,6 +237,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       } else {
         String msg = "Entered/Scanned Vehicle is invalid";
         alertServices.errorToast(msg);
+
         // Navigator.pushReplacementNamed(context, "scan_to_unlock",
         //     arguments: widget.data);
       }
@@ -305,9 +347,9 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     // _cancelTimer();
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
-        if (remainingSeconds == 30) {
-          QrMobileVision.toggleFlash();
-        }
+        // if (remainingSeconds == 30) {
+        //   QrMobileVision.toggleFlash();
+        // }
         if (remainingSeconds > 0) {
           remainingSeconds--;
         } else {
