@@ -583,9 +583,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "emailId": emailCtrl.text.toString(),
       "rollNo": rollNoCtrl.text.toString(),
       "referralCode": refer.toString(),
-      "aadharNo": showOverseasField
+      "aadharNo": showAadhaarField && !showOverseasField
+          ? aadhaarMask.getUnmaskedText().toString()
+          : '',
+      "passportNo": showOverseasField && !showAadhaarField
           ? passportCtrl.text.toString()
-          : aadhaarMask.getUnmaskedText().toString(),
+          : '',
       "nationality": nationalitySelection.toString(),
       "aadharVerificationStatus": isAadhaarVerified ? "Y" : "N",
       "organization": campusDetail[0]['campusName'].toString(),
