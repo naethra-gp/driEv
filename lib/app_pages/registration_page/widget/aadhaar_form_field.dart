@@ -168,7 +168,7 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
           _otpExpireTime--;
           verifyButton = "$_otpExpireTime s";
         } else {
-          verifyButton = "Resend OTP";
+          verifyButton = "Resend";
           _timer?.cancel();
         }
       });
