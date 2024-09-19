@@ -646,11 +646,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
     print('email request ${json.encode(request)}');
 
     customerService.verifyEmail(request).then((response) async {
-      alertServices.hideLoading();
-      alertServices.successToast('Please check your inbox and verify');
       print('email response ${response['message']}');
-
-      // Update the state to disable the button and change the text
+      if (response['message'].toString() == "Email Sent") {
+        alertServices.hideLoading();
+        alertServices.successToast('Please check your inbox and verify');
+      } else {
+        alertServices.hideLoading();
+        alertServices.errorToast('Enter Valid Email');
+      }
       setState(() {
         isVerified = true;
         isVerifyDisabled = true;
