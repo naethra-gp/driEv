@@ -79,7 +79,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       setState(() {
         bikeNumberCtl.text = code.toString();
       });
-      // startMyRide();
+      startMyRide();
     } else {
       setState(() {
         hasShownPopup = true;
