@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -143,8 +145,10 @@ class _AadhaarOtpFormFieldState extends State<AadhaarOtpFormField> {
   }
 
   verifyOtp(request) {
+    print("Request ${jsonEncode(request)}");
     alertServices.showLoading();
     otpServices.aadhaarVerifyOtp(request).then((response) async {
+      print("Aadhar verify ${jsonEncode(response)}");
       alertServices.hideLoading();
       if (response != null) {
         alertServices.successToast(response['message_code']);

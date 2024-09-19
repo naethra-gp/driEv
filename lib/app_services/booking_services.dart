@@ -22,6 +22,14 @@ class BookingServices {
     var response = await connection.postWithTokenAlert(url, params, error);
     return response;
   }
+
+  releaseBlockedBike(String blockId) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.releaseBlockedBike}/$blockId';
+    var response = await connection.getWithToken(url);
+    return response;
+  }
+
   extendBlocking(dynamic params, [error]) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.extendBlocking}';

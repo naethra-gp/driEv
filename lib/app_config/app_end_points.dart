@@ -23,6 +23,7 @@ class EndPoints {
   static const walletBalance = 'wallet/openingBalance';
   static const createMyRide = 'createMyRide';
   static const blockBike = 'blockBike';
+  static const releaseBlockedBike = 'releaseBlockedBike';
   static const extendBlocking = 'extendBlocking';
   static const rideDetails = 'rideDetails';
   static const getRideEndPin = 'getRideEndPin';

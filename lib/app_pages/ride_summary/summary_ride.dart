@@ -264,11 +264,27 @@ class _RideSummaryState extends State<RideSummary> {
                                               "driEV ${rd[0]['vehicleId'].toString()}"),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
-                                          label: "Time",
-                                          value: DateFormat.jm().format(
-                                              DateTime.parse(rd[0]['endTime']
-                                                  .toString()))),
+                                        label: "Start Time",
+                                        value: DateFormat("hh:mm a")
+                                            .format(DateTime.parse(
+                                          rd[0]['startTime'].toString(),
+                                        ).toLocal()),
+                                      ),
                                       CustomTheme.defaultHeight10,
+                                      ListViewWidget(
+                                        label: "End Time",
+                                        value: DateFormat("hh:mm a")
+                                            .format(DateTime.parse(
+                                          rd[0]['endTime'].toString(),
+                                        ).toLocal()),
+                                      ),
+                                      CustomTheme.defaultHeight10,
+                                      // ListViewWidget(
+                                      //     label: "Time",
+                                      //     value: DateFormat.jm().format(
+                                      //         DateTime.parse(rd[0]['endTime']
+                                      //             .toString()))),
+                                      // CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Base Charge",
                                           value:

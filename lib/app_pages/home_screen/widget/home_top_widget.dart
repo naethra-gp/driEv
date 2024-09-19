@@ -22,7 +22,7 @@ class HomeTopWidget extends StatelessWidget {
     double textScaleFactor = 1.1;
 
     return Positioned(
-      top: 10,
+      top: 25,
       left: 15,
       right: 0,
       child: Row(

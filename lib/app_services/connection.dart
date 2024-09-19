@@ -82,6 +82,8 @@ class Connection {
         headers: header,
         body: jsonEncode(request),
       );
+
+      print("Response ${json.decode(response.body)}");
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 404) {

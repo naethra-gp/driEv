@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../app_dialogs/widgets/block_user_content.dart';
 import '../../app_dialogs/widgets/kyc_block_widget.dart';
@@ -18,13 +19,15 @@ class AlertServices {
 
   showLoading([String? title]) async {
     EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
-    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.fadingCircle;
+    // EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.fadingCircle;
     EasyLoading.instance.toastPosition = EasyLoadingToastPosition.center;
     EasyLoading.instance.animationStyle = EasyLoadingAnimationStyle.scale;
+    // EasyLoading.instance.radius = 100;
     return await EasyLoading.show(
       status: title ?? 'Please wait...',
       maskType: EasyLoadingMaskType.black,
       dismissOnTap: false,
+      indicator: Lottie.asset('assets/loading/loading.json', width: 75, height: 75),
     );
   }
 
@@ -191,6 +194,7 @@ class AlertServices {
       },
     );
   }
+
   vehicleAlert(BuildContext context, String message) {
     return showModalBottomSheet(
       context: context,

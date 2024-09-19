@@ -70,6 +70,7 @@ class Assets {
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String homeScreenHome = 'lib/app_pages/home_screen/home.dart';
   static const String homeScreenHomePage = 'lib/app_pages/home_screen/home_page.dart';
+  static const String homeScreenMapLandingScreen = 'lib/app_pages/home_screen/map_landing_screen.dart';
   static const String imgAnimm = 'assets/img/animm.png';
   static const String imgAppLogo = 'assets/img/app_logo.png';
   static const String imgAttachmentIcon = 'assets/img/attachment_icon.png';
@@ -120,6 +121,7 @@ class Assets {
   static const String imgWallet = 'assets/img/wallet.png';
   static const String landingPageLandingPage = 'lib/app_pages/users/landing_page/landing_page.dart';
   static const String libMain = 'lib/main.dart';
+  static const String loadingLoading = 'assets/loading/loading.json';
   static const String loginPageLoginPage = 'lib/app_pages/users/login_page/login_page.dart';
   static const String noInternetNoInternet = 'lib/app_pages/no_internet/no_internet.dart';
   static const String onRideOnRide = 'lib/app_pages/on_ride/on_ride.dart';
@@ -138,6 +140,7 @@ class Assets {
   static const String scanToEndrideEndRideScan = 'lib/app_pages/scan_to_endride/end_ride_scan.dart';
   static const String scanToUnlockScanToUnlock = 'lib/app_pages/scan_to_unlock/scan_to_unlock.dart';
   static const String splashScreenSplashScreen = 'lib/app_pages/splash_screen/splash_screen.dart';
+  static const String testTimerTest = 'lib/app_pages/test/timer_test.dart';
   static const String validatorsValidators = 'lib/app_pages/registration_page/validators/validators.dart';
   static const String vehiclePageSelectVehicle = 'lib/app_pages/vehicle_page/select_vehicle.dart';
   static const String vehiclePageSelectVehicleCloserMatches = 'lib/app_pages/vehicle_page/select_vehicle_closer_matches.dart';

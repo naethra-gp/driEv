@@ -39,7 +39,7 @@ class _RideHistoryState extends State<RideHistory> {
 
   String formatDateTime(String dateTime) {
     try {
-      DateTime parsedDate = DateTime.parse(dateTime);
+      DateTime parsedDate = DateTime.parse(dateTime).toLocal();
       return DateFormat('dd MMM yyyy').format(parsedDate);
     } catch (e) {
       return "Unknown Date";
@@ -48,7 +48,7 @@ class _RideHistoryState extends State<RideHistory> {
 
   String formatTime(String dateTime) {
     try {
-      DateTime parsedDate = DateTime.parse(dateTime);
+      DateTime parsedDate = DateTime.parse(dateTime).toLocal();
       return DateFormat('hh:mm a').format(parsedDate);
     } catch (e) {
       return "Unknown Time";

@@ -1,8 +1,6 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:driev/app_config/app_constants.dart';
 import 'package:driev/app_themes/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -22,19 +20,7 @@ Future<void> main() async {
   } else {
     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
   }
-
-  // await FlutterStatusbarcolor.setNavigationBarColor(Colors.white);
-  // if (!useWhiteForeground(Colors.white)) {
-  //   FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
-  // } else {
-  //   FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
-  // }
-
   runApp(const MyApp());
-  // runApp(DevicePreview(
-  //   enabled: true,
-  //   builder: (context) => const MyApp(),
-  // ));
 }
 
 class MyApp extends StatelessWidget {

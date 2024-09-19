@@ -318,10 +318,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
           List rideDetails = [r1];
           double c = rideDetails[0]["payableAmount"];
           bookingServices.getRideEndPin(rideId).then((r2) {
-            print("rideId $rideId");
-            print("R@@@ $r2");
             alertServices.hideLoading();
-
             if (b < c) {
               QrMobileVision.stop();
               _cancelTimer();
@@ -333,7 +330,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
               showOtp(stopPing);
               String rideID = r2['rideID'].toString();
               timer = Timer.periodic(
-                const Duration(seconds: 15),
+                const Duration(seconds: 3),
                 (Timer t) => startWatching(rideID),
               );
             }
@@ -437,7 +434,6 @@ class _EndRideScannerState extends State<EndRideScanner> {
     bookingServices.rideEndConfirmation(mobile.toString()).then((r) {
       if (r != null) {
         if (rideId.toString() == r['rideId'].toString()) {
-          // Navigator.pop(context);
           rideDoneAlert([r]);
           timer?.cancel();
         }

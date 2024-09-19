@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_utils/app_form/custom_dropdown.dart';
@@ -583,31 +584,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "emailId": emailCtrl.text.toString(),
       "rollNo": rollNoCtrl.text.toString(),
       "referralCode": refer.toString(),
+      "nationality": nationalitySelection.toString(),
+      "aadharVerificationStatus": isAadhaarVerified ? "Y" : "N",
+      "organization": campusDetail[0]['campusName'].toString(),
+      "documents": uploadArray,
       "aadharNo": showAadhaarField && !showOverseasField
           ? aadhaarMask.getUnmaskedText().toString()
           : '',
       "passportNo": showOverseasField && !showAadhaarField
           ? passportCtrl.text.toString()
           : '',
-      "nationality": nationalitySelection.toString(),
-      "aadharVerificationStatus": isAadhaarVerified ? "Y" : "N",
-      "organization": campusDetail[0]['campusName'].toString(),
-      "documents": uploadArray,
+
       "aadharDetails": showAadhaarField
           ? isAadhaarRequired
-              ? aadhaarDetails[0].toString()
+              ? aadhaarDetails[0]
               : {}
           : {},
     };
-    alertServices.showLoading();
-    print(jsonEncode(request));
-    customerService.createCustomer(request).then((response) async {
-      alertServices.hideLoading();
-      alertServices.successToast(response['status']);
-      secureStorage.save("isLogin", true);
-      getAssignCoupon();
-      Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
-    });
+    log(jsonEncode(request));
+
+    // alertServices.showLoading();
+    // customerService.createCustomer(request).then((response) async {
+    //   alertServices.hideLoading();
+    //   alertServices.successToast(response['status']);
+    //   secureStorage.save("isLogin", true);
+    //   getAssignCoupon();
+    //   Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+    // });
   }
 
   getFileName(details) {

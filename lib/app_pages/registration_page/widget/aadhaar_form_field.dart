@@ -116,7 +116,7 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
                   as.errorToast("Please enter valid aadhaar!");
                 } else {
                   if (verifyButton == "Send OTP" ||
-                      verifyButton == "Resend OTP" && !widget.readOnly) {
+                      verifyButton == "Resend" && !widget.readOnly) {
                     sentOtp();
                   } else {}
                 }

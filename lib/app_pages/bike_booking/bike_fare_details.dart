@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
@@ -26,7 +28,8 @@ class BikeFareDetails extends StatefulWidget {
   State<BikeFareDetails> createState() => _BikeFareDetailsState();
 }
 
-class _BikeFareDetailsState extends State<BikeFareDetails> {
+class _BikeFareDetailsState extends State<BikeFareDetails>
+    with WidgetsBindingObserver {
   AlertServices alertServices = AlertServices();
   SecureStorage secureStorage = SecureStorage();
   BookingServices bookingServices = BookingServices();
@@ -55,6 +58,10 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   String formattedMinutes = "00";
   String formattedSeconds = "00";
   Timer? countdownTimer;
+
+  Timer? _timer;
+  int _remainingSeconds = 0;
+  bool _isRunning = false;
 
   // EXTEND BLOCK
   String blockId = "";
@@ -383,11 +390,48 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                       scanToUnlock();
                     },
                   ),
+                  const SizedBox(height: 25),
+                  blackButton("End Reservation"),
                   const SizedBox(height: 10),
                 ],
                 const SizedBox(height: 25),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget blackButton(title) {
+    return SizedBox(
+      width: double.infinity,
+      height: buttonHeight,
+      child: ElevatedButton(
+        onPressed: () {
+          endReservation(blockId.toString());
+        },
+        focusNode: FocusNode(skipTraversal: true),
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.black,
+          overlayColor: AppColors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
+        child: Text(
+          title.toString(),
+          style: const TextStyle(
+            fontFamily: "Roboto",
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
           ),
         ),
       ),
@@ -483,7 +527,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
       } else {
         if (res2[0]['blockedTill'] != null) {
           debugPrint(" --- Bike Blocked --- ");
-          print("blockBike Response ${jsonEncode(r2)}");
           setState(() {
             blockId = res2[0]['blockId'].toString();
             isOnCounter = true;
@@ -491,6 +534,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
             enableChasingTime = false;
             isOnCounter = true;
           });
+          // _onStartButtonPressed(res2[0]['blockedTill'].toString());
           startCountdown(res2[0]['blockedTill'].toString());
         } else {
           String errMsg = "Something went wrong. Please try again in a bit.";
@@ -501,7 +545,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
   }
 
   extendBikeBlocking() {
-    print("reserveMins $reserveMins");
     if (reserveMins.isEmpty) {
       alertServices.errorToast("Please select mins!");
     } else {
@@ -545,14 +588,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     int time = (min + sec);
     double percentage = time * 0.25;
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      // setState(() {
       remainingTime = blockedTime.difference(DateTime.now());
       int minutes = remainingTime.inMinutes % 60;
       int seconds = remainingTime.inSeconds % 60;
       formattedMinutes = minutes.toString().padLeft(2, '0');
       formattedSeconds = seconds.toString().padLeft(2, '0');
-      print("Time Remaining: $formattedMinutes:$formattedSeconds");
-      // ENABLE CHASING TIME
       int min = remainingTime.inMinutes * 60;
       int sec = remainingTime.inSeconds;
       int totalTime = (min + sec);
@@ -565,21 +605,19 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
         setState(() {
           isOnCounter = false;
         });
-
-        if (viaApi) {
-          Navigator.pushNamed(context, "error_bike");
-        }
-        if (viaApp) {
-          // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
-          Navigator.pushNamed(
-            context,
-            "select_vehicle",
-            arguments: widget.stationDetails[0]['homeData'],
-          );
-        }
+        Navigator.pushNamed(context, "home");
+        // if (viaApi) {
+        //   Navigator.pushNamed(context, "home");
+        // }
+        // if (viaApp) {
+        //   // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
+        //   Navigator.pushNamed(
+        //     context,
+        //     "select_vehicle",
+        //     arguments: widget.stationDetails[0]['homeData'],
+        //   );
+        // }
       }
-      // });
-
       setState(() {});
     });
   }
@@ -670,5 +708,120 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     //   ];
     //   Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
     // }
+  }
+
+  endReservation(String blockId) {
+    if (blockId.toString().isEmpty) return false;
+    alertServices.showLoading();
+    bookingServices.releaseBlockedBike(blockId).then((res) {
+      alertServices.hideLoading();
+      alertServices.successToast(res['message'].toString());
+      stopCountdown();
+      Navigator.pop(context);
+    });
+  }
+
+  loadTimer() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String exp = prefs.getString('exp') ?? "";
+    print("exp $exp");
+    if (exp.toString().isNotEmpty) {
+      String formattedDate3 =
+          DateFormat('hh:mm:ss a').format(DateTime.parse(exp));
+      print(formattedDate3);
+      // setState(() {
+      //   expireTime = formattedDate3.toString().padLeft(2, '0');
+      // });
+      var cd = DateTime.now();
+      print("cd $cd");
+      Duration difference = DateTime.parse(exp).difference(cd);
+      int mins = difference.inMinutes;
+      int sec = difference.inSeconds;
+      print("mins $mins");
+      print("sec $sec");
+      setState(() {
+        // timerCtrl.text = mins.toString();
+        _remainingSeconds = sec;
+        _isRunning = true;
+      });
+      _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+        if (_remainingSeconds > 0) {
+          setState(() {
+            _remainingSeconds--;
+          });
+          debugPrint('Remaining seconds: $_remainingSeconds');
+        } else {
+          timer.cancel();
+          setState(() {
+            _remainingSeconds = 0;
+            _isRunning = false;
+          });
+        }
+      });
+    }
+  }
+
+  Future<void> _onStartButtonPressed(expTime) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isRunning = true;
+      // _remainingSeconds = int.parse(timerCtrl.text) * 60;
+    });
+
+    int mins = int.parse("timerCtrl.text");
+    DateTime now = DateTime.now();
+    DateTime newTime = now.add(Duration(minutes: mins));
+    String format = DateFormat('hh:mm:ss a').format(newTime);
+    print("Format Date -> $format");
+    setState(() {
+      // expireTime = format.toString().padLeft(2, '0');
+    });
+    await prefs.setString('exp', newTime.toString());
+
+    /// timer functions
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      debugPrint('Remaining seconds: $_remainingSeconds');
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      }
+      if (_remainingSeconds.isNegative) {
+        timer.cancel();
+        setState(() {
+          _remainingSeconds = 0;
+          _isRunning = false;
+        });
+      }
+    });
+  }
+
+  saveTimer() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      // _remainingSeconds = int.parse(timerCtrl.text) * 60;
+    });
+    int mins = int.parse("timerCtrl.text");
+    DateTime now = DateTime.now();
+    DateTime newTime = now.add(Duration(minutes: mins));
+    String format = DateFormat('hh:mm:ss a').format(newTime);
+    print("Format Date -> $format");
+    setState(() {
+      // expireTime = format.toString().padLeft(2, '0');
+    });
+    await prefs.setString('exp', newTime.toString());
+  }
+
+  Future<void> _stopTimer() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_timer!.isActive) {
+      _timer?.cancel();
+      await prefs.setInt('start_time', 0);
+      setState(() {
+        // expireTime = "";
+        _remainingSeconds = 0;
+        _isRunning = false;
+      });
+    }
   }
 }
