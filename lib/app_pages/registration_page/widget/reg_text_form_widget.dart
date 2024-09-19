@@ -41,6 +41,8 @@ class TextFormWidget extends StatelessWidget {
   final TextStyle? style;
 
   final VoidCallback? onVerify;
+  final bool? isVerified;
+  final bool? isVerifyDisabled;
 
   const TextFormWidget({
     super.key,
@@ -81,6 +83,8 @@ class TextFormWidget extends StatelessWidget {
     this.decoration,
     this.style,
     this.onVerify,
+    this.isVerified,
+    this.isVerifyDisabled,
   });
 
   @override
@@ -165,13 +169,15 @@ class TextFormWidget extends StatelessWidget {
                 isDense: false,
                 suffixIcon: onVerify != null
                     ? TextButton(
-                        onPressed: onVerify,
+                        onPressed: isVerifyDisabled == true ? null : onVerify,
                         child: Text(
-                          'Verify Email',
+                          isVerified == true ? 'Sent' : 'Verify Email',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
+                            color: isVerifyDisabled == true
+                                ? Colors.grey
+                                : AppColors.primary,
                           ),
                         ),
                       )

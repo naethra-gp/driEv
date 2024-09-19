@@ -67,6 +67,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool showOverseasField = false;
   bool isAadhaarCtrlDisposed = false;
 
+  bool isVerified = false;
+  bool isVerifyDisabled = false;
+
   String clientId = "";
   @override
   void initState() {
@@ -327,9 +330,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             prefixIcon: Icons.alternate_email_outlined,
                             textCapitalization: TextCapitalization.none,
                             inputFormatters: [CustomTextInputFormatter()],
-                            onVerify: () {
-                              verifyEmail();
-                            },
+                            onVerify: verifyEmail,
                             validator: (value) {
                               if (value.toString().trim().isEmpty) {
                                 return "Email ID is Mandatory!";
@@ -338,6 +339,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               }
                               return null;
                             },
+                            isVerified: isVerified,
+                            isVerifyDisabled: isVerifyDisabled,
                           ),
                           const SizedBox(height: 16),
                           TextFormWidget(
@@ -594,7 +597,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       "passportNo": showOverseasField && !showAadhaarField
           ? passportCtrl.text.toString()
           : '',
-
       "aadharDetails": showAadhaarField
           ? isAadhaarRequired
               ? aadhaarDetails[0]
@@ -627,14 +629,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
     couponServices.getCouponCode(mobile).then((response) async {});
   }
 
-  verifyEmail() {
+  // verifyEmail() {
+  //   var request = {"emailId": emailCtrl.text.toString()};
+  //   alertServices.showLoading();
+  //   print('email request ${json.encode(request)}');
+  //   customerService.verifyEmail(request).then((response) async {
+  //     alertServices.hideLoading();
+  //     alertServices.successToast('Please check your inbox and verify');
+  //     print('email response ${response['message']}');
+  //   });
+  // }
+
+  void verifyEmail() {
     var request = {"emailId": emailCtrl.text.toString()};
     alertServices.showLoading();
     print('email request ${json.encode(request)}');
+
     customerService.verifyEmail(request).then((response) async {
       alertServices.hideLoading();
       alertServices.successToast('Please check your inbox and verify');
       print('email response ${response['message']}');
+
+      // Update the state to disable the button and change the text
+      setState(() {
+        isVerified = true;
+        isVerifyDisabled = true;
+      });
+    }).catchError((error) {
+      alertServices.hideLoading();
+      alertServices.errorToast('Verification failed. Try again.');
     });
   }
 }
