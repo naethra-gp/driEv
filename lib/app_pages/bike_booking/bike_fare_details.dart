@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
@@ -81,6 +82,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     if (viaApi) {
       isOnCounter = true;
       List block = widget.stationDetails[0]['data'];
+      // print("Widget Data: ${block[0]['blockId']}");
+      blockId = block[0]['blockId'].toString();
       stopCountdown();
       startCountdown(block[0]['blockedTill'].toString());
     }
@@ -409,7 +412,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       height: buttonHeight,
       child: ElevatedButton(
         onPressed: () {
-          endReservation(blockId.toString());
+          if (blockId.toString().isEmpty) {
+            alertServices.errorToast("Invalid Block ID.");
+          } else {
+            endReservation(blockId.toString());
+          }
         },
         focusNode: FocusNode(skipTraversal: true),
         style: ElevatedButton.styleFrom(
@@ -605,18 +612,18 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
         setState(() {
           isOnCounter = false;
         });
-        Navigator.pushNamed(context, "home");
-        // if (viaApi) {
-        //   Navigator.pushNamed(context, "home");
-        // }
-        // if (viaApp) {
-        //   // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
-        //   Navigator.pushNamed(
-        //     context,
-        //     "select_vehicle",
-        //     arguments: widget.stationDetails[0]['homeData'],
-        //   );
-        // }
+        // Navigator.pushNamed(context, "home");
+        if (viaApi) {
+          Navigator.pushNamed(context, "home");
+        }
+        if (viaApp) {
+          // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
+          Navigator.pushNamed(
+            context,
+            "select_vehicle",
+            arguments: widget.stationDetails[0]['homeData'],
+          );
+        }
       }
       setState(() {});
     });
@@ -717,7 +724,12 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       alertServices.hideLoading();
       alertServices.successToast(res['message'].toString());
       stopCountdown();
-      Navigator.pop(context);
+      if (viaApi) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, "home", (route) => false);
+      } else {
+        Navigator.pop(context);
+      }
     });
   }
 

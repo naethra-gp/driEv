@@ -54,7 +54,7 @@ class Constants {
 
   static const String apikey = "AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA";
   static const String spreadword = "Spread the word, earn rewards!";
-  static const String rewardText = "Spreading the word means sharing the perks! Use my referral code to sign up with Let’s driEV and start enjoying the perks right away! It’s a win-win!";
+  static const String rewardText = "Spreading the word means sharing the perks! Use my referral code to sign up with Let’s driEV and start enjoying the perks right away!\nIt’s a win-win!";
       // "Share your referral code with\nfriends and get 20% off when they\ntake their first ride.";
 
   static String bikeBookingNotes =

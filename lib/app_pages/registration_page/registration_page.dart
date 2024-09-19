@@ -603,16 +603,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
               : {}
           : {},
     };
-    log(jsonEncode(request));
+    // log(jsonEncode(request));
 
-    // alertServices.showLoading();
-    // customerService.createCustomer(request).then((response) async {
-    //   alertServices.hideLoading();
-    //   alertServices.successToast(response['status']);
-    //   secureStorage.save("isLogin", true);
-    //   getAssignCoupon();
-    //   Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
-    // });
+    alertServices.showLoading();
+    customerService.createCustomer(request).then((response) async {
+      alertServices.hideLoading();
+      alertServices.successToast(response['status']);
+      secureStorage.save("isLogin", true);
+      getAssignCoupon();
+      Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+    });
   }
 
   getFileName(details) {
