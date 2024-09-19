@@ -1,7 +1,7 @@
 name: driev
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.0.12
+version: 1.0.13
 
 environment:
   sdk: '>=3.3.1 <4.0.0'
@@ -99,7 +99,11 @@ flutter_icons:
 flutter:
   uses-material-design: true
   assets:
-    - build/app/outputs/flutter-apk/
+    - assets/
+    - assets/app/
+    - assets/img/
+    - assets/loading/
+    - lib/app_pages/on_ride/widget/
   fonts:
     - family: Roboto
       fonts:
