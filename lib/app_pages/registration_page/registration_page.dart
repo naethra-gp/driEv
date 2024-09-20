@@ -342,6 +342,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             isVerified: isVerified,
                             isVerifyDisabled: isVerifyDisabled,
                           ),
+                          Text("Check your inbox to verify the email", style: TextStyle(color: Colors.grey[500]),),
                           const SizedBox(height: 16),
                           TextFormWidget(
                             title: 'Roll Number',
@@ -642,11 +643,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void verifyEmail() {
     var request = {"emailId": emailCtrl.text.toString()};
+    if(emailCtrl.text.toString().isEmpty) {
+      alertServices.errorToast("Please enter valid email id");
+    }
     alertServices.showLoading();
-    print('email request ${json.encode(request)}');
-
+    // print('email request ${json.encode(request)}');
     customerService.verifyEmail(request).then((response) async {
-      print('email response ${response['message']}');
+      // print('email response ${response['message']}');
       if (response['message'].toString() == "Email Sent") {
         alertServices.hideLoading();
         alertServices.successToast('Please check your inbox and verify');

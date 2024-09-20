@@ -484,19 +484,20 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             children: [
                               bottomUserDetail(
-                                  Icons.mail_outline,
-                                  customerDetails[0]['emailId'].toString(),
-                                  Icons.phone_iphone_outlined,
-                                  customerDetails[0]['contact'].toString(),
-                                  fontSize),
-                              // defaultHeight,
+                                Icons.mail_outline,
+                                customerDetails[0]['emailId'].toString(),
+                                Icons.phone_iphone_outlined,
+                                customerDetails[0]['contact'].toString(),
+                                fontSize,
+                              ),
                               const SizedBox(height: 10),
                               bottomUserDetail(
-                                  Icons.person,
-                                  customerDetails[0]['rollNo'].toString(),
-                                  LineAwesome.id_card,
-                                  "ID Uploaded",
-                                  fontSize),
+                                Icons.person,
+                                customerDetails[0]['rollNo'].toString(),
+                                LineAwesome.id_card,
+                                "ID Uploaded",
+                                fontSize,
+                              ),
                             ],
                           ),
                         ),
@@ -509,7 +510,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 defaultHeight,
                 if (documents.isNotEmpty) ...[
                   for (int i = 0; i < documents.length; i++) ...[
-
                     if (documents[i]['rejected'] == true) ...[
                       DocumentReUpload(
                         document: documents[i],
@@ -663,165 +663,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  slider() {
-    List aa = [
-      {
-        "rideId": "ITER-938",
-        "lastRideDuration": "0 : 5 : 4",
-        "totalRideDuration": "13 : 44 : 6",
-        "lastRideDistance": 0.0,
-        "totalRideDistance": 0.53,
-        "contact": "7845456609"
-      }
-    ];
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return showModalBottomSheet(
-      context: context,
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (context) {
-        return SizedBox(
-          height: height / 1.5,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Positioned(
-                top: height / 5.5 - 100,
-                child: Container(
-                  height: height,
-                  width: width,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: height / 6.6 - 100,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.close),
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 50,
-                        left: 50,
-                        top: 50,
-                        bottom: 20,
-                      ),
-                      child: Image.asset(
-                        "assets/img/ride_end.png",
-                        height: 60,
-                        width: 60,
-                      ),
-                    ),
-                    const Text(
-                      "Ride done!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Color(0xff2c2c2c),
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    RichText(
-                      text: TextSpan(
-                        text: 'Great job on your ',
-                        style: DefaultTextStyle.of(context).style,
-                        children: <TextSpan>[
-                          const TextSpan(
-                              text: 'last trip covering',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(
-                            text:
-                                ' ${aa[0]['lastRideDistance'].toString()} kilometers!',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('0',
-                              style: TextStyle(
-                                  color: Color(0xff7B7B7B),
-                                  fontWeight: FontWeight.bold)),
-                          Text('500 km',
-                              style: TextStyle(
-                                  color: Color(0xff7B7B7B),
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            // width: width / 2,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    "ride_summary",
-                                    arguments: "rideId",
-                                    (route) => false);
-                              },
-                              child: const Text("View Ride Summary"),
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                          SizedBox(
-                            // width: width / 2,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text("Rate This Ride"),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Widget bottomUserDetail(fIcon, fText, sIcon, sText, fontSize) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -835,16 +676,29 @@ class _ProfilePageState extends State<ProfilePage> {
                   Icon(fIcon, size: 15),
                   const SizedBox(width: 5),
                   Expanded(
-                    child: Text(
-                      fText,
-                      overflow: TextOverflow.visible,
-                      softWrap: true,
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontSize: fontSize,
-                        fontWeight: FontWeight.normal,
+                    child: Row(children: [
+                      Text(
+                        fText,
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
-                    ),
+                      if (fText.toString().contains("@") &&
+                          customerDetails[0]['emailVerificationStatus']
+                                  .toString() ==
+                              "Y") ...[
+                        const SizedBox(width: 2),
+                        const Icon(
+                          Icons.verified,
+                          size: 15,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ]),
                   ),
                 ],
               ),

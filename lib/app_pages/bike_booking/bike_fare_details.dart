@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
@@ -411,11 +409,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       width: double.infinity,
       height: buttonHeight,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
           if (blockId.toString().isEmpty) {
             alertServices.errorToast("Invalid Block ID.");
           } else {
-            endReservation(blockId.toString());
+            await _showBackDialog(context);
           }
         },
         focusNode: FocusNode(skipTraversal: true),
@@ -609,21 +607,12 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       if ("$formattedMinutes:$formattedSeconds" == "00:00") {
         debugPrint("--- Timer Stopped ---");
         countdownTimer?.cancel();
+        _showAlertDialog(context);
         setState(() {
           isOnCounter = false;
         });
         // Navigator.pushNamed(context, "home");
-        if (viaApi) {
-          Navigator.pushNamed(context, "home");
-        }
-        if (viaApp) {
-          // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
-          Navigator.pushNamed(
-            context,
-            "select_vehicle",
-            arguments: widget.stationDetails[0]['homeData'],
-          );
-        }
+
       }
       setState(() {});
     });
@@ -732,6 +721,125 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       }
     });
   }
+  _showBackDialog(context) {
+    return showDialog<bool>(
+      barrierColor: Colors.black.withOpacity(0.5),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          title: const Text(
+            'Confirm',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: "Roboto",
+            ),
+          ),
+          content: const Text(
+            'Are you to end your reservation for the vehicle?',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontFamily: "Roboto-Bold",
+              fontSize: 16,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text(
+                'No',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Roboto",
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Roboto",
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                endReservation(blockId.toString());
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _showAlertDialog(context) {
+    return showDialog<bool>(
+      barrierColor: Colors.black.withOpacity(0.5),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          title: const Text(
+            'Alert',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: "Roboto",
+            ),
+          ),
+          content: const Text(
+            'The Timer has been stopped. App will redirect to Home Page.',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontFamily: "Roboto-Bold",
+              fontSize: 16,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Roboto",
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                if (viaApi) {
+                  Navigator.pushNamed(context, "home");
+                }
+                if (viaApp) {
+                  // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
+                  Navigator.pushNamed(
+                    context,
+                    "select_vehicle",
+                    arguments: widget.stationDetails[0]['homeData'],
+                  );
+                }
+                // Navigator.pushNamedAndRemoveUntil(
+                //     context, "home", (route) => false);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   loadTimer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -834,6 +942,26 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
         _remainingSeconds = 0;
         _isRunning = false;
       });
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // _stopTimer();
+      // loadTimer();
+      // The app is in the background or the user is leaving the app.
+      print('App is paused');
+    } else if (state == AppLifecycleState.resumed) {
+      // The app is back in the foreground.
+      print('App is resumed');
+      // _stopTimer();
+      // loadTimer();
+      // _stopTimer();
+      // loadTimer();
+    } else if (state == AppLifecycleState.detached) {
+      // The app is detached from the view, meaning it is about to be terminated.
+      print('App is detached');
     }
   }
 }
