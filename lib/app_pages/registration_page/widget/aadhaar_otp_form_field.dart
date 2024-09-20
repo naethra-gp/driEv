@@ -145,17 +145,15 @@ class _AadhaarOtpFormFieldState extends State<AadhaarOtpFormField> {
   }
 
   verifyOtp(request) {
-    print("Request ${jsonEncode(request)}");
     alertServices.showLoading();
     otpServices.aadhaarVerifyOtp(request).then((response) async {
-      print("Aadhar verify ${jsonEncode(response)}");
       alertServices.hideLoading();
       if (response != null) {
         alertServices.successToast(response['message_code']);
         aadhaar = [response];
         widget.onConfirm(aadhaar);
         setState(() {});
-      } else {}
+      }
     });
   }
 }

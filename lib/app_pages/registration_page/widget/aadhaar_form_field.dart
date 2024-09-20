@@ -43,7 +43,7 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
   AlertServices as = AlertServices();
 
   bool buttonEnabled = false;
-  int _otpExpireTime = 30;
+  int _otpExpireTime = 60;
   Timer? _timer;
   String clientId = "";
 
@@ -152,7 +152,7 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
         clientId = response['data']['client_id'].toString();
         widget.otpSent(true, clientId);
         _timer?.cancel();
-        _otpExpireTime = 30;
+        _otpExpireTime = 60;
         startTimer();
         setState(() {});
       } else {
