@@ -68,6 +68,37 @@ class LocationService {
       return 'Error: $e';
     }
   }
+  List<LatLng> decodePolyline(String encoded) {
+    List<LatLng> polyline = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = ((result >> 1) ^ -(result & 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = ((result >> 1) ^ -(result & 1));
+      lng += dlng;
+
+      polyline.add(LatLng((lat / 1E5), (lng / 1E5)));
+    }
+
+    return polyline;
+  }
+
 
   Future<List<LatLng>> getDirections(LatLng origin, LatLng destination) async {
     final String url = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$_apiKey';
@@ -77,13 +108,17 @@ class LocationService {
         final data = json.decode(response.body);
         if (data['status'] == 'OK') {
           List<LatLng> polylineCoordinates = [];
-          var steps = data['routes'][0]['legs'][0]['steps'];
+          List<dynamic> steps = data['routes'][0]['legs'][0]['steps'];
           for (var step in steps) {
             var startLocation = step['start_location'];
             var endLocation = step['end_location'];
-            polylineCoordinates.add(LatLng(startLocation['lat'], startLocation['lng']));
-            polylineCoordinates.add(LatLng(endLocation['lat'], endLocation['lng']));
+            // polylineCoordinates.add(LatLng(startLocation['lat'], startLocation['lng']));
+            // polylineCoordinates.add(LatLng(endLocation['lat'], endLocation['lng']));
+            String polyline = step['polyline']['points'];
+            List<LatLng> decodedPolyline = decodePolyline(polyline);
+            polylineCoordinates.addAll(decodedPolyline);
           }
+
           return polylineCoordinates;
         } else {
           throw Exception('Error fetching directions: ${data['status']}');

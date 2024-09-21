@@ -12,6 +12,7 @@ class Assets {
   static const String appConfigAppEndPoints = 'lib/app_config/app_end_points.dart';
   static const String appConfigAppRoutes = 'lib/app_config/app_routes.dart';
   static const String appConfigAppSizeConfig = 'lib/app_config/app_size_config.dart';
+  static const String appConfigAppStrings = 'lib/app_config/app_strings.dart';
   static const String appCurrentloc = 'assets/app/currentloc.png';
   static const String appDest = 'assets/app/dest.png';
   static const String appDialogsAppDialogs = 'lib/app_dialogs/app_dialogs.dart';
@@ -56,6 +57,7 @@ class Assets {
   static const String assetsAppGetStarted = 'assets/app/get_started.png';
   static const String bikeBookingBikeFareDetails = 'lib/app_pages/bike_booking/bike_fare_details.dart';
   static const String bikeBookingBikeFareDetailsCopy = 'lib/app_pages/bike_booking/bike_fare_details_copy.dart';
+  static const String bikeBookingCheckBikeFareDetails = 'lib/app_pages/bike_booking/check_bike_fare_details.dart';
   static const String campusScreensChooseYourCampus = 'lib/app_pages/campus_screens/choose_your_campus.dart';
   static const String campusScreensRankList = 'lib/app_pages/campus_screens/rank_list.dart';
   static const String campusScreensVoteErrorScreen = 'lib/app_pages/campus_screens/vote_error_screen.dart';

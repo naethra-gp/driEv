@@ -77,6 +77,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: Scaffold(
         body: currentLocation1 == null
@@ -85,16 +87,20 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
               )
             : Stack(
                 children: <Widget>[
-                  GoogleMap(
-                    onMapCreated: (GoogleMapController controller) {
-                      mapController = controller;
-                      bottomSheet(context);
-                    },
-                    markers: _markers,
-                    zoomControlsEnabled: false,
-                    initialCameraPosition: CameraPosition(
-                      target: currentLocation1!,
-                      zoom: 15,
+                  SizedBox(
+                    height: screenHeight * 0.6,
+                    child: GoogleMap(
+                      onMapCreated: (GoogleMapController controller) {
+                        mapController = controller;
+                        bottomSheet(context);
+                      },
+                      markers: _markers,
+                      zoomControlsEnabled: false,
+                      initialCameraPosition: CameraPosition(
+                        target: currentLocation1!,
+                        // tilt: 59.440717697143555,
+                        zoom: 15,
+                      ),
                     ),
                   ),
                   if (customer.isNotEmpty) ...[
@@ -125,7 +131,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(25),
+                top: Radius.circular(15),
               ),
             ),
             child: Padding(
@@ -202,7 +208,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   getLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
-
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -233,11 +238,10 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-    BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
+    BitmapDescriptor customIcon = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(20, 25)),
       'assets/img/map_user_icon.png',
     );
-
     _locationMessage =
         "Latitude: ${position.latitude}, Longitude: ${position.longitude}";
 
@@ -253,22 +257,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
         icon: customIcon,
       ),
     );
-    print("_locationMessage $_locationMessage");
-    print("currentDistrict $currentLocation");
     setState(() {});
   }
-
-  // GET USER WALLET BALANCE
-  // getBalance() async {
-  //   alertServices.showLoading();
-  //   String mobile = await secureStorage.get("mobile");
-  //   bookingServices.getWalletBalance(mobile).then((r) {
-  //     alertServices.hideLoading();
-  //     double balance = r['balance'];
-  //     availableBalance = balance;
-  //     setState(() {});
-  //   });
-  // }
 
   getColor(double value) {
     if (value < 350) {

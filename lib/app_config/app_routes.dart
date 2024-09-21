@@ -67,7 +67,8 @@ class AppRoute {
           return const ErrorBikes();
         case "bike_fare_details":
           Map args = settings.arguments as Map;
-          return BikeFareDetails(stationDetails: args['query']);
+          return CheckBikeFareDetails(data: args['query']);
+          // return BikeFareDetails(stationDetails: args['query']);
         case "booking_success":
           String id = settings.arguments as String;
           return BookingSuccessful(rideId: id);

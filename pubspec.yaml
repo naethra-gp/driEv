@@ -62,6 +62,7 @@ dependencies:
   device_preview: ^1.2.0
   lottie: ^3.1.2
   shared_preferences: ^2.3.2
+  sms_autofill: ^2.4.0
   #  flutter_background_service: ^5.0.10
   #  flutter_timer_countdown: ^1.0.7
   #  ai_barcode_scanner: ^5.1.1+2

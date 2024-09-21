@@ -60,4 +60,9 @@ class Constants {
   static String bikeBookingNotes =
       "Battery swap after the given range might be chargeable and depends on the availability of assets & resources";
 
+  // LOCAL VARIABLES
+  static String blockedTill = "blockedTill";
+  static String blockedOn = "blockedOn";
+  static String blockId = "blockId";
+
 }

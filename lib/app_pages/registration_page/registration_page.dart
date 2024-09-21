@@ -66,7 +66,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool showAadhaarField = false;
   bool showOverseasField = false;
   bool isAadhaarCtrlDisposed = false;
-
   bool isVerified = false;
   bool isVerifyDisabled = false;
 
@@ -327,6 +326,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             controller: emailCtrl,
                             keyboardType: TextInputType.emailAddress,
                             required: true,
+                            readOnly: isVerified,
                             prefixIcon: Icons.alternate_email_outlined,
                             textCapitalization: TextCapitalization.none,
                             inputFormatters: [CustomTextInputFormatter()],
@@ -342,7 +342,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             isVerified: isVerified,
                             isVerifyDisabled: isVerifyDisabled,
                           ),
-                          Text("Check your inbox to verify the email", style: TextStyle(color: Colors.grey[500]),),
+                          if (isVerified)
+                            const Padding(
+                              padding: EdgeInsets.only(left: 5, top: 2),
+                              child: Text(
+                                "Check your inbox to verify the email.",
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontFamily: "Roboto-Regular",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
                           const SizedBox(height: 16),
                           TextFormWidget(
                             title: 'Roll Number',
@@ -630,40 +642,43 @@ class _RegistrationPageState extends State<RegistrationPage> {
     couponServices.getCouponCode(mobile).then((response) async {});
   }
 
-  // verifyEmail() {
-  //   var request = {"emailId": emailCtrl.text.toString()};
-  //   alertServices.showLoading();
-  //   print('email request ${json.encode(request)}');
-  //   customerService.verifyEmail(request).then((response) async {
-  //     alertServices.hideLoading();
-  //     alertServices.successToast('Please check your inbox and verify');
-  //     print('email response ${response['message']}');
-  //   });
-  // }
-
   void verifyEmail() {
-    var request = {"emailId": emailCtrl.text.toString()};
-    if(emailCtrl.text.toString().isEmpty) {
-      alertServices.errorToast("Please enter valid email id");
+    FocusScope.of(context).unfocus();
+    String email = emailCtrl.text.toString();
+    if (email.isEmpty) {
+      alertServices.errorToast("Please enter a valid email address.");
+      return;
     }
+
+    /// CHECK ALREADY EXISTS
     alertServices.showLoading();
-    // print('email request ${json.encode(request)}');
-    customerService.verifyEmail(request).then((response) async {
-      // print('email response ${response['message']}');
-      if (response['message'].toString() == "Email Sent") {
-        alertServices.hideLoading();
-        alertServices.successToast('Please check your inbox and verify');
-      } else {
-        alertServices.hideLoading();
-        alertServices.errorToast('Enter Valid Email');
-      }
-      setState(() {
-        isVerified = true;
-        isVerifyDisabled = true;
-      });
-    }).catchError((error) {
+    customerService.getCustomer(email, true).then((response) async {
       alertServices.hideLoading();
-      alertServices.errorToast('Verification failed. Try again.');
+      if (response == null) {
+        /// SENDING A MAIL
+        var request = {"emailId": email};
+        alertServices.showLoading();
+        customerService.verifyEmail(request).then((response) async {
+          print('email response ${response['message']}');
+          if (response['message'].toString() == "Email Sent") {
+            alertServices.hideLoading();
+            // alertServices.successToast('Please check your inbox and verify');
+          } else {
+            alertServices.hideLoading();
+            alertServices.errorToast('Enter Valid Email');
+          }
+          setState(() {
+            isVerified = true;
+            isVerifyDisabled = true;
+          });
+        }).catchError((error) {
+          alertServices.hideLoading();
+          alertServices.errorToast('Verification failed. Try again.');
+        });
+      } else {
+        alertServices.errorToast("Email ID already exists.");
+        print("Customer Found!");
+      }
     });
   }
 }

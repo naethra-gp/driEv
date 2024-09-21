@@ -2,6 +2,8 @@ import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_config/app_constants.dart';
@@ -32,6 +34,26 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         mobileCtrl.text = widget.mobileNumber!;
       });
+    } else {
+      Future<void>.delayed(const Duration(milliseconds: 300), _tryPasteCurrentPhone);
+    }
+  }
+  Future _tryPasteCurrentPhone() async {
+    if (!mounted) return;
+    try {
+      final autoFill = SmsAutoFill();
+      final phone = await autoFill.hint;
+      if (phone == null) return;
+      if (!mounted) return;
+      if (phone.toString().startsWith('+91')) {
+        mobileCtrl.text = phone.toString().replaceFirst('+91', '');
+        setState(() {
+
+        });
+      }
+      // mobileCtrl.text = phone.toString();
+    } on PlatformException catch (e) {
+      print('Failed to get mobile number because of: ${e.message}');
     }
   }
 

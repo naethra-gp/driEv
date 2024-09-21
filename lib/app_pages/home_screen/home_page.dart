@@ -92,6 +92,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double textScaleFactor = 1.1;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -99,33 +101,37 @@ class _HomePageState extends State<HomePage> {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           children: [
             if (_currentPosition != null && stationLocation != null) ...[
-              GoogleMap(
-                myLocationEnabled: false,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: true,
-                compassEnabled: false,
-                mapType: MapType.normal,
-                minMaxZoomPreference: const MinMaxZoomPreference(15, 19),
-                onMapCreated: (GoogleMapController controller) {
-                  mapController = controller;
-                },
-                polylines: _polyLines,
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 13.5,
+              SizedBox(
+                height: screenHeight,
+                child: GoogleMap(
+                  myLocationEnabled: false,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: true,
+                  compassEnabled: false,
+                  mapType: MapType.normal,
+                  minMaxZoomPreference: getZoomControl(),
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController = controller;
+                  },
+                  polylines: _polyLines,
+                  initialCameraPosition: CameraPosition(
+                    target: _center,
+                    tilt: 59.440717697143555,
+                    zoom: 19.151926040649414,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId('1'),
+                      position: _currentPosition!,
+                      icon: customerMarker ?? BitmapDescriptor.defaultMarker,
+                    ),
+                    Marker(
+                      markerId: const MarkerId('2'),
+                      position: stationLocation!,
+                      icon: stationMarker ?? BitmapDescriptor.defaultMarker,
+                    ),
+                  },
                 ),
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('1'),
-                    position: _currentPosition!,
-                    icon: customerMarker ?? BitmapDescriptor.defaultMarker,
-                  ),
-                  Marker(
-                    markerId: const MarkerId('2'),
-                    position: stationLocation!,
-                    icon: stationMarker ?? BitmapDescriptor.defaultMarker,
-                  ),
-                },
               ),
             ] else ...[
               GoogleMap(
@@ -235,9 +241,8 @@ class _HomePageState extends State<HomePage> {
                                           .map((e) => e = false)
                                           .toList();
                                       categoryList[i] = true;
-                                      selectedPlan = stationDetails['plans']
-                                              [i]
-                                          .toString();
+                                      selectedPlan =
+                                          stationDetails['plans'][i].toString();
                                     });
                                   },
                                   child: Text(
@@ -291,17 +296,9 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _polyLines.add(polyline);
     });
-    print("Platform: ${!Platform.isIOS}");
-    // if (!Platform.isIOS) {
-    //   alertServices.showLoading("Calculate distance...");
-    //   _zoomToFitPositions();
-    //   Future.delayed(const Duration(seconds: 3), () {
-    //     debugPrint(" --- Zoom To Fit Positions --- ");
-    //     // alertServices.hideLoading();
-    //     // TODO: UNCOMMENT THIS LINE
-    //     // _zoomToFitPositions();
-    //   });
-    // }
+    if(Platform.isAndroid) {
+      _zoomToFitPositions();
+    }
   }
 
   void _zoomToFitPositions() {
@@ -328,6 +325,7 @@ class _HomePageState extends State<HomePage> {
       );
 
       double padding = 50.0;
+      print("zoomLevel $zoomLevel");
       mapController
           ?.animateCamera(CameraUpdate.newLatLngBounds(bounds, padding));
       mapController?.animateCamera(CameraUpdate.zoomTo(zoomLevel));
@@ -600,5 +598,13 @@ class _HomePageState extends State<HomePage> {
   bool isWithinRange(int a, int b, int c, int range) {
     return (c >= a - range && c <= a + range) ||
         (c >= b - range && c <= b + range);
+  }
+
+  getZoomControl() {
+    if (Platform.isIOS) {
+      return const MinMaxZoomPreference(15, 19);
+    } else {
+      return MinMaxZoomPreference.unbounded;
+    }
   }
 }
