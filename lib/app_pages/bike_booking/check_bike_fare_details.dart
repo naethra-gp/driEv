@@ -188,7 +188,9 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
                 defaultHeight,
                 OutlineButtonWidget(
                   height: buttonHeight,
-                  onPressed: scanToUnlock,
+                  onPressed: () {
+                    scanToUnlock();
+                  },
                   title: 'Scan to Unlock',
                 ),
                 const SizedBox(height: 10),
