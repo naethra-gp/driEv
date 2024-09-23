@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../app_config/app_end_points.dart';
 import 'connection.dart';
 
@@ -23,10 +25,17 @@ class CustomerService {
     return response;
   }
 
-  verifyEmail(request) async {
+  sentEmail(request) async {
     Connection connection = Connection();
-    var url = '${EndPoints.baseApi1}/${EndPoints.verifyEmail}';
+    var url = '${EndPoints.baseApi1}/${EndPoints.sentEmail}';
     var response = await connection.postWithToken(url, request);
+    return response;
+  }
+
+  verifyEmail(String email) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.verifyEmail}/$email';
+    var response = await connection.getWithToken(url);
     return response;
   }
 }

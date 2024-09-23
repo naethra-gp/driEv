@@ -658,11 +658,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
         /// SENDING A MAIL
         var request = {"emailId": email};
         alertServices.showLoading();
-        customerService.verifyEmail(request).then((response) async {
+        customerService.verifyEmail(email).then((response) async {
           print('email response ${response['message']}');
-          if (response['message'].toString() == "Email Sent") {
+          if (response['statusCode'].toString() == '404') {
             alertServices.hideLoading();
-            // alertServices.successToast('Please check your inbox and verify');
+            customerService.sentEmail(request).then((response) {
+              if (response['status'].toString() == '1') {
+                alertServices.hideLoading();
+                alertServices
+                    .successToast('Please check your inbox and verify');
+              } else {}
+            });
           } else {
             alertServices.hideLoading();
             alertServices.errorToast('Enter Valid Email');
@@ -676,6 +682,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           alertServices.errorToast('Verification failed. Try again.');
         });
       } else {
+        alertServices.hideLoading();
         alertServices.errorToast("Email ID already exists.");
         print("Customer Found!");
       }
