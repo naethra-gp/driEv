@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:driev/app_config/app_constants.dart';
-import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
-import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -52,27 +49,10 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     super.initState();
   }
 
-  // checkBikeNumber(String code) {
-  //   print("Code -> $code");
-  //   String vId = widget.data[0]['vehicleId'].toString();
-  //   if (code.toString() == vId) {
-  //     QrMobileVision.stop();
-  //     setState(() {
-  //       bikeNumberCtl.text = code.toString();
-  //     });
-  //     // startMyRide();
-  //   } else {
-  //     String msg = "Entered/Scanned Vehicle is invalid";
-  //     alertServices.errorToast(msg);
-  //   }
-  // }
-
   checkBikeNumber(String code) {
     if (hasShownPopup) {
       return;
     }
-
-    print("Code -> $code");
     String vId = widget.data[0]['vehicleId'].toString();
     if (code.toString() == vId) {
       QrMobileVision.stop();
@@ -88,7 +68,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       String msg = "Entered/Scanned Vehicle is invalid";
       alertServices.errorToast(msg);
 
-      Future.delayed(Duration(seconds: 5), () {
+      Future.delayed(const Duration(seconds: 5), () {
         setState(() {
           hasShownPopup = false;
         });
@@ -96,11 +76,22 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     }
   }
 
+  clickBackButton() {
+    Navigator.pushReplacementNamed(context, "bike_fare_details",
+        arguments: {"query": widget.data[0]['data']});
+  }
+
   /// NEW PLUGIN
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true,
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+        clickBackButton();
+      },
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Stack(
@@ -232,7 +223,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                   child: IconButton(
                 icon: Image.asset(Constants.backButton),
                 onPressed: () {
-                  Navigator.pop(context);
+                  clickBackButton();
+                  // Navigator.pop(context);
                 },
               )),
             )
@@ -249,17 +241,12 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     if (bike.isNotEmpty && bike.length <= 6) {
       String vId = widget.data[0]['vehicleId'].toString();
       if (bike == vId) {
-        print("Start my Ride");
         startMyRide();
       } else {
         String msg = "Entered/Scanned Vehicle is invalid";
         alertServices.errorToast(msg);
-
-        // Navigator.pushReplacementNamed(context, "scan_to_unlock",
-        //     arguments: widget.data);
       }
     }
-    // print("Value:${bikeNumberCtl.text}");
   }
 
   Future<void> _getCurrentLocation() async {
@@ -301,13 +288,10 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       alertServices.hideLoading();
       bookAndStartMyRide();
     });
-    print("_locationMessage $_locationMessage");
   }
 
   startMyRide() {
     if (widget.data[0]['vehicleId'].toString() != "null") {
-      print("bikeNumberCtl.text -> ${bikeNumberCtl.text}");
-      print("bikeNumberCtl.text -> ${bikeNumberCtl.text.toString() == ""}");
       if (bikeNumberCtl.text.toString() != "") {
         _getCurrentLocation();
       } else {
@@ -328,10 +312,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       "lattitude": currentLocation!.latitude.toString(),
       "longitude": currentLocation!.longitude.toString(),
     };
-    print("params $params");
     bookingServices.startMyRide(params).then((r) {
       alertServices.hideLoading();
-      print("Response -> ${jsonEncode(r)}");
       conditionCheck([r]);
     });
   }
@@ -361,12 +343,8 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   }
 
   void _startCountdown() {
-    // _cancelTimer();
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
-        // if (remainingSeconds == 30) {
-        //   QrMobileVision.toggleFlash();
-        // }
         if (remainingSeconds > 0) {
           remainingSeconds--;
         } else {
@@ -386,21 +364,4 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     _cancelTimer();
     super.dispose();
   }
-
-// _onQRViewCreated(String code) {
-//   print("Code ---> $code");
-//   if (code != "") {
-//     QrMobileVision.stop();
-//     String vId = widget.data[0]['vehicleId'].toString();
-//     if (code.toString() == vId) {
-//       setState(() {
-//         bikeNumberCtl.text = code.toString();
-//       });
-//       // startMyRide();
-//     } else {
-//       alertServices.errorToast(
-//           "Wrong vehicle! Scan the code of the assigned vehicle to end the ride");
-//     }
-//   }
-// }
 }

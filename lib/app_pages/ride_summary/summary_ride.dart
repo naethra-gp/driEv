@@ -329,8 +329,8 @@ class _RideSummaryState extends State<RideSummary> {
                         ),
                         const SizedBox(height: 25),
                         SizedBox(
-                          width: 150,
-                          height: 42,
+                          width: 200,
+                          height: 45,
                           child: AppButtonWidget(
                             onPressed: () {
                               Navigator.pushNamed(context, "rate_this_raid",

@@ -62,7 +62,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
       alertServices.hideLoading();
       if (response != null) {
         customer = [response];
-        print("customer $customer");
       } else {
         alertServices.errorToast("Customer details not found!");
       }

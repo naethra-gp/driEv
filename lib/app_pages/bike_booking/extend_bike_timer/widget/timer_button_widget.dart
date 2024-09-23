@@ -131,7 +131,7 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget>
   }
 
   Future<void> _stopTimer() async {
-    if (countdownTimer!.isActive) {
+    // if (countdownTimer!.isActive) {
       countdownTimer?.cancel();
       setState(() {
         _remainingSeconds = 0;
@@ -139,7 +139,7 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget>
         enableChasingTime = false;
       });
       debugPrint("--- TIMER STOPPED ---");
-    }
+    // }
   }
 
   _showAlertDialog(context) {

@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
@@ -59,16 +58,13 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
   String formattedSeconds = "00";
   Timer? countdownTimer;
 
-  Timer? _timer;
   int _remainingSeconds = 0;
-  bool _isRunning = false;
 
   // EXTEND BLOCK
   String blockId = "";
   bool timerRunning = false;
   bool viaApi = false; // DATA FETCH FROM BLOCK BIKE IN HOME SCREEN
   bool viaApp = false; // NORMAL APP FLOW
-
   final SuperTooltipController controller = SuperTooltipController();
 
   @override
@@ -354,11 +350,11 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
                     }),
                   ),
                   const SizedBox(height: 4),
-                  if(fd.isNotEmpty)
-                  Center(
-                    child: Text(
-                        "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
-                  ),
+                  if (fd.isNotEmpty)
+                    Center(
+                      child: Text(
+                          "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
+                    ),
                   const SizedBox(height: 25),
                   OutlineButtonWidget(
                     foregroundColor: AppColors.primary,
@@ -575,18 +571,15 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
   }
 
   Future<void> _stopTimer() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setString(Constants.blockedTill, "");
-    if (countdownTimer!.isActive) {
-      countdownTimer?.cancel();
-      setState(() {
-        _remainingSeconds = 0;
-        isOnCounter = false;
-        enableChasingTime = false;
-        // reserveMins = "";
-      });
-      debugPrint("--- TIMER STOPPED ---");
-    }
+    // if (countdownTimer!.isActive) {
+    countdownTimer?.cancel();
+    setState(() {
+      _remainingSeconds = 0;
+      isOnCounter = false;
+      enableChasingTime = false;
+    });
+    debugPrint("--- TIMER STOPPED ---");
+    // }
   }
 
   /// EXTEND BIKE BLOCKING
@@ -742,7 +735,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
   _endReservation(String blockId) {
     if (blockId.toString().isEmpty) return false;
     alertServices.showLoading();
-    print("Block ID for End Blocking is $blockId");
     bookingServices.releaseBlockedBike(blockId).then((res) async {
       alertServices.hideLoading();
       alertServices.successToast(res['message'].toString());
@@ -759,19 +751,68 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
   }
 
   /// SCAN TO UNLOCK BIKE
-  scanToUnlock() {
+  scanToUnlock() async {
+    print("isOnCounter $isOnCounter");
+    if (isOnCounter) {
+      var mobile = await secureStorage.get("mobile");
+      getBlockRides(mobile);
+      return;
+    }
     String campus = widget.data[0]['campus'].toString();
     String vehicleId = widget.data[0]['vehicleId'].toString();
+    // widget.data[0]['via'] = isOnCounter ? "api" : "app";
     List arg = [
       {
         "campus": campus,
         "vehicleId": vehicleId,
+        "data": widget.data,
       }
     ];
     //TODO: uncomment;
     _stopTimer();
-    // stopCountdown();
+    log("Argument - ${jsonEncode(arg)}");
     Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+  }
+
+  getBlockRides(String mobile) {
+    alertServices.showLoading("get block details");
+    String campus = widget.data[0]['campus'].toString();
+    String vehicleId = widget.data[0]['vehicleId'].toString();
+    widget.data[0]['via'] = "api";
+    vehicleService.getBlockedRides(mobile).then((r) {
+      alertServices.hideLoading();
+      // {
+      //   "campus": data[0]['stationName'].toString(),
+      // "distance": data[0]['distanceRange'].toString(),
+      // "vehicleId": data[0]['vehicleId'].toString(),
+      // "via": "api",
+      // "data": data
+      // }
+      List params = [
+        {
+          "campus": widget.data[0]['campus'].toString(),
+          "distance": r[0]['distanceRange'].toString(),
+          "vehicleId": widget.data[0]['vehicleId'].toString(),
+          "via": "api",
+          "data": r
+        }
+      ];
+      if (r != null) {
+        if (r.isNotEmpty) {
+          List arg = [
+            {
+              "campus": campus,
+              "vehicleId": vehicleId,
+              "data": params,
+            }
+          ];
+          //TODO: uncomment;
+          _stopTimer();
+          log("Argument - ${jsonEncode(arg)}");
+          Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
+        }
+      }
+    });
   }
 
   getTimeCount(minutes, seconds) {

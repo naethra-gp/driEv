@@ -41,7 +41,7 @@ class AppButtonWidget extends StatelessWidget {
           style: const TextStyle(
             fontFamily: "Roboto",
             fontWeight: FontWeight.w600,
-            fontSize: 16,
+            fontSize: 14,
           ),
         ),
       ),
