@@ -17,6 +17,7 @@ import 'dart:io';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
+import 'package:path_provider/path_provider.dart' as syspath;
 
 class RideSummary extends StatefulWidget {
   final String rideId;
@@ -372,9 +373,11 @@ class _RideSummaryState extends State<RideSummary> {
           },
         ),
       );
-      final dir = await getExternalStorageDirectories();
-      final cacheDir = dir!.first;
-      final file = File('${cacheDir.path}/ride_summary.pdf');
+      final dir = Platform.isIOS
+          ? await getApplicationCacheDirectory()
+          : await getDownloadsDirectory();
+      final file = File('${dir?.path}/ride_summary.pdf');
+
       await pdf.save().then((List<int> data) async {
         await file.writeAsBytes(data); // Write data to file
         OpenFile.open(file.path);

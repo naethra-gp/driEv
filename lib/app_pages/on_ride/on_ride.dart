@@ -70,122 +70,6 @@ class _OnRideState extends State<OnRide> {
     });
   }
 
-  getRideDetails(String id) {
-    bookingServices.getRideDetails(id).then((r) {
-      if (r != null) {
-        setState(() {
-          rideDetails = [r];
-          int milliseconds = rideDetails[0]['durationTime'];
-          Duration duration = Duration(milliseconds: milliseconds);
-          String formattedTime = _formatDuration1(duration);
-
-          rideDuration = formattedTime;
-          _startTime =
-              DateTime.now().subtract(Duration(milliseconds: milliseconds));
-          _startTimer();
-        });
-        if (r['status'].toString() == "On Ride") {
-          var cron = Cron();
-          cron.schedule(Schedule.parse('*/1 * * * *'), () async {
-            getRideDetails1(widget.rideId);
-          });
-        }
-      }
-    });
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _calculateElapsedTime();
-      });
-    });
-    _calculateElapsedTime();
-  }
-
-  void _calculateElapsedTime() {
-    DateTime now = DateTime.now();
-    _elapsedTime = now.difference(_startTime);
-  }
-
-  String _formatDuration1(Duration duration) {
-    String twoDigits(int n) {
-      if (n >= 10) return "$n";
-      return "0$n";
-    }
-
-    String hours = twoDigits(duration.inHours.remainder(24));
-    String minutes = twoDigits(duration.inMinutes.remainder(60));
-    String seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$hours:$minutes:$seconds";
-  }
-
-  getRideDetails1(String id) {
-    String rideId = widget.rideId.toString();
-    String mobile = secureStorage.get("mobile");
-    bookingServices.getRideDetails(id).then((r) {
-      if (r != null) {
-        setState(() {
-          rideDetails = [r];
-        });
-      }
-      bookingServices.getWalletBalance(mobile).then((r) {
-        double b = r['balance'];
-        double c = rideDetails[0]["payableAmount"];
-        bookingServices.getRideEndPin(rideId).then((r2) {
-          alertServices.hideLoading();
-          if (!popShown && b < c) {
-            setState(() {
-              popShown = true;
-              alertServices.insufficientBalanceAlert(context, b.toString(),
-                  r2["message"].toString(), [], widget.rideId, []);
-            });
-          }
-        });
-      });
-    });
-  }
-
-  String _formatDuration(Duration duration) {
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes.remainder(60);
-    int seconds = duration.inSeconds.remainder(60);
-    return '${_twoDigits(hours)}:${_twoDigits(minutes)}:${_twoDigits(seconds)}';
-  }
-
-  String _twoDigits(int n) {
-    return n.toString().padLeft(2, '0');
-  }
-
-  _getUserLocation() async {
-    try {
-      Position position = await GeolocatorPlatform.instance.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.reduced,
-        ),
-      );
-      BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(size: Size(48, 48)),
-        'assets/img/map_user_icon.png',
-      );
-      print("${position.latitude} ${position.longitude}");
-      setState(() async {
-        currentLocation = LatLng(position.latitude, position.longitude);
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('currentLocation'),
-            position: currentLocation!,
-            icon: customIcon,
-          ),
-        );
-        List<Placemark> placeMark = await placemarkFromCoordinates(
-            position.latitude, position.longitude);
-        Placemark place = placeMark[0];
-        currentDistrict = place.locality!;
-      });
-    } catch (e) {}
-  }
-
   @override
   Widget build(BuildContext context) {
     String formattedTime = _formatDuration1(_elapsedTime);
@@ -670,5 +554,108 @@ class _OnRideState extends State<OnRide> {
     });
   }
 
-  // TIMER
+  getRideDetails(String id) {
+    bookingServices.getRideDetails(id).then((r) {
+      if (r != null) {
+        setState(() {
+          rideDetails = [r];
+          int milliseconds = rideDetails[0]['durationTime'];
+          Duration duration = Duration(milliseconds: milliseconds);
+          String formattedTime = _formatDuration1(duration);
+
+          rideDuration = formattedTime;
+          _startTime =
+              DateTime.now().subtract(Duration(milliseconds: milliseconds));
+          _startTimer();
+        });
+        if (r['status'].toString() == "On Ride") {
+          var cron = Cron();
+          cron.schedule(Schedule.parse('*/1 * * * *'), () async {
+            getRideDetails1(widget.rideId);
+          });
+        }
+      }
+    });
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _calculateElapsedTime();
+      });
+    });
+    _calculateElapsedTime();
+  }
+
+  void _calculateElapsedTime() {
+    DateTime now = DateTime.now();
+    _elapsedTime = now.difference(_startTime);
+  }
+
+  String _formatDuration1(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String hours = twoDigits(duration.inHours.remainder(24));
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$hours:$minutes:$seconds";
+  }
+
+  getRideDetails1(String id) {
+    String rideId = widget.rideId.toString();
+    String mobile = secureStorage.get("mobile");
+    bookingServices.getRideDetails(id).then((r) {
+      if (r != null) {
+        setState(() {
+          rideDetails = [r];
+        });
+      }
+      bookingServices.getWalletBalance(mobile).then((r) {
+        double b = r['balance'];
+        double c = rideDetails[0]["payableAmount"];
+        bookingServices.getRideEndPin(rideId).then((r2) {
+          alertServices.hideLoading();
+          if (!popShown && b < c) {
+            setState(() {
+              popShown = true;
+              alertServices.insufficientBalanceAlert(context, b.toString(),
+                  r2["message"].toString(), [], widget.rideId, []);
+            });
+          }
+        });
+      });
+    });
+  }
+
+  _getUserLocation() async {
+    try {
+      Position position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.reduced,
+        ),
+      );
+      BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(5, 15)),
+        'assets/img/map_user_icon.png',
+      );
+      print("${position.latitude} ${position.longitude}");
+      setState(() async {
+        currentLocation = LatLng(position.latitude, position.longitude);
+        _markers.add(
+          Marker(
+            markerId: const MarkerId('currentLocation'),
+            position: currentLocation!,
+            icon: customIcon,
+          ),
+        );
+        List<Placemark> placeMark = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
+        Placemark place = placeMark[0];
+        currentDistrict = place.locality!;
+      });
+    } catch (e) {}
+  }
 }

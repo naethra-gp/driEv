@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
@@ -8,7 +10,7 @@ class FareDetailsWidget extends StatelessWidget {
   final List fareDetails;
   final SuperTooltipController? controller;
 
-  FareDetailsWidget({
+  const FareDetailsWidget({
     super.key,
     required this.title,
     required this.info,
@@ -48,22 +50,42 @@ class FareDetailsWidget extends StatelessWidget {
                     "Receive a complimentary ${fareDetails[0]['offer']['discountMin'].toStringAsFixed(0)} minute ride spanning ${fareDetails[0]['offer']['discountKm'].toStringAsFixed(0)} kilometers",
                     softWrap: true,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.black,
-                    ),
+                    style: const TextStyle(color: Colors.black),
                   ),
-                  child: GestureDetector(
+                  // child: GestureDetector(
+                  //   onTap: () async {
+                  //     await controller!.showTooltip();
+                  //   },
+                  //   child: const Padding(
+                  //     padding: EdgeInsets.only(left: 4.0),
+                  //     child: Icon(
+                  //       Icons.info,
+                  //       size: 15.0,
+                  //       color: Color(0xff7D7D7D),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  // child: IconButton(
+                  //   onPressed: () async {
+                  //     await controller!.showTooltip();
+                  //   },
+                  //   icon: const Icon(
+                  //     Icons.info,
+                  //     size: 20.0,
+                  //     color: Color(0xff7D7D7D),
+                  //   ),
+                  // ),
+
+                  child: InkWell(
+                    child: Icon(
+                      Icons.info,
+                      size: Platform.isIOS ? 20.0 : 15.0,
+                      color: const Color(0xff7D7D7D),
+                    ),
                     onTap: () async {
                       await controller!.showTooltip();
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 4.0),
-                      child: Icon(
-                        Icons.info,
-                        size: 15.0,
-                        color: Color(0xff7D7D7D),
-                      ),
-                    ),
                   ),
                 ),
             ],

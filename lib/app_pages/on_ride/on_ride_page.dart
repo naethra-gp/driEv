@@ -115,9 +115,7 @@ class _OnRidePageState extends State<OnRidePage> {
   }
 
   getRideDetails1(String id) {
-    print("Calling api ---> getRideDetails1");
-    // String rideId = widget.rideId.toString();
-    // String mobile = secureStorage.get("mobile");
+    print("Calling api ---> Get Ride Details");
     bookingServices.getRideDetails(id).then((r) {
       if (!mounted) return;
       if (r != null) {
@@ -125,26 +123,6 @@ class _OnRidePageState extends State<OnRidePage> {
           rideDetails = [r];
         });
       }
-      // bookingServices.getWalletBalance(mobile).then((r) {
-      //   double b = r['balance'];
-      //   double c = rideDetails[0]["payableAmount"];
-      //   bookingServices.getRideEndPin(rideId).then((r2) {
-      //     alertServices.hideLoading();
-      //     if (!popShown && b < c) {
-      //       // setState(() {
-      //       popShown = true;
-      //       alertServices.insufficientBalanceAlert(
-      //         context,
-      //         currentBalance.toString(),
-      //         r2["message"],
-      //         [],
-      //         widget.rideId,
-      //         [],
-      //       );
-      //       // });
-      //     }
-      //   });
-      // });
     });
   }
 
@@ -160,15 +138,18 @@ class _OnRidePageState extends State<OnRidePage> {
                 )
               : Stack(
                   children: <Widget>[
-                    GoogleMap(
-                      onMapCreated: (GoogleMapController controller) {
-                        mapController = controller;
-                      },
-                      markers: _markers,
-                      zoomControlsEnabled: false,
-                      initialCameraPosition: CameraPosition(
-                        target: currentLocation1!,
-                        zoom: 15,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: GoogleMap(
+                        onMapCreated: (GoogleMapController controller) {
+                          mapController = controller;
+                        },
+                        markers: _markers,
+                        zoomControlsEnabled: false,
+                        initialCameraPosition: CameraPosition(
+                          target: currentLocation1!,
+                          zoom: 15,
+                        ),
                       ),
                     ),
                     if (customer.isNotEmpty)
@@ -176,7 +157,8 @@ class _OnRidePageState extends State<OnRidePage> {
                         imgUrl: customer[0]['selfi'].toString(),
                         location: currentLocation.toString(),
                         balance: double.parse(
-                            customer[0]['walletBalance'].toString()),
+                          customer[0]['walletBalance'].toString(),
+                        ),
                       ),
                   ],
                 ),
@@ -200,6 +182,7 @@ class _OnRidePageState extends State<OnRidePage> {
 
   // TO GET USERS CURRENT LOCATION
   getLocation() async {
+    print("GET LOCATION");
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -224,8 +207,8 @@ class _OnRidePageState extends State<OnRidePage> {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-    BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(48, 48)),
+    BitmapDescriptor customIcon = await BitmapDescriptor.asset(
+      const ImageConfiguration(size: Size(25, 30)),
       'assets/img/map_user_icon.png',
     );
     List<Placemark> placeMark =
