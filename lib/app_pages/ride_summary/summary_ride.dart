@@ -376,7 +376,7 @@ class _RideSummaryState extends State<RideSummary> {
       final dir = Platform.isIOS
           ? await getApplicationCacheDirectory()
           : await getDownloadsDirectory();
-      final file = File('${dir?.path}/ride_summary.pdf');
+      final file = File('${dir?.path}/Ride Summary.pdf');
 
       await pdf.save().then((List<int> data) async {
         await file.writeAsBytes(data); // Write data to file

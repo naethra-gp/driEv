@@ -13,7 +13,6 @@ import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 import 'widget/screen_text_widget.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 
 class ScanToUnlock extends StatefulWidget {
   final List data;
@@ -37,8 +36,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   Barcode? result;
   QRViewController? controller;
   String qr = "";
-  FocusNode nodeText5 = FocusNode();
-
   int remainingSeconds = 40;
   Timer? countdownTimer;
 

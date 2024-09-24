@@ -183,7 +183,7 @@ class _RideDetailsState extends State<RideDetails> {
                   ListViewWidget(
                       label: "End Time",
                       value:
-                      formatTime(widget.rideId[0]['endTime'].toString())),
+                          formatTime(widget.rideId[0]['endTime'].toString())),
                   CustomTheme.defaultHeight10,
                   ListViewWidget(
                       label: "Base Charge",
@@ -275,9 +275,13 @@ class _RideDetailsState extends State<RideDetails> {
           },
         ),
       );
-      final dir = await getExternalStorageDirectories();
-      final cacheDir = dir!.first;
-      final file = File('${cacheDir.path}/ride_summary.pdf');
+      // final dir = await getExternalStorageDirectories();
+      // final cacheDir = dir!.first;
+      // final file = File('${cacheDir.path}/ride_summary.pdf');
+      final dir = Platform.isIOS
+          ? await getApplicationCacheDirectory()
+          : await getDownloadsDirectory();
+      final file = File('${dir?.path}/Ride Summary.pdf');
       await pdf.save().then((List<int> data) async {
         await file.writeAsBytes(data); // Write data to file
         OpenFile.open(file.path);
