@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:driev/app_config/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -11,6 +13,7 @@ import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
 import 'widget/screen_text_widget.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 
 class ScanToUnlock extends StatefulWidget {
   final List data;
@@ -34,6 +37,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   Barcode? result;
   QRViewController? controller;
   String qr = "";
+  FocusNode nodeText5 = FocusNode();
 
   int remainingSeconds = 40;
   Timer? countdownTimer;
@@ -110,8 +114,9 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.green),
+                        borderRadius: BorderRadius.circular(5),
+                        color: AppColors.primary,
+                      ),
                       width: 30,
                       height: 30,
                       child: Icon(
@@ -172,7 +177,15 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                           maxLength: 6,
                           textAlign: TextAlign.left,
                           textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          keyboardType: Platform.isAndroid
+                              ? TextInputType.phone
+                              : const TextInputType.numberWithOptions(
+                                  signed: true,
+                                  decimal: false,
+                                ),
                           onChanged: (value) {
                             print("Value: $value");
                           },

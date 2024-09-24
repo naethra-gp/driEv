@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cron/cron.dart';
 import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
@@ -198,7 +199,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 const Text(
                   "Wrap up your two-wheeled \n adventure!",
                   style: TextStyle(
@@ -218,7 +219,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -235,7 +236,13 @@ class _EndRideScannerState extends State<EndRideScanner> {
                         onChanged: (value) {},
                         maxLength: 6,
                         textInputAction: TextInputAction.done,
-                        keyboardType: TextInputType.phone,
+                        keyboardType: Platform.isAndroid
+                            ? TextInputType.phone
+                            : const TextInputType.numberWithOptions(
+                                signed: true,
+                                decimal: false,
+                              ),
+                        // keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           hintStyle: const TextStyle(
                             fontSize: 12,
@@ -252,9 +259,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Container(
                       width: 40,
                       height: 40,
@@ -287,13 +292,12 @@ class _EndRideScannerState extends State<EndRideScanner> {
           Positioned(
             top: 40,
             left: 10,
-            child: Container(
-                child: IconButton(
+            child: IconButton(
               icon: Image.asset(Constants.backButton),
               onPressed: () {
                 Navigator.pop(context);
               },
-            )),
+            ),
           )
         ],
       ),
