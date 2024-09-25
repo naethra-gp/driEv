@@ -19,11 +19,14 @@ class AddMoreFund extends StatefulWidget {
   final List stationDetails;
   final String rideId;
   final List rideID;
-  const AddMoreFund(
-      {super.key,
-      required this.stationDetails,
-      required this.rideId,
-      required this.rideID});
+
+  const AddMoreFund({
+    super.key,
+    required this.stationDetails,
+    required this.rideId,
+    required this.rideID,
+  });
+
   @override
   State<AddMoreFund> createState() => _AddMoreFundState();
 }
@@ -87,8 +90,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 // prefixText: "\u{20B9} ",
                                 decoration: InputDecoration(
                                   counterText: "",
-                                  contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 50),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 50),
                                   prefixIcon: const Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Row(
@@ -101,18 +104,18 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                    const BorderSide(color: Color(0xffD2D2D2)),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xffD2D2D2)),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                    const BorderSide(color: Color(0xffD2D2D2)),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xffD2D2D2)),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                    const BorderSide(color: Color(0xffD2D2D2)),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xffD2D2D2)),
                                   ),
                                   hintStyle: const TextStyle(
                                     fontSize: 14,
@@ -124,7 +127,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                 // keyboardType: TextInputType.phone,
                                 keyboardType: Platform.isIOS
                                     ? const TextInputType.numberWithOptions(
-                                    signed: true)
+                                        signed: true)
                                     : TextInputType.phone,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
@@ -194,7 +197,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
         style: ButtonStyle(
           elevation: WidgetStateProperty.all(0),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          padding: WidgetStateProperty.all(const EdgeInsets.only(top: 0, bottom: 0, right: 5, left: 5)),
+          padding: WidgetStateProperty.all(
+              const EdgeInsets.only(top: 0, bottom: 0, right: 5, left: 5)),
           minimumSize: WidgetStateProperty.all(const Size(75, 35)),
           overlayColor: WidgetStateProperty.all(Colors.transparent),
           side: WidgetStateProperty.resolveWith((states) {
@@ -244,7 +248,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       "staging": Constants.isStagingMode,
     };
     walletServices.initiateTransaction(params).then((dynamic res) {
-      print("Res--> ${jsonEncode(res)}");
+      // print("Res--> ${jsonEncode(res)}");
       List token = [res];
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
@@ -253,14 +257,14 @@ class _AddMoreFundState extends State<AddMoreFund> {
       String cbUrl = token[0]['callbackUrl'].toString();
       bool staging = Constants.isStagingMode;
       bool rai = false;
-      debugPrint("-------------- PAYTM Payment ---------------------");
-      debugPrint("mid: $mid");
-      debugPrint("orderID: $oId");
-      debugPrint("txtToken: $tToken");
-      debugPrint("amount: $amt");
-      debugPrint("callbackurl: $cbUrl");
-      debugPrint("isStaging: $staging");
-      debugPrint("-------------- // PAYTM Payment ---------------------");
+      // debugPrint("-------------- PAYTM Payment ---------------------");
+      // debugPrint("mid: $mid");
+      // debugPrint("orderID: $oId");
+      // debugPrint("txtToken: $tToken");
+      // debugPrint("amount: $amt");
+      // debugPrint("callbackurl: $cbUrl");
+      // debugPrint("isStaging: $staging");
+      // debugPrint("-------------- // PAYTM Payment ---------------------");
       alertServices.hideLoading();
       var response = AllInOneSdk.startTransaction(
           mid, oId, amt, tToken, cbUrl, staging, rai);
@@ -269,10 +273,9 @@ class _AddMoreFundState extends State<AddMoreFund> {
           result = value.toString();
         });
         List res = [value];
-        print("---------------------");
-        print("result ---> ${res[0]['STATUS']}");
-        print("---------------------");
-
+        // print("---------------------");
+        // print("result ---> ${res[0]['STATUS']}");
+        // print("---------------------");
         if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
           debugPrint("Transaction Success");
           creditMoneyToWallet(amt, oId, res[0]['STATUS'].toString());
@@ -288,10 +291,10 @@ class _AddMoreFundState extends State<AddMoreFund> {
           });
         }
         List response = [onError.details];
-        print("---------------------");
-        print("error result ---> ${response[0]['STATUS']}");
-        print("error result ---> ${response[0]['RESPMSG']}");
-        print("---------------------");
+        // print("---------------------");
+        // print("error result ---> ${response[0]['STATUS']}");
+        // print("error result ---> ${response[0]['RESPMSG']}");
+        // print("---------------------");
         if (response[0]['STATUS'].toString() == "TXN_FAILURE") {
           debugPrint("Transaction Failure");
           Navigator.pushReplacementNamed(context, "transaction_failure");
@@ -321,7 +324,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
         if (stationDetails.isNotEmpty ||
             rideID.isNotEmpty ||
             rideId.isNotEmpty) {
-          AlertSuccess(context, "TRANSACTION SUCCESS");
+          alertSuccess(context, "TRANSACTION SUCCESS");
         } else {
           Navigator.pushNamed(context, "transaction_success");
         }
@@ -335,7 +338,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
     amountCtrl.text = newAmount.toString();
   }
 
-  Future AlertSuccess(BuildContext context, String msg) async {
+  Future alertSuccess(BuildContext context, String msg) async {
     return showDialog(
       barrierDismissible: false,
       context: context,

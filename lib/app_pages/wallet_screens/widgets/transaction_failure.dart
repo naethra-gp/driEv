@@ -59,37 +59,15 @@ class _TransactionFailureState extends State<TransactionFailure> {
                     height: 50,
                     child: AppButtonWidget(
                       onPressed: () {
-                        Navigator.pushNamed(context, "add_more_fund", arguments: {
-                          "stationDetails": [],
-                          "rideId": "",
-                          "rideID": []
-                        });
+                        Navigator.pushReplacementNamed(context, "add_more_fund",
+                            arguments: {
+                              "stationDetails": [],
+                              "rideId": "",
+                              "rideID": [],
+                            });
                       },
                       title: "Retry Payment",
                     ),
-                    // child: ElevatedButton(
-                    //   onPressed: () {},
-                    //   style: ElevatedButton.styleFrom(
-                    //     textStyle: const TextStyle(
-                    //       color: Colors.black,
-                    //       fontWeight: FontWeight.w500,
-                    //       fontSize: 14,
-                    //     ),
-                    //     foregroundColor: Colors.white,
-                    //     backgroundColor: AppColors.primary,
-                    //     side: const BorderSide(
-                    //         color: AppColors.primary, width: 1),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(25),
-                    //     ),
-                    //   ),
-                    //   child: const Text(
-                    //     "Retry Payment",
-                    //     style: TextStyle(
-                    //       fontSize: 18,
-                    //     ),
-                    //   ),
-                    // ),
                   ),
                 ),
               ],
