@@ -82,8 +82,7 @@ class Connection {
         headers: header,
         body: jsonEncode(request),
       );
-
-      print("Response ${json.decode(response.body)}");
+      // print("Response ${json.decode(response.body)}");
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 404) {
@@ -111,7 +110,7 @@ class Connection {
       }
       // alertService.errorToast("Error: ${e.toString()}");
     } finally {
-      print('API request completed');
+      debugPrint('--- API Request Completed ---');
     }
   }
 
@@ -155,7 +154,7 @@ class Connection {
         // alertService.errorToast("Error: ${e.toString()}");
       }
     } finally {
-      print('API request completed');
+      debugPrint('--- API Request Completed ---');
     }
   }
 
@@ -171,12 +170,20 @@ class Connection {
         await http.MultipartFile.fromPath('image', filePath.path),
       );
       var response = await request.send();
-      if (response.statusCode == 200) {
-        return await response.stream.bytesToString();
-      } else {
-        alertService
-            .errorToast('Failed to upload file: ${response.reasonPhrase}');
-      }
+      debugPrint(" --------------------------------- ");
+      print("API RESPONSE STATUS CODE-> ${response.statusCode}");
+      // print(
+      //     "API RESPONSE -> ${jsonDecode(await response.stream.bytesToString())}");
+      debugPrint(" --------------------------------- ");
+      // Future.delayed(const Duration(seconds: 1), () async {
+        print("delay function");
+        if (response.statusCode == 200) {
+          return await response.stream.bytesToString();
+        } else {
+          alertService
+              .errorToast('Failed to upload file: ${response.reasonPhrase}');
+        }
+      // });
     } catch (e) {
       if (e is SocketException) {
         alertService
@@ -188,15 +195,11 @@ class Connection {
         alertService
             .errorToast('Something went wrong. Please try again in a bit.');
       }
-      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
-      print('API request completed');
-      final cacheDir = await getTemporaryDirectory();
-      Future.delayed(const Duration(seconds: 2), () {
-        if (cacheDir.existsSync()) {
-          cacheDir.deleteSync(recursive: true);
-        }
-      });
+      debugPrint('--- API Request Completed ---');
+      // await Future.delayed(const Duration(seconds: 1), () {
+      //   clearImageCache();
+      // });
     }
   }
 

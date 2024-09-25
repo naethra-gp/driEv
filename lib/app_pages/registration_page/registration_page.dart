@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_utils/app_form/custom_dropdown.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../app_config/app_constants.dart';
 import '../../app_services/Coupon_services.dart';
@@ -106,17 +108,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
     campusServices.getCampusById(widget.campusId).then((response) async {
       alertServices.hideLoading();
       campusDetail = [response];
-      print('campus detail $campusDetail');
       campusDocList = campusDetail[0]['campusDocList'];
-      print("campusDocList $campusDocList");
       var a =
           campusDocList.where((e) => e['mandatory'].toString() == 'Y').toList();
       var b = a
           .where((e) =>
               e['documentId'].toString().toLowerCase().contains("aadharproof"))
           .toList();
-      print("a $a");
-      print("b $b");
       isAadhaarRequired = b.isNotEmpty ? true : false;
       setState(() {});
       for (var control in campusDocList) {
@@ -624,8 +622,39 @@ class _RegistrationPageState extends State<RegistrationPage> {
       alertServices.successToast(response['status']);
       secureStorage.save("isLogin", true);
       getAssignCoupon();
+      clearImageCache();
       Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     });
+  }
+  clearImageCache() async {
+    try {
+      // Get the cache directory
+      final cacheDir = await getTemporaryDirectory();
+      // Check if the directory exists
+      if (cacheDir.existsSync()) {
+        // Delete the files in the cache directory
+        cacheDir.listSync().forEach((file) {
+          if (file is File) {
+            try {
+              file.deleteSync();
+              print('Deleted: ${file.path}');
+            } catch (e) {
+              print('Failed to delete ${file.path}: $e');
+            }
+          } else if (file is Directory) {
+            try {
+              file.deleteSync(recursive: true);
+              print('Deleted directory: ${file.path}');
+            } catch (e) {
+              print('Failed to delete directory ${file.path}: $e');
+            }
+          }
+        });
+        debugPrint('Cache folder cleared successfully.');
+      }
+    } catch (e) {
+      print('Error clearing cache folder: $e');
+    }
   }
 
   getFileName(details) {
@@ -659,7 +688,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         var request = {"emailId": email};
         alertServices.showLoading();
         customerService.verifyEmail(email).then((response) async {
-          print('email response ${response['message']}');
           if (response['statusCode'].toString() == '404') {
             alertServices.hideLoading();
             customerService.sentEmail(request).then((response) {
@@ -684,7 +712,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       } else {
         alertServices.hideLoading();
         alertServices.errorToast("Email ID already exists.");
-        print("Customer Found!");
       }
     });
   }

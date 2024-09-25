@@ -174,7 +174,7 @@ class _FileUploadFormState extends State<FileUploadForm> {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedFile.path,
       compressFormat: ImageCompressFormat.jpg,
-      compressQuality: 100,
+      compressQuality: 90,
       androidUiSettings: const AndroidUiSettings(
         toolbarTitle: 'Crop your Photo',
         toolbarColor: AppColors.primary,
@@ -196,7 +196,7 @@ class _FileUploadFormState extends State<FileUploadForm> {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       '${file.path}.jpg',
-      quality: 50,
+      quality: 80,
     );
     if (result != null) {
       var newPath = result.path;
@@ -219,20 +219,25 @@ class _FileUploadFormState extends State<FileUploadForm> {
     }).catchError((error) {
       print('Error renaming file: $error');
     });
-    Future.delayed(const Duration(seconds: 2), () {});
     alertServices.showLoading();
-    final uploadFile = File("$result1$docId$fileExtension");
-    print("uploadFile $uploadFile");
-    campusServices
-        .uploadImage(mobile.toString(), uploadFile)
-        .then((response) async {
-      alertServices.hideLoading();
-      var res = jsonDecode(response);
-      List array = res['url'].toString().split("/");
-      List name = array[array.length - 1].toString().split("_");
-      widget.controller.text = name[name.length - 1].toString();
-      widget.onDataReceived(res['url']);
+    await Future.delayed(const Duration(seconds: 1), () {
+      final uploadFile = File("$result1$docId$fileExtension");
+      print("Upload File --> $uploadFile");
+      campusServices
+          .uploadImage(mobile.toString(), uploadFile)
+          .then((response) async {
+        alertServices.hideLoading();
+        print("Page Response: $response");
+        if (response.toString().toLowerCase() != "null") {
+          var res = jsonDecode(response);
+          List array = res['url'].toString().split("/");
+          List name = array[array.length - 1].toString().split("_");
+          widget.controller.text = name[name.length - 1].toString();
+          widget.onDataReceived(res['url']);
+        }
+      });
     });
+
   }
 
   Future<void> _pickFile() async {
