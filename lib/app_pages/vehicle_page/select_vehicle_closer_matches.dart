@@ -182,7 +182,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
         "homeData": widget.params,
       }
     ];
-    print("Select Vehicle: ${jsonEncode(params)}");
+    // print("Select Vehicle: ${jsonEncode(params)}");
     var args = {"query": params};
     Navigator.pushNamed(context, "bike_fare_details", arguments: args);
   }

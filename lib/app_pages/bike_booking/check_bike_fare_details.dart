@@ -115,8 +115,8 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
   getFareDetails(String id) {
     alertServices.showLoading();
     bookingServices.getFare(id).then((response) async {
-      alertServices.hideLoading();
       fareDetails = [response];
+      alertServices.hideLoading();
       setState(() {});
     });
   }
@@ -461,8 +461,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String blockTime = prefs.getString(Constants.blockedTill) ?? "";
     String blockedOn = prefs.getString(Constants.blockedOn) ?? "";
-    log("blockedOn Time: $blockedOn");
-    log("blockedTill Time: $blockTime");
     if (blockTime.toString().isEmpty) return;
     // DATE PARSE AND CONVERT STRING TO TIME
     DateTime blockedTime = DateTime.parse(blockTime);
@@ -479,8 +477,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
     DateTime bo = DateTime.parse(blockedOn);
     Duration diff = blockedTime.difference(bo);
     double percentage = diff.inSeconds * 0.25;
-    print("_remainingSeconds $_remainingSeconds");
-    print("percentage $percentage");
 
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (_remainingSeconds > 0) {
@@ -490,7 +486,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
         if (int.parse(percentage.toStringAsFixed(0)) > _remainingSeconds) {
           enableChasingTime = true;
         }
-        debugPrint('Remaining Seconds: $_remainingSeconds');
       } else {
         countdownTimer?.cancel();
         prefs.setString(Constants.blockedTill, "");
@@ -754,7 +749,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
 
   /// SCAN TO UNLOCK BIKE
   scanToUnlock() async {
-    print("isOnCounter $isOnCounter");
     if (isOnCounter) {
       var mobile = await secureStorage.get("mobile");
       getBlockRides(mobile);
@@ -772,7 +766,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
     ];
     //TODO: uncomment;
     _stopTimer();
-    log("Argument - ${jsonEncode(arg)}");
     Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
   }
 
@@ -810,7 +803,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
           ];
           //TODO: uncomment;
           _stopTimer();
-          log("Argument - ${jsonEncode(arg)}");
           Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
         }
       }
@@ -843,11 +835,11 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
   backButtonClick() async {
     await controller.hideTooltip();
     if (isOnCounter) {
-      print("isOnCounter enable: $isOnCounter");
       apiBack();
     }
     if (!isOnCounter && viaApp) {
-      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, "select_vehicle",
+          arguments: widget.data[0]['homeData']);
     }
   }
 

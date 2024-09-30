@@ -45,7 +45,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   @override
   void initState() {
     debugPrint(" --- PAGE: SCAN TO UNLOCK --- ");
-    print("SCAN TO UNLOCK Data: ${widget.data}");
+    // print("SCAN TO UNLOCK Data: ${widget.data}");
     _startCountdown();
     super.initState();
   }
@@ -184,7 +184,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                                   decimal: false,
                                 ),
                           onChanged: (value) {
-                            print("Value: $value");
                           },
                           decoration: InputDecoration(
                             counterText: "",
