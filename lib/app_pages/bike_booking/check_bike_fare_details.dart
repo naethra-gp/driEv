@@ -523,7 +523,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
                 ),
               ),
               content: const Text(
-                'The timer has stopped. The app will now redirect to the Home Page.',
+                'Your reservation for this vehicle has expired. You will now be returned to the home page.',
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
                   fontFamily: "Roboto-Bold",
@@ -683,7 +683,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
             ),
           ),
           content: const Text(
-            'Are you to end your reservation for the vehicle?',
+            'Are you sure you want to end your reservation for the vehicle?.',
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontFamily: "Roboto-Bold",

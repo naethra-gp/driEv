@@ -132,13 +132,13 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget>
 
   Future<void> _stopTimer() async {
     // if (countdownTimer!.isActive) {
-      countdownTimer?.cancel();
-      setState(() {
-        _remainingSeconds = 0;
-        isOnCounter = false;
-        enableChasingTime = false;
-      });
-      debugPrint("--- TIMER STOPPED ---");
+    countdownTimer?.cancel();
+    setState(() {
+      _remainingSeconds = 0;
+      isOnCounter = false;
+      enableChasingTime = false;
+    });
+    debugPrint("--- TIMER STOPPED ---");
     // }
   }
 
@@ -165,7 +165,7 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget>
                 ),
               ),
               content: const Text(
-                'The timer has stopped. The app will now redirect to the Home Page.',
+                'Your reservation for this vehicle has expired. You will now be returned to the home page.',
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
                   fontFamily: "Roboto-Bold",

@@ -43,6 +43,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   CouponServices couponServices = CouponServices();
 
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController nameCtrl = TextEditingController();
   TextEditingController genderCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
@@ -234,6 +235,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                           const SizedBox(height: 16),
                           CustomDropdown(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Gender is Mandatory!";
+                              }
+                              return null;
+                            },
                             dropdownMenuEntries: ['Male', 'Female', 'Others']
                                 .map((e) => e)
                                 .toList()
@@ -250,6 +257,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               });
                             },
                           ),
+
                           const SizedBox(height: 16),
                           // Theme(
                           //   data: Theme.of(context).copyWith(),
@@ -626,6 +634,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     });
   }
+
   clearImageCache() async {
     try {
       // Get the cache directory

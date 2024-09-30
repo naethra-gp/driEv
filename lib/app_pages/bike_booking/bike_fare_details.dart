@@ -612,7 +612,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
           isOnCounter = false;
         });
         // Navigator.pushNamed(context, "home");
-
       }
       setState(() {});
     });
@@ -714,13 +713,13 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       alertServices.successToast(res['message'].toString());
       stopCountdown();
       if (viaApi) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, "home", (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
       } else {
         Navigator.pop(context);
       }
     });
   }
+
   _showBackDialog(context) {
     return showDialog<bool>(
       barrierColor: Colors.black.withOpacity(0.5),
@@ -737,7 +736,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
             ),
           ),
           content: const Text(
-            'Are you to end your reservation for the vehicle?',
+            'Are you sure you want to end your reservation for the vehicle?.',
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontFamily: "Roboto-Bold",
@@ -798,7 +797,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
             ),
           ),
           content: const Text(
-            'The Timer has been stopped. App will redirect to Home Page.',
+            'Your reservation for this vehicle has expired. You will now be returned to the home page.',
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontFamily: "Roboto-Bold",
@@ -839,7 +838,6 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       },
     );
   }
-
 
   loadTimer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

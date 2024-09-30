@@ -59,7 +59,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
               child: AppButtonWidget(
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, "referral_in_signup", (route) => false);
+                      context, "choose_your_campus", (route) => false);
                 },
                 title: "Choose Your Campus",
               ),

@@ -335,8 +335,10 @@ class _VerifyOTPState extends State<VerifyOTP> {
                                       secureStorage.save("isLogin", true);
                                       getActiveRides(mobile);
                                     } else {
-                                      Navigator.pushNamedAndRemoveUntil(context,
-                                          "success_page", (route) => false);
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          "referral_in_signup",
+                                          (route) => false);
                                     }
                                   });
                                 } else {

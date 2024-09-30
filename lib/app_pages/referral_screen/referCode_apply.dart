@@ -153,7 +153,7 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "choose_your_campus");
+                        Navigator.pushNamed(context, "success_page");
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
@@ -199,7 +199,7 @@ class _ReferCodeApplyState extends State<ReferCodeApply> {
         if (status == "Valid") {
           secureStorage.save("referCode", referCtl.text.toString());
           alertServices.successToast(msg);
-          Navigator.pushNamed(context, "choose_your_campus");
+          Navigator.pushNamed(context, "success_page");
         } else {
           alertServices.errorToast(msg);
         }
