@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:driev/app_utils/app_widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:lottie/lottie.dart';
 import '../../app_dialogs/widgets/block_user_content.dart';
 import '../../app_dialogs/widgets/kyc_block_widget.dart';
 import '../../app_dialogs/widgets/kyc_hold_widget.dart';
-import '../../app_themes/app_colors.dart';
 import 'widgets/balance_alert_widget.dart';
 import 'widgets/vehicle_alert.dart';
 
@@ -22,12 +22,29 @@ class AlertServices {
     // EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.fadingCircle;
     EasyLoading.instance.toastPosition = EasyLoadingToastPosition.center;
     EasyLoading.instance.animationStyle = EasyLoadingAnimationStyle.scale;
-    // EasyLoading.instance.radius = 100;
+    EasyLoading.instance.radius = 100;
     return await EasyLoading.show(
-      status: title ?? 'Please wait...',
       maskType: EasyLoadingMaskType.black,
       dismissOnTap: false,
-      indicator: Lottie.asset('assets/loading/loading.json', width: 75, height: 75),
+      indicator: Container(
+        width: 127,
+        height: 127,
+        child: Column(
+          children: [
+            Lottie.asset('assets/loading/loading.json', width: 93, height: 93),
+            Container(
+              width: 90,
+              child: Text(
+                title ?? 'Please wait...',
+                style: const TextStyle(fontSize: 12, color: Colors.black),
+                textAlign: TextAlign.center,
+                softWrap: true,
+                maxLines: 2,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
