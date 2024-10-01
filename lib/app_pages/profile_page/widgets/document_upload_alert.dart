@@ -94,38 +94,39 @@ class DocumentUploadAlert extends StatelessWidget {
     final ImagePicker picker = ImagePicker();
     XFile? photo = await picker.pickImage(source: src);
     if (photo != null) {
-      _cropImage(File(photo.path));
+      // _cropImage(File(photo.path));
+      compress(File(photo.path));
     }
   }
 
-  _cropImage(pickedFile) async {
-    late String path;
-    final croppedFile = await ImageCropper().cropImage(
-      sourcePath: pickedFile.path,
-      compressFormat: ImageCompressFormat.jpg,
-      compressQuality: 100,
-      androidUiSettings: const AndroidUiSettings(
-        toolbarTitle: 'Crop your Photo',
-        toolbarColor: AppColors.primary,
-        toolbarWidgetColor: Colors.white,
-        initAspectRatio: CropAspectRatioPreset.original,
-        lockAspectRatio: false,
-      ),
-      iosUiSettings: const IOSUiSettings(
-        title: 'Crop your Photo',
-      ),
-    );
-    if (croppedFile != null) {
-      path = croppedFile.path;
-      compress(File(path));
-    }
-  }
+  // _cropImage(pickedFile) async {
+  //   late String path;
+  //   final croppedFile = await ImageCropper().cropImage(
+  //     sourcePath: pickedFile.path,
+  //     compressFormat: ImageCompressFormat.jpg,
+  //     compressQuality: 100,
+  //     androidUiSettings: const AndroidUiSettings(
+  //       toolbarTitle: 'Crop your Photo',
+  //       toolbarColor: AppColors.primary,
+  //       toolbarWidgetColor: Colors.white,
+  //       initAspectRatio: CropAspectRatioPreset.original,
+  //       lockAspectRatio: false,
+  //     ),
+  //     iosUiSettings: const IOSUiSettings(
+  //       title: 'Crop your Photo',
+  //     ),
+  //   );
+  //   if (croppedFile != null) {
+  //     path = croppedFile.path;
+  //     compress(File(path));
+  //   }
+  // }
 
   compress(File file) async {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       '${file.path}.jpg',
-      quality: 50,
+      quality: 70,
     );
     if (result != null) {
       var newPath = result.path;
@@ -145,7 +146,8 @@ class DocumentUploadAlert extends StatelessWidget {
       final String fileExtension = extension(filePath!);
       if (fileExtension.toString() != ".pdf") {
         /// IMAGES
-        _cropImage(File(filePath));
+        // _cropImage(File(filePath));
+        compress(File(filePath));
       } else {
         /// PDF
         fileUpload(File(filePath));

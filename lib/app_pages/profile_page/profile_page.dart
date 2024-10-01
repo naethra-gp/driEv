@@ -129,18 +129,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //   top:
-                  //       50, // Adjust this value to move the text along the slider
-                  //   child: Text(
-                  //     "${initialValue.toInt()}",
-                  //     style: const TextStyle(
-                  //       fontSize: 14,
-                  //       fontWeight: FontWeight.bold,
-                  //       color: Colors.green,
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
               if (index != progressValues.length - 1)
