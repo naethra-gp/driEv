@@ -283,17 +283,19 @@ class _RateThisRideState extends State<RateThisRide> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        submitRideFeedback();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    child: Opacity(
+                      opacity: _rating! > 0.0 ? 1.0 : 0.5,
+                      child: ElevatedButton(
+                        onPressed:
+                            _rating! > 0.0 ? () => submitRideFeedback() : null,
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
+                        child: const Text("Submit"),
                       ),
-                      child: const Text("Submit"),
                     ),
                   ),
                 ),
@@ -308,6 +310,7 @@ class _RateThisRideState extends State<RateThisRide> {
   void submitRideFeedback() {
     alertServices.showLoading();
     print('selected item $selectedItem1 , $selectedItem2');
+
     var params = {
       "rideId": widget.rideId,
       "feedBacks": _rating! <= 2.0 ? selectedItem1 : selectedItem2,
