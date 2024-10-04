@@ -27,21 +27,21 @@ class AlertServices {
       maskType: EasyLoadingMaskType.black,
       dismissOnTap: false,
       indicator: Container(
-        width: 127,
-        height: 127,
+        width: 94,
+        height: 100,
         child: Column(
           children: [
-            Lottie.asset('assets/loading/loading.json', width: 93, height: 93),
-            Container(
-              width: 90,
-              child: Text(
-                title ?? 'Please wait...',
-                style: const TextStyle(fontSize: 12, color: Colors.black),
-                textAlign: TextAlign.center,
-                softWrap: true,
-                maxLines: 2,
-              ),
-            ),
+            Lottie.asset('assets/loading/loading.json', width: 88, height: 88),
+            // Container(
+            //   width: 90,
+            //   child: Text(
+            //     title ?? 'Please wait...',
+            //     style: const TextStyle(fontSize: 10, color: Colors.black),
+            //     textAlign: TextAlign.center,
+            //     softWrap: true,
+            //     maxLines: 2,
+            //   ),
+            // ),
           ],
         ),
       ),
