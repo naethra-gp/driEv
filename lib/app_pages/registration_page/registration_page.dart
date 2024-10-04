@@ -257,76 +257,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               });
                             },
                           ),
-
                           const SizedBox(height: 16),
-                          // Theme(
-                          //   data: Theme.of(context).copyWith(),
-                          //   child: DropdownButtonFormField<String>(
-                          //     dropdownColor: Colors.white,
-                          //     autovalidateMode:
-                          //         AutovalidateMode.onUserInteraction,
-                          //     alignment: Alignment.center,
-                          //     validator: (value) {
-                          //       if (value == null) {
-                          //         return "Gender is Mandatory!";
-                          //       }
-                          //       return null;
-                          //     },
-                          //     decoration: InputDecoration(
-                          //       hintText: 'Gender',
-                          //       alignLabelWithHint: true,
-                          //       contentPadding: const EdgeInsets.symmetric(
-                          //           horizontal: 15, vertical: 10),
-                          //       hintStyle: const TextStyle(
-                          //         fontSize: 14,
-                          //         color: Colors.grey,
-                          //       ),
-                          //       border: OutlineInputBorder(
-                          //         borderRadius: BorderRadius.circular(10.0),
-                          //         borderSide: const BorderSide(
-                          //             color: Color(0xffD2D2D2)),
-                          //       ),
-                          //       enabledBorder: OutlineInputBorder(
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         borderSide: const BorderSide(
-                          //             color: Color(0xffD2D2D2)),
-                          //       ),
-                          //       focusedBorder: OutlineInputBorder(
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         borderSide: const BorderSide(
-                          //             color: AppColors.primary),
-                          //       ),
-                          //       disabledBorder: OutlineInputBorder(
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         borderSide: const BorderSide(
-                          //             color: Color(0xffD2D2D2)),
-                          //       ),
-                          //       errorBorder: OutlineInputBorder(
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         borderSide:
-                          //             const BorderSide(color: Colors.red),
-                          //       ),
-                          //     ),
-                          //     style: CustomTheme.formFieldStyle,
-                          //     isExpanded: true,
-                          //     items: <String>['Male', 'Female', 'Others']
-                          //         .map((String value) {
-                          //       return DropdownMenuItem<String>(
-                          //         value: value,
-                          //         child: Text(
-                          //           value,
-                          //           style: CustomTheme.formFieldStyle,
-                          //         ),
-                          //       );
-                          //     }).toList(),
-                          //     onChanged: (String? value) {
-                          //       setState(() {
-                          //         genderCtrl.text = value!;
-                          //       });
-                          //     },
-                          //   ),
-                          // ),
-                          // const SizedBox(height: 16),
                           TextFormWidget(
                             title: 'College Email ID',
                             controller: emailCtrl,
@@ -409,6 +340,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 label: value,
                               );
                             }).toList(),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Nationality is Mandatory!";
+                              }
+                              return null;
+                            },
                             title: "Nationality",
                             onSelected: (value) {
                               setState(() {
@@ -425,7 +362,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 } else if (nationalitySelection == "Overseas") {
                                   showOverseasField = true;
                                   showAadhaarField = false;
-
                                   isAadhaarCtrlDisposed = true;
                                 } else {
                                   showAadhaarField = false;
@@ -593,11 +529,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       uploadArray.add({
         "name": docList[d]['documentName'].toString(),
         "id": docList[d]['documentId'].toString(),
-        "storageUrl": docList[d]['url'].toString(),
+        "storageUrl": docList[d]['url'],
       });
     }
 
     var refer = secureStorage.get("referCode") ?? "";
+
     final request = {
       "name": nameCtrl.text.toString(),
       "gender": getGender(genderCtrl.text).toString(),
@@ -622,7 +559,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               : {}
           : {},
     };
-    // log(jsonEncode(request));
+    // log(jsonEncode(uploadArray));
 
     alertServices.showLoading();
     customerService.createCustomer(request).then((response) async {
@@ -630,7 +567,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       alertServices.successToast(response['status']);
       secureStorage.save("isLogin", true);
       getAssignCoupon();
-      // clearImageCache();
+      clearImageCache();
       Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     });
   }

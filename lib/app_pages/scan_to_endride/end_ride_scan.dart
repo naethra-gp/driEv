@@ -5,6 +5,7 @@ import 'package:driev/app_services/booking_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:qr_mobile_vision/qr_mobile_vision.dart';
@@ -111,28 +112,41 @@ class _EndRideScannerState extends State<EndRideScanner> {
     });
   }
 
+  String formatNumber(int number) {
+    final formatter = NumberFormat('0000');
+    print("Format number: ${formatter.format(number)}");
+    return formatter.format(number);
+  }
+
+  String formatCode(int number) {
+    String numberStr = number.toString();
+    print(
+        "Format Code: ${numberStr.substring(numberStr.length - 4).padLeft(4, '0')}");
+    return numberStr.substring(numberStr.length - 4).padLeft(4, '0');
+  }
+
   checkBikeNumber(String bikeNo) {
     if (hasShownPopup) {
       return;
     }
     String bike = widget.rideID[0]['scanCode'].toString();
-    if (bike != bikeNo) {
+    if (formatCode(int.parse(bikeNo)) == formatNumber(int.parse(bike))) {
+      /// BIKE NUMBER VALID STATE
+      QrMobileVision.stop();
+      FocusScope.of(context).unfocus();
+      submitBikeNUmber();
+    } else {
       setState(() {
         bikeNumberCtl.text = "";
         hasShownPopup = true;
       });
       String msg = "Entered/Scanned Vehicle is invalid";
       alertServices.errorToast(msg);
-      Future.delayed(Duration(seconds: 5), () {
+      Future.delayed(const Duration(seconds: 5), () {
         setState(() {
           hasShownPopup = false;
         });
       });
-    } else {
-      /// BIKE NUMBER VALID STATE
-      QrMobileVision.stop();
-      FocusScope.of(context).unfocus();
-      submitBikeNUmber();
     }
   }
 

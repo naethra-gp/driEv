@@ -116,8 +116,8 @@ class _HomePageState extends State<HomePage> {
                   polylines: _polyLines,
                   initialCameraPosition: CameraPosition(
                     target: _center,
-                    tilt: 59.440717697143555,
-                    zoom: 19.151926040649414,
+                    // tilt: 59.440717697143555,
+                    zoom: 20.5,
                   ),
                   markers: {
                     Marker(

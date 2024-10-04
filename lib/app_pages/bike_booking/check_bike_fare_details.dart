@@ -486,7 +486,19 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
         if (int.parse(percentage.toStringAsFixed(0)) > _remainingSeconds) {
           enableChasingTime = true;
         }
-      } else {
+      }
+      // else {
+      //   countdownTimer?.cancel();
+      //   prefs.setString(Constants.blockedTill, "");
+      //   setState(() {
+      //     reserveMins = "";
+      //     _remainingSeconds = 0;
+      //     isOnCounter = false;
+      //     enableChasingTime = false;
+      //   });
+      //   _showAlertDialog(context);
+      // }
+      if (_remainingSeconds.isNegative) {
         countdownTimer?.cancel();
         prefs.setString(Constants.blockedTill, "");
         setState(() {

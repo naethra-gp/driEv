@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ConnectivityProvider(),
       child: MaterialApp(
-        title: 'Drive EV',
+        title: 'driEV',
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.system,
         initialRoute: 'splash',

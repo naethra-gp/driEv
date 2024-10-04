@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:qr_mobile_vision/qr_mobile_vision.dart';
@@ -45,30 +46,34 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   @override
   void initState() {
     debugPrint(" --- PAGE: SCAN TO UNLOCK --- ");
-    // print("SCAN TO UNLOCK Data: ${widget.data}");
     _startCountdown();
     super.initState();
   }
-
+  String formatNumber(int number) {
+    final formatter = NumberFormat('0000');
+    return formatter.format(number);
+  }
+  String formatCode(int number) {
+    String numberStr = number.toString();
+    return numberStr.substring(numberStr.length - 4).padLeft(4, '0');
+  }
   checkBikeNumber(String code) {
     if (hasShownPopup) {
       return;
     }
     String vId = widget.data[0]['vehicleId'].toString();
-    if (code.toString() == vId) {
+    if (formatCode(int.parse(code.toString())) == formatNumber(int.parse(vId))) {
       QrMobileVision.stop();
       setState(() {
-        bikeNumberCtl.text = code.toString();
+        bikeNumberCtl.text = vId;
       });
       startMyRide();
     } else {
       setState(() {
         hasShownPopup = true;
       });
-
       String msg = "Entered/Scanned Vehicle is invalid";
       alertServices.errorToast(msg);
-
       Future.delayed(const Duration(seconds: 5), () {
         setState(() {
           hasShownPopup = false;
@@ -78,8 +83,11 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   }
 
   clickBackButton() {
-    Navigator.pushReplacementNamed(context, "bike_fare_details",
-        arguments: {"query": widget.data[0]['data']});
+    Navigator.pushReplacementNamed(
+      context,
+      "bike_fare_details",
+      arguments: {"query": widget.data[0]['data']},
+    );
   }
 
   /// NEW PLUGIN
@@ -183,8 +191,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
                                   signed: true,
                                   decimal: false,
                                 ),
-                          onChanged: (value) {
-                          },
+                          onChanged: (value) {},
                           decoration: InputDecoration(
                             counterText: "",
                             hintText: 'Enter Bike Number',
@@ -244,7 +251,6 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   }
 
   submitButtonClicked() {
-    // startMyRide();
     FocusScope.of(context).unfocus();
     String bike = bikeNumberCtl.text.toString();
     if (bike.isNotEmpty && bike.length <= 6) {
