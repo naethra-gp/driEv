@@ -1,10 +1,18 @@
+/* ===============================================================
+| Project : driEV
+| Page    : CONNECTION.DART
+| Date    :
+| DESC    : THIS IS MAIN CONNECTION FILE
+*  ===============================================================*/
+
+// Dependencies or Plugins - Models - Services - Global Functions
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import '../app_config/app_constants.dart';
 import '../app_storages/secure_storage.dart';
 
@@ -12,33 +20,52 @@ class Connection {
   final header = {'Content-Type': 'application/json'};
   AlertServices alertService = AlertServices();
 
+  /*
+    * GLOBAL EXCEPTION METHOD
+  */
+  customException(e) {
+    String tryAgain = "Please try again later.";
+    if (e is SocketException) {
+      String msg = 'No Internet Connection. $tryAgain';
+      alertService.errorToast(msg);
+    } else if (e is TimeoutException) {
+      String msg = "Oops! it's taking a little longer than expected. $tryAgain";
+      alertService.errorToast(msg);
+    } else {
+      String msg = 'Something went wrong. Please try again in a bit.';
+      alertService.errorToast(msg);
+    }
+  }
+
+  /*
+  * SERVICE NAME: getWithoutToken
+  * DESC: Global GET Method Without Token
+  * METHOD: GET
+  * Params: url
+  */
   getWithoutToken(String url) async {
     try {
       var response = await http.get(Uri.parse(url), headers: header);
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
-        var result = json.decode(response.body);
-        alertService.errorToast(
-            "${response.statusCode}: ${result['message'].toString()}");
+        final result = json.decode(response.body);
+        String msg = "${response.statusCode}: ${result['message'].toString()}";
+        alertService.errorToast(msg);
       }
     } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
-      // alertService.errorToast("Error: ${e.toString()}");
+      customException(e);
     } finally {
-      // print('API request completed');
+      debugPrint('--- API request completed ---');
     }
   }
 
+  /*
+  * SERVICE NAME: postWithoutToken
+  * DESC: Global POST Method Without Token
+  * METHOD: POST
+  * Params: url, Request Params
+  */
   postWithoutToken(String url, request) async {
     try {
       var response = await http.post(
@@ -49,24 +76,14 @@ class Connection {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
-        var result = json.decode(response.body);
-        alertService.errorToast(
-            "${response.statusCode}: ${result['message'].toString()}");
+        final result = json.decode(response.body);
+        String msg = "${response.statusCode}: ${result['message'].toString()}";
+        alertService.errorToast(msg);
       }
     } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
-      // alertService.errorToast("Error: ${e.toString()}");
+      customException(e);
     } finally {
-      print('API request completed');
+      debugPrint('--- API request completed ---');
     }
   }
 
@@ -77,17 +94,16 @@ class Connection {
       'Authorization': "Bearer ${secureStorage.getToken().toString()}",
     };
     try {
-      var response = await http.post(
+      Response response = await http.post(
         Uri.parse(url),
         headers: header,
         body: jsonEncode(request),
       );
-      // print("Response ${json.decode(response.body)}");
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 404) {
         if (error != null) {
-          gotoLogin();
+          gotoLogin(); // goto LOGIN PAGE
           return json.decode(response.body);
         } else {
           var result = json.decode(response.body);
@@ -98,17 +114,7 @@ class Connection {
         alertService.errorToast(result['message'].toString());
       }
     } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
-      // alertService.errorToast("Error: ${e.toString()}");
+      customException(e);
     } finally {
       debugPrint('--- API Request Completed ---');
     }
@@ -141,17 +147,7 @@ class Connection {
       }
     } catch (e) {
       if (error == null) {
-        if (e is SocketException) {
-          alertService
-              .errorToast('No Internet Connection. Please try again later.');
-        } else if (e is TimeoutException) {
-          alertService.errorToast(
-              'Oops! it\'s taking a little longer than expected. Please try again soon.');
-        } else {
-          alertService
-              .errorToast('Something went wrong. Please try again in a bit.');
-        }
-        // alertService.errorToast("Error: ${e.toString()}");
+        customException(e);
       }
     } finally {
       debugPrint('--- API Request Completed ---');
@@ -159,11 +155,8 @@ class Connection {
   }
 
   gotoLogin() {
-    Navigator.pushNamedAndRemoveUntil(
-      Constants.navigatorKey.currentState!.overlay!.context,
-      "login",
-      (route) => false,
-    );
+    var ctx = Constants.navigatorKey.currentState!.overlay!.context;
+    Navigator.pushNamedAndRemoveUntil(ctx, "login", (r) => false);
   }
 
   postWithTokenAlert(String url, request, [error]) async {
@@ -193,18 +186,9 @@ class Connection {
         alertService.errorToast(result['message'].toString());
       }
     } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
+      customException(e);
     } finally {
-      print('API request completed');
+      debugPrint('--- API Request Completed ---');
     }
   }
 
@@ -237,20 +221,10 @@ class Connection {
       }
     } catch (e) {
       if (error == null) {
-        if (e is SocketException) {
-          String msg = 'No Internet Connection. Please try again later.';
-          alertService.errorToast(msg);
-        } else if (e is TimeoutException) {
-          String msg =
-              'Oops! it\'s taking a little longer than expected. Please try again soon.';
-          alertService.errorToast(msg);
-        } else {
-          String msg = 'Something went wrong. Please try again in a bit.';
-          alertService.errorToast(msg);
-        }
+        customException(e);
       }
     } finally {
-      print('API request completed');
+      debugPrint('--- API Request Completed ---');
     }
   }
 
@@ -273,16 +247,7 @@ class Connection {
             .errorToast('Failed to upload file: ${response.reasonPhrase}');
       }
     } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
+      customException(e);
     } finally {
       debugPrint('--- API Request Completed ---');
     }
@@ -290,11 +255,8 @@ class Connection {
 
   reUploadDocument(String url, filePath, user) async {
     SecureStorage secureStorage = SecureStorage();
-    final header = {
-      'Authorization': "Bearer ${secureStorage.getToken().toString()}",
-    };
-
-    print("url $url");
+    String token = secureStorage.getToken().toString();
+    final header = {'Authorization': "Bearer $token"};
     try {
       var request = http.MultipartRequest('POST', Uri.parse(url));
       request.headers.addAll(header);
@@ -302,12 +264,9 @@ class Connection {
         await http.MultipartFile.fromPath('file', filePath.path),
       );
       Map<String, String> fields = {'user': jsonEncode(user)};
-      print("fields $fields");
       request.fields.addAll(fields);
       final response = await request.send();
       final response2 = await http.Response.fromStream(response);
-      var decodeData = jsonDecode(response2.body);
-      // log("decodeData ${jsonEncode(decodeData)}");
       if (response.statusCode == 200) {
         return response2.body;
       } else {
@@ -315,16 +274,7 @@ class Connection {
         alertService.errorToast(msg);
       }
     } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
+      customException(e);
     } finally {
       debugPrint('--- API request completed ---');
     }
