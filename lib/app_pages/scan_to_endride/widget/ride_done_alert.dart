@@ -19,7 +19,9 @@ class RideDoneAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    double rideDistance = result[0]['totalRideDistance'];
+    double rideDistance = result[0]['totalRideDistance'] == 0.0
+        ? 0.01
+        : result[0]['totalRideDistance'];
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     return SizedBox(
       width: double.infinity,
@@ -179,6 +181,7 @@ class RideDoneAlert extends StatelessWidget {
               ),
               child: SfSlider(
                 min: 0.0,
+                // max: 0.01,
                 max: roundToNearest500(rideDistance),
                 interval: 10,
                 shouldAlwaysShowTooltip: false,
@@ -247,9 +250,10 @@ class RideDoneAlert extends StatelessWidget {
               Text(
                 '${roundToNearest500(rideDistance).toStringAsFixed(0)} km',
                 style: const TextStyle(
-                    color: Color(0xff7B7B7B),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13),
+                  color: Color(0xff7B7B7B),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
               ),
             ],
           ),

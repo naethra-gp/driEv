@@ -49,28 +49,29 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     _startCountdown();
     super.initState();
   }
+
   String formatNumber(int number) {
     final formatter = NumberFormat('0000');
+    print("Format No: ${formatter.format(number)}");
     return formatter.format(number);
   }
+
   String formatCode(int number) {
     String numberStr = number.toString();
+    print(
+        "formatCode : ${numberStr.substring(numberStr.length - 4).padLeft(4, '0')}");
+
     return numberStr.substring(numberStr.length - 4).padLeft(4, '0');
   }
+
   checkBikeNumber(String code) {
     if (hasShownPopup) {
       return;
     }
-    String vId = widget.data[0]['vehicleId'].toString();
-    if (formatCode(int.parse(code.toString())) == formatNumber(int.parse(vId))) {
-      QrMobileVision.stop();
-      setState(() {
-        bikeNumberCtl.text = vId;
-      });
-      startMyRide();
-    } else {
+    if (code.toString().length != 7) {
       setState(() {
         hasShownPopup = true;
+        bikeNumberCtl.text = "";
       });
       String msg = "Entered/Scanned Vehicle is invalid";
       alertServices.errorToast(msg);
@@ -79,6 +80,26 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
           hasShownPopup = false;
         });
       });
+    } else {
+      String vId = widget.data[0]['vehicleId'].toString();
+      if (formatCode(int.parse(code)) == formatNumber(int.parse(vId))) {
+        QrMobileVision.stop();
+        setState(() {
+          bikeNumberCtl.text = vId;
+        });
+        startMyRide();
+      } else {
+        setState(() {
+          hasShownPopup = true;
+        });
+        String msg = "Entered/Scanned Vehicle is invalid";
+        alertServices.errorToast(msg);
+        Future.delayed(const Duration(seconds: 5), () {
+          setState(() {
+            hasShownPopup = false;
+          });
+        });
+      }
     }
   }
 

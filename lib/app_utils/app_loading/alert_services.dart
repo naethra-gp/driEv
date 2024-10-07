@@ -23,28 +23,34 @@ class AlertServices {
     EasyLoading.instance.toastPosition = EasyLoadingToastPosition.center;
     EasyLoading.instance.animationStyle = EasyLoadingAnimationStyle.scale;
     EasyLoading.instance.radius = 100;
+    // return await EasyLoading.show(
+    //   maskType: EasyLoadingMaskType.black,
+    //   dismissOnTap: false,
+    //   indicator: Container(
+    //     width: 70,
+    //     height: 70,
+    //     child: Column(
+    //       children: [
+    //         Lottie.asset('assets/loading/loading1.json'),
+    //         Container(
+    //           width: 90,
+    //           child: Text(
+    //             title ?? 'Please wait...',
+    //             style: const TextStyle(fontSize: 10, color: Colors.black),
+    //             textAlign: TextAlign.center,
+    //             softWrap: true,
+    //             maxLines: 2,
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
     return await EasyLoading.show(
+      // status: title ?? 'Please wait...',
       maskType: EasyLoadingMaskType.black,
       dismissOnTap: false,
-      indicator: Container(
-        width: 94,
-        height: 100,
-        child: Column(
-          children: [
-            Lottie.asset('assets/loading/loading.json', width: 88, height: 88),
-            // Container(
-            //   width: 90,
-            //   child: Text(
-            //     title ?? 'Please wait...',
-            //     style: const TextStyle(fontSize: 10, color: Colors.black),
-            //     textAlign: TextAlign.center,
-            //     softWrap: true,
-            //     maxLines: 2,
-            //   ),
-            // ),
-          ],
-        ),
-      ),
+      indicator: Lottie.asset('assets/loading/loading1.json', height: 80, width: 80),
     );
   }
 

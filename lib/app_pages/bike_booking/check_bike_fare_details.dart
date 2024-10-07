@@ -486,18 +486,17 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
         if (int.parse(percentage.toStringAsFixed(0)) > _remainingSeconds) {
           enableChasingTime = true;
         }
+      } else {
+        countdownTimer?.cancel();
+        prefs.setString(Constants.blockedTill, "");
+        setState(() {
+          reserveMins = "";
+          _remainingSeconds = 0;
+          isOnCounter = false;
+          enableChasingTime = false;
+        });
+        _showAlertDialog(context);
       }
-      // else {
-      //   countdownTimer?.cancel();
-      //   prefs.setString(Constants.blockedTill, "");
-      //   setState(() {
-      //     reserveMins = "";
-      //     _remainingSeconds = 0;
-      //     isOnCounter = false;
-      //     enableChasingTime = false;
-      //   });
-      //   _showAlertDialog(context);
-      // }
       if (_remainingSeconds.isNegative) {
         countdownTimer?.cancel();
         prefs.setString(Constants.blockedTill, "");
@@ -695,7 +694,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
             ),
           ),
           content: const Text(
-            'Are you sure you want to end your reservation for the vehicle?.',
+            'Are you sure you want to end your reservation for the vehicle?',
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontFamily: "Roboto-Bold",

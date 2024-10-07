@@ -567,7 +567,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       alertServices.successToast(response['status']);
       secureStorage.save("isLogin", true);
       getAssignCoupon();
-      clearImageCache();
+      // clearImageCache();
       Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
     });
   }

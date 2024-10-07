@@ -258,15 +258,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 70,
                                 width: 70,
                                 child: CachedNetworkImage(
-                                  width: 50,
-                                  height: 50,
+                                  height: 70,
+                                  width: 70,
+                                  fit: BoxFit.contain,
                                   imageUrl: selfieUrl,
                                   errorWidget: (context, url, error) =>
                                       Image.asset(
-                                    "assets/img/profile_logo.png",
-                                    width: 70,
+                                    Constants.defaultUser,
                                     height: 70,
-                                    fit: BoxFit.cover,
+                                    width: 70,
+                                    fit: BoxFit.contain,
                                   ),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(

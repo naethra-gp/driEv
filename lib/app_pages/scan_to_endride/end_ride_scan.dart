@@ -81,6 +81,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
       campus = a[0];
       rideId = widget.rideID[0]['rideId'].toString();
     });
+    print("Ride: ${widget.rideID[0]['scanCode']}");
     _startCountdown();
     QrMobileVision.stop();
     super.initState();
@@ -104,7 +105,6 @@ class _EndRideScannerState extends State<EndRideScanner> {
   void _onQRViewCreated(String code) {
     setState(() {
       qr = code;
-      bikeNumberCtl.text = qr.toString();
       if (qr != "") {
         // QrMobileVision.stop();
         checkBikeNumber(qr.toString());
@@ -125,20 +125,14 @@ class _EndRideScannerState extends State<EndRideScanner> {
     return numberStr.substring(numberStr.length - 4).padLeft(4, '0');
   }
 
-  checkBikeNumber(String bikeNo) {
+  checkBikeNumber(String code) {
     if (hasShownPopup) {
       return;
     }
-    String bike = widget.rideID[0]['scanCode'].toString();
-    if (formatCode(int.parse(bikeNo)) == formatNumber(int.parse(bike))) {
-      /// BIKE NUMBER VALID STATE
-      QrMobileVision.stop();
-      FocusScope.of(context).unfocus();
-      submitBikeNUmber();
-    } else {
+    if (code.toString().length != 7) {
       setState(() {
-        bikeNumberCtl.text = "";
         hasShownPopup = true;
+        bikeNumberCtl.text = "";
       });
       String msg = "Entered/Scanned Vehicle is invalid";
       alertServices.errorToast(msg);
@@ -147,6 +141,27 @@ class _EndRideScannerState extends State<EndRideScanner> {
           hasShownPopup = false;
         });
       });
+    } else {
+      String bike = widget.rideID[0]['scanCode'].toString();
+      if (formatCode(int.parse(code)) == formatNumber(int.parse(bike))) {
+        /// BIKE NUMBER VALID STATE
+        QrMobileVision.stop();
+        FocusScope.of(context).unfocus();
+        bikeNumberCtl.text = bike.toString();
+        submitBikeNUmber();
+      } else {
+        setState(() {
+          bikeNumberCtl.text = "";
+          hasShownPopup = true;
+        });
+        String msg = "Entered/Scanned Vehicle is invalid";
+        alertServices.errorToast(msg);
+        Future.delayed(const Duration(seconds: 5), () {
+          setState(() {
+            hasShownPopup = false;
+          });
+        });
+      }
     }
   }
 
@@ -287,9 +302,18 @@ class _EndRideScannerState extends State<EndRideScanner> {
                           color: Colors.white,
                         ),
                         onPressed: () async {
-                          if (bikeNumberCtl.text.toString().isNotEmpty &&
-                              bikeNumberCtl.text.toString().length <= 6) {
-                            checkBikeNumber(bikeNumberCtl.text.toString());
+                          String bike = bikeNumberCtl.text.toString();
+                          if (bike.isNotEmpty && bike.length <= 6) {
+                            String vId =
+                                widget.rideID[0]['scanCode'].toString();
+                            if (bike == vId) {
+                              submitBikeNUmber();
+                            } else {
+                              String msg = "Entered/Scanned Vehicle is invalid";
+                              alertServices.errorToast(msg);
+                            }
+
+                            // checkBikeNumber(bikeNumberCtl.text.toString());
                           } else {
                             alertServices.errorToast(
                                 "Enter the Bike Number or Scan the QR Code");

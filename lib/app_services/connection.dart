@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import '../app_config/app_constants.dart';
 import '../app_storages/secure_storage.dart';
 
@@ -158,99 +158,6 @@ class Connection {
     }
   }
 
-  uploadFile(String url, filePath) async {
-    SecureStorage secureStorage = SecureStorage();
-    final header = {
-      'Authorization': "Bearer ${secureStorage.getToken().toString()}",
-    };
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.headers.addAll(header);
-      request.files.add(
-        await http.MultipartFile.fromPath('image', filePath.path),
-      );
-      var response = await request.send();
-      debugPrint(" --------------------------------- ");
-      print("API RESPONSE STATUS CODE-> ${response.statusCode}");
-      // print(
-      //     "API RESPONSE -> ${jsonDecode(await response.stream.bytesToString())}");
-      debugPrint(" --------------------------------- ");
-      // Future.delayed(const Duration(seconds: 1), () async {
-        print("delay function");
-        if (response.statusCode == 200) {
-          return await response.stream.bytesToString();
-        } else {
-          alertService
-              .errorToast('Failed to upload file: ${response.reasonPhrase}');
-        }
-      // });
-    } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
-    } finally {
-      debugPrint('--- API Request Completed ---');
-      // await Future.delayed(const Duration(seconds: 1), () {
-      //   clearImageCache();
-      // });
-    }
-  }
-
-  reUploadDocument(String url, filePath, user) async {
-    SecureStorage secureStorage = SecureStorage();
-    final header = {
-      'Authorization': "Bearer ${secureStorage.getToken().toString()}",
-    };
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.headers.addAll(header);
-      request.files.add(
-        await http.MultipartFile.fromPath('file', filePath.path),
-      );
-      Map<String, String> fields = {
-        'user': jsonEncode(user),
-      };
-      request.fields.addAll(fields);
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        return await response.stream.bytesToString();
-      } else {
-        alertService
-            .errorToast('Failed to upload file: ${response.reasonPhrase}');
-      }
-    } on FileSystemException catch (e) {
-      alertService
-          .errorToast('Something went wrong. Please try again in a bit.');
-    } catch (e) {
-      if (e is SocketException) {
-        alertService
-            .errorToast('No Internet Connection. Please try again later.');
-      } else if (e is TimeoutException) {
-        alertService.errorToast(
-            'Oops! it\'s taking a little longer than expected. Please try again soon.');
-      } else {
-        alertService
-            .errorToast('Something went wrong. Please try again in a bit.');
-      }
-      // alertService.errorToast("Error: ${e.toString()}");
-    } finally {
-      print('API request completed');
-      final cacheDir = await getTemporaryDirectory();
-      Future.delayed(const Duration(seconds: 2), () {
-        if (cacheDir.existsSync()) {
-          cacheDir.deleteSync(recursive: true);
-        }
-      });
-    }
-  }
-
   gotoLogin() {
     Navigator.pushNamedAndRemoveUntil(
       Constants.navigatorKey.currentState!.overlay!.context,
@@ -280,7 +187,6 @@ class Connection {
         } else {
           var result = json.decode(response.body);
           return result;
-          //alertService.errorToast(result['message'].toString());
         }
       } else {
         var result = json.decode(response.body);
@@ -297,7 +203,6 @@ class Connection {
         alertService
             .errorToast('Something went wrong. Please try again in a bit.');
       }
-      // alertService.errorToast("Error: ${e.toString()}");
     } finally {
       print('API request completed');
     }
@@ -315,11 +220,10 @@ class Connection {
         headers: header,
       );
       if (response.statusCode == 200) {
-        // final decodedResponse = utf8.decode(response.bodyBytes);
-        // final data = jsonDecode(decodedResponse);
-        // return data;
-        return json
-            .decode(utf8.decode(response.bodyBytes, allowMalformed: true));
+        return json.decode(utf8.decode(
+          response.bodyBytes,
+          allowMalformed: true,
+        ));
       } else if (response.statusCode == 401) {
         alertService.errorToast("Unauthorized");
         gotoLogin();
@@ -328,28 +232,136 @@ class Connection {
         if (error == null) {
           final decodedResponse = utf8.decode(response.bodyBytes);
           final data = jsonDecode(decodedResponse);
-          // var result = json.decode(response.body);
           return data;
-          //  alertService.errorToast(
-          //    "${response.statusCode}: ${result['message'].toString()}");
         }
       }
     } catch (e) {
       if (error == null) {
         if (e is SocketException) {
-          alertService
-              .errorToast('No Internet Connection. Please try again later.');
+          String msg = 'No Internet Connection. Please try again later.';
+          alertService.errorToast(msg);
         } else if (e is TimeoutException) {
-          alertService.errorToast(
-              'Oops! it\'s taking a little longer than expected. Please try again soon.');
+          String msg =
+              'Oops! it\'s taking a little longer than expected. Please try again soon.';
+          alertService.errorToast(msg);
         } else {
-          alertService
-              .errorToast('Something went wrong. Please try again in a bit.');
+          String msg = 'Something went wrong. Please try again in a bit.';
+          alertService.errorToast(msg);
         }
-        // alertService.errorToast("Error: ${e.toString()}");
       }
     } finally {
       print('API request completed');
     }
+  }
+
+  uploadFile(String url, filePath) async {
+    SecureStorage secureStorage = SecureStorage();
+    final header = {
+      'Authorization': "Bearer ${secureStorage.getToken().toString()}",
+    };
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers.addAll(header);
+      request.files.add(
+        await http.MultipartFile.fromPath('image', filePath.path),
+      );
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        return await response.stream.bytesToString();
+      } else {
+        alertService
+            .errorToast('Failed to upload file: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
+      } else {
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
+      }
+    } finally {
+      debugPrint('--- API Request Completed ---');
+    }
+  }
+
+  reUploadDocument(String url, filePath, user) async {
+    SecureStorage secureStorage = SecureStorage();
+    final header = {
+      'Authorization': "Bearer ${secureStorage.getToken().toString()}",
+    };
+
+    print("url $url");
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers.addAll(header);
+      request.files.add(
+        await http.MultipartFile.fromPath('file', filePath.path),
+      );
+      Map<String, String> fields = {'user': jsonEncode(user)};
+      print("fields $fields");
+      request.fields.addAll(fields);
+      final response = await request.send();
+      final response2 = await http.Response.fromStream(response);
+      var decodeData = jsonDecode(response2.body);
+      // log("decodeData ${jsonEncode(decodeData)}");
+      if (response.statusCode == 200) {
+        return response2.body;
+      } else {
+        String msg = 'Failed to upload file: ${response.reasonPhrase}';
+        alertService.errorToast(msg);
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        alertService
+            .errorToast('No Internet Connection. Please try again later.');
+      } else if (e is TimeoutException) {
+        alertService.errorToast(
+            'Oops! it\'s taking a little longer than expected. Please try again soon.');
+      } else {
+        alertService
+            .errorToast('Something went wrong. Please try again in a bit.');
+      }
+    } finally {
+      debugPrint('--- API request completed ---');
+    }
+
+    // try {
+    //   var request = http.MultipartRequest('POST', Uri.parse(url));
+    //   request.headers.addAll(header);
+    //   request.files.add(
+    //     await http.MultipartFile.fromPath('file', filePath.path),
+    //   );
+    //   Map<String, String> fields = {
+    //     'user': jsonEncode(user),
+    //   };
+    //   request.fields.addAll(fields);
+    //   var response = await request.send();
+    //   if (response.statusCode == 200) {
+    //     return await response.stream.bytesToString();
+    //   } else {
+    //     alertService
+    //         .errorToast('Failed to upload file: ${response.reasonPhrase}');
+    //   }
+    // } on FileSystemException catch (e) {
+    //   alertService
+    //       .errorToast('Something went wrong. Please try again in a bit.');
+    // } catch (e) {
+    //   if (e is SocketException) {
+    //     alertService
+    //         .errorToast('No Internet Connection. Please try again later.');
+    //   } else if (e is TimeoutException) {
+    //     alertService.errorToast(
+    //         'Oops! it\'s taking a little longer than expected. Please try again soon.');
+    //   } else {
+    //     alertService
+    //         .errorToast('Something went wrong. Please try again in a bit.');
+    //   }
+    // } finally {
+    //   debugPrint('API request completed');
+    // }
   }
 }

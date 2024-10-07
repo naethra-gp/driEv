@@ -166,22 +166,16 @@ class DocumentUploadAlert extends StatelessWidget {
       "contact": mobile.toString(),
       "fileName": document['id'].toString()
     };
-    print("request $request");
-    final String fileExtension = extension(file.path);
+    final String ext = extension(file.path);
     int lastIndex = file.path.lastIndexOf('/');
     String result1 = file.path.substring(0, lastIndex + 1);
-    file.rename("$result1${document['id'].toString()}$fileExtension").then((_) {
-      print('File renamed successfully.');
-    }).catchError((error) {
-      print('Error renaming file: $error');
-    });
-    final uploadFile =
-        File("$result1${document['id'].toString()}$fileExtension");
-    print("uploadFile $uploadFile");
+    String docId = document['id'].toString();
+    file.rename("$result1$docId$ext").then((_) {}).catchError((error) {});
+    final uploadFile = File("$result1${document['id'].toString()}$ext");
+    // --- SERVICE CALL --- //
     customerService.uploadImage(uploadFile, request).then((response) async {
       alertServices.hideLoading();
       var res = jsonDecode(response);
-      print("res $res");
       if (res != null) {
         onDataReceived(true);
       } else {

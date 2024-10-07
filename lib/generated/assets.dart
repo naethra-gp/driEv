@@ -124,6 +124,7 @@ class Assets {
   static const String landingPageLandingPage = 'lib/app_pages/users/landing_page/landing_page.dart';
   static const String libMain = 'lib/main.dart';
   static const String loadingLoading = 'assets/loading/loading.json';
+  static const String loadingLoading1 = 'assets/loading/loading1.json';
   static const String loginPageLoginPage = 'lib/app_pages/users/login_page/login_page.dart';
   static const String noInternetNoInternet = 'lib/app_pages/no_internet/no_internet.dart';
   static const String onRideOnRide = 'lib/app_pages/on_ride/on_ride.dart';

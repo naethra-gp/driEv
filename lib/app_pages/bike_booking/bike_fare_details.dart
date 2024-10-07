@@ -736,7 +736,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
             ),
           ),
           content: const Text(
-            'Are you sure you want to end your reservation for the vehicle?.',
+            'Are you sure you want to end your reservation for the vehicle?',
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontFamily: "Roboto-Bold",
