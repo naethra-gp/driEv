@@ -344,7 +344,6 @@ class _EndRideScannerState extends State<EndRideScanner> {
 
   submitBikeNUmber() async {
     String mobile = secureStorage.get("mobile");
-    alertServices.showLoading();
     _cancelTimer();
     // ON-RIDE CRON JOB
     final cron = Cron();
@@ -353,6 +352,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
     } on ScheduleParseException {
       await cron.close();
     }
+    alertServices.showLoading();
     bookingServices.getRideEndPin(rideId).then((r) {
       bookingServices.getWalletBalance(mobile).then((r) {
         double b = r['balance'];

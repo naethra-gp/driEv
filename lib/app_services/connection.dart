@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import '../app_config/app_constants.dart';
@@ -24,6 +25,8 @@ class Connection {
     * GLOBAL EXCEPTION METHOD
   */
   customException(e) {
+    alertService.hideLoading();
+    Fluttertoast.cancel();
     String tryAgain = "Please try again later.";
     if (e is SocketException) {
       String msg = 'No Internet Connection. $tryAgain';

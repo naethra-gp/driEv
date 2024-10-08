@@ -10,7 +10,6 @@ import '../app_pages/index.dart';
 import '../app_pages/referral_screen/referCode_apply.dart';
 import '../app_pages/ride_summary/summary_ride.dart';
 import '../app_pages/scan_to_endride/end_ride_scan.dart';
-import '../app_pages/test/timer_test.dart';
 import '../app_utils/app_provider/connectivity_provider.dart';
 
 class AppRoute {
