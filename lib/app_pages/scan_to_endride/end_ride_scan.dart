@@ -43,6 +43,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
 
   bool flashOn = false;
   bool hasShownPopup = false;
+  bool showQR = true;
 
   /// TIMER 30S
   void _startCountdown() {
@@ -114,14 +115,11 @@ class _EndRideScannerState extends State<EndRideScanner> {
 
   String formatNumber(int number) {
     final formatter = NumberFormat('0000');
-    print("Format number: ${formatter.format(number)}");
     return formatter.format(number);
   }
 
   String formatCode(int number) {
     String numberStr = number.toString();
-    print(
-        "Format Code: ${numberStr.substring(numberStr.length - 4).padLeft(4, '0')}");
     return numberStr.substring(numberStr.length - 4).padLeft(4, '0');
   }
 
@@ -195,39 +193,40 @@ class _EndRideScannerState extends State<EndRideScanner> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: ShapeDecoration(
-                        shape: QrScannerOverlayShape(
-                          borderColor: AppColors.primary,
-                          borderRadius: 5,
-                          borderWidth: 5,
-                        ),
-                      ),
-                      child: QrCamera(
-                        onError: (context, error) => const Center(
-                          child: Text(
-                            "Hey.! There may be an error with your camera due to multiple access attempts. Please try scanning it again.",
-                            textAlign: TextAlign.center,
-                            // error.toString(),
-                            style: TextStyle(color: Colors.red),
+                if (showQR)
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: ShapeDecoration(
+                          shape: QrScannerOverlayShape(
+                            borderColor: AppColors.primary,
+                            borderRadius: 5,
+                            borderWidth: 5,
                           ),
                         ),
-                        cameraDirection: CameraDirection.BACK,
-                        qrCodeCallback: (code) {
-                          if (code != null) {
-                            _onQRViewCreated(code);
-                          }
-                        },
+                        child: QrCamera(
+                          onError: (context, error) => const Center(
+                            child: Text(
+                              "Hey.! There may be an error with your camera due to multiple access attempts. Please try scanning it again.",
+                              textAlign: TextAlign.center,
+                              // error.toString(),
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                          cameraDirection: CameraDirection.BACK,
+                          qrCodeCallback: (code) {
+                            if (code != null) {
+                              _onQRViewCreated(code);
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
                 const SizedBox(height: 10),
                 const Text(
                   "Wrap up your two-wheeled \n adventure!",
@@ -353,33 +352,74 @@ class _EndRideScannerState extends State<EndRideScanner> {
       await cron.close();
     }
     alertServices.showLoading();
-    bookingServices.getRideEndPin(rideId).then((r) {
-      bookingServices.getWalletBalance(mobile).then((r) {
-        double b = r['balance'];
-        bookingServices.getRideDetails(rideId).then((r1) {
-          List rideDetails = [r1];
-          double c = rideDetails[0]["payableAmount"];
-          bookingServices.getRideEndPin(rideId).then((r2) {
-            alertServices.hideLoading();
-            if (b < c) {
-              QrMobileVision.stop();
-              _cancelTimer();
-              alertServices.insufficientBalanceAlert(
-                  context, b.toString(), r2["message"], [], "", widget.rideID);
-            } else if (r2 != null) {
-              timer?.cancel();
-              String stopPing = r2['stopPing'].toString();
-              showOtp(stopPing);
-              String rideID = r2['rideID'].toString();
-              timer = Timer.periodic(
-                const Duration(seconds: 3),
-                (Timer t) => startWatching(rideID),
-              );
-            }
+    bookingServices.getRideEndPin(rideId).then((r2) {
+      print("r2 --> $r2");
+      alertServices.hideLoading();
+
+      if (r2['key'] == "WALLET_ISSUE") {
+        QrMobileVision.stop();
+        _cancelTimer();
+        alertServices.insufficientBalanceAlert(
+            context, "", r2["message"].toString(), [], "", widget.rideID);
+      } else {
+        if (r2 != null) {
+          timer?.cancel();
+          String stopPing = r2['stopPing'].toString();
+          setState(() {
+            showQR = false;
           });
-        });
-      });
+          showOtp(stopPing);
+          String rideID = r2['rideID'].toString();
+          timer = Timer.periodic(
+            const Duration(seconds: 3),
+            (Timer t) => startWatching(rideID),
+          );
+        }
+      }
+      // if (b < c) {
+      //   QrMobileVision.stop();
+      //   _cancelTimer();
+      //   alertServices.insufficientBalanceAlert(
+      //       context, b.toString(), r2["message"].toString(), [], "", widget.rideID);
+      // } else
     });
+
+    // bookingServices.getRideEndPin(rideId).then((r) {
+    //   bookingServices.getWalletBalance(mobile).then((r) {
+    //     double b = r['balance'];
+    //     print("Balance --> $b");
+    //     bookingServices.getRideDetails(rideId).then((r1) {
+    //       List rideDetails = [r1];
+    //       double c = rideDetails[0]["payableAmount"];
+    //       print("payableAmount --> $c");
+    //       print("rideId --> $rideId");
+    //
+    //       bookingServices.getRideEndPin(rideId).then((r2) {
+    //         print("r2 --> $r2");
+    //
+    //         alertServices.hideLoading();
+    //         if (b < c) {
+    //           QrMobileVision.stop();
+    //           _cancelTimer();
+    //           alertServices.insufficientBalanceAlert(
+    //               context, b.toString(), r2["message"].toString(), [], "", widget.rideID);
+    //         } else if (r2 != null) {
+    //           timer?.cancel();
+    //           String stopPing = r2['stopPing'].toString();
+    //           setState(() {
+    //             showQR = false;
+    //           });
+    //           showOtp(stopPing);
+    //           String rideID = r2['rideID'].toString();
+    //           timer = Timer.periodic(
+    //             const Duration(seconds: 3),
+    //             (Timer t) => startWatching(rideID),
+    //           );
+    //         }
+    //       });
+    //     });
+    //   });
+    // });
   }
 
   showOtp(String otp) {
@@ -427,6 +467,9 @@ class _EndRideScannerState extends State<EndRideScanner> {
                           icon: const Icon(Icons.close),
                           color: Colors.white,
                           onPressed: () {
+                            setState(() {
+                              showQR = true;
+                            });
                             _cancelTimer();
                             Navigator.pop(context);
                           },

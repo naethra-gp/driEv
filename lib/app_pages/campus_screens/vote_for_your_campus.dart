@@ -129,7 +129,7 @@ class _VoteForYourCampusState extends State<VoteForYourCampus> {
                   physics: const ScrollPhysics(),
                   itemCount: searchList.length,
                   itemBuilder: (context, index) {
-                    final item = searchList[index].toString();
+                    final item = searchList[index];
                     return listView([item].toList());
                   },
                 ),

@@ -68,60 +68,36 @@ class _WalletSummaryState extends State<WalletSummary> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarWidget(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          WalletBalanceWidget(balance: walletBalance),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ButtonTheme(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "add_more_fund", arguments: {
-                      "stationDetails": [],
-                      "rideId": "",
-                      "rideID": []
-                    });
-                  },
-                  focusNode: FocusNode(skipTraversal: true),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFF3DB54A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                  child: const Text(
-                    "Add More Fund",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: "Roboto",
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+        Navigator.pushReplacementNamed(context, "home");
+      },
+      child: Scaffold(
+        appBar: const AppBarWidget(),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            WalletBalanceWidget(balance: walletBalance),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ButtonTheme(
+                  height: 50,
+                  child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, "withdraw_amount");
+                      Navigator.pushNamed(context, "add_more_fund", arguments: {
+                        "stationDetails": [],
+                        "rideId": "",
+                        "rideID": []
+                      });
                     },
                     focusNode: FocusNode(skipTraversal: true),
                     style: ElevatedButton.styleFrom(
@@ -138,7 +114,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                       ),
                     ),
                     child: const Text(
-                      "Withdraw Fund",
+                      "Add More Fund",
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: "Roboto",
@@ -147,33 +123,66 @@ class _WalletSummaryState extends State<WalletSummary> {
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "* Charges Apply",
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "withdraw_amount");
+                      },
+                      focusNode: FocusNode(skipTraversal: true),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(0xFF3DB54A),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                      child: const Text(
+                        "Withdraw Fund",
                         style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.black,
-                          fontStyle: FontStyle.italic,
+                          fontSize: 14,
+                          fontFamily: "Roboto",
+                          color: Colors.white,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Image.asset(
-                        "assets/img/vector.png",
-                        width: 20,
-                        height: 20,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 25),
-          walletTransaction(),
-        ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "* Charges Apply",
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Image.asset(
+                          "assets/img/vector.png",
+                          width: 20,
+                          height: 20,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 25),
+            walletTransaction(),
+          ],
+        ),
       ),
     );
   }

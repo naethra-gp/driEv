@@ -52,15 +52,12 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
 
   String formatNumber(int number) {
     final formatter = NumberFormat('0000');
-    print("Format No: ${formatter.format(number)}");
+    // print("Format No: ${formatter.format(number)}");
     return formatter.format(number);
   }
 
   String formatCode(int number) {
     String numberStr = number.toString();
-    print(
-        "formatCode : ${numberStr.substring(numberStr.length - 4).padLeft(4, '0')}");
-
     return numberStr.substring(numberStr.length - 4).padLeft(4, '0');
   }
 

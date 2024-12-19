@@ -88,7 +88,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                     if (fd.isNotEmpty) ...[
                       Expanded(
                         child: GridView.builder(
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(

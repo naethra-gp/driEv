@@ -185,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                       sliderWidget(),
                       const SizedBox(height: 25),
                       Text(
-                        "Preferred Category",
+                        "Select a category:",
                         style: TextStyle(
                           fontSize: 15 * textScaleFactor,
                           fontWeight: FontWeight.w500,
@@ -196,8 +196,8 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 15),
                         Flexible(
                           child: Wrap(
-                            spacing: 5.0,
-                            runSpacing: 0.0,
+                            spacing: 15.0,
+                            runSpacing: 2.0,
                             alignment: WrapAlignment.start,
                             children: [
                               if (stationDetails['plans'].length == 0) ...[

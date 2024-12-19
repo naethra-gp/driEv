@@ -7,6 +7,7 @@ class OtpServices {
     Connection connection = Connection();
     var url =
         '${EndPoints.baseApi}/${EndPoints.sendOtp}/$mobile/${EndPoints.otpLength}';
+    print(url);
     var response = await connection.getWithoutToken(url);
     return response;
   }

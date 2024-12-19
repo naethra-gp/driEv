@@ -66,7 +66,7 @@ class CampusWidget extends StatelessWidget {
               width: 20,
             ),
             Text(
-              "${data[0]['filterVehicleList'].length} Rides Available",
+              "${data[0]['filterVehicleList'].length} ${data[0]['filterVehicleList'].length > 1 ? "Rides" : "Ride"} Available",
               style: const TextStyle(
                 fontFamily: "Poppins",
                 fontWeight: FontWeight.normal,

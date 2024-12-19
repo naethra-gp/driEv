@@ -9,7 +9,7 @@ class ConnectivityProvider with ChangeNotifier {
     Connectivity connectivity = Connectivity();
 
     connectivity.onConnectivityChanged.listen((result) async {
-      print("Provider result $result");
+      // print("Provider result $result");
       if (result.contains(ConnectivityResult.none)) {
         _isOnline = false;
         notifyListeners();

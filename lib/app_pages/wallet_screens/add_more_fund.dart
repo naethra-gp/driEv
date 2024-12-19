@@ -51,138 +51,170 @@ class _AddMoreFundState extends State<AddMoreFund> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      child: Scaffold(
-        appBar: const AppBarWidget(),
-        body: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: IntrinsicHeight(
-                        child: Column(
-                          children: <Widget>[
-                            const SizedBox(height: 16),
-                            Image.asset("assets/img/oops.png",
-                                height: 70, width: 70),
-                            const SizedBox(height: 40),
-                            const Text("Your Wallet Balance",
-                                style: TextStyle(fontSize: 16)),
-                            Text(
-                              "\u{20B9} $walletBalance",
-                              style: const TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 16),
-                            Form(
-                              key: formKey,
-                              child: TextFormWidget(
-                                title: 'Enter Amount',
-                                controller: amountCtrl,
-                                maxLength: 4,
-                                required: true,
-                                // prefixText: "\u{20B9} ",
-                                decoration: InputDecoration(
-                                  counterText: "",
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 50),
-                                  prefixIcon: const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.currency_rupee_sharp),
-                                      ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+        Navigator.pushReplacementNamed(context, "wallet_summary");
+      },
+      child: BaseScreen(
+        child: Scaffold(
+          appBar: const AppBarWidget(),
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: IntrinsicHeight(
+                          child: Column(
+                            children: <Widget>[
+                              const SizedBox(height: 16),
+                              Image.asset("assets/img/oops.png",
+                                  height: 70, width: 70),
+                              const SizedBox(height: 40),
+                              const Text("Your Wallet Balance",
+                                  style: TextStyle(fontSize: 16)),
+                              Text(
+                                "\u{20B9} $walletBalance",
+                                style: const TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 16),
+                              Form(
+                                key: formKey,
+                                child: TextFormWidget(
+                                  title: 'Enter Amount',
+                                  controller: amountCtrl,
+                                  maxLength: 4,
+                                  required: true,
+                                  // prefixText: "\u{20B9} ",
+                                  decoration: InputDecoration(
+                                    counterText: "",
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 50),
+                                    prefixIcon: const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.currency_rupee_sharp),
+                                        ],
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xffD2D2D2)),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xffD2D2D2)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xffD2D2D2)),
+                                    ),
+                                    hintStyle: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color(0xffD2D2D2)),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color(0xffD2D2D2)),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color(0xffD2D2D2)),
-                                  ),
-                                  hintStyle: const TextStyle(
-                                    fontSize: 14,
+                                  textInputAction: TextInputAction.done,
+                                  // keyboardType: TextInputType.phone,
+                                  keyboardType: Platform.isIOS
+                                      ? const TextInputType.numberWithOptions(
+                                          signed: true)
+                                      : TextInputType.phone,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  style: const TextStyle(
+                                    fontSize: 25,
+                                    fontFamily: "Roboto",
+                                    color: AppColors.black,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                    textBaseline: TextBaseline.alphabetic,
                                   ),
+                                  prefixIcon: Icons.account_circle_outlined,
+                                  validator: (value) {
+                                    if (value.toString().trim().isEmpty) {
+                                      return "Amount is Mandatory!";
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                textInputAction: TextInputAction.done,
-                                // keyboardType: TextInputType.phone,
-                                keyboardType: Platform.isIOS
-                                    ? const TextInputType.numberWithOptions(
-                                        signed: true)
-                                    : TextInputType.phone,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
+                              ),
+                              const SizedBox(height: 25),
+                              Wrap(
+                                runSpacing: 5,
+                                spacing: 5,
+                                children: [
+                                  addFundTextButton(100),
+                                  addFundTextButton(200),
+                                  addFundTextButton(500),
+                                  addFundTextButton(1000),
                                 ],
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                  fontFamily: "Roboto",
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.bold,
-                                  textBaseline: TextBaseline.alphabetic,
+                              ),
+                              const SizedBox(height: 50),
+
+                              /// ENABLE / DISABLE TEST PAYMENT
+                              // Center(
+                              //   child: Text(
+                              //       "${Constants.isStagingMode ? "Disable" : "Enable"} Test Payment"),
+                              // ),
+                              // Switch(
+                              //   activeColor: AppColors.white,
+                              //   trackOutlineColor:
+                              //       WidgetStateProperty.all(Colors.transparent),
+                              //   activeTrackColor: AppColors.primary,
+                              //   inactiveThumbColor: Colors.white,
+                              //   inactiveTrackColor: Colors.grey.shade500,
+                              //   splashRadius: 50.0,
+                              //   value: Constants.isStagingMode,
+                              //   onChanged: (value) => setState(
+                              //       () => Constants.isStagingMode = value),
+                              // ),
+                              // const SizedBox(height: 16),
+
+
+                              SizedBox(
+                                height: 50,
+                                width: double.infinity,
+                                child: AppButtonWidget(
+                                  title: "Proceed",
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      print(
+                                          "Staging Mode: ${Constants.isStagingMode}");
+                                      FocusScope.of(context).unfocus();
+                                      formKey.currentState!.save();
+                                      paytm(amountCtrl.text.toString());
+                                    }
+                                  },
                                 ),
-                                prefixIcon: Icons.account_circle_outlined,
-                                validator: (value) {
-                                  if (value.toString().trim().isEmpty) {
-                                    return "Amount is Mandatory!";
-                                  }
-                                  return null;
-                                },
                               ),
-                            ),
-                            const SizedBox(height: 25),
-                            Wrap(
-                              runSpacing: 5,
-                              spacing: 5,
-                              children: [
-                                addFundTextButton(100),
-                                addFundTextButton(200),
-                                addFundTextButton(500),
-                                addFundTextButton(1000),
-                              ],
-                            ),
-                            const SizedBox(height: 50),
-                            SizedBox(
-                              height: 50,
-                              width: double.infinity,
-                              child: AppButtonWidget(
-                                title: "Proceed",
-                                onPressed: () {
-                                  if (formKey.currentState!.validate()) {
-                                    FocusScope.of(context).unfocus();
-                                    formKey.currentState!.save();
-                                    paytm(amountCtrl.text.toString());
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -248,7 +280,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       "staging": Constants.isStagingMode,
     };
     walletServices.initiateTransaction(params).then((dynamic res) {
-      // print("Res--> ${jsonEncode(res)}");
+      print("Res--> ${jsonEncode(res)}");
       List token = [res];
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
@@ -257,14 +289,14 @@ class _AddMoreFundState extends State<AddMoreFund> {
       String cbUrl = token[0]['callbackUrl'].toString();
       bool staging = Constants.isStagingMode;
       bool rai = false;
-      // debugPrint("-------------- PAYTM Payment ---------------------");
-      // debugPrint("mid: $mid");
-      // debugPrint("orderID: $oId");
-      // debugPrint("txtToken: $tToken");
-      // debugPrint("amount: $amt");
-      // debugPrint("callbackurl: $cbUrl");
-      // debugPrint("isStaging: $staging");
-      // debugPrint("-------------- // PAYTM Payment ---------------------");
+      debugPrint("-------------- PAYTM Payment ---------------------");
+      debugPrint("mid: $mid");
+      debugPrint("orderID: $oId");
+      debugPrint("txtToken: $tToken");
+      debugPrint("amount: $amt");
+      debugPrint("callbackurl: $cbUrl");
+      debugPrint("isStaging: $staging");
+      debugPrint("-------------- // PAYTM Payment ---------------------");
       alertServices.hideLoading();
       var response = AllInOneSdk.startTransaction(
           mid, oId, amt, tToken, cbUrl, staging, rai);

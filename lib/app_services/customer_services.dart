@@ -4,10 +4,10 @@ import '../app_config/app_end_points.dart';
 import 'connection.dart';
 
 class CustomerService {
-  createCustomer(request) async {
+  createCustomer(request, [noError]) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi}/${EndPoints.createCustomer}';
-    var response = await connection.postWithToken(url, request);
+    var response = await connection.postWithToken(url, request, noError);
     return response;
   }
 

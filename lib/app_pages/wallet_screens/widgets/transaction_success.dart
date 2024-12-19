@@ -23,6 +23,10 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
   void initState() {
     getWalletBalance();
     super.initState();
+    Future.delayed(const Duration(seconds: 5), ()
+    {
+      Navigator.pushReplacementNamed(context, "wallet_summary");
+    });
   }
 
   @override
@@ -33,64 +37,73 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: SizedBox(
-        height: size.height,
-        width: size.width,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset("assets/img/success_logo.png",
-                    height: 150, width: 150),
-              ),
-              const SizedBox(height: 25),
-              const Text(
-                "Hooray!",
-                style: TextStyle(
-                  fontSize: 35,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+        Navigator.pushReplacementNamed(context, "wallet_summary");
+      },
+      child: Scaffold(
+        body: SizedBox(
+          height: size.height,
+          width: size.width,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Image.asset("assets/img/success_logo.png",
+                      height: 150, width: 150),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Wallet recharge successful!",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.normal,
+                const SizedBox(height: 25),
+                const Text(
+                  "Hooray!",
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Wallet Balance",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
+                const SizedBox(height: 20),
+                const Text(
+                  "Wallet recharge successful!",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
-              ),
-              Text(
-                "\u{20B9} $walletBalance",
-                style: const TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 20),
+                const Text(
+                  "Wallet Balance",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 25),
-              SizedBox(
-                width: double.maxFinite,
-                child: AppButtonWidget(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, "wallet_summary");
-                  },
-                  title: "Go to Wallet",
+                Text(
+                  "\u{20B9} $walletBalance",
+                  style: const TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 25),
+                SizedBox(
+                  width: double.maxFinite,
+                  child: AppButtonWidget(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, "wallet_summary");
+                    },
+                    title: "Go to Wallet",
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

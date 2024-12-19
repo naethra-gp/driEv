@@ -562,7 +562,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     // log(jsonEncode(uploadArray));
 
     alertServices.showLoading();
-    customerService.createCustomer(request).then((response) async {
+    customerService.createCustomer(request, true).then((response) async {
       alertServices.hideLoading();
       alertServices.successToast(response['status']);
       secureStorage.save("isLogin", true);
@@ -634,6 +634,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         var request = {"emailId": email};
         alertServices.showLoading();
         customerService.verifyEmail(email).then((response) async {
+          print("response ---> $response");
           if (response['statusCode'].toString() == '404') {
             alertServices.hideLoading();
             customerService.sentEmail(request).then((response) {

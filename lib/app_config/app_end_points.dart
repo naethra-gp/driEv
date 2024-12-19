@@ -1,6 +1,14 @@
 class EndPoints {
-  static const baseApi = 'https://community-test.driev.bike/driev/api/app';
-  static const baseApi1 = 'https://community-test.driev.bike/driev/api';
+  /// LIVE APIS
+  static String baseApi = 'https://iot.driev.bike/driev/api/app';
+  static String baseApi1 = 'https://iot.driev.bike/driev/api';
+  static String payment = 'https://iot.driev.bike/driev/app/payment';
+
+  /// STAGING APIS
+  // static String baseApi = 'https://community-test.driev.bike/driev/api/app';
+  // static String baseApi1 = 'https://community-test.driev.bike/driev/api';
+  // static String payment = 'https://community-test.driev.bike/driev/app/payment';
+
   static const sendOtp = 'generateOTP';
   static const otpLength = '6';
   static const verifyOtp = 'verifyOtp';
@@ -35,7 +43,6 @@ class EndPoints {
   static const transactionByContact = 'fetchTransactionByContact';
   static const withdrawmoney = 'wallet/withdrawMoneyFromWallet';
   static const validateCode = 'validateCode';
-  static const payment = 'https://community-test.driev.bike/driev/app/payment';
   static const withdrawMoney = 'wallet/withdrawMoneyFromWallet';
   static const initiateTransaction = 'initiateTransaction';
   static const creditMoneyToWallet = 'wallet/creditMoneyToWallet';

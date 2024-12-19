@@ -4,6 +4,7 @@ import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:readsms/readsms.dart';
@@ -44,6 +45,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
   final double smallDeviceHeight = 600;
   final double largeDeviceHeight = 1024;
 
+  final _otpFocus = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +82,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
     double width = MediaQuery.of(context).size.width;
     double containerHeight;
     double positionedHeight;
-
     if (height < smallDeviceHeight) {
       containerHeight = height / 1.2;
       positionedHeight = height / 0.925;
@@ -110,264 +112,268 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 ),
               ),
             ),
-            Column(
-              children: [
-                Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height / 12.5)),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: SizedBox(
-                    height: 96,
-                    child: Image.asset(
-                      Constants.appLogo,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text(
-                    "Verify your Phone number to finish setting up your account",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text:
-                              "Please enter the verification code send to \n +91 ${maskMobileNumber(widget.mobileNumber)} ",
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            height: 1.5,
-                            color: Color(0xff6F6F6F),
-                          ),
-                        ),
-                        WidgetSpan(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacementNamed(context, "login",
-                                  arguments: widget.mobileNumber.toString());
-                            },
-                            child: const Icon(
-                              Icons.edit_outlined,
-                              size: 20,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: PinCodeTextField(
-                    appContext: context,
-                    length: 6,
-                    autoFocus: true,
-                    textStyle: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    blinkWhenObscuring: true,
-                    animationType: AnimationType.fade,
-                    errorAnimationController: errorController,
-                    autoDisposeControllers: false,
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(10),
-                      fieldHeight: 55,
-                      fieldWidth: 50,
-                      activeFillColor: Colors.white,
-                      selectedFillColor: Colors.white,
-                      inactiveFillColor: Colors.white,
-                      inactiveColor: Colors.grey,
-                      activeColor:
-                          hasError ? Colors.redAccent : AppColors.primary,
-                      selectedColor: AppColors.primary,
-                      borderWidth: 2,
-                    ),
-                    cursorColor: Colors.black,
-                    animationDuration: const Duration(milliseconds: 300),
-                    enableActiveFill: true,
-                    controller: otpCtrl,
-                    boxShadows: const [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        color: Colors.black,
-                        blurRadius: 10,
-                      )
-                    ],
-                    onCompleted: (v) {
-                      if (v.toString().length == 6) {
-                        setState(() {
-                          buttonEnabled = true;
-                        });
-                      }
-                    },
-                    onChanged: (value) {
-                      if (value.toString().length == 6) {
-                        setState(() {
-                          buttonEnabled = true;
-                        });
-                      } else {
-                        setState(() {
-                          hasError = false;
-                        });
-                      }
-                    },
-                    pastedTextStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12),
-                if (invalidOtp)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      "Oops! Looks like that OTP didn't hit the mark. Please enter the correct OTP",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+            KeyboardActions(
+              config: _buildKeyboardActionsConfig(context),
+              child: Column(
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.height / 12.5)),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      height: 96,
+                      child: Image.asset(
+                        Constants.appLogo,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                if (!invalidOtp)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                  const SizedBox(height: 10),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
                     child: Text(
-                      "Your OTP will expire in ${getFormattedTime(_otpExpireTime)} Secs.",
+                      "Verify your Phone number to finish setting up your account",
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.redAccent, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                const SizedBox(height: 6),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        const TextSpan(
-                          text: 'Did not get the code? ',
-                          style: TextStyle(
-                            color: AppColors.blackLight,
-                            fontWeight: FontWeight.bold,
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                "Please enter the verification code sent to \n +91 ${maskMobileNumber(widget.mobileNumber)} ",
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              height: 1.5,
+                              color: Color(0xff6F6F6F),
+                            ),
                           ),
+                          WidgetSpan(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacementNamed(context, "login",
+                                    arguments: widget.mobileNumber.toString());
+                              },
+                              child: const Icon(
+                                Icons.edit_outlined,
+                                size: 20,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      autoFocus: true,
+                      focusNode: _otpFocus,
+                      textStyle: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      blinkWhenObscuring: true,
+                      animationType: AnimationType.fade,
+                      errorAnimationController: errorController,
+                      autoDisposeControllers: false,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(10),
+                        fieldHeight: 55,
+                        fieldWidth: 50,
+                        activeFillColor: Colors.white,
+                        selectedFillColor: Colors.white,
+                        inactiveFillColor: Colors.white,
+                        inactiveColor: Colors.grey,
+                        activeColor:
+                            hasError ? Colors.redAccent : AppColors.primary,
+                        selectedColor: AppColors.primary,
+                        borderWidth: 2,
+                      ),
+                      cursorColor: Colors.black,
+                      animationDuration: const Duration(milliseconds: 300),
+                      enableActiveFill: true,
+                      controller: otpCtrl,
+                      boxShadows: const [
+                        BoxShadow(
+                          offset: Offset(0, 1),
+                          color: Colors.black,
+                          blurRadius: 10,
+                        )
+                      ],
+                      onCompleted: (v) {
+                        if (v.toString().length == 6) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        }
+                      },
+                      onChanged: (value) {
+                        if (value.toString().length == 6) {
+                          setState(() {
+                            buttonEnabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            hasError = false;
+                          });
+                        }
+                      },
+                      pastedTextStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (invalidOtp)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        "Oops! Looks like that OTP didn't hit the mark. Please enter the correct OTP",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        TextSpan(
-                          text: 'Resend code',
-                          style: TextStyle(
-                            color: !enableResend
-                                ? Colors.grey[600]
-                                : AppColors.primary,
-                            fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  if (!invalidOtp)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        "Your OTP will expire in ${getFormattedTime(_otpExpireTime)} Secs.",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Colors.redAccent, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  const SizedBox(height: 6),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          const TextSpan(
+                            text: 'Did not get the code? ',
+                            style: TextStyle(
+                              color: AppColors.blackLight,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              if (enableResend) {
-                                resendOTP();
+                          TextSpan(
+                            text: 'Resend code',
+                            style: TextStyle(
+                              color: !enableResend
+                                  ? Colors.grey[600]
+                                  : AppColors.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                if (enableResend) {
+                                  resendOTP();
+                                }
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height / 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: AppButtonWidget(
+                      title: 'Verify',
+                      onPressed: !buttonEnabled
+                          ? null
+                          : () {
+                              if (otpCtrl.text.length == 6) {
+                                var vRequest = {
+                                  "mobileNos": widget.mobileNumber,
+                                  "otp": otpCtrl.text.toString(),
+                                  "source": "app",
+                                  "clientId": Constants.clientId,
+                                  "clientSecret": Constants.clientSecret,
+                                };
+                                alertServices.showLoading();
+                                otpServices
+                                    .verifyOtp(vRequest)
+                                    .then((vResponse) async {
+                                  if (vResponse['type'] == "success") {
+                                    String mobile =
+                                        widget.mobileNumber.toString();
+                                    String token = vResponse['token_info']
+                                            ['token']
+                                        .toString();
+                    
+                                    /// SAVE LOCAL VALUES
+                                    secureStorage.saveToken(token);
+                                    secureStorage.save("mobile", mobile);
+                    
+                                    /// REDIRECT
+                                    customerService
+                                        .getCustomer(mobile, true)
+                                        .then((cResponse) async {
+                                      alertServices.hideLoading();
+                                      if (cResponse != null) {
+                                        secureStorage.save("isLogin", true);
+                                        getActiveRides(mobile);
+                                      } else {
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            "referral_in_signup",
+                                            (route) => false);
+                                      }
+                                    });
+                                  } else {
+                                    alertServices.hideLoading();
+                                    setState(() {
+                                      hasError = true;
+                                      enableResend = true;
+                                      invalidOtp = true;
+                                      buttonEnabled = false;
+                                      clearOtp = true;
+                                    });
+                                    errorController!
+                                        .add(ErrorAnimationType.shake);
+                                    Future.delayed(
+                                        const Duration(milliseconds: 100), () {
+                                      setState(() {
+                                        clearOtp = false;
+                                      });
+                                    });
+                                  }
+                                });
+                              } else {
+                                alertServices
+                                    .errorToast("Please enter valid OTP!");
                               }
                             },
-                        ),
-                      ],
                     ),
                   ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height / 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: AppButtonWidget(
-                    title: 'Verify',
-                    onPressed: !buttonEnabled
-                        ? null
-                        : () {
-                            if (otpCtrl.text.length == 6) {
-                              var vRequest = {
-                                "mobileNos": widget.mobileNumber,
-                                "otp": otpCtrl.text.toString(),
-                                "source": "app",
-                                "clientId": Constants.clientId,
-                                "clientSecret": Constants.clientSecret,
-                              };
-                              alertServices.showLoading();
-                              otpServices
-                                  .verifyOtp(vRequest)
-                                  .then((vResponse) async {
-                                if (vResponse['type'] == "success") {
-                                  String mobile =
-                                      widget.mobileNumber.toString();
-                                  String token = vResponse['token_info']
-                                          ['token']
-                                      .toString();
-
-                                  /// SAVE LOCAL VALUES
-                                  secureStorage.saveToken(token);
-                                  secureStorage.save("mobile", mobile);
-
-                                  /// REDIRECT
-                                  customerService
-                                      .getCustomer(mobile, true)
-                                      .then((cResponse) async {
-                                    alertServices.hideLoading();
-                                    if (cResponse != null) {
-                                      secureStorage.save("isLogin", true);
-                                      getActiveRides(mobile);
-                                    } else {
-                                      Navigator.pushNamedAndRemoveUntil(
-                                          context,
-                                          "referral_in_signup",
-                                          (route) => false);
-                                    }
-                                  });
-                                } else {
-                                  alertServices.hideLoading();
-                                  setState(() {
-                                    hasError = true;
-                                    enableResend = true;
-                                    invalidOtp = true;
-                                    buttonEnabled = false;
-                                    clearOtp = true;
-                                  });
-                                  errorController!
-                                      .add(ErrorAnimationType.shake);
-                                  Future.delayed(
-                                      const Duration(milliseconds: 100), () {
-                                    setState(() {
-                                      clearOtp = false;
-                                    });
-                                  });
-                                }
-                              });
-                            } else {
-                              alertServices
-                                  .errorToast("Please enter valid OTP!");
-                            }
-                          },
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -474,5 +480,31 @@ class _VerifyOTPState extends State<VerifyOTP> {
         }
       }
     });
+  }
+
+  /// Returns the custom [Widget] to be rendered as the *"Done"* button.
+  KeyboardActionsConfig _buildKeyboardActionsConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+      // keyboardBarColor: Theme.of(context).primaryColor,
+      //   keyboardBarColor: Colors.grey,
+      actions: [
+        KeyboardActionsItem(focusNode: _otpFocus, toolbarButtons: [
+              (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Container(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                child: const Text(
+                  "Done",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
   }
 }

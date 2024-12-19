@@ -7,6 +7,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_config/app_constants.dart';
+import '../../../app_config/app_end_points.dart';
 import '../../../app_config/app_size_config.dart';
 import '../../../app_services/index.dart';
 import '../../../app_utils/app_widgets/app_button.dart';
@@ -35,9 +36,11 @@ class _LoginPageState extends State<LoginPage> {
         mobileCtrl.text = widget.mobileNumber!;
       });
     } else {
-      Future<void>.delayed(const Duration(milliseconds: 300), _tryPasteCurrentPhone);
+      Future<void>.delayed(
+          const Duration(milliseconds: 300), _tryPasteCurrentPhone);
     }
   }
+
   Future _tryPasteCurrentPhone() async {
     if (!mounted) return;
     try {
@@ -47,9 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       if (phone.toString().startsWith('+91')) {
         mobileCtrl.text = phone.toString().replaceFirst('+91', '');
-        setState(() {
-
-        });
+        setState(() {});
       }
       // mobileCtrl.text = phone.toString();
     } on PlatformException catch (e) {
@@ -238,6 +239,41 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          /// TOGGLE APIs
+                          // Center(
+                          //   child: Text(
+                          //       "Current API: ${Constants.isStaging ? "Staging (community-test.driev.bike)" : "Live (iot.driev.bike)"}"),
+                          // ),
+                          // Switch(
+                          //     activeColor: AppColors.white,
+                          //     trackOutlineColor:
+                          //     WidgetStateProperty.all(Colors.transparent),
+                          //     activeTrackColor: AppColors.primary,
+                          //     inactiveThumbColor: Colors.white,
+                          //     inactiveTrackColor: Colors.grey.shade500,
+                          //     splashRadius: 50.0,
+                          //     value: Constants.isStaging,
+                          //     onChanged: (value) {
+                          //       setState(() {
+                          //         Constants.isStaging = value;
+                          //       });
+                          //       if (!value) {
+                          //         EndPoints.baseApi =
+                          //         "https://iot.driev.bike/driev/api/app";
+                          //         EndPoints.baseApi1 =
+                          //         "https://iot.driev.bike/driev/api/app";
+                          //       } else {
+                          //         EndPoints.baseApi =
+                          //         "https://community-test.driev.bike/driev/api/app";
+                          //         EndPoints.baseApi1 =
+                          //         "https://community-test.driev.bike/driev/api";
+                          //       }
+                          //
+                          //       print(value);
+                          //       print("EndPoints.baseApi: ${EndPoints.baseApi}");
+                          //     }),
+                          // const SizedBox(height: 16),
+
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: AppButtonWidget(
