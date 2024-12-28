@@ -141,6 +141,8 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
+            padding: EdgeInsets.zero,
+    constraints: BoxConstraints(),
             icon: Image.asset(Constants.backButton),
             onPressed: () {
               backButtonClick();
@@ -272,7 +274,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
               ],
 
               if (isOnCounter) ...[
-                const SizedBox(height: 15),
+                // const SizedBox(height: 15),
                 SizedBox(
                   width: double.infinity,
                   height: 45,
@@ -357,7 +359,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
                       child: Text(
                           "(₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)"),
                     ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 16),
                   OutlineButtonWidget(
                     foregroundColor: AppColors.primary,
                     height: buttonHeight,
@@ -382,7 +384,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
                     scanToUnlock();
                   },
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 16),
                 blackButton("End Reservation"),
                 const SizedBox(height: 10),
               ],

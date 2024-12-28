@@ -11,6 +11,7 @@ import 'package:lottie/lottie.dart';
 import '../../app_dialogs/widgets/block_user_content.dart';
 import '../../app_dialogs/widgets/kyc_block_widget.dart';
 import '../../app_dialogs/widgets/kyc_hold_widget.dart';
+import '../../app_dialogs/widgets/user_subscription_widget.dart';
 import 'widgets/balance_alert_widget.dart';
 import 'widgets/vehicle_alert.dart';
 
@@ -167,6 +168,8 @@ class AlertServices {
 
   blockedKycAlert(BuildContext context, String reason) {
     return kycMainModel(context, const BlockUserContent());
+  }subscriptionAlert(BuildContext context, String reason) {
+    return kycMainModel(context, const UserSubscriptionWidget());
   }
 
   kycMainModel(BuildContext context, Widget child) {

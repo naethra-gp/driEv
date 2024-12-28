@@ -119,150 +119,152 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
         }
         clickBackButton();
       },
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 70),
-                  GestureDetector(
-                    onTap: () {
-                      QrMobileVision.toggleFlash();
-                      setState(() {
-                        flashOn = !flashOn;
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppColors.primary,
-                      ),
-                      width: 30,
-                      height: 30,
-                      child: Icon(
-                        flashOn ? Icons.flash_off : Icons.flash_on,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: Stack(
+            children: [
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 70),
+                    GestureDetector(
+                      onTap: () {
+                        QrMobileVision.toggleFlash();
+                        setState(() {
+                          flashOn = !flashOn;
+                        });
+                      },
                       child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: ShapeDecoration(
-                          shape: QrScannerOverlayShape(
-                            borderColor: AppColors.primary,
-                            borderRadius: 5,
-                            borderWidth: 5,
-                          ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppColors.primary,
                         ),
-                        child: QrCamera(
-                          fit: BoxFit.cover,
-                          onError: (context, error) => const Center(
-                            child: Text(
-                              "There may be an error with your camera. Try scanning again.",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ),
-                          cameraDirection: CameraDirection.BACK,
-                          qrCodeCallback: (code) {
-                            if (code != null) {
-                              setState(() {
-                                bikeNumberCtl.text = code.toString();
-                                checkBikeNumber(code);
-                              });
-                            }
-                          },
+                        width: 30,
+                        height: 30,
+                        child: Icon(
+                          flashOn ? Icons.flash_off : Icons.flash_on,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                  ),
-                  const ScreenTextWidget(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 190,
-                        height: 42,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: TextField(
-                          controller: bikeNumberCtl,
-                          maxLength: 6,
-                          textAlign: TextAlign.left,
-                          textInputAction: TextInputAction.done,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          keyboardType: Platform.isAndroid
-                              ? TextInputType.phone
-                              : const TextInputType.numberWithOptions(
-                                  signed: true,
-                                  decimal: false,
-                                ),
-                          onChanged: (value) {},
-                          decoration: InputDecoration(
-                            counterText: "",
-                            hintText: 'Enter Bike Number',
-                            hintStyle: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0Xff7A7A7A),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: ShapeDecoration(
+                            shape: QrScannerOverlayShape(
+                              borderColor: AppColors.primary,
+                              borderRadius: 5,
+                              borderWidth: 5,
                             ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: QrCamera(
+                            fit: BoxFit.cover,
+                            onError: (context, error) => const Center(
+                              child: Text(
+                                "There may be an error with your camera. Try scanning again.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.red),
+                              ),
                             ),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 16),
+                            cameraDirection: CameraDirection.BACK,
+                            qrCodeCallback: (code) {
+                              if (code != null) {
+                                setState(() {
+                                  bikeNumberCtl.text = code.toString();
+                                  checkBikeNumber(code);
+                                });
+                              }
+                            },
                           ),
                         ),
                       ),
-                      const SizedBox(width: 5),
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_forward,
+                    ),
+                    const ScreenTextWidget(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 190,
+                          height: 42,
+                          decoration: BoxDecoration(
                             color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                          onPressed: () async {
-                            submitButtonClicked();
-                          },
+                          child: TextField(
+                            controller: bikeNumberCtl,
+                            maxLength: 6,
+                            textAlign: TextAlign.left,
+                            textInputAction: TextInputAction.done,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            keyboardType: Platform.isAndroid
+                                ? TextInputType.phone
+                                : const TextInputType.numberWithOptions(
+                                    signed: true,
+                                    decimal: false,
+                                  ),
+                            onChanged: (value) {},
+                            decoration: InputDecoration(
+                              counterText: "",
+                              hintText: 'Enter Bike Number',
+                              hintStyle: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0Xff7A7A7A),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 15),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 5),
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            ),
+                            onPressed: () async {
+                              submitButtonClicked();
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-              top: 40,
-              left: 10,
-              child: Container(
-                  child: IconButton(
-                icon: Image.asset(Constants.backButton),
-                onPressed: () {
-                  clickBackButton();
-                  // Navigator.pop(context);
-                },
-              )),
-            )
-          ],
+              Positioned(
+                top: 10,
+                left: 10,
+                child: Container(
+                    child: IconButton(
+                  icon: Image.asset(Constants.backButton),
+                  onPressed: () {
+                    clickBackButton();
+                    // Navigator.pop(context);
+                  },
+                )),
+              )
+            ],
+          ),
         ),
       ),
     );

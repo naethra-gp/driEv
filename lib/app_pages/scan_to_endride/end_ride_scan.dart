@@ -165,7 +165,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child: Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
@@ -327,7 +327,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
             ),
           ),
           Positioned(
-            top: 40,
+            top: 10,
             left: 10,
             child: IconButton(
               icon: Image.asset(Constants.backButton),
@@ -337,6 +337,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
             ),
           )
         ],
+      ),
       ),
     );
   }

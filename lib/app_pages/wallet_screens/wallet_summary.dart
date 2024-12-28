@@ -3,8 +3,6 @@ import 'package:driev/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';

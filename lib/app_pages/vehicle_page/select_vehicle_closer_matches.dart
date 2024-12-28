@@ -148,7 +148,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                         itemCount: cd.length,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 0),
                             child: DynamicCardWidget(
                               imageUrl: cd[index]['imageUrl'] ?? "",
                               plan: cd[index]["planType"],
@@ -165,6 +165,8 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                   ],
                 ),
               ),
+                    const SizedBox(height: 25),
+
             ],
           ],
         ),

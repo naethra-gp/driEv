@@ -132,6 +132,7 @@ class Assets {
   static const String otpVerifyOtpModels = 'lib/app_models/otp/verify_otp_models.dart';
   static const String pagesBookingFailed = 'lib/app_pages/bike_booking/pages/booking_failed.dart';
   static const String pagesBookingSuccessful = 'lib/app_pages/bike_booking/pages/booking_successful.dart';
+  static const String permissionPermissionPage = 'lib/app_pages/users/permission/permission_page.dart';
   static const String profilePageProfilePage = 'lib/app_pages/profile_page/profile_page.dart';
   static const String rateThisRideRateThisRide = 'lib/app_pages/rate_this_ride/rate_this_ride.dart';
   static const String referralScreenReferCodeApply = 'lib/app_pages/referral_screen/referCode_apply.dart';
@@ -189,6 +190,7 @@ class Assets {
   static const String widgetsPlaceHolder = 'lib/app_pages/wallet_screens/widgets/place_holder.dart';
   static const String widgetsTransactionFailure = 'lib/app_pages/wallet_screens/widgets/transaction_failure.dart';
   static const String widgetsTransactionSuccess = 'lib/app_pages/wallet_screens/widgets/transaction_success.dart';
+  static const String widgetsUserSubscriptionWidget = 'lib/app_dialogs/widgets/user_subscription_widget.dart';
   static const String widgetsVehicleAlert = 'lib/app_utils/app_loading/widgets/vehicle_alert.dart';
   static const String widgetsWalletBalanceWidget = 'lib/app_pages/wallet_screens/widgets/wallet_balance_widget.dart';
   static const String widgetsWalletListWidget = 'lib/app_pages/wallet_screens/widgets/wallet_list_widget.dart';

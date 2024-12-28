@@ -48,9 +48,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
   final _otpFocus = FocusNode();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    print("----> Verify OTP <----");
+    debugPrint("----> Verify OTP <----");
     errorController = StreamController<ErrorAnimationType>();
     startTimer();
     getPermission().then((value) {
@@ -116,9 +116,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
               config: _buildKeyboardActionsConfig(context),
               child: Column(
                 children: [
-                  Padding(
-                      padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.height / 12.5)),
+                  Padding(padding: EdgeInsets.all(height / 12.5)),
                   Align(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
@@ -129,7 +127,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 25),
                     child: Text(
@@ -175,8 +173,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: PinCodeTextField(
                       appContext: context,
                       length: 6,
@@ -263,13 +261,14 @@ class _VerifyOTPState extends State<VerifyOTP> {
                         "Your OTP will expire in ${getFormattedTime(_otpExpireTime)} Secs.",
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            color: Colors.redAccent, fontWeight: FontWeight.bold),
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   const SizedBox(height: 6),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
@@ -326,11 +325,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
                                     String token = vResponse['token_info']
                                             ['token']
                                         .toString();
-                    
+
                                     /// SAVE LOCAL VALUES
                                     secureStorage.saveToken(token);
                                     secureStorage.save("mobile", mobile);
-                    
+
                                     /// REDIRECT
                                     customerService
                                         .getCustomer(mobile, true)
@@ -439,6 +438,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   }
 
   Future<bool> getPermission() async {
+    Permission.sms.request();
     if (await Permission.sms.status == PermissionStatus.granted) {
       return true;
     } else {
@@ -490,12 +490,12 @@ class _VerifyOTPState extends State<VerifyOTP> {
       //   keyboardBarColor: Colors.grey,
       actions: [
         KeyboardActionsItem(focusNode: _otpFocus, toolbarButtons: [
-              (node) {
+          (node) {
             return GestureDetector(
               onTap: () => node.unfocus(),
               child: Container(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                 child: const Text(
                   "Done",
                   style: TextStyle(color: Colors.black),

@@ -30,20 +30,22 @@ class NeedHelpButtonWidget extends StatelessWidget {
 
   ButtonStyle buttonStyle() {
     return ElevatedButton.styleFrom(
-      elevation: 0,
+      elevation: 5,
       foregroundColor: Colors.black,
       backgroundColor: Colors.white,
       side: const BorderSide(
-        color: Color(0xffC7C7C7),
+        // color: Color(0xffC7C7C7),
+        color: AppColors.primary,
         width: 1,
       ),
+      padding: const EdgeInsets.all(5.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50),
       ),
       textStyle: const TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.w500,
-        fontSize: 16,
+        // fontSize: 16,
       ),
     );
   }
@@ -53,14 +55,15 @@ class NeedHelpButtonWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, color: AppColors.primary),
-        const SizedBox(width: 10),
+        Icon(icon, color: AppColors.primary, size: 22),
+        const SizedBox(width: 5),
         Text(
           title,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.bold,
             color: Color(0xff626262),
+            fontSize: 14,
           ),
         ),
       ],

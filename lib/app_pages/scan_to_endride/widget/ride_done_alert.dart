@@ -107,7 +107,7 @@ class RideDoneAlert extends StatelessWidget {
                               (route) => false);
                         },
                         child: const Text("View Ride Summary",
-                            style: TextStyle(fontSize: 10)),
+                            style: TextStyle(fontSize: 12)),
                       ),
                     ),
                     const Spacer(),
@@ -129,7 +129,7 @@ class RideDoneAlert extends StatelessWidget {
                         },
                         child: const Text(
                           "Rate This Ride",
-                          style: TextStyle(fontSize: 10),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
                     ),

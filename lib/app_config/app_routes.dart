@@ -22,6 +22,8 @@ class AppRoute {
       switch (settings.name) {
         case "splash":
           return const SplashScreen();
+        case "permission":
+          return const PermissionPage();
         case "landing_page":
           return const LandingPage();
         case "login":
@@ -67,7 +69,7 @@ class AppRoute {
         case "bike_fare_details":
           Map args = settings.arguments as Map;
           return CheckBikeFareDetails(data: args['query']);
-          // return BikeFareDetails(stationDetails: args['query']);
+        // return BikeFareDetails(stationDetails: args['query']);
         case "booking_success":
           String id = settings.arguments as String;
           return BookingSuccessful(rideId: id);

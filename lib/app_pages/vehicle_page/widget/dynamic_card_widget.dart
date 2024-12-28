@@ -96,7 +96,7 @@ class DynamicCardWidget extends StatelessWidget {
                               "Estimated Range",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 8,
+                                fontSize: 10,
                                 color: Color(0xff626262),
                               ),
                             ),

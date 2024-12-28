@@ -15,36 +15,35 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  SecureStorage secureStorage = SecureStorage();
-  AlertServices alertServices = AlertServices();
-  VehicleService vehicleService = VehicleService();
-  bool loading = true;
+  final SecureStorage _secureStorage = SecureStorage();
+  final AlertServices _alertServices = AlertServices();
+  final VehicleService _vehicleService = VehicleService();
 
   @override
   void initState() {
-    debugPrint('--->>> Splash Screen <<<---');
     super.initState();
-    checkLocationService();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.white, // Set the status bar color here
-      statusBarIconBrightness:
-          Brightness.dark, // For Android to set the icons color
-    ));
-    Future.delayed(const Duration(seconds: 3), () {
-      getRoute();
-    });
+    _initialize();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Future<void> _initialize() async {
+    debugPrint('--->>> Splash Screen <<<---');
+    _setStatusBarStyle();
+    await _checkLocationService();
+    await Future.delayed(const Duration(seconds: 3), _navigateToNextScreen);
+  }
+
+  void _setStatusBarStyle() {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white, // Set your desired background color here
+        color: Colors.white,
         child: SafeArea(
           child: Center(
             child: Image.asset("assets/img/logo.png"),
@@ -54,52 +53,81 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  getRoute() async {
-    var mobile = await secureStorage.get("mobile");
-    bool isLogin = await secureStorage.get("isLogin") ?? false;
+  Future<void> _navigateToNextScreen() async {
+    final String? mobile = await _secureStorage.get("mobile");
+    final bool isLogin = await _secureStorage.get("isLogin") ?? false;
+
     if (isLogin && mobile != null) {
-      getActiveRides(mobile);
+      _getActiveRides(mobile);
     } else {
       Navigator.pushNamedAndRemoveUntil(
           context, "landing_page", (route) => false);
     }
   }
 
-  getActiveRides(String mobile) {
-    alertServices.showLoading();
-    vehicleService.getActiveRides(mobile).then((r) {
-      alertServices.hideLoading();
-      if (r != null) {
-        List rideList = [r][0]['rideList'];
-        List a =
-            rideList.where((e) => e['status'].toString() == "On Ride").toList();
-        if (a.isEmpty) {
-          getBlockRides(mobile);
+  Future<void> _getActiveRides(String mobile) async {
+    _alertServices.showLoading();
+    try {
+      final response = await _vehicleService.getActiveRides(mobile);
+      if (response != null) {
+        final List rideList = response['rideList'] ?? [];
+        final activeRides =
+            rideList.where((e) => e['status'] == "On Ride").toList();
+
+        if (activeRides.isEmpty) {
+          _getBlockedRides(mobile);
         } else {
           Navigator.pushNamed(context, "on_ride",
-              arguments: a[0]['rideId'].toString());
+              arguments: activeRides[0]['rideId'].toString());
         }
       }
-    });
+    } catch (e) {
+      debugPrint("Error fetching active rides: $e");
+      _alertServices.hideLoading();
+      _showErrorAlert('Failed to load active rides.');
+    }
   }
 
-  getBlockRides(String mobile) {
-    alertServices.showLoading();
-    vehicleService.getBlockedRides(mobile).then((r) {
-      alertServices.hideLoading();
-      if (r != null) {
-        if (r.isNotEmpty) {
-          Navigator.pushNamed(context, "extend_bike", arguments: r);
-        } else {
-          Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
-        }
+  Future<void> _getBlockedRides(String mobile) async {
+    _alertServices.showLoading();
+    try {
+      final blockedRides = await _vehicleService.getBlockedRides(mobile);
+      if (blockedRides != null && blockedRides.isNotEmpty) {
+        Navigator.pushNamed(context, "extend_bike", arguments: blockedRides);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
       }
-    });
+    } catch (e) {
+      debugPrint("Error fetching blocked rides: $e");
+      _alertServices.hideLoading();
+      _showErrorAlert('Failed to load blocked rides.');
+    }
   }
 
-  checkLocationService() async {
-    final LocationService _locationService = LocationService();
-    Position position = await _locationService.determinePosition();
-    print("position $position");
+  Future<void> _checkLocationService() async {
+    try {
+      final LocationService locationService = LocationService();
+      final Position position = await locationService.determinePosition();
+      debugPrint("Position: $position");
+    } catch (e) {
+      debugPrint("Location service error: $e");
+    }
+  }
+
+  void _showErrorAlert(String message) {
+    _alertServices.hideLoading();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }

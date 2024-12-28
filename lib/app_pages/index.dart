@@ -33,3 +33,4 @@ export 'ride_history/ride_details.dart';
 export 'home_screen/home_page.dart';
 export 'home_screen/map_landing_screen.dart';
 export 'bike_booking/check_bike_fare_details.dart';
+export 'users/permission/permission_page.dart';

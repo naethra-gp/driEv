@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:driev/app_pages/home_screen/widget/home_top_widget.dart';
@@ -296,7 +297,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _polyLines.add(polyline);
     });
-    if(Platform.isAndroid) {
+    if (Platform.isAndroid) {
       _zoomToFitPositions();
     }
   }
@@ -362,18 +363,29 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           customer = [response];
         });
-        // print("Customer Details -> ${jsonEncode(customer)}");
+        print("Customer Details -> ${jsonEncode(customer)}");
         String station = customer[0]['registeredStation'].toString();
         String kyc = customer[0]['kycStatus'] ?? "";
         String block = customer[0]['blockStatus'] ?? "";
+        String custType = customer[0]['custType'] ?? "";
+        print(custType == "Subscription");
+        if (custType == "Subscription") {
+          alertServices.subscriptionAlert(context, "");
+          return;
+        }
         if (block == "Y") {
           alertServices.blockedKycAlert(
-              context, customer[0]['comment'].toString());
+            context,
+            customer[0]['comment'].toString(),
+          );
+          return;
         } else {
           if (kyc == "") {
             alertServices.holdKycAlert(context);
+            return;
           } else if (kyc == "N") {
             alertServices.rejectKycAlert(context);
+            return;
           } else {
             if (station.isNotEmpty) {
               getUserLocation();

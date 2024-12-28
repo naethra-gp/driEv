@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:driev/app_services/customer_services.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
@@ -35,17 +36,21 @@ class _AddMoreFundState extends State<AddMoreFund> {
   AlertServices alertServices = AlertServices();
   WalletServices walletServices = WalletServices();
   SecureStorage secureStorage = SecureStorage();
-  String result = "";
-  String walletBalance = "0";
+  CustomerService customerService = CustomerService();
   final TextEditingController amountCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  String result = "";
+  String walletBalance = "0";
   List stationDetails = [];
   String rideId = "";
   List rideID = [];
+  List customerDetails = [];
 
   @override
   void initState() {
     getWalletBalance();
+    getCustomerInfo();
     super.initState();
   }
 
@@ -77,15 +82,24 @@ class _AddMoreFundState extends State<AddMoreFund> {
                           child: Column(
                             children: <Widget>[
                               const SizedBox(height: 16),
-                              Image.asset("assets/img/oops.png",
-                                  height: 70, width: 70),
+                              Image.asset(
+                                "assets/img/oops.png",
+                                height: 70,
+                                width: 70,
+                              ),
                               const SizedBox(height: 40),
-                              const Text("Your Wallet Balance",
-                                  style: TextStyle(fontSize: 16)),
+                              const Text(
+                                "Your Wallet Balance",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
                               Text(
                                 "\u{20B9} $walletBalance",
                                 style: const TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold),
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               const SizedBox(height: 16),
                               Form(
@@ -95,15 +109,16 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                   controller: amountCtrl,
                                   maxLength: 4,
                                   required: true,
-                                  // prefixText: "\u{20B9} ",
                                   decoration: InputDecoration(
                                     counterText: "",
                                     contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 50),
+                                      horizontal: 5,
+                                    ),
                                     prefixIcon: const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Icon(Icons.currency_rupee_sharp),
@@ -125,14 +140,26 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                       borderSide: const BorderSide(
                                           color: Color(0xffD2D2D2)),
                                     ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red),
+                                    ),
                                     hintStyle: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                     ),
+                                    errorStyle: const TextStyle(
+                                      color: Colors.redAccent,
+                                    ),
                                   ),
                                   textInputAction: TextInputAction.done,
-                                  // keyboardType: TextInputType.phone,
                                   keyboardType: Platform.isIOS
                                       ? const TextInputType.numberWithOptions(
                                           signed: true)
@@ -159,7 +186,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
                               const SizedBox(height: 25),
                               Wrap(
                                 runSpacing: 5,
-                                spacing: 5,
+                                spacing: 8,
                                 children: [
                                   addFundTextButton(100),
                                   addFundTextButton(200),
@@ -188,7 +215,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
                               // ),
                               // const SizedBox(height: 16),
 
-
                               SizedBox(
                                 height: 50,
                                 width: double.infinity,
@@ -196,8 +222,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
                                   title: "Proceed",
                                   onPressed: () {
                                     if (formKey.currentState!.validate()) {
-                                      print(
-                                          "Staging Mode: ${Constants.isStagingMode}");
                                       FocusScope.of(context).unfocus();
                                       formKey.currentState!.save();
                                       paytm(amountCtrl.text.toString());
@@ -257,6 +281,18 @@ class _AddMoreFundState extends State<AddMoreFund> {
     );
   }
 
+  getCustomerInfo() async {
+    alertServices.showLoading();
+    String mobile = secureStorage.get("mobile") ?? "";
+    customerService.getCustomer(mobile).then((response) {
+      if (response != null) {
+        customerDetails = [response];
+        alertServices.hideLoading();
+        setState(() {});
+      }
+    });
+  }
+
   getWalletBalance() async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
@@ -272,15 +308,22 @@ class _AddMoreFundState extends State<AddMoreFund> {
 
   paytm(String amount) {
     WalletServices walletServices = WalletServices();
+    String city = customerDetails[0]['city'].toString();
+    String errorMsg = 'City is not mentioned. Please contact administrator!';
+    if (city.isEmpty) {
+      alertServices.errorToast(errorMsg);
+      return;
+    }
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     var params = {
       "amount": amount.toString(),
       "contact": mobile.toString(),
       "staging": Constants.isStagingMode,
+      "city": city,
     };
     walletServices.initiateTransaction(params).then((dynamic res) {
-      print("Res--> ${jsonEncode(res)}");
+      // print("Res--> ${jsonEncode(res)}");
       List token = [res];
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
