@@ -165,179 +165,181 @@ class _EndRideScannerState extends State<EndRideScanner> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 70),
-                GestureDetector(
-                  onTap: () {
-                    QrMobileVision.toggleFlash();
-                    setState(() {
-                      flashOn = !flashOn;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.green),
-                    width: 30,
-                    height: 30,
-                    child: Icon(
-                      flashOn ? Icons.flash_off : Icons.flash_on,
-                      color: Colors.white,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 70),
+                  GestureDetector(
+                    onTap: () {
+                      QrMobileVision.toggleFlash();
+                      setState(() {
+                        flashOn = !flashOn;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.green),
+                      width: 30,
+                      height: 30,
+                      child: Icon(
+                        flashOn ? Icons.flash_off : Icons.flash_on,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                if (showQR)
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: ShapeDecoration(
-                          shape: QrScannerOverlayShape(
-                            borderColor: AppColors.primary,
-                            borderRadius: 5,
-                            borderWidth: 5,
-                          ),
-                        ),
-                        child: QrCamera(
-                          onError: (context, error) => const Center(
-                            child: Text(
-                              "Hey.! There may be an error with your camera due to multiple access attempts. Please try scanning it again.",
-                              textAlign: TextAlign.center,
-                              // error.toString(),
-                              style: TextStyle(color: Colors.red),
+                  if (showQR)
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: ShapeDecoration(
+                            shape: QrScannerOverlayShape(
+                              borderColor: AppColors.primary,
+                              borderRadius: 5,
+                              borderWidth: 5,
                             ),
                           ),
-                          cameraDirection: CameraDirection.BACK,
-                          qrCodeCallback: (code) {
-                            if (code != null) {
-                              _onQRViewCreated(code);
+                          child: QrCamera(
+                            onError: (context, error) => const Center(
+                              child: Text(
+                                "Hey.! There may be an error with your camera due to multiple access attempts. Please try scanning it again.",
+                                textAlign: TextAlign.center,
+                                // error.toString(),
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            cameraDirection: CameraDirection.BACK,
+                            qrCodeCallback: (code) {
+                              if (code != null) {
+                                _onQRViewCreated(code);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Wrap up your two-wheeled \n adventure!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "End your ride at $campus by scanning the QR \n code or entering the bike number manually.",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 190,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextField(
+                          controller: bikeNumberCtl,
+                          textAlign: TextAlign.left,
+                          onChanged: (value) {},
+                          maxLength: 6,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: Platform.isAndroid
+                              ? TextInputType.phone
+                              : const TextInputType.numberWithOptions(
+                                  signed: true,
+                                  decimal: false,
+                                ),
+                          // keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            hintStyle: const TextStyle(
+                              fontSize: 12,
+                              color: Color(0Xff7A7A7A),
+                            ),
+                            counterText: "",
+                            hintText: 'Enter Bike Number',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                          onPressed: () async {
+                            String bike = bikeNumberCtl.text.toString();
+                            if (bike.isNotEmpty && bike.length <= 6) {
+                              String vId =
+                                  widget.rideID[0]['scanCode'].toString();
+                              if (bike == vId) {
+                                submitBikeNUmber();
+                              } else {
+                                String msg =
+                                    "Entered/Scanned Vehicle is invalid";
+                                alertServices.errorToast(msg);
+                              }
+
+                              // checkBikeNumber(bikeNumberCtl.text.toString());
+                            } else {
+                              alertServices.errorToast(
+                                  "Enter the Bike Number or Scan the QR Code");
                             }
                           },
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 15),
+                    ],
                   ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Wrap up your two-wheeled \n adventure!",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 15),
-                Text(
-                  "End your ride at $campus by scanning the QR \n code or entering the bike number manually.",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 190,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: TextField(
-                        controller: bikeNumberCtl,
-                        textAlign: TextAlign.left,
-                        onChanged: (value) {},
-                        maxLength: 6,
-                        textInputAction: TextInputAction.done,
-                        keyboardType: Platform.isAndroid
-                            ? TextInputType.phone
-                            : const TextInputType.numberWithOptions(
-                                signed: true,
-                                decimal: false,
-                              ),
-                        // keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          hintStyle: const TextStyle(
-                            fontSize: 12,
-                            color: Color(0Xff7A7A7A),
-                          ),
-                          counterText: "",
-                          hintText: 'Enter Bike Number',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                        ),
-                        onPressed: () async {
-                          String bike = bikeNumberCtl.text.toString();
-                          if (bike.isNotEmpty && bike.length <= 6) {
-                            String vId =
-                                widget.rideID[0]['scanCode'].toString();
-                            if (bike == vId) {
-                              submitBikeNUmber();
-                            } else {
-                              String msg = "Entered/Scanned Vehicle is invalid";
-                              alertServices.errorToast(msg);
-                            }
-
-                            // checkBikeNumber(bikeNumberCtl.text.toString());
-                          } else {
-                            alertServices.errorToast(
-                                "Enter the Bike Number or Scan the QR Code");
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            top: 10,
-            left: 10,
-            child: IconButton(
-              icon: Image.asset(Constants.backButton),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          )
-        ],
-      ),
+            Positioned(
+              top: 10,
+              left: 10,
+              child: IconButton(
+                icon: Image.asset(Constants.backButton),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -454,6 +456,8 @@ class _EndRideScannerState extends State<EndRideScanner> {
               ),
               Positioned(
                 top: height / 7.5 - 70,
+                left: 10,
+                right: 10,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -478,32 +482,38 @@ class _EndRideScannerState extends State<EndRideScanner> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Text(
-                      "Please enter your OTP to\nconclude this ride.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        "Share this PIN with our station executive to end the ride",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          // color: Color(0xff6F6F6F),
+                          fontSize: 20,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    const Text(
-                      "Share this PIN with our station executive\nto end the ride",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xff6F6F6F),
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 50),
                     Text(
                       otp.toString(),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 32,
+                        fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    // TextButton(
+                    //   onPressed: () {},
+                    //   child: const Text(
+                    //     'Regenerate OTP',
+                    //     style: TextStyle(
+                    //       decoration: TextDecoration.underline,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               )

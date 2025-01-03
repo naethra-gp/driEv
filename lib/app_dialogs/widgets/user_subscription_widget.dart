@@ -24,11 +24,11 @@ class UserSubscriptionWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(height: 25),
-                Image.asset("assets/img/block_user_logo.png"),
                 const SizedBox(height: 16),
+                Image.asset("assets/img/block_user_logo.png"),
+                const SizedBox(height: 10),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     "Oops! It seems like you’re not registered with our community. Don’t worry - feel free to reach out to us, and we’ll be happy to assist you further.",
                     textAlign: TextAlign.center,
@@ -39,7 +39,7 @@ class UserSubscriptionWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: 150,
                   child: NeedHelpButtonWidget(
@@ -52,7 +52,7 @@ class UserSubscriptionWidget extends StatelessWidget {
                     icon: Icons.phone_outlined,
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 16),
                 SizedBox(
                   width: 150,
                   child: NeedHelpButtonWidget(
@@ -71,7 +71,7 @@ class UserSubscriptionWidget extends StatelessWidget {
                     icon: Icons.public_outlined,
                   ),
                 ),
-                const SizedBox(height: 16),
+                // const SizedBox(height: 16),
               ],
             ),
           ),

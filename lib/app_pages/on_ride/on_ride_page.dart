@@ -79,7 +79,7 @@ class _OnRidePageState extends State<OnRidePage> {
   }
 
   getRideDetails(String id) {
-    print("Ride ID: $id");
+    print("Ride ID: $id  planType");
     bookingServices.getRideDetails(id).then((r) {
       if (r != null) {
         setState(() {

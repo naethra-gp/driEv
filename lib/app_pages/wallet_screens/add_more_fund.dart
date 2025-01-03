@@ -45,12 +45,10 @@ class _AddMoreFundState extends State<AddMoreFund> {
   List stationDetails = [];
   String rideId = "";
   List rideID = [];
-  List customerDetails = [];
 
   @override
   void initState() {
     getWalletBalance();
-    getCustomerInfo();
     super.initState();
   }
 
@@ -281,18 +279,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
     );
   }
 
-  getCustomerInfo() async {
-    alertServices.showLoading();
-    String mobile = secureStorage.get("mobile") ?? "";
-    customerService.getCustomer(mobile).then((response) {
-      if (response != null) {
-        customerDetails = [response];
-        alertServices.hideLoading();
-        setState(() {});
-      }
-    });
-  }
-
   getWalletBalance() async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
@@ -308,19 +294,12 @@ class _AddMoreFundState extends State<AddMoreFund> {
 
   paytm(String amount) {
     WalletServices walletServices = WalletServices();
-    String city = customerDetails[0]['city'].toString();
-    String errorMsg = 'City is not mentioned. Please contact administrator!';
-    if (city.isEmpty) {
-      alertServices.errorToast(errorMsg);
-      return;
-    }
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     var params = {
       "amount": amount.toString(),
       "contact": mobile.toString(),
-      "staging": Constants.isStagingMode,
-      "city": city,
+      "staging": Constants.isStagingMode
     };
     walletServices.initiateTransaction(params).then((dynamic res) {
       // print("Res--> ${jsonEncode(res)}");
@@ -350,10 +329,13 @@ class _AddMoreFundState extends State<AddMoreFund> {
         List res = [value];
         // print("---------------------");
         // print("result ---> ${res[0]['STATUS']}");
+        // print("result ---> ${res[0]['TXNID']}");
         // print("---------------------");
         if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
           debugPrint("Transaction Success");
-          creditMoneyToWallet(amt, oId, res[0]['STATUS'].toString());
+          String txtId = res[0]['TXNID'];
+          String status = res[0]['STATUS'];
+          creditMoneyToWallet(amt, oId, status, txtId);
         }
       }).catchError((onError) {
         if (onError is PlatformException) {
@@ -378,15 +360,17 @@ class _AddMoreFundState extends State<AddMoreFund> {
     });
   }
 
-  creditMoneyToWallet(amount, oId, status) async {
+  creditMoneyToWallet(amount, oId, status, txtId) async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
     var params = {
       "contact": mobile.toString(),
       "transactionAmount": amount,
       "orderId": oId.toString(),
-      "transactionStatus": status.toString()
+      "transactionStatus": status.toString(),
+      "transactionId": txtId.toString(),
     };
+    // print("Credit Money Request -> ${jsonEncode(params)}");
     walletServices.creditMoneyToWallet(params).then((dynamic response) {
       alertServices.hideLoading();
       if (response != null) {

@@ -168,12 +168,6 @@ class OnRideBottomSheet extends StatelessWidget {
                                 width: 200,
                               ),
                             ),
-                            // child: Image.asset(
-                            //   "assets/img/bike2.png",
-                            //   height: 140,
-                            //   width: 150,
-                            //   fit: BoxFit.cover,
-                            // ),
                           ),
                         ],
                       ),
@@ -181,27 +175,6 @@ class OnRideBottomSheet extends StatelessWidget {
                   ),
                 ),
               ),
-              // Card(
-              //   margin: const EdgeInsets.all(5.0),
-              //   surfaceTintColor: Colors.transparent,
-              //   color: const Color(0xFFF5F5F5),
-              //   elevation: 0,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(10),
-              //   ),
-              //   clipBehavior: Clip.antiAlias,
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(15),
-              //     child: Column(
-              //       mainAxisSize: MainAxisSize.min,
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //
-              //       ],
-              //     ),
-              //   ),
-              // ),
               const SizedBox(height: 16.0),
               const Divider(),
               Row(
@@ -254,7 +227,6 @@ class OnRideBottomSheet extends StatelessWidget {
                         "scanCode": rideDetails[0]['scanCode'].toString(),
                       }
                     ];
-                    print(params);
                     Navigator.pushNamed(
                       context,
                       "scan_to_end_ride",
@@ -262,7 +234,7 @@ class OnRideBottomSheet extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.redAccent,
                   ),
                   child: const Text('End Ride'),
                 ),
@@ -275,8 +247,9 @@ class OnRideBottomSheet extends StatelessWidget {
                   const Icon(
                     Icons.info_outline,
                     color: Colors.red,
+                    size: 15,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 5),
                   Text(
                     'You can end your ride at the ${widget.rideId.toString().split("-").first} station only',
                     style: const TextStyle(
@@ -286,7 +259,19 @@ class OnRideBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              if (rideDetails[0]['planType'].toString() == 'Luxé' ||
+                  rideDetails[0]['planType'].toString() == 'Speed+')
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Refer vehicle dashboard for distance details',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 10),
             ],
           ),
         ),
