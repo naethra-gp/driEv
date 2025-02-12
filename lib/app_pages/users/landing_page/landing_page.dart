@@ -62,10 +62,9 @@ class _LandingPageState extends State<LandingPage> {
       Permission.camera,
       Permission.location,
       Permission.locationAlways,
-      Permission.sms,
       Permission.photos,
-      Permission.mediaLibrary,
-      Permission.notification,
+      // Permission.mediaLibrary,
+      // Permission.notification,
     ].request();
   }
 

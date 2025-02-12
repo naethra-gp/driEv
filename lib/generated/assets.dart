@@ -183,6 +183,7 @@ class Assets {
   static const String widgetTimerButtonWidget = 'lib/app_pages/bike_booking/extend_bike_timer/widget/timer_button_widget.dart';
   static const String widgetsBalanceAlertWidget = 'lib/app_utils/app_loading/widgets/balance_alert_widget.dart';
   static const String widgetsBlockUserContent = 'lib/app_dialogs/widgets/block_user_content.dart';
+  static const String widgetsDeleteUserWidget = 'lib/app_dialogs/widgets/delete_user_widget.dart';
   static const String widgetsDocumentReUpload = 'lib/app_pages/profile_page/widgets/document_re_upload.dart';
   static const String widgetsDocumentUploadAlert = 'lib/app_pages/profile_page/widgets/document_upload_alert.dart';
   static const String widgetsKycBlockWidget = 'lib/app_dialogs/widgets/kyc_block_widget.dart';

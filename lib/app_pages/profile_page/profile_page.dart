@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_config/app_constants.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
@@ -193,6 +194,19 @@ class _ProfilePageState extends State<ProfilePage> {
       alertServices.hideLoading();
       getSliderValues();
       setState(() {});
+    });
+  }
+
+  deleteCustomer() async {
+    alertServices.showLoading();
+    Navigator.pop(context);
+    String mobile = secureStorage.get("mobile") ?? "";
+    customerService.deleteCustomer(mobile).then((response) {
+      print("deleteCustomer -> $response");
+      alertServices.hideLoading();
+      if(response['status'].toString() == "SUCCESS") {
+        alertServices.deleteUserAlert(context, response['message'].toString());
+      }
     });
   }
 
@@ -594,6 +608,61 @@ class _ProfilePageState extends State<ProfilePage> {
                           indent: 15,
                           color: Color(0xffD9D9D9),
                         ),
+                        deleteAccountWidget(
+                            "assets/img/gift.png", "Delete your account", () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                child: AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  title: const Text("Confirm"),
+                                  content: const Text(
+                                    "Do you want delete your account?",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text(
+                                        "No",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.redAccent,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: const Text(
+                                        "Yes",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        deleteCustomer();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                          // Navigator.pushNamed(context, "refer_screen");
+                        }),
+                        const Divider(
+                          endIndent: 15,
+                          indent: 15,
+                          color: Color(0xffD9D9D9),
+                        ),
                         menuList("assets/img/logout.png", "Logout", () {
                           showDialog(
                             context: context,
@@ -737,6 +806,32 @@ class _ProfilePageState extends State<ProfilePage> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  deleteAccountWidget(path, menu, onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Icon(Icons.delete_forever_outlined,
+                color: Colors.red, size: 24),
+            // Image.asset(path, width: 25, height: 25, fit: BoxFit.contain),
+            const SizedBox(width: 15),
+            Text(
+              menu,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.red,
               ),
             ),
           ],

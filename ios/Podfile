@@ -44,13 +44,10 @@ post_install do |installer|
                 config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
                 '$(inherited)',
-                'PERMISSION_CAMERA=1',
                 'PERMISSION_MICROPHONE=1',
-                'PERMISSION_MEDIA_LIBRARY=1',
                 'PERMISSION_CAMERA=1',
                 'PERMISSION_PHOTOS=1',
-                'PERMISSION_LOCATION=1',
-                'PERMISSION_NOTIFICATIONS=1',
+                'PERMISSION_LOCATION=1'
               ]
       end
   end

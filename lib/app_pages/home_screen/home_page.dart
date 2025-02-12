@@ -363,14 +363,20 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           customer = [response];
         });
-        print("Customer Details -> ${jsonEncode(customer)}");
+        // print("Customer Details -> ${jsonEncode(customer)}");
         String station = customer[0]['registeredStation'].toString();
         String kyc = customer[0]['kycStatus'] ?? "";
         String block = customer[0]['blockStatus'] ?? "";
         String custType = customer[0]['custType'] ?? "";
+        String status = customer[0]['accountStatus'] ?? "";
         print(custType == "Subscription");
         if (custType == "Subscription") {
           alertServices.subscriptionAlert(context, "");
+          return;
+        }
+        if (status == "N") {
+          alertServices.deleteUserAlert(
+              context, customer[0]['message'].toString());
           return;
         }
         if (block == "Y") {

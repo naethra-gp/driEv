@@ -3,6 +3,7 @@ import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   AlertServices alertServices = AlertServices();
   final double smallDeviceHeight = 600;
   final double largeDeviceHeight = 1024;
+  final _otpFocus = FocusNode();
 
   @override
   void initState() {
@@ -345,5 +347,31 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
     }
+  }
+
+  /// Returns the custom [Widget] to be rendered as the *"Done"* button.
+  KeyboardActionsConfig _buildKeyboardActionsConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+      // keyboardBarColor: Theme.of(context).primaryColor,
+      //   keyboardBarColor: Colors.grey,
+      actions: [
+        KeyboardActionsItem(focusNode: _otpFocus, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                child: const Text(
+                  "Done",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
   }
 }

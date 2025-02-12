@@ -1,13 +1,13 @@
 class EndPoints {
   /// LIVE APIS
-  static String baseApi = 'https://iot.driev.bike/driev/api/app';
-  static String baseApi1 = 'https://iot.driev.bike/driev/api';
-  static String payment = 'https://iot.driev.bike/driev/app/payment';
+  // static String baseApi = 'https://iot.driev.bike/driev/api/app';
+  // static String baseApi1 = 'https://iot.driev.bike/driev/api';
+  // static String payment = 'https://iot.driev.bike/driev/app/payment';
 
   /// STAGING APIS
-  // static String baseApi = 'https://community-test.driev.bike/driev/api/app';
-  // static String baseApi1 = 'https://community-test.driev.bike/driev/api';
-  // static String payment = 'https://community-test.driev.bike/driev/app/payment';
+  static String baseApi = 'https://community-test.driev.bike/driev/api/app';
+  static String baseApi1 = 'https://community-test.driev.bike/driev/api';
+  static String payment = 'https://community-test.driev.bike/driev/app/payment';
 
   static const sendOtp = 'generateOTP';
   static const otpLength = '6';
@@ -23,6 +23,7 @@ class EndPoints {
   static const aadhaarSendOtp = 'aadhar/generateOtp';
   static const aadhaarVerifyOtp = 'aadhar/validateOtp';
   static const createCustomer = 'createCommunityCustomer';
+  static const deleteAccount = 'deleteAccount';
   static const getCustomer = 'customerDetails';
   static const getVehiclesByPlan = 'getVehiclesByPlan';
   static const vehiclesByStation = 'vehiclesByStation';

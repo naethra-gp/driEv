@@ -31,22 +31,20 @@
       <string>sms</string>
       <string>tel</string>
     </array>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>This app access apple music</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to scan QR codes</string>
+	<string>This app needs camera access to scan QR codes and upload documents</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Always and when in use</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app needs access to your location to show your position on the map.</string>
 	<key>NSLocationUsageDescription</key>
-	<string>Older devices need location.</string>
+	<string>This app needs access to your location to show your position on the map.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to your location to show your position on the map.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs to Microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>this app needs to access photo</string>
+	<string>This app needs access Photos to upload profile picture and documents.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -68,5 +66,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>

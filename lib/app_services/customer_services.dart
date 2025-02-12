@@ -18,6 +18,13 @@ class CustomerService {
     return response;
   }
 
+  deleteCustomer(mobile, [noError]) async {
+    Connection connection = Connection();
+    var url = '${EndPoints.baseApi}/${EndPoints.deleteAccount}/$mobile';
+    var response = await connection.getWithToken(url, noError);
+    return response;
+  }
+
   uploadImage(filePath, user) async {
     Connection connection = Connection();
     var url = '${EndPoints.baseApi1}/${EndPoints.uploadDocument}';

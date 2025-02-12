@@ -66,7 +66,7 @@ class CampusWidget extends StatelessWidget {
               width: 20,
             ),
             Text(
-              "${data[0]['filterVehicleList'].length} ${data[0]['filterVehicleList'].length > 1 ? "Rides" : "Ride"} Available",
+              "${data[0]['filterVehicleList']?.length.toString()} ${data[0]['filterVehicleList']?.length > 1 ? "Rides" : "Ride"} Available",
               style: const TextStyle(
                 fontFamily: "Poppins",
                 fontWeight: FontWeight.normal,
@@ -88,7 +88,7 @@ class CampusWidget extends StatelessWidget {
                 width: 20,
               ),
               Text(
-                "${data[0]['distanceText']}",
+                data[0]['distanceText'].toString(),
                 style: const TextStyle(fontSize: 12),
               ),
               const SizedBox(width: 10),
