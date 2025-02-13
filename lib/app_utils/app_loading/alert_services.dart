@@ -163,8 +163,8 @@ class AlertServices {
     return kycMainModel(context, const KycHoldWidget());
   }
 
-  deleteUserAlert(context, String msg) {
-    return kycMainModel(context, DeleteUserWidget(message: msg));
+  deleteUserAlert(context, String msg, String? status) {
+    return kycMainModel(context, DeleteUserWidget(message: msg, status: status));
   }
 
   rejectKycAlert(context) {

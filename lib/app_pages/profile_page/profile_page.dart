@@ -202,10 +202,11 @@ class _ProfilePageState extends State<ProfilePage> {
     Navigator.pop(context);
     String mobile = secureStorage.get("mobile") ?? "";
     customerService.deleteCustomer(mobile).then((response) {
-      print("deleteCustomer -> $response");
-      alertServices.hideLoading();
-      if(response['status'].toString() == "SUCCESS") {
-        alertServices.deleteUserAlert(context, response['message'].toString());
+      String msg = response['message'].toString().toLowerCase();
+      String status = response['status'].toString();
+      if (msg.isNotEmpty || msg != 'null') {
+        alertServices.hideLoading();
+        alertServices.deleteUserAlert(context, response['message'].toString(), status);
       }
     });
   }
@@ -301,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             const SizedBox(width: 8),
                             Expanded(
-                              flex: 8, // 70% width
+                              flex: 8,
                               child: Column(
                                 children: [
                                   Row(
@@ -310,7 +311,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     children: [
                                       const SizedBox(height: 15),
                                       SizedBox(
-                                        width: 140,
+                                        width: 120,
                                         child: Text(
                                           customerDetails[0]['name']
                                               .toString()
@@ -353,6 +354,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ),
                                       ),
+                                      const SizedBox(width: 10),
+
                                     ],
                                   ),
                                   const SizedBox(height: 10),

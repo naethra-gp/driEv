@@ -369,14 +369,13 @@ class _HomePageState extends State<HomePage> {
         String block = customer[0]['blockStatus'] ?? "";
         String custType = customer[0]['custType'] ?? "";
         String status = customer[0]['accountStatus'] ?? "";
-        print(custType == "Subscription");
         if (custType == "Subscription") {
           alertServices.subscriptionAlert(context, "");
           return;
         }
         if (status == "N") {
           alertServices.deleteUserAlert(
-              context, customer[0]['message'].toString());
+              context, customer[0]['message'].toString(), null);
           return;
         }
         if (block == "Y") {
