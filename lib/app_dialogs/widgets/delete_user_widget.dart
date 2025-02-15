@@ -44,6 +44,19 @@ class DeleteUserWidget extends StatelessWidget {
                     ),
                   ),
                 ),
+                if(status.toString().toLowerCase()=='failure')...[
+                  TextButton(
+                    child: const Text(
+                      "OK",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "home");
+                    },
+                  ),
+                ],
               ],
             ),
           ),
