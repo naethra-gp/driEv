@@ -14,7 +14,7 @@ class DeleteUserWidget extends StatelessWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     return SizedBox(
       width: double.infinity,
-      height: mediaQueryData.size.height / 2.9,
+      height: mediaQueryData.size.height / 2.5,
       child: Padding(
         padding: EdgeInsets.only(bottom: mediaQueryData.viewInsets.bottom),
         child: SingleChildScrollView(
@@ -27,7 +27,9 @@ class DeleteUserWidget extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Image.asset(
-                  status == "SUCCESS" ? "assets/img/kyc_hold_logo.png" : "assets/img/block_user_logo.png",
+                  status == "SUCCESS"
+                      ? "assets/img/kyc_hold_logo.png"
+                      : "assets/img/block_user_logo.png",
                   height: 70,
                   width: 70,
                 ),
@@ -44,18 +46,22 @@ class DeleteUserWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                if(status.toString().toLowerCase()=='failure')...[
-                  TextButton(
-                    child: const Text(
-                      "OK",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                if (status.toString().toLowerCase() == 'failure') ...[
+                  SizedBox(height: MediaQuery.of(context).size.height * .03),
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, "home");
                     },
+                    child: const Text(
+                      "Okay",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        // decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .02),
                 ],
               ],
             ),
