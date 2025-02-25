@@ -104,7 +104,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                   ),
                   if (customer.isNotEmpty) ...[
                     HomeTopWidget(
-                      imgUrl: customer[0]['selfi'],
+                      imgUrl: customer[0]['selfi'] == null ? "" : customer[0]['selfi'].toString(),
                       location: currentLocation.toString(),
                       balance:
                           double.parse(customer[0]['walletBalance'].toString()),
