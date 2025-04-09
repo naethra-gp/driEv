@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Constants {
   static const String storageBox = "driEV";
   static bool isStagingMode = false;
-  // static bool isStaging = false;
+  static bool isStaging = false;
   static const String clientId = "070720222304";
   static const String clientSecret = "403222027070";
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

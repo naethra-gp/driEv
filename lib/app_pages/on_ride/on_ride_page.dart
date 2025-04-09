@@ -1,23 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
-import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';
-import '../app_common/need_help_widget.dart';
 import '../home_screen/widget/home_top_widget.dart';
 import 'widget/on_ride_bottom_sheet.dart';
-import 'widget/on_ride_timer_widget.dart';
 
 class OnRidePage extends StatefulWidget {
   final String rideId;

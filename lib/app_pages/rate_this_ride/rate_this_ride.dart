@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:driev/app_services/feedback_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_loading/alert_services.dart';

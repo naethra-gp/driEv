@@ -5,7 +5,6 @@ import 'package:driev/app_storages/secure_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
@@ -238,7 +237,6 @@ class _FileUploadFormState extends State<FileUploadForm> {
         }
       });
     });
-
   }
 
   Future<void> _pickFile() async {

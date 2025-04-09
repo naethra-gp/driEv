@@ -75,7 +75,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    // double width = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return SafeArea(
@@ -104,7 +104,9 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                   ),
                   if (customer.isNotEmpty) ...[
                     HomeTopWidget(
-                      imgUrl: customer[0]['selfi'] == null ? "" : customer[0]['selfi'].toString(),
+                      imgUrl: customer[0]['selfi'] == null
+                          ? "assets/img/profile_logo.png"
+                          : customer[0]['selfi'].toString(),
                       location: currentLocation.toString(),
                       balance:
                           double.parse(customer[0]['walletBalance'].toString()),

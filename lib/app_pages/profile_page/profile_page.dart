@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driev/app_config/app_constants.dart';
 import 'package:driev/app_pages/profile_page/widgets/document_upload_alert.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
@@ -206,7 +205,8 @@ class _ProfilePageState extends State<ProfilePage> {
       String status = response['status'].toString();
       if (msg.isNotEmpty || msg != 'null') {
         alertServices.hideLoading();
-        alertServices.deleteUserAlert(context, response['message'].toString(), status);
+        alertServices.deleteUserAlert(
+            context, response['message'].toString(), status);
       }
     });
   }
@@ -355,7 +355,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ),
                                       const SizedBox(width: 10),
-
                                     ],
                                   ),
                                   const SizedBox(height: 10),

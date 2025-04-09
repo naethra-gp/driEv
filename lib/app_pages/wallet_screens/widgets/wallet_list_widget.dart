@@ -55,7 +55,7 @@ class WalletListWidget extends StatelessWidget {
   }
 
   String _formatTransactionTime(String timeString) {
-    final DateTime time = DateTime.parse(timeString);
+    final DateTime time = DateTime.parse(timeString).toLocal();
     final now = DateTime.now();
     if (time.year == now.year &&
         time.month == now.month &&

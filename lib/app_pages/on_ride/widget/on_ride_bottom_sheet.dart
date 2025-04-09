@@ -1,11 +1,11 @@
 import 'dart:ui';
 
 import 'package:driev/app_config/app_constants.dart';
+import 'package:driev/app_pages/app_common/need_help_widget.dart';
+import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../app_themes/app_colors.dart';
-import '../../app_common/need_help_widget.dart';
 import 'on_ride_timer_widget.dart';
 
 class OnRideBottomSheet extends StatelessWidget {

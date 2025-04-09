@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:driev/app_themes/app_colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../../app_themes/app_colors.dart';
 
 class OnRideTimerWidget extends StatefulWidget {
   final List rd;

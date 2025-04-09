@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:driev/app_services/Coupon_services.dart';
 import 'package:driev/app_services/customer_services.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
@@ -9,7 +7,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../app_config/app_constants.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
-import '../../app_themes/custom_theme.dart';
 
 class ReferralScreen extends StatefulWidget {
   const ReferralScreen({super.key});

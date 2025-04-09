@@ -162,7 +162,6 @@ class _RideHistoryState extends State<RideHistory> {
                           ),
                         ),
                         onTap: () {
-                          print("Ride Details: ${[ride]}");
                           Navigator.pushNamed(context, "ride_details",
                               arguments: [ride]);
                         },

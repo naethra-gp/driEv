@@ -195,23 +195,23 @@ class _AddMoreFundState extends State<AddMoreFund> {
                               const SizedBox(height: 50),
 
                               /// ENABLE / DISABLE TEST PAYMENT
-                              // Center(
-                              //   child: Text(
-                              //       "${Constants.isStagingMode ? "Disable" : "Enable"} Test Payment"),
-                              // ),
-                              // Switch(
-                              //   activeColor: AppColors.white,
-                              //   trackOutlineColor:
-                              //       WidgetStateProperty.all(Colors.transparent),
-                              //   activeTrackColor: AppColors.primary,
-                              //   inactiveThumbColor: Colors.white,
-                              //   inactiveTrackColor: Colors.grey.shade500,
-                              //   splashRadius: 50.0,
-                              //   value: Constants.isStagingMode,
-                              //   onChanged: (value) => setState(
-                              //       () => Constants.isStagingMode = value),
-                              // ),
-                              // const SizedBox(height: 16),
+                              Center(
+                                child: Text(
+                                    "${Constants.isStagingMode ? "Disable" : "Enable"} Test Payment"),
+                              ),
+                              Switch(
+                                activeColor: AppColors.white,
+                                trackOutlineColor:
+                                    WidgetStateProperty.all(Colors.transparent),
+                                activeTrackColor: AppColors.primary,
+                                inactiveThumbColor: Colors.white,
+                                inactiveTrackColor: Colors.grey.shade500,
+                                splashRadius: 50.0,
+                                value: Constants.isStagingMode,
+                                onChanged: (value) => setState(
+                                    () => Constants.isStagingMode = value),
+                              ),
+                              const SizedBox(height: 16),
 
                               SizedBox(
                                 height: 50,
@@ -292,18 +292,36 @@ class _AddMoreFundState extends State<AddMoreFund> {
     });
   }
 
-  paytm(String amount) {
+  getCustomerDetails() {
+    alertServices.showLoading("Getting user details...");
+    String mobile = secureStorage.get("mobile");
+    customerService.getCustomer(mobile.toString(), true).then((response) async {
+      alertServices.hideLoading();
+      List customer = [response];
+      return customer[0]['city'] ?? "";
+    });
+  }
+
+  paytm(String amount) async {
+    var city = await getCustomerDetails();
     WalletServices walletServices = WalletServices();
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
     var params = {
       "amount": amount.toString(),
       "contact": mobile.toString(),
-      "staging": Constants.isStagingMode
+      "staging": Constants.isStagingMode,
+      "city": city,
     };
+    // print(jsonEncode(params));
     walletServices.initiateTransaction(params).then((dynamic res) {
-      // print("Res--> ${jsonEncode(res)}");
+      print(jsonEncode(res));
       List token = [res];
+      if (token[0]['status'].toString().toLowerCase() == "failed") {
+        alertServices.hideLoading();
+        alertServices.errorToast(token[0]['description']);
+        return;
+      }
       String mid = token[0]['mid'].toString();
       String tToken = token[0]['txnToken'].toString();
       String amt = amount.toString();
@@ -323,6 +341,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       var response = AllInOneSdk.startTransaction(
           mid, oId, amt, tToken, cbUrl, staging, rai);
       response.then((value) {
+        print(value);
         setState(() {
           result = value.toString();
         });
@@ -348,11 +367,13 @@ class _AddMoreFundState extends State<AddMoreFund> {
           });
         }
         List response = [onError.details];
+        print(jsonEncode(response));
         // print("---------------------");
         // print("error result ---> ${response[0]['STATUS']}");
         // print("error result ---> ${response[0]['RESPMSG']}");
         // print("---------------------");
-        if (response[0]['STATUS'].toString() == "TXN_FAILURE") {
+        if (response[0] != null &&
+            response[0]['STATUS'].toString() == "TXN_FAILURE") {
           debugPrint("Transaction Failure");
           Navigator.pushReplacementNamed(context, "transaction_failure");
         }

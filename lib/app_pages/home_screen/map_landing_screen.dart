@@ -1,4 +1,3 @@
-import 'package:driev/app_pages/home_screen/widget/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -72,7 +71,6 @@ class _MapLandingScreenState extends State<MapLandingScreen> {
       ),
     );
   }
-
 
   // --- LOCATION FUNCTIONS ---
   Future<void> _checkLocationPermissions() async {

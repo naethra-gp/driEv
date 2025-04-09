@@ -17,7 +17,6 @@ import 'dart:io';
 import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_themes/custom_theme.dart';
-import 'package:path_provider/path_provider.dart' as syspath;
 
 class RideSummary extends StatefulWidget {
   final String rideId;
@@ -217,7 +216,7 @@ class _RideSummaryState extends State<RideSummary> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: <Widget>[
-                                                SizedBox(height: 30),
+                                                const SizedBox(height: 30),
                                                 const Text(
                                                   "Payment Total",
                                                   style: TextStyle(
@@ -293,33 +292,31 @@ class _RideSummaryState extends State<RideSummary> {
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Ride Distance (KM)",
-                                          value:
-                                              "${rd[0]['totalKm'].toString()}"),
+                                          value: rd[0]['totalKm'].toString()),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Billable Distance (KM)",
                                           value:
-                                              "${rd[0]['billableKm'].toString()}"),
+                                              rd[0]['billableKm'].toString()),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Ride Time",
-                                          value:
-                                              "${rd[0]['duration'].toString()}"),
+                                          value: rd[0]['duration'].toString()),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Billable Time",
                                           value:
-                                              "${rd[0]['billableTime'].toString()}"),
+                                              rd[0]['billableTime'].toString()),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Total Amount (Incl.GST)",
-                                          value:
-                                              "${rd[0]['payableAmount'].toString()}"),
+                                          value: rd[0]['payableAmount']
+                                              .toString()),
                                       CustomTheme.defaultHeight10,
                                       ListViewWidget(
                                           label: "Total Amount (excl.GST)",
-                                          value:
-                                              "${rd[0]['payableAmountExclGst'].toString()}"),
+                                          value: rd[0]['payableAmountExclGst']
+                                              .toString()),
                                       CustomTheme.defaultHeight10,
                                     ],
                                   ),
@@ -383,6 +380,7 @@ class _RideSummaryState extends State<RideSummary> {
         OpenFile.open(file.path);
       });
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to save or open PDF: $e')),
       );

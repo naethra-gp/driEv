@@ -1,3 +1,4 @@
+import 'package:driev/app_config/app_end_points.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/gestures.dart';
@@ -8,7 +9,6 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_config/app_constants.dart';
-import '../../../app_config/app_end_points.dart';
 import '../../../app_config/app_size_config.dart';
 import '../../../app_services/index.dart';
 import '../../../app_utils/app_widgets/app_button.dart';
@@ -249,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                           // Switch(
                           //     activeColor: AppColors.white,
                           //     trackOutlineColor:
-                          //     WidgetStateProperty.all(Colors.transparent),
+                          //         WidgetStateProperty.all(Colors.transparent),
                           //     activeTrackColor: AppColors.primary,
                           //     inactiveThumbColor: Colors.white,
                           //     inactiveTrackColor: Colors.grey.shade500,
@@ -261,18 +261,15 @@ class _LoginPageState extends State<LoginPage> {
                           //       });
                           //       if (!value) {
                           //         EndPoints.baseApi =
-                          //         "https://iot.driev.bike/driev/api/app";
+                          //             "https://iot.driev.bike/driev/api/app";
                           //         EndPoints.baseApi1 =
-                          //         "https://iot.driev.bike/driev/api/app";
+                          //             "https://iot.driev.bike/driev/api/app";
                           //       } else {
                           //         EndPoints.baseApi =
-                          //         "https://community-test.driev.bike/driev/api/app";
+                          //             "https://community-test.driev.bike/driev/api/app";
                           //         EndPoints.baseApi1 =
-                          //         "https://community-test.driev.bike/driev/api";
+                          //             "https://community-test.driev.bike/driev/api";
                           //       }
-                          //
-                          //       print(value);
-                          //       print("EndPoints.baseApi: ${EndPoints.baseApi}");
                           //     }),
                           // const SizedBox(height: 16),
 
