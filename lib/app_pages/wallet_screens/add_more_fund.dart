@@ -346,6 +346,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
           result = value.toString();
         });
         List res = [value];
+        print(jsonEncode(result));
+
         // print("---------------------");
         // print("result ---> ${res[0]['STATUS']}");
         // print("result ---> ${res[0]['TXNID']}");
@@ -354,7 +356,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
           debugPrint("Transaction Success");
           String txtId = res[0]['TXNID'];
           String status = res[0]['STATUS'];
-          creditMoneyToWallet(amt, oId, status, txtId);
+          String txtTime = res[0]['TXNDATE'];
+          creditMoneyToWallet(amt, oId, status, txtId, txtTime);
         }
       }).catchError((onError) {
         if (onError is PlatformException) {
@@ -381,12 +384,13 @@ class _AddMoreFundState extends State<AddMoreFund> {
     });
   }
 
-  creditMoneyToWallet(amount, oId, status, txtId) async {
+  creditMoneyToWallet(amount, oId, status, txtId, txtTime) async {
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile");
     var params = {
       "contact": mobile.toString(),
       "transactionAmount": amount,
+      "transactionTime": txtTime,
       "orderId": oId.toString(),
       "transactionStatus": status.toString(),
       "transactionId": txtId.toString(),

@@ -7,12 +7,9 @@ import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:driev/app_utils/app_widgets/app_bar_widget.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import '../../app_themes/app_colors.dart';
-import '../../app_themes/custom_theme.dart';
 import 'widgets/wallet_balance_widget.dart';
 
 class WithdrawAmount extends StatefulWidget {
