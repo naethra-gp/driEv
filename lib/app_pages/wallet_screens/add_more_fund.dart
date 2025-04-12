@@ -244,8 +244,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
 
   addFundTextButton(amount) {
     return SizedBox(
-      // width: 75,
-      // height: 40,
       child: TextButton(
         onPressed: () => addAmount(amount),
         style: ButtonStyle(
@@ -315,7 +313,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
     };
     // print(jsonEncode(params));
     walletServices.initiateTransaction(params).then((dynamic res) {
-      print(jsonEncode(res));
       List token = [res];
       if (token[0]['status'].toString().toLowerCase() == "failed") {
         alertServices.hideLoading();
@@ -341,14 +338,12 @@ class _AddMoreFundState extends State<AddMoreFund> {
       var response = AllInOneSdk.startTransaction(
           mid, oId, amt, tToken, cbUrl, staging, rai);
       response.then((value) {
-        print(value);
         setState(() {
           result = value.toString();
         });
         List res = [value];
-        print(jsonEncode(result));
-
         // print("---------------------");
+        print("result ---> ${res[0]}");
         // print("result ---> ${res[0]['STATUS']}");
         // print("result ---> ${res[0]['TXNID']}");
         // print("---------------------");
@@ -370,7 +365,6 @@ class _AddMoreFundState extends State<AddMoreFund> {
           });
         }
         List response = [onError.details];
-        print(jsonEncode(response));
         // print("---------------------");
         // print("error result ---> ${response[0]['STATUS']}");
         // print("error result ---> ${response[0]['RESPMSG']}");
@@ -390,14 +384,16 @@ class _AddMoreFundState extends State<AddMoreFund> {
     var params = {
       "contact": mobile.toString(),
       "transactionAmount": amount,
-      "transactionTime": txtTime,
+      // "transactionTime": txtTime,
       "orderId": oId.toString(),
       "transactionStatus": status.toString(),
       "transactionId": txtId.toString(),
     };
-    // print("Credit Money Request -> ${jsonEncode(params)}");
+    print("Credit Money Request -> ${jsonEncode(params)}");
     walletServices.creditMoneyToWallet(params).then((dynamic response) {
       alertServices.hideLoading();
+      print("Credit Money Response -> ${jsonEncode(response)}");
+
       if (response != null) {
         setState(() {
           walletBalance = [response][0]['closingBalance'].toString();
@@ -412,6 +408,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
         } else {
           Navigator.pushNamed(context, "transaction_success");
         }
+      } else {
+        Navigator.pushReplacementNamed(context, "transaction_failure");
       }
     });
   }

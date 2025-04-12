@@ -242,36 +242,36 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           /// TOGGLE APIs
-                          // Center(
-                          //   child: Text(
-                          //       "Current API: ${Constants.isStaging ? "Staging (community-test.driev.bike)" : "Live (iot.driev.bike)"}"),
-                          // ),
-                          // Switch(
-                          //     activeColor: AppColors.white,
-                          //     trackOutlineColor:
-                          //         WidgetStateProperty.all(Colors.transparent),
-                          //     activeTrackColor: AppColors.primary,
-                          //     inactiveThumbColor: Colors.white,
-                          //     inactiveTrackColor: Colors.grey.shade500,
-                          //     splashRadius: 50.0,
-                          //     value: Constants.isStaging,
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         Constants.isStaging = value;
-                          //       });
-                          //       if (!value) {
-                          //         EndPoints.baseApi =
-                          //             "https://iot.driev.bike/driev/api/app";
-                          //         EndPoints.baseApi1 =
-                          //             "https://iot.driev.bike/driev/api/app";
-                          //       } else {
-                          //         EndPoints.baseApi =
-                          //             "https://community-test.driev.bike/driev/api/app";
-                          //         EndPoints.baseApi1 =
-                          //             "https://community-test.driev.bike/driev/api";
-                          //       }
-                          //     }),
-                          // const SizedBox(height: 16),
+                          Center(
+                            child: Text(
+                                "Current API: ${Constants.isStaging ? "Staging (community-test.driev.bike)" : "Live (iot.driev.bike)"}"),
+                          ),
+                          Switch(
+                              activeColor: AppColors.white,
+                              trackOutlineColor:
+                                  WidgetStateProperty.all(Colors.transparent),
+                              activeTrackColor: AppColors.primary,
+                              inactiveThumbColor: Colors.white,
+                              inactiveTrackColor: Colors.grey.shade500,
+                              splashRadius: 50.0,
+                              value: Constants.isStaging,
+                              onChanged: (value) {
+                                setState(() {
+                                  Constants.isStaging = value;
+                                });
+                                if (!value) {
+                                  EndPoints.baseApi =
+                                      "https://iot.driev.bike/driev/api/app";
+                                  EndPoints.baseApi1 =
+                                      "https://iot.driev.bike/driev/api/app";
+                                } else {
+                                  EndPoints.baseApi =
+                                      "https://community-test.driev.bike/driev/api/app";
+                                  EndPoints.baseApi1 =
+                                      "https://community-test.driev.bike/driev/api";
+                                }
+                              }),
+                          const SizedBox(height: 16),
 
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),

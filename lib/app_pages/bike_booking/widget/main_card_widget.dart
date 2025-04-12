@@ -76,7 +76,7 @@ class MainCardWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              "${sd[0]['campus']} (${sd[0]['distance'].toString()})",
+                              "${sd[0]['campus']} (${sd[0]['distance'].toString() == 'null' ? 'N/A' : sd[0]['distanceText'].toString()})",
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,

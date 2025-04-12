@@ -50,8 +50,8 @@ class _HomePageState extends State<HomePage> {
   List closedVehicleList = [];
   String selfieUrl = "";
   double distance = 20;
-  String currentDistrict = "";
-  String distanceText = "";
+  String? currentDistrict = "";
+  String? distanceText = "";
 
   @override
   void initState() {
@@ -348,8 +348,72 @@ class _HomePageState extends State<HomePage> {
 
   void _fetchAndDisplayDirections(LatLng start, LatLng end) async {
     debugPrint(" --- fetchAndDisplayDirections ---");
-    List<LatLng> pc = await _locationService.getDirections(start, end);
-    _addPolyline(pc);
+    try {
+      // Platform-specific coordinate validation
+      if (Platform.isAndroid || Platform.isIOS) {
+        // Validate coordinates are within reasonable bounds
+        if (start.latitude < -90 ||
+            start.latitude > 90 ||
+            start.longitude < -180 ||
+            start.longitude > 180 ||
+            end.latitude < -90 ||
+            end.latitude > 90 ||
+            end.longitude < -180 ||
+            end.longitude > 180) {
+          debugPrint("Coordinates out of valid range");
+          return;
+        }
+
+        // Check for zero or near-zero coordinates
+        if (start.latitude.abs() < 0.000001 ||
+            start.longitude.abs() < 0.000001 ||
+            end.latitude.abs() < 0.000001 ||
+            end.longitude.abs() < 0.000001) {
+          debugPrint("Invalid coordinates detected (too close to zero)");
+          return;
+        }
+
+        // Check if coordinates are too far apart
+        double distance = distanceBetween(start, end);
+        if (distance > 1000) {
+          // 1000 km threshold
+          debugPrint("Coordinates too far apart: $distance km");
+          setState(() {
+            distanceText = null;
+          });
+          return;
+        }
+      }
+
+      List<LatLng> pc = await _locationService.getDirections(start, end);
+      if (pc.isEmpty) {
+        debugPrint("No route found between points");
+        setState(() {
+          distanceText = null;
+        });
+        return;
+      }
+
+      // Platform-specific polyline handling
+      if (Platform.isAndroid) {
+        _addPolyline(pc);
+        _zoomToFitPositions();
+      } else if (Platform.isIOS) {
+        _addPolyline(pc);
+        // iOS might need different zoom handling
+        _zoomToFitPositions();
+      }
+    } catch (e) {
+      debugPrint("Error fetching directions: $e");
+      setState(() {
+        distanceText = null;
+      });
+      if (Platform.isAndroid) {
+        debugPrint("Android specific error details: $e");
+      } else if (Platform.isIOS) {
+        debugPrint("iOS specific error details: $e");
+      }
+    }
   }
 
   /// GETTING STATION DETAILS
@@ -429,8 +493,9 @@ class _HomePageState extends State<HomePage> {
               stationLat,
               stationLon,
             );
+            print("distanceText: $distance");
             setState(() {
-              distanceText = distance.toString();
+              distanceText = distance;
             });
             _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
           }

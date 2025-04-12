@@ -48,6 +48,7 @@ class Connection {
   */
   getWithoutToken(String url) async {
     try {
+      debugPrint("[GET] => API: $url");
       var response = await http.get(Uri.parse(url), headers: header);
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -71,6 +72,7 @@ class Connection {
   */
   postWithoutToken(String url, request) async {
     try {
+      debugPrint("[POST] =>  API: $url");
       var response = await http.post(
         Uri.parse(url),
         headers: header,
@@ -97,6 +99,7 @@ class Connection {
       'Authorization': "Bearer ${secureStorage.getToken().toString()}",
     };
     try {
+      debugPrint("[POST] =>  API: $url");
       Response response = await http.post(
         Uri.parse(url),
         headers: header,
@@ -130,6 +133,7 @@ class Connection {
       'Authorization': "Bearer ${secureStorage.getToken().toString()}",
     };
     try {
+      debugPrint("[GET] =>  API: $url");
       var response = await http.get(
         Uri.parse(url),
         headers: header,
@@ -169,6 +173,7 @@ class Connection {
       'Authorization': "Bearer ${secureStorage.getToken().toString()}",
     };
     try {
+      debugPrint("[POST] =>  API: $url");
       var response = await http.post(
         Uri.parse(url),
         headers: header,
@@ -202,6 +207,7 @@ class Connection {
       'Authorization': "Bearer ${secureStorage.getToken().toString()}",
     };
     try {
+      debugPrint("[GET] =>  API: $url");
       var response = await http.get(
         Uri.parse(url),
         headers: header,
@@ -237,6 +243,7 @@ class Connection {
       'Authorization': "Bearer ${secureStorage.getToken().toString()}",
     };
     try {
+      debugPrint("UPLOADING API: $url");
       var request = http.MultipartRequest('POST', Uri.parse(url));
       request.headers.addAll(header);
       request.files.add(
@@ -261,6 +268,7 @@ class Connection {
     String token = secureStorage.getToken().toString();
     final header = {'Authorization': "Bearer $token"};
     try {
+      debugPrint("RE UPLOADING API: $url");
       var request = http.MultipartRequest('POST', Uri.parse(url));
       request.headers.addAll(header);
       request.files.add(

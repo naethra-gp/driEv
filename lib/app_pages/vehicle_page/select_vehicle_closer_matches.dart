@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:driev/app_pages/vehicle_page/widget/campus_widget.dart';
 import 'package:driev/app_services/campus_services.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
@@ -165,8 +163,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
                   ],
                 ),
               ),
-                    const SizedBox(height: 25),
-
+              const SizedBox(height: 25),
             ],
           ],
         ),

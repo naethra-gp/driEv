@@ -597,7 +597,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         debugPrint('Cache folder cleared successfully.');
       }
     } catch (e) {
-      print('Error clearing cache folder: $e');
+      debugPrint('Error clearing cache folder: $e');
     }
   }
 

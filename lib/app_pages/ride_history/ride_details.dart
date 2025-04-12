@@ -251,8 +251,6 @@ class _RideDetailsState extends State<RideDetails> {
     print("dateTime $dateTime");
     try {
       DateTime parsedDate = DateTime.parse(dateTime).toLocal();
-      print("dateTime ${DateFormat('hh:mm a').format(parsedDate)}");
-
       return DateFormat('hh:mm a').format(parsedDate);
     } catch (e) {
       return "Unknown Time";

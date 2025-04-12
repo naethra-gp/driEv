@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as loc;
+import 'package:flutter/foundation.dart';
 
 class LocationService {
   final String _apiKey = 'AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA';
@@ -50,24 +51,30 @@ class LocationService {
     }
   }
 
-  Future<String> calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) async {
-    String url = 'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$startLatitude,$startLongitude&origins=$endLatitude,$endLongitude&key=$_apiKey';
+  Future<String> calculateDistance(double startLatitude, double startLongitude,
+      double endLatitude, double endLongitude) async {
+    String url =
+        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$startLatitude,$startLongitude&origins=$endLatitude,$endLongitude&key=$_apiKey';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['rows'].isEmpty || data['rows'][0]['elements'].isEmpty) {
-          throw Exception('Invalid response from Distance Matrix API');
+          return "N/A";
         }
-        String distance = data['rows'][0]['elements'][0]['distance']['text'].toString();
+        String distance =
+            data['rows'][0]['elements'][0]['distance']['text'].toString();
         return distance;
       } else {
-        throw Exception('Error fetching distance: ${response.statusCode}');
+        debugPrint('Error fetching distance: ${response.statusCode}');
+        return "N/A";
       }
     } catch (e) {
-      return 'Error: $e';
+      debugPrint('Error in calculateDistance: $e');
+      return "N/A";
     }
   }
+
   List<LatLng> decodePolyline(String encoded) {
     List<LatLng> polyline = [];
     int index = 0, len = encoded.length;
@@ -99,35 +106,69 @@ class LocationService {
     return polyline;
   }
 
-
   Future<List<LatLng>> getDirections(LatLng origin, LatLng destination) async {
-    final String url = 'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$_apiKey';
+    // Validate input coordinates
+    if (origin == null || destination == null) {
+      debugPrint('Origin or destination coordinates are null');
+      return [];
+    }
+
+    if (origin.latitude < -90 ||
+        origin.latitude > 90 ||
+        origin.longitude < -180 ||
+        origin.longitude > 180 ||
+        destination.latitude < -90 ||
+        destination.latitude > 90 ||
+        destination.longitude < -180 ||
+        destination.longitude > 180) {
+      debugPrint('Invalid coordinates provided');
+      return [];
+    }
+
+    final String url =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$_apiKey';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['status'] == 'OK') {
-          List<LatLng> polylineCoordinates = [];
-          List<dynamic> steps = data['routes'][0]['legs'][0]['steps'];
-          for (var step in steps) {
-            var startLocation = step['start_location'];
-            var endLocation = step['end_location'];
-            // polylineCoordinates.add(LatLng(startLocation['lat'], startLocation['lng']));
-            // polylineCoordinates.add(LatLng(endLocation['lat'], endLocation['lng']));
-            String polyline = step['polyline']['points'];
-            List<LatLng> decodedPolyline = decodePolyline(polyline);
-            polylineCoordinates.addAll(decodedPolyline);
-          }
 
-          return polylineCoordinates;
-        } else {
-          throw Exception('Error fetching directions: ${data['status']}');
+        if (data['status'] == 'ZERO_RESULTS') {
+          debugPrint('No route found between locations');
+          return [];
+        } else if (data['status'] == 'NOT_FOUND') {
+          debugPrint('One or both locations not found');
+          return [];
+        } else if (data['status'] != 'OK') {
+          debugPrint('Error fetching directions: ${data['status']}');
+          return [];
         }
+
+        if (data['routes'] == null || data['routes'].isEmpty) {
+          debugPrint('No routes found in response');
+          return [];
+        }
+
+        List<LatLng> polylineCoordinates = [];
+        List<dynamic> steps = data['routes'][0]['legs'][0]['steps'];
+        for (var step in steps) {
+          String polyline = step['polyline']['points'];
+          List<LatLng> decodedPolyline = decodePolyline(polyline);
+          polylineCoordinates.addAll(decodedPolyline);
+        }
+
+        if (polylineCoordinates.isEmpty) {
+          debugPrint('No valid route points decoded');
+          return [];
+        }
+
+        return polylineCoordinates;
       } else {
-        throw Exception('Failed to load directions: ${response.statusCode}');
+        debugPrint('Failed to load directions: ${response.statusCode}');
+        return [];
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      debugPrint('Error in getDirections: $e');
+      return [];
     }
   }
 }

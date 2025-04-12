@@ -88,7 +88,9 @@ class CampusWidget extends StatelessWidget {
                 width: 20,
               ),
               Text(
-                data[0]['distanceText'].toString(),
+                data[0]['distanceText'].toString() == 'null'
+                    ? 'N/A'
+                    : data[0]['distanceText'].toString(),
                 style: const TextStyle(fontSize: 12),
               ),
               const SizedBox(width: 10),
