@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:driev/app_services/customer_services.dart';
@@ -300,61 +301,64 @@ class _AddMoreFundState extends State<AddMoreFund> {
     });
   }
 
-  paytm(String amount) async {
+  paytm(String userAmount) async {
+    debugPrint("===> PAYTM PROCESS START <===");
     var city = await getCustomerDetails();
     WalletServices walletServices = WalletServices();
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
-    var params = {
-      "amount": amount.toString(),
+    var initiateTransactionRequest = {
+      "amount": userAmount.toString(),
       "contact": mobile.toString(),
       "staging": Constants.isStagingMode,
       "city": city,
     };
-    // print(jsonEncode(params));
-    walletServices.initiateTransaction(params).then((dynamic res) {
+    debugPrint("===> Calling Initiate Transaction API <===");
+    debugPrint("Request Params ===> ${jsonEncode(initiateTransactionRequest)}");
+    walletServices.initiateTransaction(initiateTransactionRequest).then((dynamic res) {
       List token = [res];
       if (token[0]['status'].toString().toLowerCase() == "failed") {
         alertServices.hideLoading();
         alertServices.errorToast(token[0]['description']);
         return;
       }
-      String mid = token[0]['mid'].toString();
-      String tToken = token[0]['txnToken'].toString();
-      String amt = amount.toString();
-      String oId = token[0]['orderId'].toString();
-      String cbUrl = token[0]['callbackUrl'].toString();
-      bool staging = Constants.isStagingMode;
+      String merchantID = token[0]['mid'].toString();
+      String txtToken = token[0]['txnToken'].toString();
+      String amount = userAmount.toString();
+      String orderID = token[0]['orderId'].toString();
+      String callbackURL = token[0]['callbackUrl'].toString();
+      bool isStagingMode = Constants.isStagingMode;
       bool rai = false;
-      debugPrint("-------------- PAYTM Payment ---------------------");
-      debugPrint("mid: $mid");
-      debugPrint("orderID: $oId");
-      debugPrint("txtToken: $tToken");
-      debugPrint("amount: $amt");
-      debugPrint("callbackurl: $cbUrl");
-      debugPrint("isStaging: $staging");
-      debugPrint("-------------- // PAYTM Payment ---------------------");
+      debugPrint("""
+      -------------- PAYTM Payment ---------------------
+        MerchantID    : $merchantID
+        OrderID       : $orderID
+        txtToken      : $txtToken
+        Amount        : $amount
+        callbackURL   : $callbackURL
+        isStagingMode : $isStagingMode
+      -------------- EOL PAYTM Payment ---------------------
+      """);
       alertServices.hideLoading();
       var response = AllInOneSdk.startTransaction(
-          mid, oId, amt, tToken, cbUrl, staging, rai);
-      response.then((value) {
+          merchantID, orderID, amount, txtToken, callbackURL, isStagingMode, rai,);
+      log("===> PAYTM SERVER RESPONSE => ${jsonEncode(response)}");
+
+
+      response.then((value) async {
         setState(() {
           result = value.toString();
         });
         List res = [value];
-        // print("---------------------");
         print("result ---> ${res[0]}");
-        // print("result ---> ${res[0]['STATUS']}");
-        // print("result ---> ${res[0]['TXNID']}");
-        // print("---------------------");
-        if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
+        // if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
           debugPrint("Transaction Success");
           String txtId = res[0]['TXNID'];
           String status = res[0]['STATUS'];
           String txtTime = res[0]['TXNDATE'];
-          creditMoneyToWallet(amt, oId, status, txtId, txtTime);
-        }
-      }).catchError((onError) {
+          await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
+        // }
+      }).catchError((onError) async {
         if (onError is PlatformException) {
           setState(() {
             result = "${onError.message!} \n  ${onError.details}";
@@ -371,9 +375,14 @@ class _AddMoreFundState extends State<AddMoreFund> {
         // print("---------------------");
         if (response[0] != null &&
             response[0]['STATUS'].toString() == "TXN_FAILURE") {
-          debugPrint("Transaction Failure");
-          Navigator.pushReplacementNamed(context, "transaction_failure");
+
         }
+        String txtId = response[0]['TXNID'];
+        String status = response[0]['STATUS'];
+        String txtTime = response[0]['TXNDATE'];
+        await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
+        debugPrint("Transaction Failure");
+        Navigator.pushReplacementNamed(context, "transaction_failure");
       });
     });
   }
@@ -393,7 +402,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
     walletServices.creditMoneyToWallet(params).then((dynamic response) {
       alertServices.hideLoading();
       print("Credit Money Response -> ${jsonEncode(response)}");
-
+      alertServices.toast("Credit Money Response -> ${jsonEncode(response)}");
+try {
       if (response != null) {
         setState(() {
           walletBalance = [response][0]['closingBalance'].toString();
@@ -409,8 +419,12 @@ class _AddMoreFundState extends State<AddMoreFund> {
           Navigator.pushNamed(context, "transaction_success");
         }
       } else {
+        debugPrint("===> Credit Money Error <===");
         Navigator.pushReplacementNamed(context, "transaction_failure");
       }
+} catch(e) {
+  debugPrint("Catch Error: ${e.toString()}");
+}
     });
   }
 
