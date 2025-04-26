@@ -315,7 +315,9 @@ class _AddMoreFundState extends State<AddMoreFund> {
     };
     debugPrint("===> Calling Initiate Transaction API <===");
     debugPrint("Request Params ===> ${jsonEncode(initiateTransactionRequest)}");
-    walletServices.initiateTransaction(initiateTransactionRequest).then((dynamic res) {
+    walletServices
+        .initiateTransaction(initiateTransactionRequest)
+        .then((dynamic res) {
       List token = [res];
       if (token[0]['status'].toString().toLowerCase() == "failed") {
         alertServices.hideLoading();
@@ -341,23 +343,28 @@ class _AddMoreFundState extends State<AddMoreFund> {
       """);
       alertServices.hideLoading();
       var response = AllInOneSdk.startTransaction(
-          merchantID, orderID, amount, txtToken, callbackURL, isStagingMode, rai,);
+        merchantID,
+        orderID,
+        amount,
+        txtToken,
+        callbackURL,
+        isStagingMode,
+        rai,
+      );
       log("===> PAYTM SERVER RESPONSE => ${jsonEncode(response)}");
-
+      // todo: CHECK HERE LOGIC
 
       response.then((value) async {
         setState(() {
           result = value.toString();
         });
         List res = [value];
-        print("result ---> ${res[0]}");
-        // if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
-          debugPrint("Transaction Success");
-          String txtId = res[0]['TXNID'];
-          String status = res[0]['STATUS'];
-          String txtTime = res[0]['TXNDATE'];
-          await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
-        // }
+        debugPrint("===> PayTM Success Result ---> ${res[0]}");
+        debugPrint("===> Transaction Success <===");
+        String txtId = res[0]['TXNID'];
+        String status = res[0]['STATUS'];
+        String txtTime = res[0]['TXNDATE'];
+        await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
       }).catchError((onError) async {
         if (onError is PlatformException) {
           setState(() {
@@ -369,20 +376,12 @@ class _AddMoreFundState extends State<AddMoreFund> {
           });
         }
         List response = [onError.details];
-        // print("---------------------");
-        // print("error result ---> ${response[0]['STATUS']}");
-        // print("error result ---> ${response[0]['RESPMSG']}");
-        // print("---------------------");
-        if (response[0] != null &&
-            response[0]['STATUS'].toString() == "TXN_FAILURE") {
 
-        }
+        /// ASSIGN DETAILS
         String txtId = response[0]['TXNID'];
         String status = response[0]['STATUS'];
         String txtTime = response[0]['TXNDATE'];
         await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
-        debugPrint("Transaction Failure");
-        Navigator.pushReplacementNamed(context, "transaction_failure");
       });
     });
   }
@@ -398,33 +397,33 @@ class _AddMoreFundState extends State<AddMoreFund> {
       "transactionStatus": status.toString(),
       "transactionId": txtId.toString(),
     };
-    print("Credit Money Request -> ${jsonEncode(params)}");
+    debugPrint("====> Credit Money Request -> ${jsonEncode(params)}");
     walletServices.creditMoneyToWallet(params).then((dynamic response) {
       alertServices.hideLoading();
-      print("Credit Money Response -> ${jsonEncode(response)}");
-      alertServices.toast("Credit Money Response -> ${jsonEncode(response)}");
-try {
-      if (response != null) {
-        setState(() {
-          walletBalance = [response][0]['closingBalance'].toString();
-          stationDetails = widget.stationDetails;
-          rideId = widget.rideId;
-          rideID = widget.rideID;
-        });
-        if (stationDetails.isNotEmpty ||
-            rideID.isNotEmpty ||
-            rideId.isNotEmpty) {
-          alertSuccess(context, "TRANSACTION SUCCESS");
+      debugPrint("====> Credit Money Response -> ${jsonEncode(response)}");
+      try {
+        if (response != null) {
+          setState(() {
+            walletBalance = [response][0]['closingBalance'].toString();
+            stationDetails = widget.stationDetails;
+            rideId = widget.rideId;
+            rideID = widget.rideID;
+          });
+          if (stationDetails.isNotEmpty ||
+              rideID.isNotEmpty ||
+              rideId.isNotEmpty) {
+            alertSuccess(context, "TRANSACTION SUCCESS");
+          } else {
+            Navigator.pushNamed(context, "transaction_success");
+          }
         } else {
-          Navigator.pushNamed(context, "transaction_success");
+          debugPrint("===> Credit Money Error <===");
+          Navigator.pushReplacementNamed(context, "transaction_failure");
         }
-      } else {
-        debugPrint("===> Credit Money Error <===");
+      } catch (e) {
+        debugPrint("Catch Error: ${e.toString()}");
         Navigator.pushReplacementNamed(context, "transaction_failure");
       }
-} catch(e) {
-  debugPrint("Catch Error: ${e.toString()}");
-}
     });
   }
 
