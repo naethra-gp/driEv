@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:driev/app_pages/home_screen/widget/home_top_widget.dart';
@@ -57,7 +58,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     debugPrint("--- PAGE: Home Page ---");
     super.initState();
-    getCustomerDetails();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await getCustomerDetails();
   }
 
   @override
@@ -325,7 +330,6 @@ class _HomePageState extends State<HomePage> {
       );
 
       double padding = 50.0;
-      print("zoomLevel $zoomLevel");
       mapController
           ?.animateCamera(CameraUpdate.newLatLngBounds(bounds, padding));
       mapController?.animateCamera(CameraUpdate.zoomTo(zoomLevel));
@@ -346,162 +350,175 @@ class _HomePageState extends State<HomePage> {
     return 12742 * atan2(sqrt(a), sqrt(1 - a));
   }
 
-  void _fetchAndDisplayDirections(LatLng start, LatLng end) async {
-    debugPrint(" --- fetchAndDisplayDirections ---");
-    try {
-      // Platform-specific coordinate validation
-      if (Platform.isAndroid || Platform.isIOS) {
-        // Validate coordinates are within reasonable bounds
-        if (start.latitude < -90 ||
-            start.latitude > 90 ||
-            start.longitude < -180 ||
-            start.longitude > 180 ||
-            end.latitude < -90 ||
-            end.latitude > 90 ||
-            end.longitude < -180 ||
-            end.longitude > 180) {
-          debugPrint("Coordinates out of valid range");
-          return;
-        }
+  Future<void> _fetchAndDisplayDirections(LatLng start, LatLng end) async {
+    debugPrint(" --- FETCH AND DISPLAY DIRECTIONS ---");
 
-        // Check for zero or near-zero coordinates
-        if (start.latitude.abs() < 0.000001 ||
-            start.longitude.abs() < 0.000001 ||
-            end.latitude.abs() < 0.000001 ||
-            end.longitude.abs() < 0.000001) {
-          debugPrint("Invalid coordinates detected (too close to zero)");
-          return;
-        }
-
-        // Check if coordinates are too far apart
-        double distance = distanceBetween(start, end);
-        if (distance > 1000) {
-          // 1000 km threshold
-          debugPrint("Coordinates too far apart: $distance km");
-          setState(() {
-            distanceText = null;
-          });
-          return;
-        }
+    // Platform-specific coordinate validation
+    if (Platform.isAndroid || Platform.isIOS) {
+      // Validate coordinates are within reasonable bounds
+      if (start.latitude < -90 ||
+          start.latitude > 90 ||
+          start.longitude < -180 ||
+          start.longitude > 180 ||
+          end.latitude < -90 ||
+          end.latitude > 90 ||
+          end.longitude < -180 ||
+          end.longitude > 180) {
+        debugPrint("Coordinates out of valid range");
+        return;
       }
 
-      List<LatLng> pc = await _locationService.getDirections(start, end);
-      if (pc.isEmpty) {
-        debugPrint("No route found between points");
+      // Check for zero or near-zero coordinates
+      if (start.latitude.abs() < 0.000001 ||
+          start.longitude.abs() < 0.000001 ||
+          end.latitude.abs() < 0.000001 ||
+          end.longitude.abs() < 0.000001) {
+        debugPrint("Invalid coordinates detected (too close to zero)");
+        return;
+      }
+
+      // Check if coordinates are too far apart
+      double distance = distanceBetween(start, end);
+      if (distance > 1000) {
+        // 1000 km threshold
+        debugPrint("Coordinates too far apart: $distance km");
         setState(() {
           distanceText = null;
         });
         return;
       }
+    }
 
-      // Platform-specific polyline handling
-      if (Platform.isAndroid) {
-        _addPolyline(pc);
-        _zoomToFitPositions();
-      } else if (Platform.isIOS) {
-        _addPolyline(pc);
-        // iOS might need different zoom handling
-        _zoomToFitPositions();
-      }
-    } catch (e) {
-      debugPrint("Error fetching directions: $e");
+    List<LatLng> pc = await _locationService.getDirections(start, end);
+    if (pc.isEmpty) {
+      debugPrint("No route found between points");
       setState(() {
         distanceText = null;
       });
-      if (Platform.isAndroid) {
-        debugPrint("Android specific error details: $e");
-      } else if (Platform.isIOS) {
-        debugPrint("iOS specific error details: $e");
-      }
+      return;
+    }
+
+    // Platform-specific polyline handling
+    if (Platform.isAndroid) {
+      _addPolyline(pc);
+      _zoomToFitPositions();
+    } else if (Platform.isIOS) {
+      _addPolyline(pc);
+      // iOS might need different zoom handling
+      _zoomToFitPositions();
     }
   }
 
   /// GETTING STATION DETAILS
-  getCustomerDetails() {
+  Future<void> getCustomerDetails() async {
     alertServices.showLoading("Getting user details...");
     String mobile = secureStorage.get("mobile");
-    customerService.getCustomer(mobile.toString(), true).then((response) async {
-      alertServices.hideLoading();
-      if (response != null) {
-        setState(() {
-          customer = [response];
-        });
-        // print("Customer Details -> ${jsonEncode(customer)}");
-        String station = customer[0]['registeredStation'].toString();
-        String kyc = customer[0]['kycStatus'] ?? "";
-        String block = customer[0]['blockStatus'] ?? "";
-        String custType = customer[0]['custType'] ?? "";
-        String status = customer[0]['accountStatus'] ?? "";
-        if (custType == "Subscription") {
-          alertServices.subscriptionAlert(context, "");
+    final response = await customerService.getCustomer(mobile.toString(), true);
+    alertServices.hideLoading();
+
+    if (!mounted) return;
+
+    if (response != null) {
+      setState(() {
+        customer = [response];
+      });
+      debugPrint("Customer Details -> ${jsonEncode(customer)}");
+      String station = customer[0]['registeredStation'].toString();
+      String kyc = customer[0]['kycStatus'] ?? "";
+      String block = customer[0]['blockStatus'] ?? "";
+      String custType = customer[0]['custType'] ?? "";
+      String status = customer[0]['accountStatus'] ?? "";
+
+      if (!mounted) return;
+
+      if (custType == "Subscription") {
+        alertServices.subscriptionAlert(context, "");
+        return;
+      }
+      if (status == "N") {
+        alertServices.deleteUserAlert(
+            context, customer[0]['message'].toString(), null);
+        return;
+      }
+      if (block == "Y") {
+        alertServices.blockedKycAlert(
+          context,
+          customer[0]['comment'].toString(),
+        );
+        return;
+      } else {
+        if (kyc == "") {
+          alertServices.holdKycAlert(context);
           return;
-        }
-        if (status == "N") {
-          alertServices.deleteUserAlert(
-              context, customer[0]['message'].toString(), null);
-          return;
-        }
-        if (block == "Y") {
-          alertServices.blockedKycAlert(
-            context,
-            customer[0]['comment'].toString(),
-          );
+        } else if (kyc == "N") {
+          alertServices.rejectKycAlert(context);
           return;
         } else {
-          if (kyc == "") {
-            alertServices.holdKycAlert(context);
-            return;
-          } else if (kyc == "N") {
-            alertServices.rejectKycAlert(context);
-            return;
+          if (station.isNotEmpty) {
+            await getUserLocation();
+            if (!mounted) return;
+            await _loadCustomIcons();
+            await getPlansByStation(station);
           } else {
-            if (station.isNotEmpty) {
-              getUserLocation();
-              _loadCustomIcons();
-              getPlansByStation(station);
-            } else {
-              alertServices.errorToast("Registered Station is missing.");
-              gotoLogin();
-            }
+            alertServices.errorToast("Registered Station is missing.");
+            gotoLogin();
           }
         }
-      } else {
-        gotoLogin();
       }
-    });
+    } else {
+      gotoLogin();
+    }
   }
 
-  getPlansByStation(String stationId) async {
-    alertServices.showLoading("Getting station details...");
-    vehicleService.getPlansByStation(stationId).then(
-      (r) async {
-        alertServices.hideLoading();
-        stationDetails = r;
-        double stationLat = stationDetails['lattitude'];
-        double stationLon = stationDetails['longitude'];
-        stationLocation = LatLng(stationLat, stationLon);
-        for (var list in stationDetails['plans']) {
-          categoryList.add(false);
-        }
+  Future<void> getPlansByStation(String stationId) async {
+    if (!mounted) return;
+
+    try {
+      alertServices.showLoading("Getting station details...");
+      final stationData = await vehicleService.getPlansByStation(stationId);
+
+      if (!mounted) return;
+      alertServices.hideLoading();
+
+      // Update station details
+      setState(() {
+        stationDetails = stationData;
+        stationLocation = LatLng(
+          stationData['lattitude'],
+          stationData['longitude'],
+        );
+        categoryList = List.generate(
+          stationData['plans'].length,
+          (_) => false,
+        );
+      });
+
+      // Get route details
+      if (_currentPosition != null) {
         alertServices.showLoading("Finding best route...");
-        Future.delayed(const Duration(seconds: 5), () async {
-          alertServices.hideLoading();
-          if (_currentPosition != null) {
-            String distance = await _locationService.calculateDistance(
-              _currentPosition!.latitude,
-              _currentPosition!.longitude,
-              stationLat,
-              stationLon,
-            );
-            print("distanceText: $distance");
-            setState(() {
-              distanceText = distance;
-            });
-            _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
-          }
-        });
-      },
-    );
+        await Future.delayed(const Duration(seconds: 5));
+
+        if (!mounted) return;
+        alertServices.hideLoading();
+
+        final distance = await _locationService.calculateDistance(
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+          stationLocation!.latitude,
+          stationLocation!.longitude,
+        );
+
+        if (!mounted) return;
+        setState(() => distanceText = distance);
+
+        await _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      alertServices.hideLoading();
+      alertServices.errorToast("Failed to get station details");
+      gotoLogin();
+    }
   }
 
   gotoLogin() {

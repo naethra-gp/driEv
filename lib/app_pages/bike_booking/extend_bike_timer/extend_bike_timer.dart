@@ -14,6 +14,7 @@ import '../../home_screen/widget/home_top_widget.dart';
 import 'bike_card_widget.dart';
 import 'widget/timer_button_widget.dart';
 
+/// A widget that displays the bike extension timer screen with map and booking details
 class ExtendBikeTimer extends StatefulWidget {
   final List blockRide;
   const ExtendBikeTimer({super.key, required this.blockRide});
@@ -24,7 +25,6 @@ class ExtendBikeTimer extends StatefulWidget {
 
 class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   late GoogleMapController mapController;
-  String _locationMessage = "";
   String currentLocation = "";
   double availableBalance = 0;
   LatLng? currentLocation1;
@@ -34,7 +34,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   SecureStorage secureStorage = SecureStorage();
   CustomerService customerService = CustomerService();
 
-  // TIMER VARIABLES
+  // Timer state variables
   String formattedMinutes = "";
   String formattedSeconds = "";
   Timer? countdownTimer;
@@ -46,7 +46,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
   void initState() {
     super.initState();
     debugPrint("--- EXTEND BLOCK TIMER ---");
-    // getBalance();
     getLocation();
     getCustomerDetails();
 
@@ -55,7 +54,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     });
   }
 
-  getCustomerDetails() {
+  /// Fetches and updates customer details from the server
+  Future<void> getCustomerDetails() async {
     alertServices.showLoading("Getting user details...");
     String mobile = secureStorage.get("mobile");
     customerService.getCustomer(mobile.toString(), true).then((response) async {
@@ -75,7 +75,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
 
   @override
   Widget build(BuildContext context) {
-    // double width = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return SafeArea(
@@ -97,7 +96,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                       zoomControlsEnabled: false,
                       initialCameraPosition: CameraPosition(
                         target: currentLocation1!,
-                        // tilt: 59.440717697143555,
                         zoom: 15,
                       ),
                     ),
@@ -118,7 +116,8 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     );
   }
 
-  bottomSheet(BuildContext context) {
+  /// Shows the bottom sheet with bike details and timer controls
+  Future<dynamic> bottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       barrierColor: Colors.black45,
@@ -149,7 +148,6 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                   const SizedBox(height: 25),
                   SizedBox(
                     height: 45,
-                    // height: MediaQuery.of(context).size.height / 3,
                     child: AppButtonWidget(
                       title: "More",
                       onPressed: () {
@@ -162,9 +160,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
                             "data": data
                           }
                         ];
-                        print("More: ${jsonEncode(params)}");
-                        // Navigator.pushNamed(context, "bike_fare_details",
-                        //     arguments: {"query": params});
+                        debugPrint("More: ${jsonEncode(params)}");
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           "bike_fare_details",
@@ -205,16 +201,14 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     );
   }
 
-  // TO GET USERS CURRENT LOCATION
-  getLocation() async {
+  /// Fetches and updates the user's current location
+  Future<void> getLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
-    // Test if location services are enabled.
+
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      setState(() {
-        _locationMessage = "Location services are disabled.";
-      });
+      debugPrint("Error: Location services are disabled.");
       return;
     }
 
@@ -222,17 +216,13 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        setState(() {
-          _locationMessage = "Location permissions are denied";
-        });
+        debugPrint("Error: Location permissions are disabled.");
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      setState(() {
-        _locationMessage = "Location permissions are permanently denied.";
-      });
+      debugPrint("Error: Location permissions are permanently denied.");
       return;
     }
 
@@ -243,9 +233,7 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
       const ImageConfiguration(size: Size(20, 25)),
       'assets/img/map_user_icon.png',
     );
-    _locationMessage =
-        "Latitude: ${position.latitude}, Longitude: ${position.longitude}";
-
+    debugPrint("Location: ${position.latitude},${position.longitude}");
     List<Placemark> placeMark =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark place = placeMark[0];
@@ -261,7 +249,9 @@ class _ExtendBikeTimerState extends State<ExtendBikeTimer> {
     setState(() {});
   }
 
-  getColor(double value) {
+  /// Returns color based on the given value
+  /// Returns red for values less than 350, otherwise returns primary color
+  Color getColor(double value) {
     if (value < 350) {
       return Colors.redAccent;
     } else {

@@ -889,11 +889,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     int mins = int.parse("timerCtrl.text");
     DateTime now = DateTime.now();
     DateTime newTime = now.add(Duration(minutes: mins));
-    String format = DateFormat('hh:mm:ss a').format(newTime);
-    print("Format Date -> $format");
-    setState(() {
-      // expireTime = format.toString().padLeft(2, '0');
-    });
+    // String format = DateFormat('hh:mm:ss a').format(newTime);
+    // print("Format Date -> $format");
+    // setState(() {
+    //   // expireTime = format.toString().padLeft(2, '0');
+    // });
     await prefs.setString('exp', newTime.toString());
 
     /// timer functions
@@ -912,21 +912,23 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
         });
       }
     });
+
+    debugPrint("isRunning: $_isRunning");
   }
 
   saveTimer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      // _remainingSeconds = int.parse(timerCtrl.text) * 60;
-    });
+    // setState(() {
+    //   // _remainingSeconds = int.parse(timerCtrl.text) * 60;
+    // });
     int mins = int.parse("timerCtrl.text");
     DateTime now = DateTime.now();
     DateTime newTime = now.add(Duration(minutes: mins));
     String format = DateFormat('hh:mm:ss a').format(newTime);
     print("Format Date -> $format");
-    setState(() {
-      // expireTime = format.toString().padLeft(2, '0');
-    });
+    // setState(() {
+    //   // expireTime = format.toString().padLeft(2, '0');
+    // });
     await prefs.setString('exp', newTime.toString());
   }
 
@@ -946,20 +948,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // _stopTimer();
-      // loadTimer();
-      // The app is in the background or the user is leaving the app.
-      print('App is paused');
+      debugPrint('App is paused');
     } else if (state == AppLifecycleState.resumed) {
-      // The app is back in the foreground.
-      print('App is resumed');
-      // _stopTimer();
-      // loadTimer();
-      // _stopTimer();
-      // loadTimer();
+      debugPrint('App is resumed');
     } else if (state == AppLifecycleState.detached) {
-      // The app is detached from the view, meaning it is about to be terminated.
-      print('App is detached');
+      debugPrint('App is detached');
     }
   }
 }
