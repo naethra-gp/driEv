@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1013699001397",
+    "project_id": "driev-naethra",
+    "storage_bucket": "driev-naethra.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013699001397:android:f964136f1513dcf785457c",
+        "android_client_info": {
+          "package_name": "com.release.community"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZW5jYPJ5LIvJ4ey_ubbZt4o1_L80BU3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

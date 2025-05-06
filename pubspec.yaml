@@ -67,6 +67,10 @@ dependencies:
   shared_preferences: ^2.3.2
   sms_autofill: ^2.4.1
   keyboard_actions: ^4.2.0
+  # FIREBASE CONSOLE PLUGINS
+  firebase_core: ^2.27.1
+  firebase_crashlytics: ^3.4.19
+  firebase_performance: ^0.9.3+10
 
 dev_dependencies:
   flutter_test:
