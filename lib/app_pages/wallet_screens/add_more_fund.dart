@@ -6,6 +6,7 @@ import 'package:driev/app_services/customer_services.dart';
 import 'package:driev/app_themes/app_colors.dart';
 import 'package:driev/app_utils/app_widgets/app_base_screen.dart';
 import 'package:driev/app_utils/app_widgets/app_button.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
@@ -307,6 +308,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
     WalletServices walletServices = WalletServices();
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
+    FirebaseCrashlytics.instance.log("1. PAYTM PROCESS START - ${mobile.toString()}");
     var initiateTransactionRequest = {
       "amount": userAmount.toString(),
       "contact": mobile.toString(),
@@ -314,6 +316,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       "city": city,
     };
     debugPrint("===> Calling Initiate Transaction API <===");
+    FirebaseCrashlytics.instance.log("2. Calling Initiate Transaction API");
     debugPrint("Request Params ===> ${jsonEncode(initiateTransactionRequest)}");
     walletServices
         .initiateTransaction(initiateTransactionRequest)
@@ -322,6 +325,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       if (token[0]['status'].toString().toLowerCase() == "failed") {
         alertServices.hideLoading();
         alertServices.errorToast(token[0]['description']);
+        FirebaseCrashlytics.instance.log("Initiate API Error: ${token[0]['description'].toString()}");
         return;
       }
       String merchantID = token[0]['mid'].toString();
@@ -364,8 +368,10 @@ class _AddMoreFundState extends State<AddMoreFund> {
         String txtId = res[0]['TXNID'];
         String status = res[0]['STATUS'];
         String txtTime = res[0]['TXNDATE'];
+        FirebaseCrashlytics.instance.log("Paytm Success: ${res[0]}");
         await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
-      }).catchError((onError) async {
+      }).catchError((onError, stack) async {
+        FirebaseCrashlytics.instance.recordError(onError, stack, reason: 'PAYTM Error');
         if (onError is PlatformException) {
           setState(() {
             result = "${onError.message!} \n  ${onError.details}";
@@ -376,6 +382,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
           });
         }
         List response = [onError.details];
+        FirebaseCrashlytics.instance.log("Paytm Error: $response");
 
         /// ASSIGN DETAILS
         String txtId = response[0]['TXNID'];
@@ -420,8 +427,9 @@ class _AddMoreFundState extends State<AddMoreFund> {
           debugPrint("===> Credit Money Error <===");
           Navigator.pushReplacementNamed(context, "transaction_failure");
         }
-      } catch (e) {
+      } catch (e, stack) {
         debugPrint("Catch Error: ${e.toString()}");
+        FirebaseCrashlytics.instance.recordError(e, stack, reason: 'Credit Money API error');
         Navigator.pushReplacementNamed(context, "transaction_failure");
       }
     });
