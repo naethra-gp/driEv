@@ -308,7 +308,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
     WalletServices walletServices = WalletServices();
     alertServices.showLoading();
     String mobile = secureStorage.get("mobile") ?? "";
-    FirebaseCrashlytics.instance.log("1. PAYTM PROCESS START - ${mobile.toString()}");
+    FirebaseCrashlytics.instance
+        .log("1. PAYTM PROCESS START - ${mobile.toString()}");
     var initiateTransactionRequest = {
       "amount": userAmount.toString(),
       "contact": mobile.toString(),
@@ -318,16 +319,22 @@ class _AddMoreFundState extends State<AddMoreFund> {
     debugPrint("===> Calling Initiate Transaction API <===");
     FirebaseCrashlytics.instance.log("2. Calling Initiate Transaction API");
     debugPrint("Request Params ===> ${jsonEncode(initiateTransactionRequest)}");
-    walletServices
-        .initiateTransaction(initiateTransactionRequest)
-        .then((dynamic res) {
+
+    try {
+      final res =
+          await walletServices.initiateTransaction(initiateTransactionRequest);
       List token = [res];
+      debugPrint("====> Initiate Transaction Response <====");
+      debugPrint(token.toString());
+
       if (token[0]['status'].toString().toLowerCase() == "failed") {
         alertServices.hideLoading();
         alertServices.errorToast(token[0]['description']);
-        FirebaseCrashlytics.instance.log("Initiate API Error: ${token[0]['description'].toString()}");
+        FirebaseCrashlytics.instance
+            .log("Initiate API Error: ${token[0]['description'].toString()}");
         return;
       }
+
       String merchantID = token[0]['mid'].toString();
       String txtToken = token[0]['txnToken'].toString();
       String amount = userAmount.toString();
@@ -335,6 +342,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
       String callbackURL = token[0]['callbackUrl'].toString();
       bool isStagingMode = Constants.isStagingMode;
       bool rai = false;
+
       debugPrint("""
       -------------- PAYTM Payment ---------------------
         MerchantID    : $merchantID
@@ -345,24 +353,26 @@ class _AddMoreFundState extends State<AddMoreFund> {
         isStagingMode : $isStagingMode
       -------------- EOL PAYTM Payment ---------------------
       """);
-      alertServices.hideLoading();
-      var response = AllInOneSdk.startTransaction(
-        merchantID,
-        orderID,
-        amount,
-        txtToken,
-        callbackURL,
-        isStagingMode,
-        rai,
-      );
-      log("===> PAYTM SERVER RESPONSE => ${jsonEncode(response)}");
-      // todo: CHECK HERE LOGIC
 
-      response.then((value) async {
+      alertServices.hideLoading();
+
+      try {
+        final response = await AllInOneSdk.startTransaction(
+          merchantID,
+          orderID,
+          amount,
+          txtToken,
+          callbackURL,
+          isStagingMode,
+          rai,
+        );
+
+        log("===> PAYTM SERVER RESPONSE => $response");
         setState(() {
-          result = value.toString();
+          result = response.toString();
         });
-        List res = [value];
+
+        List res = [response];
         debugPrint("===> PayTM Success Result ---> ${res[0]}");
         debugPrint("===> Transaction Success <===");
         String txtId = res[0]['TXNID'];
@@ -370,8 +380,9 @@ class _AddMoreFundState extends State<AddMoreFund> {
         String txtTime = res[0]['TXNDATE'];
         FirebaseCrashlytics.instance.log("Paytm Success: ${res[0]}");
         await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
-      }).catchError((onError, stack) async {
-        FirebaseCrashlytics.instance.recordError(onError, stack, reason: 'PAYTM Error');
+      } catch (onError, stack) {
+        FirebaseCrashlytics.instance
+            .recordError(onError, stack, reason: 'PAYTM Error');
         if (onError is PlatformException) {
           setState(() {
             result = "${onError.message!} \n  ${onError.details}";
@@ -381,16 +392,20 @@ class _AddMoreFundState extends State<AddMoreFund> {
             result = onError.toString();
           });
         }
-        List response = [onError.details];
-        FirebaseCrashlytics.instance.log("Paytm Error: $response");
 
-        /// ASSIGN DETAILS
-        String txtId = response[0]['TXNID'];
-        String status = response[0]['STATUS'];
-        String txtTime = response[0]['TXNDATE'];
-        await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
-      });
-    });
+        if (onError is Map) {
+          String txtId = onError['TXNID'] ?? '';
+          String status = onError['STATUS'] ?? '';
+          String txtTime = onError['TXNDATE'] ?? '';
+          await creditMoneyToWallet(amount, orderID, status, txtId, txtTime);
+        }
+      }
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance
+          .recordError(e, stack, reason: 'Initiate Transaction Error');
+      alertServices.hideLoading();
+      alertServices.errorToast("Failed to initiate transaction");
+    }
   }
 
   creditMoneyToWallet(amount, oId, status, txtId, txtTime) async {
@@ -407,7 +422,7 @@ class _AddMoreFundState extends State<AddMoreFund> {
     debugPrint("====> Credit Money Request -> ${jsonEncode(params)}");
     walletServices.creditMoneyToWallet(params).then((dynamic response) {
       alertServices.hideLoading();
-      debugPrint("====> Credit Money Response -> ${jsonEncode(response)}");
+      debugPrint("====> Credit Money Response -> $response");
       try {
         if (response != null) {
           setState(() {
@@ -429,7 +444,8 @@ class _AddMoreFundState extends State<AddMoreFund> {
         }
       } catch (e, stack) {
         debugPrint("Catch Error: ${e.toString()}");
-        FirebaseCrashlytics.instance.recordError(e, stack, reason: 'Credit Money API error');
+        FirebaseCrashlytics.instance
+            .recordError(e, stack, reason: 'Credit Money API error');
         Navigator.pushReplacementNamed(context, "transaction_failure");
       }
     });
