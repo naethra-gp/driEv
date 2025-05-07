@@ -1,17 +1,19 @@
+// Root build.gradle
 buildscript {
-    ext.kotlin_version = '1.9.23'
+    ext.kotlin_version = '1.8.10'
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
-        classpath 'com.google.firebase:perf-plugin:1.4.2'
+        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.google.gms:google-services:4.4.1'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath 'com.google.firebase:perf-plugin:1.4.1'
     }
 }
+
 allprojects {
     repositories {
         google()
@@ -19,11 +21,34 @@ allprojects {
     }
 }
 
+// Add this configuration block
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            android {
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_1_8
+                    targetCompatibility JavaVersion.VERSION_1_8
+                }
+            }
+        }
+        if (project.hasProperty('kotlin')) {
+            kotlin {
+                jvmToolchain(8)
+            }
+        }
+        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = '1.8'
+            }
+        }
+    }
+}
+
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 

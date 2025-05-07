@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'app_config/app_routes.dart';
 import 'app_utils/app_provider/connectivity_provider.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +19,9 @@ Future<void> main() async {
   await Hive.openBox(Constants.storageBox);
 
   /// FIREBASE SETUP
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Enable Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
