@@ -204,7 +204,7 @@ class _RideDetailsState extends State<RideDetails> {
                   CustomTheme.defaultHeight10,
                   ListViewWidget(
                       label: "Billable Time",
-                      value: widget.rideId[0]['billableTime'].toString()),
+                      value: widget.rideId[0]['billableTime'] !=null? widget.rideId[0]['billableTime'].toString():''),
                   CustomTheme.defaultHeight10,
                   ListViewWidget(
                       label: "Total Amount (Incl.GST)",

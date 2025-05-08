@@ -639,6 +639,7 @@ class _HomePageState extends State<HomePage> {
       for (int i = 0; i < vehicleList.length; i++) {
         List dis = vehicleList[i]['distanceRange'].toString().split("-");
         if (dis.length == 2) {
+
           int minDistance = int.parse(dis[0]);
           int maxDistance = int.parse(dis[1]);
           int userDistance = int.parse(list[0]['distance']);
@@ -693,9 +694,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  bool isWithinRange(int a, int b, int c, int range) {
+
+ /* bool isWithinRange(int a, int b, int c, int range) {
     return (c >= a - range && c <= a + range) ||
         (c >= b - range && c <= b + range);
+  }*/
+
+  bool isWithinRange(int a, int b, int c, int range) {
+    return (a >= c - 10 && b <= c + 20);
   }
 
   getZoomControl() {
