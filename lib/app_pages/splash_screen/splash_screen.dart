@@ -1,3 +1,4 @@
+import 'package:driev/app_config/app_config.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initialize() async {
-    debugPrint('--->>> Splash Screen <<<---');
+    debugPrint("=====> PAGE TITLE: SPLASH SCREEN");
     _setStatusBarStyle();
     await _checkLocationService();
     await Future.delayed(const Duration(seconds: 3), _navigateToNextScreen);
@@ -45,9 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         color: Colors.white,
         child: SafeArea(
-          child: Center(
-            child: Image.asset("assets/img/logo.png"),
-          ),
+          child: Center(child: Image.asset(AppImages.appLogo)),
         ),
       ),
     );
@@ -60,8 +59,8 @@ class _SplashScreenState extends State<SplashScreen> {
     if (isLogin && mobile != null) {
       _getActiveRides(mobile);
     } else {
-      Navigator.pushNamedAndRemoveUntil(
-          context, "landing_page", (route) => false);
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, "landing_page", (_) => false);
     }
   }
 
@@ -77,8 +76,9 @@ class _SplashScreenState extends State<SplashScreen> {
         if (activeRides.isEmpty) {
           _getBlockedRides(mobile);
         } else {
-          Navigator.pushNamed(context, "on_ride",
-              arguments: activeRides[0]['rideId'].toString());
+          if (!mounted) return;
+          String rideId = activeRides[0]['rideId'].toString();
+          Navigator.pushNamed(context, "on_ride", arguments: rideId);
         }
       }
     } catch (e) {
@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (blockedRides != null && blockedRides.isNotEmpty) {
         Navigator.pushNamed(context, "extend_bike", arguments: blockedRides);
       } else {
-        Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, "home", (_) => false);
       }
     } catch (e) {
       debugPrint("Error fetching blocked rides: $e");
