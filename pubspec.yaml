@@ -2,7 +2,7 @@ name: driev
 description: "A new Flutter project."
 publish_to: 'none'
 # version: 4.0.7+17 # ANDROID PLAY STORE VERSION
-version: 1.0.18+18 # ANDROID CLIENT VERSION
+version: 1.0.19+19 # ANDROID CLIENT VERSION
 #version: 1.0.21 # ios test flight version number
 #version: 1.0.23+1 # ios Live version number
 

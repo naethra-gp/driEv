@@ -1,6 +1,8 @@
+import 'package:driev/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
+
 import '../../../app_utils/app_widgets/app_button.dart';
 
 class LandingPage extends StatefulWidget {
@@ -11,6 +13,16 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  // Constants
+  static const double _imageHeight = 277;
+  static const double _imageWidth = 370;
+  static const double _titleFontSize = 20;
+  static const double _descriptionFontSize = 16;
+  static const double _horizontalPadding = 30;
+  static const double _verticalSpacing = 16;
+  static const double _smallSpacing = 10;
+  static const double _largeSpacing = 30;
+
   @override
   void initState() {
     super.initState();
@@ -24,19 +36,19 @@ class _LandingPageState extends State<LandingPage> {
         color: Colors.white,
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(horizontal: _horizontalPadding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _buildImageSection(),
-                const SizedBox(height: 10),
+                const SizedBox(height: _smallSpacing),
                 _buildTitleText(),
-                const SizedBox(height: 16),
+                const SizedBox(height: _verticalSpacing),
                 _buildDescriptionText(),
-                const SizedBox(height: 30),
+                const SizedBox(height: _largeSpacing),
                 _buildActionButton(context),
-                const SizedBox(height: 16),
+                const SizedBox(height: _verticalSpacing),
               ],
             ),
           ),
@@ -63,8 +75,6 @@ class _LandingPageState extends State<LandingPage> {
       Permission.location,
       Permission.locationAlways,
       Permission.photos,
-      // Permission.mediaLibrary,
-      // Permission.notification,
     ].request();
   }
 
@@ -72,9 +82,9 @@ class _LandingPageState extends State<LandingPage> {
   Widget _buildImageSection() {
     return Center(
       child: Image.asset(
-        "assets/app/get_started.png",
-        height: 277,
-        width: 370,
+        AppImages.getStarted,
+        height: _imageHeight,
+        width: _imageWidth,
         fit: BoxFit.contain,
       ),
     );
@@ -83,9 +93,9 @@ class _LandingPageState extends State<LandingPage> {
   // Builds the title text
   Widget _buildTitleText() {
     return const Text(
-      "Let's get you road-ready!",
+      AppStrings.landingTitle,
       style: TextStyle(
-        fontSize: 20,
+        fontSize: _titleFontSize,
         fontWeight: FontWeight.bold,
       ),
     );
@@ -94,13 +104,13 @@ class _LandingPageState extends State<LandingPage> {
   // Builds the description text
   Widget _buildDescriptionText() {
     return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.symmetric(horizontal: _smallSpacing),
       child: Text(
-        "Get set to zip through the city, uncover hidden hotspots, and transform every journey into an epic adventure with our eco-friendly rides. Let's hit the road!",
+        AppStrings.landingDescription,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: "Roboto",
-          fontSize: 16,
+          fontSize: _descriptionFontSize,
           color: Color(0xff6F6F6F),
         ),
       ),
@@ -110,12 +120,10 @@ class _LandingPageState extends State<LandingPage> {
   // Builds the action button
   Widget _buildActionButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: _smallSpacing),
       child: AppButtonWidget(
-        title: "Sign In / Sign Up",
-        onPressed: () {
-          Navigator.pushNamed(context, "login");
-        },
+        title: AppStrings.signInSignUp,
+        onPressed: () => Navigator.pushNamed(context, "login"),
       ),
     );
   }

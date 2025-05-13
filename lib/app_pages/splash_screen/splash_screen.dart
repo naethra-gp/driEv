@@ -23,11 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    printPageTitle(AppTitles.splashScreen);
     _initialize();
   }
 
   Future<void> _initialize() async {
-    debugPrint("=====> PAGE TITLE: SPLASH SCREEN");
     _setStatusBarStyle();
     await _checkLocationService();
     await Future.delayed(const Duration(seconds: 3), _navigateToNextScreen);
@@ -93,8 +93,10 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       final blockedRides = await _vehicleService.getBlockedRides(mobile);
       if (blockedRides != null && blockedRides.isNotEmpty) {
+        if (!mounted) return;
         Navigator.pushNamed(context, "extend_bike", arguments: blockedRides);
       } else {
+        if (!mounted) return;
         Navigator.pushNamedAndRemoveUntil(context, "home", (_) => false);
       }
     } catch (e) {
@@ -109,8 +111,8 @@ class _SplashScreenState extends State<SplashScreen> {
       final LocationService locationService = LocationService();
       final Position position = await locationService.determinePosition();
       debugPrint("Position: $position");
-    } catch (e) {
-      debugPrint("Location service error: $e");
+    } catch (e, stack) {
+      appLog(e, stack, reason: AppTitles.splashScreen, fatal: true);
     }
   }
 
