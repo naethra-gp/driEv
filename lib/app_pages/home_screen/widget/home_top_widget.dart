@@ -81,55 +81,66 @@ class HomeTopWidget extends StatelessWidget {
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    const SizedBox(width: 10),
-                    const Icon(Icons.location_on_outlined),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        location,
-                        style: TextStyle(
-                          fontSize: 12 * textScaleFactor,
-                          fontWeight: FontWeight.normal,
+                // Make this whole Row Expanded
+                Expanded(
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      const Icon(Icons.location_on_outlined),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          location,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 12 * textScaleFactor,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, "wallet_summary");
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 40,
-                        width: 2,
-                        color: const Color(0xffDEDEDE),
-                      ),
-                      const SizedBox(width: 10),
-                      Image.asset(
-                        "assets/img/wallet.png",
-                        height: 25,
-                        width: 25,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        "\u{20B9} ${balance.toStringAsFixed(2)}",
-                        style: TextStyle(
-                          fontSize: 12 * textScaleFactor,
-                          fontWeight: FontWeight.bold,
-                          color: getColor(balance),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 120), // <<< Add width limit here
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 2,
+                          color: const Color(0xffDEDEDE),
                         ),
-                      ),
-                      const SizedBox(width: 20),
-                    ],
+                        const SizedBox(width: 10),
+                        Image.asset(
+                          "assets/img/wallet.png",
+                          height: 25,
+                          width: 25,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded( // now you can use Expanded safely!
+                          child: Text(
+                            "\u{20B9} ${balance.toStringAsFixed(2)}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 12 * textScaleFactor,
+                              fontWeight: FontWeight.bold,
+                              color: getColor(balance),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                    ),
                   ),
                 ),
               ],
