@@ -82,7 +82,6 @@ class _EndRideScannerState extends State<EndRideScanner> {
       campus = a[0];
       rideId = widget.rideID[0]['rideId'].toString();
     });
-    print("Ride: ${widget.rideID[0]['scanCode']}");
     _startCountdown();
     QrMobileVision.stop();
     super.initState();

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:driev/app_config/app_config.dart';
 import 'package:driev/app_pages/home_screen/widget/home_top_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -56,8 +57,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    debugPrint("--- PAGE: Home Page ---");
     super.initState();
+    printPageTitle(AppTitles.homeScreen);
     _initializeData();
   }
 
@@ -513,9 +514,10 @@ class _HomePageState extends State<HomePage> {
 
         await _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
       }
-    } catch (e) {
+    } catch (e, stack) {
       if (!mounted) return;
       alertServices.hideLoading();
+      appLog(e, stack, reason: AppTitles.homeScreen, fatal: true);
       alertServices.errorToast("Failed to get station details");
       gotoLogin();
     }
@@ -639,7 +641,6 @@ class _HomePageState extends State<HomePage> {
       for (int i = 0; i < vehicleList.length; i++) {
         List dis = vehicleList[i]['distanceRange'].toString().split("-");
         if (dis.length == 2) {
-
           int minDistance = int.parse(dis[0]);
           int maxDistance = int.parse(dis[1]);
           int userDistance = int.parse(list[0]['distance']);
@@ -694,8 +695,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
- /* bool isWithinRange(int a, int b, int c, int range) {
+  /* bool isWithinRange(int a, int b, int c, int range) {
     return (c >= a - range && c <= a + range) ||
         (c >= b - range && c <= b + range);
   }*/

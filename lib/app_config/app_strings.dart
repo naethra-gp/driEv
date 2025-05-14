@@ -14,7 +14,13 @@ class AppStrings {
 class AppTitles {
   static const splashScreen = "SPLASH SCREEN";
   static const loginScreen = "LOGIN SCREEN";
+  static const landingScreen = "LANDING SCREEN";
   static const verifyOTPScreen = "VERIFY OTP SCREEN";
+  static const homeScreen = "HOME SCREEN";
+  static const bikeFareScreen = "BIKE FARE SCREEN";
+  static const extendBikeTimerScreen = "EXTEND BIKE FARE TIMER SCREEN";
+  static const bookingSuccessScreen = "BOOKING SUCCESS SCREEN";
+  static const bookingFailedScreen = "BOOKING FAILED SCREEN";
 }
 
 class AppErrors {

@@ -71,7 +71,6 @@ class _OnRidePageState extends State<OnRidePage> {
   }
 
   getRideDetails(String id) {
-    print("Ride ID: $id  planType");
     bookingServices.getRideDetails(id).then((r) {
       if (r != null) {
         setState(() {
@@ -107,7 +106,6 @@ class _OnRidePageState extends State<OnRidePage> {
   }
 
   getRideDetails1(String id) {
-    print("Calling api ---> Get Ride Details");
     bookingServices.getRideDetails(id).then((r) {
       if (!mounted) return;
       if (r != null) {
@@ -125,9 +123,7 @@ class _OnRidePageState extends State<OnRidePage> {
       child: SafeArea(
         child: Scaffold(
           body: currentLocation1 == null
-              ? const Center(
-                  child: Text("Loading map..."),
-                )
+              ? const Center(child: Text("Loading map..."))
               : Stack(
                   children: <Widget>[
                     SizedBox(
@@ -174,7 +170,6 @@ class _OnRidePageState extends State<OnRidePage> {
 
   // TO GET USERS CURRENT LOCATION
   getLocation() async {
-    print("GET LOCATION");
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
