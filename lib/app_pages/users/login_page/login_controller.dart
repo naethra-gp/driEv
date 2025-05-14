@@ -4,22 +4,29 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../app_services/index.dart';
 import '../../../app_utils/app_loading/alert_services.dart';
 
 mixin LoginController {
   // Controllers and Services
-  final TextEditingController mobileCtrl = TextEditingController();
+  TextEditingController? _mobileCtrl;
+  TextEditingController get mobileCtrl =>
+      _mobileCtrl ??= TextEditingController();
+
   final OtpServices otpServices = OtpServices();
   final AlertServices alertServices = AlertServices();
   final formKey = GlobalKey<FormState>();
-  final otpFocus = FocusNode();
+  FocusNode? _otpFocus;
+  FocusNode get otpFocus => _otpFocus ??= FocusNode();
 
   // State Variables
   bool isStaging = Constants.isStaging;
   bool isLoading = false;
   bool isMobileValid = false;
+  bool _isDisposed = false;
+  StateSetter? _currentSetState;
 
   // UI Constants
   final double smallDeviceHeight = 600;
@@ -41,7 +48,10 @@ mixin LoginController {
   final Color textColor = Colors.black;
   final Color subtitleColor = const Color(0XFF6F6F6F);
 
-  void initStateController(String? mobileNumber) {
+  void initStateController(String? mobileNumber, StateSetter setState) {
+    if (_isDisposed) return;
+
+    _currentSetState = setState;
     printPageTitle(AppTitles.loginScreen);
     mobileCtrl.addListener(_validateMobile);
     if (mobileNumber != null) {
@@ -53,12 +63,17 @@ mixin LoginController {
   }
 
   void dispose() {
+    _isDisposed = true;
+    _currentSetState = null;
     mobileCtrl.removeListener(_validateMobile);
-    mobileCtrl.dispose();
-    otpFocus.dispose();
+    _mobileCtrl?.dispose();
+    _mobileCtrl = null;
+    _otpFocus?.dispose();
+    _otpFocus = null;
   }
 
   void _validateMobile() {
+    if (_isDisposed) return;
     isMobileValid = mobileCtrl.text.length == 10;
   }
 
@@ -88,6 +103,7 @@ mixin LoginController {
 
   // Business Logic Methods
   void toggleApiMode(bool value, StateSetter setState) {
+    if (_isDisposed) return;
     setState(() {
       isStaging = value;
       Constants.isStaging = value;
@@ -102,19 +118,27 @@ mixin LoginController {
   }
 
   Future<void> tryPasteCurrentPhone() async {
+    if (_isDisposed) return;
     try {
-      final autoFill = SmsAutoFill();
-      final phone = await autoFill.hint;
-      if (phone == null) return;
-      if (phone.toString().startsWith('+91')) {
-        mobileCtrl.text = phone.toString().replaceFirst('+91', '');
+      // Request permissions first
+      final status = await Permission.sms.request();
+      if (status.isGranted) {
+        final autoFill = SmsAutoFill();
+        final phone = await autoFill.hint;
+        if (phone == null) return;
+        if (phone.toString().startsWith('+91')) {
+          mobileCtrl.text = phone.toString().replaceFirst('+91', '');
+        }
+      } else {
+        alertServices.errorToast("SMS permission is required for autofill");
       }
     } on PlatformException catch (e, stack) {
-      appLog(e, stack, reason: AppTitles.loginScreen, fatal: true);
+      firebaseCatchLogs(e, stack, reason: AppTitles.loginScreen, fatal: true);
     }
   }
 
   Future<void> submitLogin(BuildContext context, StateSetter setState) async {
+    if (_isDisposed) return;
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       setState(() => isLoading = true);
@@ -129,14 +153,17 @@ mixin LoginController {
         }
       } catch (e, stack) {
         alertServices.errorToast(AppErrors.failedToSendOTP);
-        appLog(e, stack, reason: AppTitles.loginScreen, fatal: false);
+        firebaseCatchLogs(e, stack, reason: AppTitles.loginScreen, fatal: false);
       } finally {
-        setState(() => isLoading = false);
+        if (!_isDisposed) {
+          setState(() => isLoading = false);
+        }
       }
     }
   }
 
   Future<void> openBrowser() async {
+    if (_isDisposed) return;
     final Uri url = Uri.parse('https://driev.bike/termsandconditions');
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       alertServices.errorToast("Could not launch $url");
@@ -144,6 +171,13 @@ mixin LoginController {
   }
 
   KeyboardActionsConfig buildKeyboardActionsConfig(BuildContext context) {
+    if (_isDisposed) {
+      return const KeyboardActionsConfig(
+        keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+        actions: [],
+      );
+    }
+
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
       actions: [

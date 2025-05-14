@@ -5,10 +5,10 @@
 | DESC    : THIS IS MAIN CONNECTION FILE
 *  ===============================================================*/
 
-// Dependencies or Plugins - Models - Services - Global Functions
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:driev/app_config/app_logs.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -127,8 +127,7 @@ class Connection {
       if (!Uri.parse(url).isAbsolute) {
         throw const FormatException('Invalid URL format');
       }
-
-      debugPrint("[GET] => API: $url");
+      printServiceLogs('GET', url);
       final response = await _retryRequest(() => http
           .get(
             Uri.parse(url),
@@ -138,7 +137,7 @@ class Connection {
 
       return await _handleResponse(response);
     } catch (e, stackTrace) {
-      FirebaseCrashlytics.instance.recordError(e, stackTrace);
+      firebaseCatchLogs(e, stackTrace, reason: url);
       customException(e);
       return null;
     } finally {
@@ -162,7 +161,7 @@ class Connection {
         throw const FormatException('Invalid URL format');
       }
 
-      debugPrint("[POST] =>  API: $url");
+      printServiceLogs('POST', url);
       final response = await _retryRequest(() => http
           .post(
             Uri.parse(url),
@@ -221,7 +220,8 @@ class Connection {
         throw const FormatException('Invalid URL format');
       }
 
-      debugPrint("[GET] =>  API: $url");
+      printServiceLogs('GET WITH TOKEN', url);
+
       final response = await _retryRequest(() => http
           .get(
             Uri.parse(url),
@@ -257,8 +257,8 @@ class Connection {
       if (!Uri.parse(url).isAbsolute) {
         throw const FormatException('Invalid URL format');
       }
+      printServiceLogs('POST WITH TOKEN', url);
 
-      debugPrint("[POST] =>  API: $url");
       final response = await _retryRequest(() => http
           .post(
             Uri.parse(url),

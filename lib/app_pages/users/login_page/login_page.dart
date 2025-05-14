@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> with LoginController {
   @override
   void initState() {
     super.initState();
-    initStateController(widget.mobileNumber);
+    initStateController(widget.mobileNumber, setState);
   }
 
   @override

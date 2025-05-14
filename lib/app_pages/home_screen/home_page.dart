@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   double distance = 20;
   String? currentDistrict = "";
   String? distanceText = "";
+  bool _mounted = true;
 
   @override
   void initState() {
@@ -63,15 +64,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initializeData() async {
+    if (!_mounted) return;
     await getCustomerDetails();
   }
 
   @override
   void dispose() {
+    _mounted = false;
+    mapController?.dispose();
     super.dispose();
   }
 
+  void _safeSetState(VoidCallback fn) {
+    if (_mounted) {
+      setState(fn);
+    }
+  }
+
   getUserLocation() async {
+    if (!_mounted) return;
     Position position = await _locationService.determinePosition();
     Placemark place = await _locationService.getPlaceMark(position);
     location = place.locality.toString();
@@ -81,10 +92,11 @@ class _HomePageState extends State<HomePage> {
         LatLng(position.latitude, position.longitude),
       ),
     );
-    setState(() {});
+    _safeSetState(() {});
   }
 
   Future<void> _loadCustomIcons() async {
+    if (!_mounted) return;
     stationMarker = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(20, 30)),
       'assets/img/map_station_icon.png',
@@ -288,6 +300,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _addPolyline(List<LatLng> polylineCoordinates) {
+    if (!_mounted) return;
     debugPrint("--- add Polyline ---");
     Polyline polyline = Polyline(
       polylineId: const PolylineId("polyLines"),
@@ -299,7 +312,7 @@ class _HomePageState extends State<HomePage> {
         PatternItem.gap(10),
       ],
     );
-    setState(() {
+    _safeSetState(() {
       _polyLines.add(polyline);
     });
     if (Platform.isAndroid) {
@@ -352,6 +365,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchAndDisplayDirections(LatLng start, LatLng end) async {
+    if (!_mounted) return;
     debugPrint(" --- FETCH AND DISPLAY DIRECTIONS ---");
 
     // Platform-specific coordinate validation
@@ -383,7 +397,7 @@ class _HomePageState extends State<HomePage> {
       if (distance > 1000) {
         // 1000 km threshold
         debugPrint("Coordinates too far apart: $distance km");
-        setState(() {
+        _safeSetState(() {
           distanceText = null;
         });
         return;
@@ -393,7 +407,7 @@ class _HomePageState extends State<HomePage> {
     List<LatLng> pc = await _locationService.getDirections(start, end);
     if (pc.isEmpty) {
       debugPrint("No route found between points");
-      setState(() {
+      _safeSetState(() {
         distanceText = null;
       });
       return;
@@ -412,15 +426,16 @@ class _HomePageState extends State<HomePage> {
 
   /// GETTING STATION DETAILS
   Future<void> getCustomerDetails() async {
+    if (!_mounted) return;
     alertServices.showLoading("Getting user details...");
     String mobile = secureStorage.get("mobile");
     final response = await customerService.getCustomer(mobile.toString(), true);
     alertServices.hideLoading();
 
-    if (!mounted) return;
+    if (!_mounted) return;
 
     if (response != null) {
-      setState(() {
+      _safeSetState(() {
         customer = [response];
       });
       debugPrint("Customer Details -> ${jsonEncode(customer)}");
@@ -430,7 +445,7 @@ class _HomePageState extends State<HomePage> {
       String custType = customer[0]['custType'] ?? "";
       String status = customer[0]['accountStatus'] ?? "";
 
-      if (!mounted) return;
+      if (!_mounted) return;
 
       if (custType == "Subscription") {
         alertServices.subscriptionAlert(context, "");
@@ -457,7 +472,7 @@ class _HomePageState extends State<HomePage> {
         } else {
           if (station.isNotEmpty) {
             await getUserLocation();
-            if (!mounted) return;
+            if (!_mounted) return;
             await _loadCustomIcons();
             await getPlansByStation(station);
           } else {
@@ -472,17 +487,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getPlansByStation(String stationId) async {
-    if (!mounted) return;
+    if (!_mounted) return;
 
     try {
       alertServices.showLoading("Getting station details...");
       final stationData = await vehicleService.getPlansByStation(stationId);
 
-      if (!mounted) return;
+      if (!_mounted) return;
       alertServices.hideLoading();
 
       // Update station details
-      setState(() {
+      _safeSetState(() {
         stationDetails = stationData;
         stationLocation = LatLng(
           stationData['lattitude'],
@@ -499,7 +514,7 @@ class _HomePageState extends State<HomePage> {
         alertServices.showLoading("Finding best route...");
         await Future.delayed(const Duration(seconds: 5));
 
-        if (!mounted) return;
+        if (!_mounted) return;
         alertServices.hideLoading();
 
         final distance = await _locationService.calculateDistance(
@@ -509,15 +524,15 @@ class _HomePageState extends State<HomePage> {
           stationLocation!.longitude,
         );
 
-        if (!mounted) return;
-        setState(() => distanceText = distance);
+        if (!_mounted) return;
+        _safeSetState(() => distanceText = distance);
 
         await _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
       }
     } catch (e, stack) {
-      if (!mounted) return;
+      if (!_mounted) return;
       alertServices.hideLoading();
-      appLog(e, stack, reason: AppTitles.homeScreen, fatal: true);
+      firebaseCatchLogs(e, stack, reason: AppTitles.homeScreen, fatal: true);
       alertServices.errorToast("Failed to get station details");
       gotoLogin();
     }
@@ -629,10 +644,12 @@ class _HomePageState extends State<HomePage> {
 
   // VEHICLE FILTRATION
   getVehiclesByPlan(List list) async {
+    if (!_mounted) return;
     alertServices.showLoading();
     vehicleService
         .getVehiclesByStation(list[0]['sId'].toString())
         .then((response) async {
+      if (!_mounted) return;
       alertServices.hideLoading();
       filterVehicleList = [];
       closedVehicleList = [];
@@ -647,7 +664,7 @@ class _HomePageState extends State<HomePage> {
 
           String result =
               checkConditions(minDistance, maxDistance, userDistance);
-          setState(() {
+          _safeSetState(() {
             if (result == "exact") {
               if (vehicleList[i]['planType'].toString() ==
                   list[0]['plan'].toString()) {
@@ -658,9 +675,6 @@ class _HomePageState extends State<HomePage> {
                   list[0]['plan'].toString()) {
                 closedVehicleList.add(vehicleList[i]);
               }
-              // closedVehicleList.add(vehicleList[i]);
-            } else {
-              // closedVehicleList.add(vehicleList[i]);
             }
           });
         }
@@ -673,7 +687,6 @@ class _HomePageState extends State<HomePage> {
           {
             "sId": list[0]['sId'].toString(),
             "sName": list[0]['sName'].toString(),
-            // "plan": list[0]['plan'],
             "distanceText": list[0]['distanceText'].toString(),
             "distance": list[0]['distance'].toString(),
             "filterVehicleList": filterVehicleList,
@@ -694,11 +707,6 @@ class _HomePageState extends State<HomePage> {
       return "Wrong number";
     }
   }
-
-  /* bool isWithinRange(int a, int b, int c, int range) {
-    return (c >= a - range && c <= a + range) ||
-        (c >= b - range && c <= b + range);
-  }*/
 
   bool isWithinRange(int a, int b, int c, int range) {
     return (a >= c - 10 && b <= c + 20);

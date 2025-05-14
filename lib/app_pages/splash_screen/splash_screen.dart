@@ -112,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen> {
       final Position position = await locationService.determinePosition();
       debugPrint("Position: $position");
     } catch (e, stack) {
-      appLog(e, stack, reason: AppTitles.splashScreen, fatal: true);
+      firebaseCatchLogs(e, stack, reason: AppTitles.splashScreen, fatal: true);
     }
   }
 

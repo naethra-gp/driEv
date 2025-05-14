@@ -8,8 +8,18 @@ printPageTitle(String title) {
   }
 }
 
+/// PRINT ONLY SERVICE CLASS
+printServiceLogs(String method, String url) {
+  if (!kReleaseMode) {
+    debugPrint("-----------------------------------");
+    debugPrint("METHOD NAME : [$method]");
+    debugPrint("API URL     : $url");
+    debugPrint("-----------------------------------");
+  }
+}
+
 /// FIREBASE GLOBAL ERROR CATCH
-Future<void> appLog(
+Future<void> firebaseCatchLogs(
   dynamic onError,
   StackTrace stack, {
   String reason = "",
@@ -32,3 +42,4 @@ Future<void> appLog(
     fatal: fatal,
   );
 }
+      

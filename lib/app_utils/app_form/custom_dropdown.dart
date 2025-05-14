@@ -1,95 +1,118 @@
 import 'package:flutter/material.dart';
 
+/// A custom dropdown form field that extends [FormField] with enhanced styling and functionality.
 class CustomDropdown extends FormField<String> {
-  CustomDropdown(
-      {Key? key,
-      required List<DropdownMenuEntry<dynamic>> dropdownMenuEntries,
-      required String title,
-      String? errorText,
-      bool? search,
-      ValueChanged<String?>? onSelected,
-      FormFieldValidator<String>? validator,
-      String? initialValue,
-      bool enabled = true,
-      InputDecoration? decoration})
-      : super(
-          key: key,
-          validator: validator,
-          initialValue: initialValue,
-          builder: (FormFieldState<String> state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color:
-                          state.hasError ? Colors.red : const Color(0xffD2D2D2),
-                    ),
-                  ),
-                  height: 48,
-                  alignment: AlignmentDirectional.center,
-                  child: DropdownMenu(
-                    menuHeight: MediaQuery.of(state.context).size.width / 1.5,
-                    dropdownMenuEntries: dropdownMenuEntries,
-                    enabled: enabled,
-                    onSelected: (value) {
-                      state.didChange(value);
-                      state.validate();
-                      if (onSelected != null) {
-                        onSelected(value);
-                      }
-                    },
-                    hintText: title,
-                    expandedInsets: const EdgeInsets.all(0),
-                    enableFilter: search ?? false,
-                    enableSearch: search ?? false,
-                    requestFocusOnTap: search ?? false,
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      textBaseline: TextBaseline.alphabetic,
-                      fontFamily: "Roboto",
-                      fontSize: 12,
-                    ),
-                    errorText: null,
-                    inputDecorationTheme: InputDecorationTheme(
-                      border: InputBorder.none,
-                      errorStyle: const TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xffD2D2D2)),
-                      ),
-                      isDense: true,
-                      contentPadding: const EdgeInsets.only(left: 15),
-                    ),
-                    menuStyle: MenuStyle(
-                      backgroundColor:
-                          const WidgetStatePropertyAll(Colors.white),
-                      padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                      elevation: const WidgetStatePropertyAll(15),
-                      visualDensity: VisualDensity.adaptivePlatformDensity,
-                    ),
-                  ),
-                ),
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12, top: 4),
-                    child: Text(
-                      state.errorText ?? '',
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontFamily: "Roboto-Regular",
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          },
-        );
+  static const double _borderRadius = 10.0;
+  static const double _height = 48.0;
+  static const double _fontSize = 12.0;
+  static const double _elevation = 15.0;
+  static const Color _borderColor = Color(0xffD2D2D2);
+  static const EdgeInsets _contentPadding = EdgeInsets.only(left: 15);
+  static const EdgeInsets _errorPadding = EdgeInsets.only(left: 12, top: 4);
+
+  static const TextStyle _textStyle = TextStyle(
+    fontWeight: FontWeight.normal,
+    textBaseline: TextBaseline.alphabetic,
+    fontFamily: "Roboto",
+    fontSize: _fontSize,
+  );
+
+  static const TextStyle _errorStyle = TextStyle(
+    color: Colors.redAccent,
+    fontSize: _fontSize,
+    fontWeight: FontWeight.normal,
+  );
+
+  static const TextStyle _errorTextStyle = TextStyle(
+    color: Colors.red,
+    fontFamily: "Roboto-Regular",
+    fontSize: _fontSize,
+  );
+
+  static const _inputDecorationTheme = InputDecorationTheme(
+    border: InputBorder.none,
+    errorStyle: _errorStyle,
+    isDense: true,
+    contentPadding: _contentPadding,
+  );
+
+  final List<DropdownMenuEntry<dynamic>> _dropdownMenuEntries;
+  final String _title;
+  final bool? _search;
+  final bool _enabled;
+  final ValueChanged<String?>? _onSelected;
+
+  CustomDropdown({
+    super.key,
+    required List<DropdownMenuEntry<dynamic>> dropdownMenuEntries,
+    required String title,
+    String? errorText,
+    bool? search,
+    ValueChanged<String?>? onSelected,
+    super.validator,
+    super.initialValue,
+    bool enabled = true,
+    InputDecoration? decoration,
+  })  : _dropdownMenuEntries = dropdownMenuEntries,
+        _title = title,
+        _search = search,
+        _enabled = enabled,
+        _onSelected = onSelected,
+        super(builder: (state) => _buildFormField(state));
+
+  static Widget _buildFormField(FormFieldState<String> state) {
+    final dropdown = state.widget as CustomDropdown;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildDropdownContainer(state, dropdown),
+        if (state.hasError) _buildErrorText(state),
+      ],
+    );
+  }
+
+  static Widget _buildDropdownContainer(
+      FormFieldState<String> state, CustomDropdown dropdown) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(_borderRadius),
+        border: Border.all(
+          color: state.hasError ? Colors.red : _borderColor,
+        ),
+      ),
+      height: _height,
+      alignment: AlignmentDirectional.center,
+      child: DropdownMenu(
+        menuHeight: MediaQuery.of(state.context).size.width / 1.5,
+        dropdownMenuEntries: dropdown._dropdownMenuEntries,
+        enabled: dropdown._enabled,
+        onSelected: (value) {
+          state.didChange(value);
+          state.validate();
+          dropdown._onSelected?.call(value);
+        },
+        hintText: dropdown._title,
+        expandedInsets: EdgeInsets.zero,
+        enableFilter: dropdown._search ?? false,
+        enableSearch: dropdown._search ?? false,
+        requestFocusOnTap: dropdown._search ?? false,
+        textStyle: _textStyle,
+        errorText: null,
+        inputDecorationTheme: _inputDecorationTheme,
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          padding: WidgetStateProperty.all(EdgeInsets.zero),
+          elevation: WidgetStateProperty.all(_elevation),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+      ),
+    );
+  }
+
+  static Widget _buildErrorText(FormFieldState<String> state) {
+    return Padding(
+      padding: _errorPadding,
+      child: Text(state.errorText ?? '', style: _errorTextStyle),
+    );
+  }
 }
