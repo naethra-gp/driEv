@@ -1,13 +1,9 @@
+import 'package:driev/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 
-class NoInterNet extends StatefulWidget {
+class NoInterNet extends StatelessWidget {
   const NoInterNet({super.key});
 
-  @override
-  State<NoInterNet> createState() => _NoInterNetState();
-}
-
-class _NoInterNetState extends State<NoInterNet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +19,7 @@ class _NoInterNetState extends State<NoInterNet> {
           children: [
             Center(
               child: Image.asset(
-                "assets/img/no-internet.png",
+                AppImages.noInternetImage,
                 height: 200,
               ),
             ),
@@ -31,16 +27,20 @@ class _NoInterNetState extends State<NoInterNet> {
             const Text(
               'Oops!',
               style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.redAccent,
-                  fontFamily: "Poppins"),
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.redAccent,
+                fontFamily: "Poppins",
+              ),
             ),
             const SizedBox(height: 20),
             const Text(
-              'No internet connection was found. Check your internet connection or try again.',
+              AppStrings.noInternetMessage,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: "Poppins",
+              ),
             ),
             const SizedBox(height: 20),
           ],

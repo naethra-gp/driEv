@@ -3,7 +3,6 @@ import 'package:driev/app_pages/ride_history/ride_history.dart';
 import 'package:driev/app_pages/wallet_screens/wallet_summary.dart';
 import 'package:driev/app_pages/wallet_screens/walllet_all_transaction.dart';
 import 'package:driev/app_pages/wallet_screens/withdraw_amount.dart';
-import 'package:driev/app_test/app_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../app_pages/index.dart';
@@ -22,8 +21,6 @@ class AppRoute {
       switch (settings.name) {
         case "splash":
           return const SplashScreen();
-        case "permission":
-          return const PermissionPage();
         case "landing_page":
           return const LandingPage();
         case "login":
@@ -31,8 +28,6 @@ class AppRoute {
           return LoginPage(mobileNumber: mobile);
         case "home":
           return const HomePage();
-        // case "home":
-        //   return const MapLandingScreen();
         case "verify_otp":
           String mobile = settings.arguments as String;
           return VerifyOTP(mobileNumber: mobile);
@@ -127,9 +122,6 @@ class AppRoute {
         case "ride_details":
           List args = settings.arguments as List;
           return RideDetails(rideId: args);
-
-        case "test":
-          return const AppTest();
       }
       return const LandingPage();
     });

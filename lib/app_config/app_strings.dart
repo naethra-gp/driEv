@@ -9,6 +9,7 @@ class AppStrings {
   static const String landingDescription =
       "Get set to zip through the city, uncover hidden hotspots, and transform every journey into an epic adventure with our eco-friendly rides. Let's hit the road!";
   static const String signInSignUp = "Sign In / Sign Up";
+  static const String noInternetMessage = "No internet connection was found. Check your internet connection or try again.";
 }
 
 class AppTitles {

@@ -79,19 +79,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    double containerHeight;
-    double positionedHeight;
-    if (height < smallDeviceHeight) {
-      containerHeight = height / 1.2;
-      positionedHeight = height / 0.925;
-    } else if (height >= smallDeviceHeight && height < largeDeviceHeight) {
-      containerHeight = height / 1.35;
-      positionedHeight = height / 1.045;
-    } else {
-      containerHeight = height / 1.1;
-      positionedHeight = height / 0.95;
-    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
