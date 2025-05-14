@@ -1,9 +1,8 @@
+import 'package:driev/app_config/app_config.dart';
 import 'package:driev/app_pages/vehicle_page/widget/campus_widget.dart';
 import 'package:driev/app_services/campus_services.dart';
 import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
-
-import '../../app_config/app_constants.dart';
 import 'widget/dynamic_card_widget.dart';
 import 'widget/error_widget.dart';
 
@@ -29,7 +28,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
   @override
   void initState() {
     super.initState();
-    debugPrint("--- Page Name: VEHICLE CLOSER MATCHES ---");
+    printPageTitle(AppTitles.vehicleCloserScreen);
     setState(() {
       data = widget.params;
     });

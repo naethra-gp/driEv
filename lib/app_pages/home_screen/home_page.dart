@@ -25,12 +25,85 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+class MapWidget extends StatefulWidget {
+  final LatLng? currentPosition;
+  final LatLng? stationLocation;
+  final Set<Polyline> polylines;
+  final BitmapDescriptor? customerMarker;
+  final BitmapDescriptor? stationMarker;
+  final Function(GoogleMapController) onMapCreated;
+  final MinMaxZoomPreference? zoomPreference;
+
+  const MapWidget({
+    super.key,
+    this.currentPosition,
+    this.stationLocation,
+    required this.polylines,
+    this.customerMarker,
+    this.stationMarker,
+    required this.onMapCreated,
+    this.zoomPreference,
+  });
+
+  @override
+  State<MapWidget> createState() => _MapWidgetState();
+}
+
+class _MapWidgetState extends State<MapWidget> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.currentPosition != null && widget.stationLocation != null) {
+      return GoogleMap(
+        myLocationEnabled: false,
+        myLocationButtonEnabled: false,
+        zoomControlsEnabled: true,
+        compassEnabled: false,
+        mapType: MapType.normal,
+        minMaxZoomPreference:
+            widget.zoomPreference ?? MinMaxZoomPreference.unbounded,
+        onMapCreated: widget.onMapCreated,
+        polylines: widget.polylines,
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(20.2993002, 85.8173442),
+          zoom: 20.5,
+        ),
+        markers: {
+          Marker(
+            markerId: const MarkerId('1'),
+            position: widget.currentPosition!,
+            icon: widget.customerMarker ?? BitmapDescriptor.defaultMarker,
+          ),
+          Marker(
+            markerId: const MarkerId('2'),
+            position: widget.stationLocation!,
+            icon: widget.stationMarker ?? BitmapDescriptor.defaultMarker,
+          ),
+        },
+      );
+    }
+
+    return GoogleMap(
+      myLocationEnabled: false,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: true,
+      compassEnabled: false,
+      mapType: MapType.normal,
+      onMapCreated: widget.onMapCreated,
+      initialCameraPosition: const CameraPosition(
+        target: LatLng(20.2993002, 85.8173442),
+        zoom: 13.5,
+      ),
+    );
+  }
+}
+
 class _HomePageState extends State<HomePage> {
   AlertServices alertServices = AlertServices();
   CustomerService customerService = CustomerService();
   SecureStorage secureStorage = SecureStorage();
   VehicleService vehicleService = VehicleService();
   final LocationService _locationService = LocationService();
+  StreamSubscription<Position>? _locationSubscription;
 
   // GOOGLE MAP
   String location = "";
@@ -61,6 +134,29 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     printPageTitle(AppTitles.homeScreen);
     _initializeData();
+    _startLocationUpdates();
+  }
+
+  void _startLocationUpdates() {
+    _locationSubscription = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10, // Update every 10 meters
+      ),
+    ).listen((Position position) {
+      if (!_mounted) return;
+
+      debugPrint(
+          "Location updated: ${position.latitude}, ${position.longitude}");
+      _safeSetState(() {
+        _currentPosition = LatLng(position.latitude, position.longitude);
+      });
+
+      // Redraw polyline if we have both current position and station location
+      if (_currentPosition != null && stationLocation != null) {
+        _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
+      }
+    });
   }
 
   Future<void> _initializeData() async {
@@ -70,6 +166,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _locationSubscription?.cancel();
     _mounted = false;
     mapController?.dispose();
     super.dispose();
@@ -81,18 +178,109 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> getCustomerDetails() async {
+    if (!_mounted) return;
+    final context = this.context; // Store context before async operations
+    try {
+      alertServices.showLoading("Getting user details...");
+      String mobile = secureStorage.get("mobile");
+      final response =
+          await customerService.getCustomer(mobile.toString(), true);
+
+      if (!_mounted) return;
+
+      if (response != null) {
+        _safeSetState(() {
+          customer = [response];
+        });
+        // debugPrint("Customer Details -> ${jsonEncode(customer)}");
+        String station = customer[0]['registeredStation'].toString();
+        String kyc = customer[0]['kycStatus'] ?? "";
+        String block = customer[0]['blockStatus'] ?? "";
+        String custType = customer[0]['custType'] ?? "";
+        String status = customer[0]['accountStatus'] ?? "";
+
+        if (!_mounted) return;
+
+        if (custType == "Subscription") {
+          alertServices.hideLoading();
+          alertServices.subscriptionAlert(context, "");
+          return;
+        }
+        if (status == "N") {
+          alertServices.hideLoading();
+          alertServices.deleteUserAlert(
+              context, customer[0]['message'].toString(), null);
+          return;
+        }
+        if (block == "Y") {
+          alertServices.hideLoading();
+          alertServices.blockedKycAlert(
+            context,
+            customer[0]['comment'].toString(),
+          );
+          return;
+        } else {
+          if (kyc == "") {
+            alertServices.hideLoading();
+            alertServices.holdKycAlert(context);
+            return;
+          } else if (kyc == "N") {
+            alertServices.hideLoading();
+            alertServices.rejectKycAlert(context);
+            return;
+          } else {
+            if (station.isNotEmpty) {
+              alertServices.showLoading("Getting your location...");
+              await getUserLocation();
+              if (!_mounted) return;
+              await _loadCustomIcons();
+              await getPlansByStation(station);
+            } else {
+              alertServices.hideLoading();
+              alertServices.errorToast("Registered Station is missing.");
+              gotoLogin();
+            }
+          }
+        }
+      } else {
+        alertServices.hideLoading();
+        gotoLogin();
+      }
+    } catch (e, stack) {
+      if (!_mounted) return;
+      alertServices.hideLoading();
+      firebaseCatchLogs(e, stack, reason: AppTitles.homeScreen, fatal: true);
+      alertServices.errorToast("Failed to get user details");
+      gotoLogin();
+    }
+  }
+
   getUserLocation() async {
     if (!_mounted) return;
-    Position position = await _locationService.determinePosition();
-    Placemark place = await _locationService.getPlaceMark(position);
-    location = place.locality.toString();
-    _currentPosition = LatLng(position.latitude, position.longitude);
-    mapController?.animateCamera(
-      CameraUpdate.newLatLng(
-        LatLng(position.latitude, position.longitude),
-      ),
-    );
-    _safeSetState(() {});
+    try {
+      Position position = await _locationService.determinePosition();
+      Placemark place = await _locationService.getPlaceMark(position);
+
+      if (!_mounted) return;
+
+      _safeSetState(() {
+        location = place.locality.toString();
+        _currentPosition = LatLng(position.latitude, position.longitude);
+      });
+
+      mapController?.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(position.latitude, position.longitude),
+        ),
+      );
+    } catch (e, stack) {
+      if (!_mounted) return;
+      firebaseCatchLogs(e, stack,
+          reason: "HomePage - getUserLocation", fatal: false);
+      alertServices.errorToast("Failed to get location. Please try again.");
+      rethrow; // Rethrow to handle in calling function
+    }
   }
 
   Future<void> _loadCustomIcons() async {
@@ -118,55 +306,21 @@ class _HomePageState extends State<HomePage> {
           fit: StackFit.loose,
           clipBehavior: Clip.antiAliasWithSaveLayer,
           children: [
-            if (_currentPosition != null && stationLocation != null) ...[
-              SizedBox(
-                height: screenHeight,
-                child: GoogleMap(
-                  myLocationEnabled: false,
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: true,
-                  compassEnabled: false,
-                  mapType: MapType.normal,
-                  minMaxZoomPreference: getZoomControl(),
-                  onMapCreated: (GoogleMapController controller) {
-                    mapController = controller;
-                  },
-                  polylines: _polyLines,
-                  initialCameraPosition: CameraPosition(
-                    target: _center,
-                    // tilt: 59.440717697143555,
-                    zoom: 20.5,
-                  ),
-                  markers: {
-                    Marker(
-                      markerId: const MarkerId('1'),
-                      position: _currentPosition!,
-                      icon: customerMarker ?? BitmapDescriptor.defaultMarker,
-                    ),
-                    Marker(
-                      markerId: const MarkerId('2'),
-                      position: stationLocation!,
-                      icon: stationMarker ?? BitmapDescriptor.defaultMarker,
-                    ),
-                  },
-                ),
-              ),
-            ] else ...[
-              GoogleMap(
-                myLocationEnabled: false,
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: true,
-                compassEnabled: false,
-                mapType: MapType.normal,
-                onMapCreated: (GoogleMapController controller) {
+            SizedBox(
+              height: screenHeight,
+              child: MapWidget(
+                currentPosition: _currentPosition,
+                stationLocation: stationLocation,
+                polylines: _polyLines,
+                customerMarker: customerMarker,
+                stationMarker: stationMarker,
+                onMapCreated: (controller) {
                   mapController = controller;
+                  debugPrint("Map controller created");
                 },
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 13.5,
-                ),
+                zoomPreference: getZoomControl(),
               ),
-            ],
+            ),
             if (customer.isNotEmpty)
               HomeTopWidget(
                 imgUrl: customer[0]['selfi'].toString(),
@@ -299,60 +453,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _addPolyline(List<LatLng> polylineCoordinates) {
-    if (!_mounted) return;
-    debugPrint("--- add Polyline ---");
-    Polyline polyline = Polyline(
-      polylineId: const PolylineId("polyLines"),
-      color: Colors.black,
-      points: polylineCoordinates,
-      width: 2,
-      patterns: [
-        PatternItem.dash(15),
-        PatternItem.gap(10),
-      ],
-    );
-    _safeSetState(() {
-      _polyLines.add(polyline);
-    });
-    if (Platform.isAndroid) {
-      _zoomToFitPositions();
-    }
-  }
-
-  void _zoomToFitPositions() {
-    if (_currentPosition != null && stationLocation != null) {
-      double distance = distanceBetween(_currentPosition!, stationLocation!);
-      double zoomLevel = 15.0 - (log(distance) / log(2));
-      LatLngBounds bounds = LatLngBounds(
-        southwest: LatLng(
-          _currentPosition!.latitude < stationLocation!.latitude
-              ? _currentPosition!.latitude
-              : stationLocation!.latitude,
-          _currentPosition!.longitude < stationLocation!.longitude
-              ? _currentPosition!.longitude
-              : stationLocation!.longitude,
-        ),
-        northeast: LatLng(
-          _currentPosition!.latitude > stationLocation!.latitude
-              ? _currentPosition!.latitude
-              : stationLocation!.latitude,
-          _currentPosition!.longitude > stationLocation!.longitude
-              ? _currentPosition!.longitude
-              : stationLocation!.longitude,
-        ),
-      );
-
-      double padding = 50.0;
-      mapController
-          ?.animateCamera(CameraUpdate.newLatLngBounds(bounds, padding));
-      mapController?.animateCamera(CameraUpdate.zoomTo(zoomLevel));
-      alertServices.hideLoading();
-    } else {
-      alertServices.errorToast("User Location/Station Location is missing!");
-    }
-  }
-
   double distanceBetween(LatLng latLng1, LatLng latLng2) {
     const p = 0.017453292519943295;
     final a = 0.5 -
@@ -367,122 +467,100 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchAndDisplayDirections(LatLng start, LatLng end) async {
     if (!_mounted) return;
     debugPrint(" --- FETCH AND DISPLAY DIRECTIONS ---");
+    debugPrint("Start: ${start.latitude}, ${start.longitude}");
+    debugPrint("End: ${end.latitude}, ${end.longitude}");
 
-    // Platform-specific coordinate validation
-    if (Platform.isAndroid || Platform.isIOS) {
-      // Validate coordinates are within reasonable bounds
-      if (start.latitude < -90 ||
-          start.latitude > 90 ||
-          start.longitude < -180 ||
-          start.longitude > 180 ||
-          end.latitude < -90 ||
-          end.latitude > 90 ||
-          end.longitude < -180 ||
-          end.longitude > 180) {
-        debugPrint("Coordinates out of valid range");
-        return;
-      }
-
-      // Check for zero or near-zero coordinates
-      if (start.latitude.abs() < 0.000001 ||
-          start.longitude.abs() < 0.000001 ||
-          end.latitude.abs() < 0.000001 ||
-          end.longitude.abs() < 0.000001) {
-        debugPrint("Invalid coordinates detected (too close to zero)");
-        return;
-      }
-
-      // Check if coordinates are too far apart
+    try {
+      // Check distance between points
       double distance = distanceBetween(start, end);
-      if (distance > 1000) {
-        // 1000 km threshold
-        debugPrint("Coordinates too far apart: $distance km");
+      debugPrint("Distance between points: ${distance.toStringAsFixed(2)} km");
+      debugPrint(
+          "Distance check: ${distance <= 100 ? "Within 100km limit" : "Exceeds 100km limit"}");
+
+      if (distance > 100) {
+        debugPrint("Points are outside the 100km radius limit");
         _safeSetState(() {
-          distanceText = null;
+          distanceText = "Distance exceeds 100km limit";
+          _polyLines.clear();
         });
         return;
       }
-    }
 
-    List<LatLng> pc = await _locationService.getDirections(start, end);
-    if (pc.isEmpty) {
-      debugPrint("No route found between points");
+      // Clear existing polylines
       _safeSetState(() {
-        distanceText = null;
+        _polyLines.clear();
       });
-      return;
-    }
 
-    // Platform-specific polyline handling
-    if (Platform.isAndroid) {
-      _addPolyline(pc);
-      _zoomToFitPositions();
-    } else if (Platform.isIOS) {
-      _addPolyline(pc);
-      // iOS might need different zoom handling
-      _zoomToFitPositions();
-    }
-  }
-
-  /// GETTING STATION DETAILS
-  Future<void> getCustomerDetails() async {
-    if (!_mounted) return;
-    alertServices.showLoading("Getting user details...");
-    String mobile = secureStorage.get("mobile");
-    final response = await customerService.getCustomer(mobile.toString(), true);
-    alertServices.hideLoading();
-
-    if (!_mounted) return;
-
-    if (response != null) {
-      _safeSetState(() {
-        customer = [response];
-      });
-      debugPrint("Customer Details -> ${jsonEncode(customer)}");
-      String station = customer[0]['registeredStation'].toString();
-      String kyc = customer[0]['kycStatus'] ?? "";
-      String block = customer[0]['blockStatus'] ?? "";
-      String custType = customer[0]['custType'] ?? "";
-      String status = customer[0]['accountStatus'] ?? "";
+      // Get directions
+      debugPrint("Fetching directions from Google Directions API...");
+      List<LatLng> polylineCoordinates =
+          await _locationService.getDirections(start, end);
 
       if (!_mounted) return;
 
-      if (custType == "Subscription") {
-        alertServices.subscriptionAlert(context, "");
+      debugPrint("Polyline points count: ${polylineCoordinates.length}");
+      if (polylineCoordinates.isNotEmpty) {
+        debugPrint(
+            "First point: ${polylineCoordinates.first.latitude}, ${polylineCoordinates.first.longitude}");
+        debugPrint(
+            "Last point: ${polylineCoordinates.last.latitude}, ${polylineCoordinates.last.longitude}");
+      }
+
+      if (polylineCoordinates.isEmpty) {
+        debugPrint("No route found between points");
+        _safeSetState(() {
+          distanceText = "No route available";
+        });
         return;
       }
-      if (status == "N") {
-        alertServices.deleteUserAlert(
-            context, customer[0]['message'].toString(), null);
-        return;
-      }
-      if (block == "Y") {
-        alertServices.blockedKycAlert(
-          context,
-          customer[0]['comment'].toString(),
+
+      // Create and add polyline
+      Polyline polyline = Polyline(
+        polylineId: const PolylineId("route"),
+        color: Colors.black,
+        points: polylineCoordinates,
+        width: 4,
+        patterns: [
+          PatternItem.dash(20),
+          PatternItem.gap(10),
+        ],
+        geodesic: true,
+      );
+
+      debugPrint(
+          "Adding polyline to map with ${polylineCoordinates.length} points");
+      _safeSetState(() {
+        _polyLines.add(polyline);
+        distanceText = "Distance: ${distance.toStringAsFixed(1)} km";
+      });
+
+      // Zoom to fit the route
+      if (_currentPosition != null && stationLocation != null) {
+        LatLngBounds bounds = LatLngBounds(
+          southwest: LatLng(
+            min(_currentPosition!.latitude, stationLocation!.latitude),
+            min(_currentPosition!.longitude, stationLocation!.longitude),
+          ),
+          northeast: LatLng(
+            max(_currentPosition!.latitude, stationLocation!.latitude),
+            max(_currentPosition!.longitude, stationLocation!.longitude),
+          ),
         );
-        return;
-      } else {
-        if (kyc == "") {
-          alertServices.holdKycAlert(context);
-          return;
-        } else if (kyc == "N") {
-          alertServices.rejectKycAlert(context);
-          return;
-        } else {
-          if (station.isNotEmpty) {
-            await getUserLocation();
-            if (!_mounted) return;
-            await _loadCustomIcons();
-            await getPlansByStation(station);
-          } else {
-            alertServices.errorToast("Registered Station is missing.");
-            gotoLogin();
-          }
-        }
+
+        debugPrint(
+            "Zooming to bounds: SW(${bounds.southwest.latitude}, ${bounds.southwest.longitude}), NE(${bounds.northeast.latitude}, ${bounds.northeast.longitude})");
+        mapController?.animateCamera(
+          CameraUpdate.newLatLngBounds(bounds, 50.0),
+        );
       }
-    } else {
-      gotoLogin();
+    } catch (e, stack) {
+      debugPrint("Error fetching directions: $e");
+      debugPrint("Stack trace: $stack");
+      firebaseCatchLogs(e, stack,
+          reason: "HomePage - fetchDirections", fatal: false);
+      _safeSetState(() {
+        distanceText = "Error finding route";
+      });
     }
   }
 
@@ -490,11 +568,10 @@ class _HomePageState extends State<HomePage> {
     if (!_mounted) return;
 
     try {
-      alertServices.showLoading("Getting station details...");
+      // Keep loader active from previous step
       final stationData = await vehicleService.getPlansByStation(stationId);
 
       if (!_mounted) return;
-      alertServices.hideLoading();
 
       // Update station details
       _safeSetState(() {
@@ -512,10 +589,9 @@ class _HomePageState extends State<HomePage> {
       // Get route details
       if (_currentPosition != null) {
         alertServices.showLoading("Finding best route...");
-        await Future.delayed(const Duration(seconds: 5));
+        await Future.delayed(const Duration(seconds: 2)); // Reduced delay
 
         if (!_mounted) return;
-        alertServices.hideLoading();
 
         final distance = await _locationService.calculateDistance(
           _currentPosition!.latitude,
@@ -529,6 +605,8 @@ class _HomePageState extends State<HomePage> {
 
         await _fetchAndDisplayDirections(_currentPosition!, stationLocation!);
       }
+
+      alertServices.hideLoading();
     } catch (e, stack) {
       if (!_mounted) return;
       alertServices.hideLoading();

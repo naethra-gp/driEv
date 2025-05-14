@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:driev/app_config/app_config.dart';
 import 'package:driev/app_pages/wallet_screens/widgets/wallet_list_widget.dart';
 import 'package:driev/app_services/wallet_services.dart';
 import 'package:driev/app_storages/secure_storage.dart';
@@ -6,7 +7,6 @@ import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
-import '../../app_config/app_constants.dart';
 import '../../app_themes/app_colors.dart';
 import '../../app_utils/app_widgets/app_bar_widget.dart';
 import 'widgets/wallet_balance_widget.dart';
@@ -31,37 +31,61 @@ class _WalletSummaryState extends State<WalletSummary> {
   @override
   void initState() {
     super.initState();
-    getBalance();
+    getWalletBalance();
     getWalletSummary();
   }
 
-  getBalance() {
-    alertServices.showLoading();
-    String mobile = secureStorage.get("mobile");
-    walletServices.getWalletBalance(mobile).then((response) {
+  Future<void> getWalletBalance() async {
+    if (!mounted) return;
+
+    try {
+      alertServices.showLoading();
+      final mobile = secureStorage.get("mobile");
+      if (mobile == null) {
+        throw Exception("Mobile number not found");
+      }
+
+      final response = await walletServices.getWalletBalance(mobile);
+      if (!mounted) return;
+
       alertServices.hideLoading();
-      List result = [response];
-      print("response $response");
       if (response != null) {
         setState(() {
-          walletBalance = result[0]['balance'].toStringAsFixed(2);
+          walletBalance = response['balance'].toStringAsFixed(2);
         });
+        printResponse("WALLET BALANCE IS: $walletBalance");
       }
-      print("walletBalance $walletBalance");
-    });
+    } catch (e, stack) {
+      if (!mounted) return;
+      alertServices.hideLoading();
+      alertServices.errorToast("Failed to fetch wallet balance");
+      firebaseCatchLogs(e, stack, reason: "Wallet Summary", fatal: false);
+    }
   }
 
-  void getWalletSummary() async {
-    alertServices.showLoading();
-    String mobile = secureStorage.get("mobile") ?? "";
-    walletServices.getWalletTransaction(mobile).then((response) {
+  Future<void> getWalletSummary() async {
+    if (!mounted) return;
+
+    try {
+      alertServices.showLoading();
+      final mobile = secureStorage.get("mobile");
+      if (mobile == null) {
+        throw Exception("Mobile number not found");
+      }
+
+      final response = await walletServices.getWalletTransaction(mobile);
+      if (!mounted) return;
+
       alertServices.hideLoading();
       setState(() {
         walletSummaryDetails = List<Map<String, dynamic>>.from(response);
       });
-    }).catchError((error) {
+    } catch (e, stack) {
+      if (!mounted) return;
       alertServices.hideLoading();
-    });
+      alertServices.errorToast("Failed to fetch wallet summary");
+      firebaseCatchLogs(e, stack, reason: "Wallet Summary", fatal: false);
+    }
   }
 
   @override
@@ -226,24 +250,24 @@ class _WalletSummaryState extends State<WalletSummary> {
                 ),
               ),
               if (walletSummaryDetails.length > 4)
-              Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "all_transaction",
-                        arguments: walletSummaryDetails);
-                  },
-                  child: const Text(
-                    "See All Transactions",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      decoration: TextDecoration.underline,
-                      color: AppColors.transacColor,
-                      fontWeight: FontWeight.w500,
+                Align(
+                  alignment: Alignment.center,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "all_transaction",
+                          arguments: walletSummaryDetails);
+                    },
+                    child: const Text(
+                      "See All Transactions",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        decoration: TextDecoration.underline,
+                        color: AppColors.transacColor,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ] else ...[
               const Expanded(
                 child: Center(

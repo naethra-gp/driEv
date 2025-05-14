@@ -18,7 +18,6 @@ class HomeTopWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     double textScaleFactor = 1.1;
 
     return Positioned(
@@ -109,7 +108,7 @@ class HomeTopWidget extends StatelessWidget {
                     Navigator.pushNamed(context, "wallet_summary");
                   },
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 120), // <<< Add width limit here
+                    constraints: const BoxConstraints(maxWidth: 120), // <<< Add width limit here
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

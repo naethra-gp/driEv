@@ -25,7 +25,6 @@ export 'home_screen/home_page.dart';
 export 'no_internet/no_internet.dart';
 
 /// VEHICLE & BIKE BOOKING PAGE
-export 'vehicle_page/select_vehicle.dart';
 export 'vehicle_page/widget/error_bikes.dart';
 export 'bike_booking/bike_fare_details.dart';
 export 'scan_to_unlock/scan_to_unlock.dart';

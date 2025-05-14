@@ -6,6 +6,8 @@ class Constants {
   static bool isStaging = false;
   static const String clientId = "070720222304";
   static const String clientSecret = "403222027070";
+  static const String googleMapsApiKey =
+      "AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA";
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   /// ASSETS IMAGES
@@ -55,8 +57,9 @@ class Constants {
 
   static const String apikey = "AIzaSyA1BR25d81VWTluf66WscvlTb_T1kRLQeA";
   static const String spreadword = "Spread the word, earn rewards!";
-  static const String rewardText = "Spreading the word means sharing the perks! Use my referral code to sign up with Let’s driEV and start enjoying the perks right away!\nIt’s a win-win!";
-      // "Share your referral code with\nfriends and get 20% off when they\ntake their first ride.";
+  static const String rewardText =
+      "Spreading the word means sharing the perks! Use my referral code to sign up with Let’s driEV and start enjoying the perks right away!\nIt’s a win-win!";
+  // "Share your referral code with\nfriends and get 20% off when they\ntake their first ride.";
 
   static String bikeBookingNotes =
       "Battery swap after the given range might be chargeable and depends on the availability of assets & resources";
@@ -65,5 +68,4 @@ class Constants {
   static String blockedTill = "blockedTill";
   static String blockedOn = "blockedOn";
   static String blockId = "blockId";
-
 }

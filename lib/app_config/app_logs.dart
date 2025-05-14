@@ -18,6 +18,15 @@ printServiceLogs(String method, String url) {
   }
 }
 
+/// PRINT RESPONSE
+printResponse(String content) {
+  if (!kReleaseMode) {
+    debugPrint("-----------------------------------");
+    debugPrint(content);
+    debugPrint("-----------------------------------");
+  }
+}
+
 /// FIREBASE GLOBAL ERROR CATCH
 Future<void> firebaseCatchLogs(
   dynamic onError,

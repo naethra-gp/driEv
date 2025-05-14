@@ -153,7 +153,8 @@ mixin LoginController {
         }
       } catch (e, stack) {
         alertServices.errorToast(AppErrors.failedToSendOTP);
-        firebaseCatchLogs(e, stack, reason: AppTitles.loginScreen, fatal: false);
+        firebaseCatchLogs(e, stack,
+            reason: AppTitles.loginScreen, fatal: false);
       } finally {
         if (!_isDisposed) {
           setState(() => isLoading = false);

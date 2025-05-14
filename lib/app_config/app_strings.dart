@@ -22,7 +22,8 @@ class AppTitles {
   static const extendBikeTimerScreen = "EXTEND BIKE FARE TIMER SCREEN";
   static const bookingSuccessScreen = "BOOKING SUCCESS SCREEN";
   static const bookingFailedScreen = "BOOKING FAILED SCREEN";
-}
+  static const vehicleCloserScreen = "VEHICLE CLOSER MATCH SCREEN";
+  }
 
 class AppErrors {
   static const failedToSendOTP = "Failed to send OTP. Please try again.";
