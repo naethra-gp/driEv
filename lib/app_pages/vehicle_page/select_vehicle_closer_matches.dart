@@ -174,13 +174,13 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
     List params = [
       {
         "campus": data[0]['sName'].toString(),
-        "distance": data[0]['distanceText'].toString(),
+        "distance": data[0]['distance'].toString(),
         "vehicleId": vehicleId,
         "via": "app",
         "homeData": widget.params,
       }
     ];
-    // print("Select Vehicle: ${jsonEncode(params)}");
+    print("Select Vehicle: $params");
     var args = {"query": params};
     Navigator.pushNamed(context, "bike_fare_details", arguments: args);
   }

@@ -714,6 +714,8 @@ class _HomePageState extends State<HomePage> {
                     'distance': distance.toString().replaceAll(".0", ""),
                   },
                 ];
+                debugPrint(
+                    "====> Distance: ${distance.toString().replaceAll(".0", "")}");
                 getVehiclesByPlan(list);
               },
       ),
