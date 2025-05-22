@@ -130,7 +130,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
     // buttonHeight = MediaQuery.of(context).size.height * 0.055;
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }
@@ -142,7 +142,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
             padding: EdgeInsets.zero,
-    constraints: BoxConstraints(),
+            constraints: const BoxConstraints(),
             icon: Image.asset(Constants.backButton),
             onPressed: () {
               backButtonClick();
@@ -202,7 +202,8 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
               if (isReserveClick && !isOnCounter) ...[
                 Align(
                   alignment: Alignment.centerLeft,
-                  // TODO: To change text to rich text
+
+                  /// To change text to rich text
                   child: Text(
                     "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
                     textAlign: TextAlign.left,
@@ -433,8 +434,10 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (key.contains("WALLET_ISSUE")) {
+      if (!mounted) return;
       alertServices.balanceAlert(context, msg, widget.data, "", []);
     } else if (key != "null" && msg != "null") {
+      if (!mounted) return;
       alertServices.vehicleAlert(context, msg);
     } else {
       debugPrint("BLOCK TILL TIME ---> ${res2[0]['blockedTill'].toString()}");
@@ -561,7 +564,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
                     //   Navigator.pushNamed(context, "home");
                     // }
                     // if (viaApp) {
-                    //   // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
+                    // CHANGE NAVIGATION IN SELECT VEHICLE
                     //   Navigator.pushNamed(
                     //     context,
                     //     "select_vehicle",
@@ -753,8 +756,10 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString(Constants.blockedTill, "");
       if (viaApi) {
+        if (!mounted) return;
         Navigator.pushNamedAndRemoveUntil(context, "home", (route) => false);
       } else {
+        if (!mounted) return;
         Navigator.pop(context);
       }
     });
@@ -777,7 +782,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
         "data": widget.data,
       }
     ];
-    //TODO: uncomment;
     _stopTimer();
     Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
   }
@@ -814,7 +818,6 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
               "data": params,
             }
           ];
-          //TODO: uncomment;
           _stopTimer();
           Navigator.pushNamed(context, "scan_to_unlock", arguments: arg);
         }
@@ -851,6 +854,7 @@ class _CheckBikeFareDetailsState extends State<CheckBikeFareDetails>
       apiBack();
     }
     if (!isOnCounter && viaApp) {
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, "select_vehicle",
           arguments: widget.data[0]['homeData']);
     }

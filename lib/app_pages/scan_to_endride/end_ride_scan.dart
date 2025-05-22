@@ -554,7 +554,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
       builder: (context) {
         return PopScope(
           canPop: false,
-          onPopInvoked: (didPop) async {
+            onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
               return;
             }

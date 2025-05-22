@@ -172,7 +172,7 @@ class AlertServices {
       barrierColor: Colors.black.withOpacity(_bottomSheetBarrierOpacity),
       builder: (context) => PopScope(
         canPop: false,
-        onPopInvoked: (didPop) async {
+        onPopInvokedWithResult: (didPop, result) async {
           if (didPop) return;
           final bool shouldPop = await _showBackDialog(context) ?? false;
           if (context.mounted && shouldPop) {

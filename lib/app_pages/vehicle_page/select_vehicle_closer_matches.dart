@@ -54,7 +54,7 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }
@@ -180,7 +180,6 @@ class _VehicleCloserMatchesState extends State<VehicleCloserMatches> {
         "homeData": widget.params,
       }
     ];
-    print("Select Vehicle: $params");
     var args = {"query": params};
     Navigator.pushNamed(context, "bike_fare_details", arguments: args);
   }

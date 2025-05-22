@@ -31,7 +31,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   String otpCode = "";
   Timer? timer;
   LatLng? currentLocation;
-  String _locationMessage = "";
+  // String _locationMessage = "";
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
@@ -113,7 +113,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }
@@ -254,14 +254,13 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
               Positioned(
                 top: 10,
                 left: 10,
-                child: Container(
-                    child: IconButton(
-                  icon: Image.asset(Constants.backButton),
-                  onPressed: () {
-                    clickBackButton();
-                    // Navigator.pop(context);
-                  },
-                )),
+                child: IconButton(
+                                  icon: Image.asset(Constants.backButton),
+                                  onPressed: () {
+                clickBackButton();
+                // Navigator.pop(context);
+                                  },
+                                ),
               )
             ],
           ),
@@ -291,7 +290,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       setState(() {
-        _locationMessage = "Location services are disabled.";
+        // _locationMessage = "Location services are disabled.";
       });
       return;
     }
@@ -301,7 +300,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         setState(() {
-          _locationMessage = "Location permissions are denied.";
+          // _locationMessage = "Location permissions are denied.";
         });
         return;
       }
@@ -309,7 +308,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
 
     if (permission == LocationPermission.deniedForever) {
       setState(() {
-        _locationMessage = "Location permissions are permanently denied.";
+        // _locationMessage = "Location permissions are permanently denied.";
       });
       return;
     }
@@ -319,7 +318,7 @@ class _ScanToUnlockState extends State<ScanToUnlock> {
     );
     setState(() {
       currentLocation = LatLng(position.latitude, position.longitude);
-      _locationMessage = "${position.latitude},${position.longitude}";
+      // _locationMessage = "${position.latitude},${position.longitude}";
       alertServices.hideLoading();
       bookAndStartMyRide();
     });

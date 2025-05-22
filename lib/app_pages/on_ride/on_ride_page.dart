@@ -40,7 +40,7 @@ class _OnRidePageState extends State<OnRidePage> {
   String rideDuration = "00:00:00";
 
   // TIMER
-  late Timer _timer;
+  // late Timer _timer;
   late DateTime _startTime;
   Duration _elapsedTime = Duration.zero;
   bool popShown = false;
@@ -92,7 +92,7 @@ class _OnRidePageState extends State<OnRidePage> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _calculateElapsedTime();
       });
@@ -118,7 +118,7 @@ class _OnRidePageState extends State<OnRidePage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    // double width = MediaQuery.of(context).size.width;
     return PopScope(
       child: SafeArea(
         child: Scaffold(

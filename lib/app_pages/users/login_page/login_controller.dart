@@ -22,7 +22,7 @@ mixin LoginController {
   bool isLoading = false;
   bool isMobileValid = false;
   bool _isDisposed = false;
-  StateSetter? _currentSetState;
+  // StateSetter? _currentSetState;
 
   // UI Constants
   final double smallDeviceHeight = 600;
@@ -47,7 +47,7 @@ mixin LoginController {
   void initStateController(String? mobileNumber, StateSetter setState) {
     if (_isDisposed) return;
 
-    _currentSetState = setState;
+    // _currentSetState = setState;
     printPageTitle(AppTitles.loginScreen);
     mobileCtrl.addListener(_validateMobile);
     if (mobileNumber != null) {
@@ -59,7 +59,7 @@ mixin LoginController {
 
   void dispose() {
     _isDisposed = true;
-    _currentSetState = null;
+    // _currentSetState = null;
     mobileCtrl.removeListener(_validateMobile);
     _mobileCtrl?.dispose();
     _mobileCtrl = null;
@@ -121,6 +121,7 @@ mixin LoginController {
         final response = await otpServices.generateOtp(mobileCtrl.text);
         if (response['type'] == "success") {
           alertServices.successToast("OTP sent to +91${mobileCtrl.text}");
+          if (!context.mounted) return;
           Navigator.pushNamed(context, "verify_otp",
               arguments: mobileCtrl.text);
         } else {

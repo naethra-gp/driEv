@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:driev/app_services/index.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import '../../app_config/app_constants.dart';
@@ -58,7 +57,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
   String formattedSeconds = "00";
   Timer? countdownTimer;
 
-  Timer? _timer;
+  // Timer? _timer;
   int _remainingSeconds = 0;
   bool _isRunning = false;
 
@@ -71,24 +70,21 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
   final SuperTooltipController controller = SuperTooltipController();
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
     String id = widget.stationDetails[0]['vehicleId'];
-    getFareDetails(id); // GETTING BIKE FARE DETAILS
+    await getFareDetails(id);
     viaApi = widget.stationDetails[0]['via'] == "api";
     viaApp = widget.stationDetails[0]['via'] == "app";
     if (viaApi) {
       isOnCounter = true;
       List block = widget.stationDetails[0]['data'];
-      // print("Widget Data: ${block[0]['blockId']}");
       blockId = block[0]['blockId'].toString();
       stopCountdown();
       startCountdown(block[0]['blockedTill'].toString());
     }
     setState(() {});
   }
-
-  /// FLOW - 1 [TIMER RUNNING]
 
   @override
   void dispose() {
@@ -97,9 +93,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     stopCountdown();
   }
 
-  getFareDetails(String id) {
+  Future<void> getFareDetails(String id) async {
     alertServices.showLoading();
-    bookingServices.getFare(id).then((response) async {
+    await bookingServices.getFare(id).then((response) async {
       alertServices.hideLoading();
       setState(() {
         fareDetails = [response];
@@ -110,10 +106,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
   backButtonClick() async {
     await controller.hideTooltip();
     if (isOnCounter) {
-      print("isOnCounter enable: $isOnCounter");
+      // print("isOnCounter enable: $isOnCounter");
       apiBack();
     }
     if (!isOnCounter && viaApp) {
+      if (!mounted) return;
       Navigator.pop(context);
     }
   }
@@ -124,7 +121,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     List sd = widget.stationDetails;
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }
@@ -195,7 +192,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
                 if (isReserveClick && !isOnCounter) ...[
                   Align(
                     alignment: Alignment.centerLeft,
-                    // TODO: To change text to rich text
+
+                    /// To change text to rich text
                     child: Text(
                       "Reserve Your Bike (₹${fd[0]['offer']['blockAmountPerMin'].toString()} per min)",
                       textAlign: TextAlign.left,
@@ -252,6 +250,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
                     foregroundColor: AppColors.primary,
                     onPressed: () async {
                       await controller.hideTooltip();
+                      if (!context.mounted) return;
                       FocusScope.of(context).unfocus();
                       // print("User Selected or entered Mins: $reserveMins");
                       checkCondition();
@@ -822,7 +821,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
                   Navigator.pushNamed(context, "home");
                 }
                 if (viaApp) {
-                  // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
+                  /// CHANGE NAVIGATION IN SELECT VEHICLE
                   Navigator.pushNamed(
                     context,
                     "select_vehicle",
@@ -844,8 +843,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     String exp = prefs.getString('exp') ?? "";
     // print("exp $exp");
     if (exp.toString().isNotEmpty) {
-      String formattedDate3 =
-          DateFormat('hh:mm:ss a').format(DateTime.parse(exp));
+      // String formattedDate3 =
+      //     DateFormat('hh:mm:ss a').format(DateTime.parse(exp));
       // print(formattedDate3);
       // setState(() {
       //   expireTime = formattedDate3.toString().padLeft(2, '0');
@@ -853,14 +852,14 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       var cd = DateTime.now();
       // print("cd $cd");
       Duration difference = DateTime.parse(exp).difference(cd);
-      int mins = difference.inMinutes;
+      // int mins = difference.inMinutes;
       int sec = difference.inSeconds;
       setState(() {
         // timerCtrl.text = mins.toString();
         _remainingSeconds = sec;
         _isRunning = true;
       });
-      _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      Timer.periodic(const Duration(seconds: 1), (Timer timer) {
         if (_remainingSeconds > 0) {
           setState(() {
             _remainingSeconds--;
@@ -877,13 +876,11 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     }
   }
 
-  Future<void> _onStartButtonPressed(expTime) async {
+  saveTimer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isRunning = true;
-      // _remainingSeconds = int.parse(timerCtrl.text) * 60;
-    });
-
+    // setState(() {
+    //   // _remainingSeconds = int.parse(timerCtrl.text) * 60;
+    // });
     int mins = int.parse("timerCtrl.text");
     DateTime now = DateTime.now();
     DateTime newTime = now.add(Duration(minutes: mins));
@@ -893,55 +890,8 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     //   // expireTime = format.toString().padLeft(2, '0');
     // });
     await prefs.setString('exp', newTime.toString());
-
-    /// timer functions
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      debugPrint('Remaining seconds: $_remainingSeconds');
-      if (_remainingSeconds > 0) {
-        setState(() {
-          _remainingSeconds--;
-        });
-      }
-      if (_remainingSeconds.isNegative) {
-        timer.cancel();
-        setState(() {
-          _remainingSeconds = 0;
-          _isRunning = false;
-        });
-      }
-    });
-
-    debugPrint("isRunning: $_isRunning");
   }
 
-  saveTimer() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // setState(() {
-    //   // _remainingSeconds = int.parse(timerCtrl.text) * 60;
-    // });
-    int mins = int.parse("timerCtrl.text");
-    DateTime now = DateTime.now();
-    DateTime newTime = now.add(Duration(minutes: mins));
-    String format = DateFormat('hh:mm:ss a').format(newTime);
-    // print("Format Date -> $format");
-    // setState(() {
-    //   // expireTime = format.toString().padLeft(2, '0');
-    // });
-    await prefs.setString('exp', newTime.toString());
-  }
-
-  Future<void> _stopTimer() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_timer!.isActive) {
-      _timer?.cancel();
-      await prefs.setInt('start_time', 0);
-      setState(() {
-        // expireTime = "";
-        _remainingSeconds = 0;
-        _isRunning = false;
-      });
-    }
-  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

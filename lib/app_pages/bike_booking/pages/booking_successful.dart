@@ -18,6 +18,7 @@ class _BookingSuccessfulState extends State<BookingSuccessful> {
   void initState() {
     Future.delayed(const Duration(seconds: 5), () {
       String rideId = widget.rideId.toString();
+      if (!mounted) return;
       Navigator.pushNamed(context, "on_ride", arguments: rideId);
     });
       super.initState();

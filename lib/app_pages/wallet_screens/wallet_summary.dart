@@ -92,7 +92,7 @@ class _WalletSummaryState extends State<WalletSummary> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }
@@ -359,6 +359,7 @@ class _WalletSummaryState extends State<WalletSummary> {
         List res = [value];
         if (res[0]['STATUS'].toString() == "TXN_SUCCESS") {
           debugPrint("Transaction Success");
+          if (!mounted) return;
           Navigator.pushReplacementNamed(context, "transaction_success");
         }
       }).catchError((onError) {
@@ -374,6 +375,7 @@ class _WalletSummaryState extends State<WalletSummary> {
         List response = [onError.details];
         if (response[0]['STATUS'].toString() == "TXN_FAILURE") {
           debugPrint("Transaction Failure");
+          if (!mounted) return;
           Navigator.pushReplacementNamed(context, "transaction_failure");
         }
       });

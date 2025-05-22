@@ -71,7 +71,7 @@ class _RideSummaryState extends State<RideSummary> {
     List rd = rideDetails;
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }

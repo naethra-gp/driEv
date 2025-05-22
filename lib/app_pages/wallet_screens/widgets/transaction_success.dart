@@ -25,6 +25,7 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
     super.initState();
     Future.delayed(const Duration(seconds: 5), ()
     {
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, "wallet_summary");
     });
   }
@@ -39,7 +40,7 @@ class _TransactionSuccessState extends State<TransactionSuccess> {
     Size size = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           return;
         }

@@ -19,6 +19,7 @@ class _VoteSuccessPageState extends State<VoteSuccessPage> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
+      if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, "rank_list", (route) => false);
     });
   }

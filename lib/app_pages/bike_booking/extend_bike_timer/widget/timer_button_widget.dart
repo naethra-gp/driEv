@@ -105,8 +105,6 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget>
     DateTime bo = DateTime.parse(blockedOn);
     Duration diff = blockedTime.difference(bo);
     double percentage = diff.inSeconds * 0.25;
-    print("_remainingSeconds $_remainingSeconds");
-    print("percentage $percentage");
 
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (_remainingSeconds > 0) {
@@ -190,7 +188,7 @@ class _TimerButtonWidgetState extends State<TimerButtonWidget>
                     //   Navigator.pushNamed(context, "home");
                     // }
                     // if (viaApp) {
-                    //   // TODO: CHANGE NAVIGATION IN SELECT VEHICLE
+                    //   // CHANGE NAVIGATION IN SELECT VEHICLE
                     //   Navigator.pushNamed(
                     //     context,
                     //     "select_vehicle",

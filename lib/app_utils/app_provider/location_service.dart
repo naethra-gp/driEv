@@ -8,10 +8,10 @@ import 'package:location/location.dart' as loc;
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart'
     as polyline_algo;
 
-import 'package:driev/app_config/app_config.dart';
+// import 'package:driev/app_config/app_config.dart';
 
 class LocationService {
-  final String _apiKey = Constants.googleMapsApiKey;
+  // final String _apiKey = Constants.googleMapsApiKey;
   final loc.Location _location = loc.Location();
 
   Future<Position?> determinePosition() async {
@@ -198,7 +198,7 @@ class LocationService {
           .map((point) => LatLng(point[0].toDouble(), point[1].toDouble()))
           .toList();
     } catch (e, stack) {
-      debugPrint('Error decoding polyline: $e');
+      debugPrint('Error decoding polyline: $e, $stack');
       return [];
     }
   }
@@ -211,55 +211,6 @@ class LocationService {
       return [start, end]; // fallback dummy path
     } catch (e) {
       debugPrint("Error getting directions: $e");
-      return [];
-    }
-  }
-
-
-  bool _isValidDirectionsResponse(Map<String, dynamic> data) {
-    if (data['status'] != 'OK') {
-      debugPrint('Error fetching directions: ${data['status']}');
-      if (data['error_message'] != null) {
-        debugPrint('Error message: ${data['error_message']}');
-      }
-      return false;
-    }
-
-    if (data['routes'] == null || data['routes'].isEmpty) return false;
-    if (data['routes'][0]['legs'] == null || data['routes'][0]['legs'].isEmpty)
-      return false;
-
-    return true;
-  }
-
-  bool _isValidDistanceMatrixResponse(Map<String, dynamic> data) {
-    if (data['rows'] == null ||
-        data['rows'].isEmpty ||
-        data['rows'][0]['elements'] == null ||
-        data['rows'][0]['elements'].isEmpty) {
-      return false;
-    }
-    return true;
-  }
-
-  List<LatLng> _extractPolylineCoordinates(Map<String, dynamic> data) {
-    try {
-      final List<LatLng> polylineCoordinates = [];
-      final List<dynamic> steps = data['routes'][0]['legs'][0]['steps'];
-
-      for (var step in steps) {
-        final String polyline = step['polyline']['points'];
-        final List<LatLng> decodedPolyline = decodeGooglePolyline(polyline);
-        polylineCoordinates.addAll(decodedPolyline);
-      }
-
-      if (polylineCoordinates.isEmpty) {
-        throw Exception('No valid route points decoded');
-      }
-
-      return polylineCoordinates;
-    } catch (e, stack) {
-      debugPrint('Error extracting polyline coordinates: $e');
       return [];
     }
   }

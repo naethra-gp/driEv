@@ -61,7 +61,6 @@ class _OnRideState extends State<OnRide> {
   @override
   void initState() {
     super.initState();
-    print("---- ON RIDE 1 ----");
     _getUserLocation();
     getBalance();
     getRideDetails(widget.rideId);
@@ -76,7 +75,7 @@ class _OnRideState extends State<OnRide> {
     return SafeArea(
       child: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (didPop, result) {
           if (didPop) {
             return;
           }
@@ -656,6 +655,8 @@ class _OnRideState extends State<OnRide> {
         Placemark place = placeMark[0];
         currentDistrict = place.locality!;
       });
-    } catch (e) {}
+    } catch (e) {
+      debugPrint("Error: ${e.toString()}");
+    }
   }
 }

@@ -16,14 +16,14 @@ class OnRideTimerWidget extends StatefulWidget {
 
 class _OnRideTimerWidgetState extends State<OnRideTimerWidget> {
   // TIMER
-  late Timer _timer;
+  // late Timer _timer;
   late DateTime _startTime;
   Duration _elapsedTime = Duration.zero;
 
   @override
   void initState() {
     int milliseconds = widget.rd[0]['durationTime'];
-    Duration duration = Duration(milliseconds: milliseconds);
+    // Duration duration = Duration(milliseconds: milliseconds);
 
     _startTime = DateTime.now().subtract(Duration(milliseconds: milliseconds));
     _startTimer();
@@ -31,7 +31,7 @@ class _OnRideTimerWidgetState extends State<OnRideTimerWidget> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
       setState(() {
         _calculateElapsedTime();

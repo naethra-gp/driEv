@@ -89,11 +89,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
     contactCtrl.dispose();
     passportCtrl.dispose();
 
-    if (aadhaarCtrl != null) {
-      aadhaarCtrl.dispose();
-      isAadhaarCtrlDisposed = true;
-    }
-
+    aadhaarCtrl.dispose();
+    isAadhaarCtrlDisposed = true;
+  
     for (var controller in _controllers) {
       controller.dispose();
     }
@@ -115,6 +113,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           .toList();
       isAadhaarRequired = b.isNotEmpty ? true : false;
       setState(() {});
+      // ignore: unused_local_variable
       for (var control in campusDocList) {
         _controllers.add(TextEditingController());
       }
@@ -351,8 +350,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   showAadhaarField = true;
                                   showOverseasField = false;
 
-                                  if (isAadhaarCtrlDisposed ||
-                                      aadhaarCtrl == null) {
+                                  if (isAadhaarCtrlDisposed) {
                                     aadhaarCtrl = TextEditingController();
                                     isAadhaarCtrlDisposed = false;
                                   }

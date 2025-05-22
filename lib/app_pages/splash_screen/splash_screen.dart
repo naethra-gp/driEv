@@ -170,14 +170,6 @@ class _SplashScreenState extends State<SplashScreen> {
         },
       );
 
-      if (position == null) {
-        debugPrint("Could not get position, but continuing anyway");
-        // Continue even if we couldn't get the position
-        _alertServices.hideLoading();
-        _gotoHome();
-        return;
-      }
-
       debugPrint(
           "Successfully got position: ${position.latitude}, ${position.longitude}");
       _alertServices.hideLoading();

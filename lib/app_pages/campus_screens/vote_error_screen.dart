@@ -25,6 +25,7 @@ class _VoteErrorScreenState extends State<VoteErrorScreen> {
       message = widget.params['message'].toString();
     });
     Future.delayed(const Duration(seconds: 5), () {
+      if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, "rank_list", (route) => false);
     });
   }
