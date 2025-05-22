@@ -1,170 +1,219 @@
-import 'dart:convert';
+import 'dart:async';
 import 'package:app_settings/app_settings.dart';
-import 'package:driev/app_config/app_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as loc;
-import 'package:flutter/foundation.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart'
     as polyline_algo;
 
-class LocationService {
-  // Move API key to app_config.dart
-  final String _apiKey = Constants.googleMapsApiKey;
+import 'package:driev/app_config/app_config.dart';
+import 'package:driev/app_utils/app_loading/alert_services.dart';
 
-  Future<Position> determinePosition() async {
+class LocationService {
+  final String _apiKey = Constants.googleMapsApiKey;
+  final loc.Location _location = loc.Location();
+
+  Future<Position?> determinePosition() async {
     try {
+      debugPrint("=== Determining Position ===");
+
+      // First try with Location package
+      try {
+        debugPrint("Checking Location package service and permission");
+
+        bool serviceEnabled = await _location.serviceEnabled();
+        if (!serviceEnabled) {
+          serviceEnabled = await _location.requestService();
+          if (!serviceEnabled) {
+            debugPrint("User declined to enable location services");
+            return null;
+          }
+        }
+
+        loc.PermissionStatus permission = await _location.hasPermission();
+        if (permission == loc.PermissionStatus.denied) {
+          permission = await _location.requestPermission();
+          if (permission != loc.PermissionStatus.granted) {
+            debugPrint("Location permission denied");
+            return null;
+          }
+        }
+
+        debugPrint("Fetching location using Location package...");
+        final locationData = await _location.getLocation().timeout(
+          const Duration(seconds: 20),
+          onTimeout: () {
+            debugPrint("Timeout waiting for location");
+            throw TimeoutException("Location fetch timed out");
+          },
+        );
+
+        if (locationData.latitude != null && locationData.longitude != null) {
+          debugPrint(
+              "Location package success: ${locationData.latitude}, ${locationData.longitude}");
+          return Position(
+            latitude: locationData.latitude!,
+            longitude: locationData.longitude!,
+            timestamp: DateTime.now(),
+            accuracy: locationData.accuracy ?? 0,
+            altitude: locationData.altitude ?? 0,
+            heading: locationData.heading ?? 0,
+            speed: locationData.speed ?? 0,
+            speedAccuracy: 0,
+            altitudeAccuracy: 0,
+            headingAccuracy: 0,
+          );
+        }
+      } catch (e) {
+        debugPrint("Location package error: $e");
+      }
+
+      // Fallback to Geolocator
+      debugPrint("Falling back to Geolocator");
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        await loc.Location().requestService();
-        throw Exception('Location services are disabled.');
+        debugPrint("Location services are disabled");
+        return null;
       }
 
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          throw Exception('Location permissions are denied.');
-        }
+      }
+
+      if (permission == LocationPermission.denied) {
+        debugPrint("Location permission denied");
+        return null;
       }
 
       if (permission == LocationPermission.deniedForever) {
-        await AppSettings.openAppSettings(type: AppSettingsType.location);
-        throw Exception(
-            'Location permissions are permanently denied. Please enable in settings.');
+        debugPrint("Location permission permanently denied");
+        AppSettings.openAppSettings();
+        return null;
       }
 
-      return await Geolocator.getCurrentPosition();
+      try {
+        debugPrint("Attempting to get position with lowest accuracy");
+        return await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.lowest,
+          timeLimit: const Duration(seconds: 15),
+        );
+      } catch (e) {
+        debugPrint("Lowest accuracy failed: $e");
+
+        try {
+          debugPrint("Attempting to get position with low accuracy");
+          return await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.low,
+            timeLimit: const Duration(seconds: 15),
+          );
+        } catch (e) {
+          debugPrint("Low accuracy failed: $e");
+
+          try {
+            debugPrint("Attempting to get position with high accuracy");
+            return await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high,
+              timeLimit: const Duration(seconds: 15),
+            );
+          } catch (e) {
+            debugPrint("High accuracy failed: $e");
+            return null;
+          }
+        }
+      }
     } catch (e, stack) {
-      firebaseCatchLogs(e, stack,
-          reason: "Location Service - determinePosition", fatal: true);
-      rethrow;
+      debugPrint("Error in determinePosition: $e");
+      debugPrint("Stack trace: $stack");
+      return null;
     }
   }
 
   Future<Placemark> getPlaceMark(Position position) async {
     try {
-      List<Placemark> places = await placemarkFromCoordinates(
+      debugPrint(
+          "Getting placemark for position: ${position.latitude}, ${position.longitude}");
+      List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
       );
 
-      if (places.isEmpty) {
-        throw Exception(
-            'No placemark found for coordinates: ${position.latitude}, ${position.longitude}');
+      if (placemarks.isNotEmpty) {
+        debugPrint("Placemark found: ${placemarks.first.locality}");
+        return placemarks.first;
+      } else {
+        debugPrint("No placemark found");
+        return _unknownPlacemark();
       }
-
-      return places.first;
-    } catch (e, stack) {
-      firebaseCatchLogs(e, stack,
-          reason: "Location Service - getPlaceMark", fatal: false);
-      rethrow;
+    } catch (e) {
+      debugPrint("Error getting placemark: $e");
+      return _unknownPlacemark();
     }
   }
 
-  Future<String> calculateDistance(
-    double startLatitude,
-    double startLongitude,
-    double endLatitude,
-    double endLongitude,
-  ) async {
-    final url = _buildDistanceMatrixUrl(
-      startLatitude,
-      startLongitude,
-      endLatitude,
-      endLongitude,
+  Placemark _unknownPlacemark() {
+    return const Placemark(
+      locality: "Unknown Location",
+      subLocality: "",
+      administrativeArea: "",
+      country: "",
+      name: "",
+      street: "",
+      postalCode: "",
+      subAdministrativeArea: "",
+      isoCountryCode: "",
+      thoroughfare: "",
+      subThoroughfare: "",
     );
+  }
 
+  Future<String> calculateDistance(
+    double startLat,
+    double startLng,
+    double endLat,
+    double endLng,
+  ) async {
     try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode != 200) {
-        throw Exception('Failed to fetch distance: ${response.statusCode}');
-      }
-
-      final data = jsonDecode(response.body);
-      if (!_isValidDistanceMatrixResponse(data)) {
-        return "N/A";
-      }
-
-      return data['rows'][0]['elements'][0]['distance']['text'].toString();
-    } catch (e, stack) {
-      firebaseCatchLogs(e, stack,
-          reason: "Location Service - calculateDistance", fatal: false);
-      debugPrint('Error in calculateDistance: $e');
-      return "N/A";
+      double distanceInMeters = Geolocator.distanceBetween(
+        startLat,
+        startLng,
+        endLat,
+        endLng,
+      );
+      double distanceInKm = distanceInMeters / 1000;
+      return "${distanceInKm.toStringAsFixed(1)} km";
+    } catch (e) {
+      debugPrint("Error calculating distance: $e");
+      return "Distance calculation failed";
     }
   }
 
   List<LatLng> decodeGooglePolyline(String encoded) {
     try {
-      final List<List<num>> decodedPoints = polyline_algo.decodePolyline(encoded);
-      debugPrint('Raw decoded points: ${decodedPoints.length}');
-      debugPrint('First raw point: ${decodedPoints.first}');
-      
-      return decodedPoints.map((point) {
-        // The points are already in the correct format, no need to divide
-        return LatLng(
-          point[0].toDouble(),
-          point[1].toDouble(),
-        );
-      }).toList();
+      final List<List<num>> decodedPoints =
+          polyline_algo.decodePolyline(encoded);
+      debugPrint('Decoded points count: ${decodedPoints.length}');
+      return decodedPoints
+          .map((point) => LatLng(point[0].toDouble(), point[1].toDouble()))
+          .toList();
     } catch (e, stack) {
-      firebaseCatchLogs(e, stack,
-          reason: "Location Service - decodePolyline", fatal: false);
       debugPrint('Error decoding polyline: $e');
       return [];
     }
   }
 
-  Future<List<LatLng>> getDirections(LatLng origin, LatLng destination) async {
-    if (!_isValidCoordinates(origin) || !_isValidCoordinates(destination)) {
-      debugPrint(
-          'Invalid coordinates: Origin(${origin.latitude}, ${origin.longitude}), Destination(${destination.latitude}, ${destination.longitude})');
-      throw Exception('Invalid coordinates provided');
-    }
-
-    final url = _buildDirectionsUrl(origin, destination);
-    debugPrint('Fetching directions from URL: $url');
-
+  Future<List<LatLng>> getDirections(LatLng start, LatLng end) async {
     try {
-      final response = await http.get(Uri.parse(url));
-      debugPrint('Directions API Response Status: ${response.statusCode}');
-
-      if (response.statusCode != 200) {
-        debugPrint('Failed to load directions: ${response.body}');
-        throw Exception('Failed to load directions: ${response.statusCode}');
-      }
-
-      final data = json.decode(response.body);
-      debugPrint('Directions API Response: ${data['status']}');
-
-      if (!_isValidDirectionsResponse(data)) {
-        debugPrint('Invalid directions response: ${data['status']}');
-        if (data['error_message'] != null) {
-          debugPrint('Error message: ${data['error_message']}');
-        }
-        throw Exception('Invalid directions response: ${data['status']}');
-      }
-
-      final coordinates = _extractPolylineCoordinates(data);
-      debugPrint('Extracted ${coordinates.length} points from polyline');
-      return coordinates;
-    } catch (e, stack) {
-      debugPrint('Error in getDirections: $e');
-      debugPrint('Stack trace: $stack');
-      firebaseCatchLogs(e, stack,
-          reason: "Location Service - getDirections", fatal: false);
+      debugPrint(
+          "Getting directions from ${start.latitude},${start.longitude} to ${end.latitude},${end.longitude}");
+      // Add API call if needed
+      return [start, end]; // fallback dummy path
+    } catch (e) {
+      debugPrint("Error getting directions: $e");
       return [];
     }
-  }
-
-  bool _isValidCoordinates(LatLng coordinates) {
-    return coordinates.latitude >= -90 &&
-        coordinates.latitude <= 90 &&
-        coordinates.longitude >= -180 &&
-        coordinates.longitude <= 180;
   }
 
   String _buildDirectionsUrl(LatLng origin, LatLng destination) {
@@ -186,6 +235,13 @@ class LocationService {
         '&key=$_apiKey';
   }
 
+  bool _isValidCoordinates(LatLng coordinates) {
+    return coordinates.latitude >= -90 &&
+        coordinates.latitude <= 90 &&
+        coordinates.longitude >= -180 &&
+        coordinates.longitude <= 180;
+  }
+
   bool _isValidDirectionsResponse(Map<String, dynamic> data) {
     if (data['status'] != 'OK') {
       debugPrint('Error fetching directions: ${data['status']}');
@@ -195,16 +251,9 @@ class LocationService {
       return false;
     }
 
-    if (data['routes'] == null || data['routes'].isEmpty) {
-      debugPrint('No routes found in response');
+    if (data['routes'] == null || data['routes'].isEmpty) return false;
+    if (data['routes'][0]['legs'] == null || data['routes'][0]['legs'].isEmpty)
       return false;
-    }
-
-    if (data['routes'][0]['legs'] == null ||
-        data['routes'][0]['legs'].isEmpty) {
-      debugPrint('No legs found in route');
-      return false;
-    }
 
     return true;
   }
@@ -236,9 +285,6 @@ class LocationService {
 
       return polylineCoordinates;
     } catch (e, stack) {
-      firebaseCatchLogs(e, stack,
-          reason: "Location Service - extractPolylineCoordinates",
-          fatal: false);
       debugPrint('Error extracting polyline coordinates: $e');
       return [];
     }

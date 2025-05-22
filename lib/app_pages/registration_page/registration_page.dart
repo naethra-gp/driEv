@@ -10,7 +10,6 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../app_config/app_constants.dart';
-import '../../app_services/coupon_services.dart';
 import '../../app_services/index.dart';
 import '../../app_storages/secure_storage.dart';
 import '../../app_themes/app_colors.dart';
@@ -572,25 +571,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   clearImageCache() async {
     try {
-      // Get the cache directory
       final cacheDir = await getTemporaryDirectory();
-      // Check if the directory exists
       if (cacheDir.existsSync()) {
-        // Delete the files in the cache directory
         cacheDir.listSync().forEach((file) {
           if (file is File) {
             try {
               file.deleteSync();
-              print('Deleted: ${file.path}');
+              // print('Deleted: ${file.path}');
             } catch (e) {
-              print('Failed to delete ${file.path}: $e');
+              // print('Failed to delete ${file.path}: $e');
             }
           } else if (file is Directory) {
             try {
               file.deleteSync(recursive: true);
-              print('Deleted directory: ${file.path}');
+              // print('Deleted directory: ${file.path}');
             } catch (e) {
-              print('Failed to delete directory ${file.path}: $e');
+              // print('Failed to delete directory ${file.path}: $e');
             }
           }
         });
@@ -632,7 +628,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         var request = {"emailId": email};
         alertServices.showLoading();
         customerService.verifyEmail(email).then((response) async {
-          print("response ---> $response");
+          // print("response ---> $response");
           if (response['statusCode'].toString() == '404') {
             alertServices.hideLoading();
             customerService.sentEmail(request).then((response) {

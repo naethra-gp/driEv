@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:readsms/readsms.dart';
+// import 'package:readsms/readsms.dart';
 
 import '../../../app_config/app_constants.dart';
 import '../../../app_services/index.dart';
@@ -41,7 +41,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
   /// NEW OTP AUTO FILL
   StreamController<ErrorAnimationType>? errorController;
-  final _plugin = Readsms();
+  // final _plugin = Readsms();
   final double smallDeviceHeight = 600;
   final double largeDeviceHeight = 1024;
 
@@ -53,19 +53,19 @@ class _VerifyOTPState extends State<VerifyOTP> {
     debugPrint("----> Verify OTP <----");
     errorController = StreamController<ErrorAnimationType>();
     startTimer();
-    getPermission().then((value) {
-      if (value) {
-        _plugin.read();
-        _plugin.smsStream.listen((event) {
-          String sms = event.body;
-          RegExp regExp = RegExp(r'\b\d+\b');
-          String otpCode = regExp.firstMatch(sms)?.group(0) ?? "";
-          setState(() {
-            otpCtrl.text = otpCode;
-          });
-        });
-      }
-    });
+    // getPermission().then((value) {
+    //   if (value) {
+    //     _plugin.read();
+    //     _plugin.smsStream.listen((event) {
+    //       String sms = event.body;
+    //       RegExp regExp = RegExp(r'\b\d+\b');
+    //       String otpCode = regExp.firstMatch(sms)?.group(0) ?? "";
+    //       setState(() {
+    //         otpCtrl.text = otpCode;
+    //       });
+    //     });
+    //   }
+    // });
   }
 
   @override

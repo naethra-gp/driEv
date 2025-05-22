@@ -16,7 +16,7 @@ import '../../app_themes/custom_theme.dart';
 import '../ride_summary/widget/list_ride_summary.dart';
 
 class RideDetails extends StatefulWidget {
-  final List rideId;
+  final List<Map<String, dynamic>> rideId;
   const RideDetails({super.key, required this.rideId});
 
   @override
@@ -43,7 +43,7 @@ class _RideDetailsState extends State<RideDetails> {
       appBar: const AppBarWidget(),
       body: SingleChildScrollView(
         child: Center(
-          child: widget.rideId == null || widget.rideId.isEmpty
+          child: widget.rideId.isEmpty
               ? const Text("Please wait...")
               : mainContent(),
         ),
@@ -52,6 +52,7 @@ class _RideDetailsState extends State<RideDetails> {
   }
 
   Widget mainContent() {
+    final ride = widget.rideId[0];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Screenshot(
@@ -82,139 +83,15 @@ class _RideDetailsState extends State<RideDetails> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 8,
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'dri',
-                                style: heading(Colors.black),
-                              ),
-                              TextSpan(
-                                text: 'EV ',
-                                style: heading(AppColors.primary),
-                              ),
-                              TextSpan(
-                                text:
-                                    "${widget.rideId[0]['planType'].toString()} ${widget.rideId[0]['vehicleId'].toString()}",
-                                style: heading(Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: IconButton(
-                          icon: Image.asset(
-                            "assets/img/pdf.png",
-                            height: 30,
-                            width: 19,
-                          ),
-                          onPressed: () async {
-                            await requestPermission();
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            const SizedBox(height: 30),
-                            const Text(
-                              "Payment Total",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              "₹ ${widget.rideId[0]['payableAmount'].toString()}",
-                              style: const TextStyle(
-                                fontSize: 34,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Image.asset(
-                          Constants.bike,
-                          fit: BoxFit.contain,
-                        ),
-                      )
-                    ],
-                  ),
+                  _buildHeader(ride),
+                  _buildPaymentSection(ride),
                   const Divider(
                     color: Color(0XffADADAD),
                     endIndent: 5,
                     indent: 5,
                   ),
                   CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Date",
-                      value: DateFormat("dd MMM yyyy").format(DateTime.parse(
-                          widget.rideId[0]['endTime'].toString()))),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Vehicle no.",
-                      value:
-                          "driEV ${widget.rideId[0]['vehicleId'].toString()}"),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Start Time",
-                      value:
-                          formatTime(widget.rideId[0]['startTime'].toString())),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "End Time",
-                      value:
-                          formatTime(widget.rideId[0]['endTime'].toString())),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Base Charge",
-                      value:
-                          "${widget.rideId[0]['offers'] != null ? widget.rideId[0]['offers']['basePrice'] : ''}"),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Ride Distance (KM)",
-                      value: widget.rideId[0]['totalKm'].toString()),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Billable Distance (KM)",
-                      value: widget.rideId[0]['billableKm'].toString()),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Ride Time",
-                      value: widget.rideId[0]['duration'].toString()),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Billable Time",
-                      value: widget.rideId[0]['billableTime'] !=null? widget.rideId[0]['billableTime'].toString():''),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Total Amount (Incl.GST)",
-                      value: widget.rideId[0]['payableAmount'].toString()),
-                  CustomTheme.defaultHeight10,
-                  ListViewWidget(
-                      label: "Total Amount (excl.GST)",
-                      value:
-                          widget.rideId[0]['payableAmountExclGst'].toString()),
-                  CustomTheme.defaultHeight10,
+                  ..._buildRideDetails(ride),
                 ],
               ),
             ),
@@ -224,19 +101,147 @@ class _RideDetailsState extends State<RideDetails> {
     );
   }
 
+  Widget _buildHeader(Map<String, dynamic> ride) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 8,
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'dri',
+                  style: heading(Colors.black),
+                ),
+                TextSpan(
+                  text: 'EV ',
+                  style: heading(AppColors.primary),
+                ),
+                TextSpan(
+                  text: "${ride['planType']} ${ride['vehicleId']}",
+                  style: heading(Colors.black),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: IconButton(
+            icon: Image.asset(
+              "assets/img/pdf.png",
+              height: 30,
+              width: 19,
+            ),
+            onPressed: requestPermission,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildPaymentSection(Map<String, dynamic> ride) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          flex: 2,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              const SizedBox(height: 30),
+              const Text(
+                "Payment Total",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                "₹ ${ride['payableAmount']}",
+                style: const TextStyle(
+                  fontSize: 34,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Image.asset(
+            Constants.bike,
+            fit: BoxFit.contain,
+          ),
+        )
+      ],
+    );
+  }
+
+  List<Widget> _buildRideDetails(Map<String, dynamic> ride) {
+    final endTime = DateTime.parse(ride['endTime'].toString());
+    final offers = ride['offers'] as Map<String, dynamic>?;
+    
+    return [
+      ListViewWidget(
+          label: "Date",
+          value: DateFormat("dd MMM yyyy").format(endTime)),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Vehicle no.",
+          value: "driEV ${ride['vehicleId']}"),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Start Time",
+          value: formatTime(ride['startTime'].toString())),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "End Time",
+          value: formatTime(ride['endTime'].toString())),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Base Charge",
+          value: offers?['basePrice']?.toString() ?? ''),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Ride Distance (KM)",
+          value: ride['totalKm'].toString()),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Billable Distance (KM)",
+          value: ride['billableKm'].toString()),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Ride Time",
+          value: ride['duration'].toString()),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Billable Time",
+          value: ride['billableTime']?.toString() ?? ''),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Total Amount (Incl.GST)",
+          value: ride['payableAmount'].toString()),
+      CustomTheme.defaultHeight10,
+      ListViewWidget(
+          label: "Total Amount (excl.GST)",
+          value: ride['payableAmountExclGst'].toString()),
+      CustomTheme.defaultHeight10,
+    ];
+  }
+
   Future<void> requestPermission() async {
-    PermissionStatus status = await Permission.storage.status;
+    final status = await Permission.storage.status;
     screenShot = await screenshotController.capture();
-    if (status.isGranted) {
-    } else if (status.isDenied) {
-      status = await Permission.storage.request();
-      if (status.isGranted) {
-        _captureAndSavePdf(screenShot!);
-      } else {}
+    
+    if (status.isGranted || status.isDenied && await Permission.storage.request().isGranted) {
+      _captureAndSavePdf(screenShot!);
     } else if (status.isPermanentlyDenied) {
       openAppSettings();
     }
-    _captureAndSavePdf(screenShot!);
   }
 
   TextStyle heading(Color color) {
@@ -248,10 +253,8 @@ class _RideDetailsState extends State<RideDetails> {
   }
 
   String formatTime(String dateTime) {
-    print("dateTime $dateTime");
     try {
-      DateTime parsedDate = DateTime.parse(dateTime).toLocal();
-      return DateFormat('hh:mm a').format(parsedDate);
+      return DateFormat('hh:mm a').format(DateTime.parse(dateTime).toLocal());
     } catch (e) {
       return "Unknown Time";
     }
@@ -259,35 +262,29 @@ class _RideDetailsState extends State<RideDetails> {
 
   Future<void> _captureAndSavePdf(Uint8List screenShot) async {
     try {
-      pw.Document pdf = pw.Document();
+      final pdf = pw.Document();
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          build: (context) {
-            return pw.Center(
-              child: pw.Image(
-                pw.MemoryImage(screenShot),
-                fit: pw.BoxFit.contain,
-              ),
-            );
-          },
+          build: (context) => pw.Center(
+            child: pw.Image(pw.MemoryImage(screenShot), fit: pw.BoxFit.contain),
+          ),
         ),
       );
-      // final dir = await getExternalStorageDirectories();
-      // final cacheDir = dir!.first;
-      // final file = File('${cacheDir.path}/ride_summary.pdf');
+
       final dir = Platform.isIOS
           ? await getApplicationCacheDirectory()
           : await getDownloadsDirectory();
       final file = File('${dir?.path}/Ride Summary.pdf');
-      await pdf.save().then((List<int> data) async {
-        await file.writeAsBytes(data); // Write data to file
-        OpenFile.open(file.path);
-      });
+      
+      await file.writeAsBytes(await pdf.save());
+      OpenFile.open(file.path);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save or open PDF: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save or open PDF: $e')),
+        );
+      }
     }
   }
 }

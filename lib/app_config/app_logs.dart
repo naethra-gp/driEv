@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
@@ -9,11 +11,14 @@ printPageTitle(String title) {
 }
 
 /// PRINT ONLY SERVICE CLASS
-printServiceLogs(String method, String url) {
+printServiceLogs(String method, String url,
+    {dynamic request, dynamic response}) {
   if (!kReleaseMode) {
     debugPrint("-----------------------------------");
     debugPrint("METHOD NAME : [$method]");
-    debugPrint("API URL     : $url");
+    debugPrint("API URL     : ${Uri.parse(url)}");
+    debugPrint("REQUEST     : ${jsonEncode(request)}");
+    debugPrint("RESPONSE    : ${jsonEncode(response)}");
     debugPrint("-----------------------------------");
   }
 }
@@ -51,4 +56,3 @@ Future<void> firebaseCatchLogs(
     fatal: fatal,
   );
 }
-      

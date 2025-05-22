@@ -2,10 +2,7 @@ import 'package:driev/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import '../../../app_services/index.dart';
 import '../../../app_utils/app_loading/alert_services.dart';
 
@@ -57,8 +54,7 @@ mixin LoginController {
     if (mobileNumber != null) {
       mobileCtrl.text = mobileNumber;
     } else {
-      Future<void>.delayed(
-          const Duration(milliseconds: 300), () => tryPasteCurrentPhone());
+      mobileCtrl.text = '';
     }
   }
 
@@ -114,26 +110,6 @@ mixin LoginController {
     } else {
       EndPoints.baseApi = "https://community-test.driev.bike/driev/api/app";
       EndPoints.baseApi1 = "https://community-test.driev.bike/driev/api";
-    }
-  }
-
-  Future<void> tryPasteCurrentPhone() async {
-    if (_isDisposed) return;
-    try {
-      // Request permissions first
-      final status = await Permission.sms.request();
-      if (status.isGranted) {
-        final autoFill = SmsAutoFill();
-        final phone = await autoFill.hint;
-        if (phone == null) return;
-        if (phone.toString().startsWith('+91')) {
-          mobileCtrl.text = phone.toString().replaceFirst('+91', '');
-        }
-      } else {
-        alertServices.errorToast("SMS permission is required for autofill");
-      }
-    } on PlatformException catch (e, stack) {
-      firebaseCatchLogs(e, stack, reason: AppTitles.loginScreen, fatal: true);
     }
   }
 

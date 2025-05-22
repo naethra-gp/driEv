@@ -1,44 +1,52 @@
-import 'package:driev/app_config/app_constants.dart';
+import 'dart:async';
+
+import 'package:driev/app_config/app_config.dart';
 import 'package:driev/app_themes/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-
-import 'app_config/app_routes.dart';
 import 'app_utils/app_provider/connectivity_provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  await Hive.openBox(Constants.storageBox);
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Hive.initFlutter();
+    await Hive.openBox(Constants.storageBox);
 
-  /// FIREBASE SETUP
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+    /// FIREBASE SETUP
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
 
-  // Enable Crashlytics
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    /// Enable Crashlytics
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(kReleaseMode);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-  // Enable Performance Monitoring
-  FirebasePerformance performance = FirebasePerformance.instance;
-  performance.setPerformanceCollectionEnabled(true);
-  // performance.setPerformanceCollectionEnabled(!kDebugMode);
+    /// Enable Performance Monitoring
+    FirebasePerformance performance = FirebasePerformance.instance;
+    performance.setPerformanceCollectionEnabled(kReleaseMode);
 
-  await FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-  if (!useWhiteForeground(Colors.white)) {
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-  } else {
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-  }
-  runApp(const MyApp());
+    /// MAIN RUN APP
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+        .then((value) {
+      runApp(const MyApp());
+    });
+  }, (error, stack) {
+    FlutterError.onError = (FlutterErrorDetails details) {
+      printResponse("===> MAIN FILE ERROR: ${details.exceptionAsString()}");
+      try {
+        FirebaseCrashlytics.instance.recordFlutterError(details);
+      } on Exception catch (e) {
+        printResponse("===> MAIN FILE EXCEPTION ERROR: ${e.toString()}");
+      }
+    };
+  });
 }
 
 class MyApp extends StatelessWidget {

@@ -63,7 +63,6 @@ class AppRoute {
         case "bike_fare_details":
           Map args = settings.arguments as Map;
           return CheckBikeFareDetails(data: args['query']);
-        // return BikeFareDetails(stationDetails: args['query']);
         case "booking_success":
           String id = settings.arguments as String;
           return BookingSuccessful(rideId: id);
@@ -81,7 +80,6 @@ class AppRoute {
         case "on_ride":
           String id = settings.arguments as String;
           return OnRidePage(rideId: id);
-        // return OnRide(rideId: id);
         case "ride_summary":
           String id = settings.arguments as String;
           return RideSummary(rideId: id);
@@ -119,7 +117,7 @@ class AppRoute {
         case "transaction_failure":
           return const TransactionFailure();
         case "ride_details":
-          List args = settings.arguments as List;
+          List<Map<String, dynamic>> args = settings.arguments as List<Map<String, dynamic>>;
           return RideDetails(rideId: args);
       }
       return const LandingPage();

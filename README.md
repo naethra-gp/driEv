@@ -63,10 +63,8 @@ assets/
 
 - flutter_easyloading: ^3.0.5
 - fluttertoast: ^8.2.5
-- flutter_otp_text_field: ^1.1.3+2
 - flutter_rating_bar: ^4.0.1
 - lottie: ^3.1.2
-- animate_do: ^3.3.4
 
 ### Storage & State Management
 

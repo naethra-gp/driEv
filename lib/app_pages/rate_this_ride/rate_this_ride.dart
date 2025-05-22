@@ -54,7 +54,6 @@ class _RateThisRideState extends State<RateThisRide> {
     super.initState();
     _ratingController.text = "0";
     _rating = 0.0;
-    print(_rating);
   }
 
   @override
@@ -308,19 +307,15 @@ class _RateThisRideState extends State<RateThisRide> {
 
   void submitRideFeedback() {
     alertServices.showLoading();
-    print('selected item $selectedItem1 , $selectedItem2');
-
     var params = {
       "rideId": widget.rideId,
       "feedBacks": _rating! <= 2.0 ? selectedItem1 : selectedItem2,
       "comments": commentCtl.text.toString(),
       "rating": _rating,
     };
-    print("params ---> ${jsonEncode(params)}");
     feedbackServices.rideFeedBack(params).then((response) {
       alertServices.hideLoading();
       if (response != null) {
-        // alertServices.successToast(response['messageEndStatus'].toString());
         Navigator.pushNamedAndRemoveUntil(context, "home", (r) => false);
       }
     });

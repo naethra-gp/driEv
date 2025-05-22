@@ -1,13 +1,13 @@
 class EndPoints {
   /// LIVE APIS
-  static String baseApi = 'https://iot.driev.bike/driev/api/app';
-  static String baseApi1 = 'https://iot.driev.bike/driev/api';
-  static String payment = 'https://iot.driev.bike/driev/app/payment';
+  // static String baseApi = 'https://iot.driev.bike/driev/api/app';
+  // static String baseApi1 = 'https://iot.driev.bike/driev/api';
+  // static String payment = 'https://iot.driev.bike/driev/app/payment';
 
-  /// STAGING APIS
-  // static String baseApi = 'https://community-test.driev.bike/driev/api/app';
-  // static String baseApi1 = 'https://community-test.driev.bike/driev/api';
-  // static String payment = 'https://community-test.driev.bike/driev/app/payment';
+  // STAGING APIS
+  static String baseApi = 'https://community-test.driev.bike/driev/api/app';
+  static String baseApi1 = 'https://community-test.driev.bike/driev/api';
+  static String payment = 'https://community-test.driev.bike/driev/app/payment';
 
   static const sendOtp = 'generateOTP';
   static const otpLength = '6';
