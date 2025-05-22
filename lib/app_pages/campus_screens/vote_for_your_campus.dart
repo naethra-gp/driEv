@@ -233,28 +233,28 @@ class SearchWidget extends StatelessWidget {
       width: double.infinity,
       child: SearchBar(
         controller: controller,
-        surfaceTintColor: MaterialStateProperty.all(Colors.white),
-        shadowColor: MaterialStateProperty.all(Colors.white),
-        elevation: MaterialStateProperty.all(5.0),
-        backgroundColor: MaterialStateProperty.all(Colors.white),
-        shape: MaterialStateProperty.all(
+        surfaceTintColor: WidgetStateProperty.all(Colors.white),
+        shadowColor: WidgetStateProperty.all(Colors.white),
+        elevation: WidgetStateProperty.all(5.0),
+        backgroundColor: WidgetStateProperty.all(Colors.white),
+        shape: WidgetStateProperty.all(
           const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(50),
             ),
           ),
         ),
-        side: MaterialStateProperty.all(
+        side: WidgetStateProperty.all(
           const BorderSide(color: Color(0xffDEDEDE), width: 1),
         ),
-        textStyle: MaterialStateProperty.all(
+        textStyle: WidgetStateProperty.all(
           const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.normal,
           ),
         ),
         hintText: hintText,
-        hintStyle: MaterialStateProperty.all(
+        hintStyle: WidgetStateProperty.all(
           const TextStyle(color: Colors.black54),
         ),
         trailing: [

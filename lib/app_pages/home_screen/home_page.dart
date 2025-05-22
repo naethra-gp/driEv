@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:driev/app_config/app_config.dart';
@@ -108,7 +107,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // Map related variables
   String _location = "";
   GoogleMapController? _mapController;
-  final LatLng _center = const LatLng(20.2993002, 85.8173442);
+  // final LatLng _center = const LatLng(20.2993002, 85.8173442);
   LatLng? _currentPosition;
   BitmapDescriptor? _customerMarker;
   BitmapDescriptor? _stationMarker;

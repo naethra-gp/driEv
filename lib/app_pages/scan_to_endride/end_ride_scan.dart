@@ -344,7 +344,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   submitBikeNUmber() async {
-    String mobile = secureStorage.get("mobile");
+    // String mobile = secureStorage.get("mobile");
     _cancelTimer();
     // ON-RIDE CRON JOB
     final cron = Cron();
@@ -355,7 +355,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
     }
     alertServices.showLoading();
     bookingServices.getRideEndPin(rideId).then((r2) {
-      print("r2 --> $r2");
+      // print("r2 --> $r2");
       alertServices.hideLoading();
 
       if (r2['key'] == "WALLET_ISSUE") {
@@ -524,7 +524,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   startWatching(String rideId) {
-    print(" ---- startWatching ----");
+    // print(" ---- startWatching ----");
     String mobile = secureStorage.get("mobile");
     bookingServices.rideEndConfirmation(mobile.toString()).then((r) {
       if (r != null) {
@@ -537,7 +537,7 @@ class _EndRideScannerState extends State<EndRideScanner> {
   }
 
   rideDoneAlert(List res) {
-    print(" ---- Stop Watching ----");
+    // print(" ---- Stop Watching ----");
     Navigator.pop(context);
     QrMobileVision.stop();
     return showModalBottomSheet(

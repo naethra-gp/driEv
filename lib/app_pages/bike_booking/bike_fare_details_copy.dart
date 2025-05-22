@@ -706,9 +706,9 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           setState(() {
             enableChasingTime = false;
             int blockStart = int.parse(reserveMins.toString()) * 60;
-            print("blockStart $blockStart");
+            // print("blockStart $blockStart");
             _start = blockStart + _start;
-            print("_start --> $_start");
+            // print("_start --> $_start");
             isReservedDone = true;
             timerRunning = true;
             countDownTime(r['blockedTill'].toString());
@@ -741,7 +741,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
           "vehicleId": fareDetails[0]['vehicleId'].toString(),
           "duration": reserveMins.toString()
         };
-        print("params $params");
+        // print("params $params");
         bookingServices.blockBike(params).then((r2) async {
           alertServices.hideLoading();
           if (amount > balance) {
@@ -749,7 +749,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
                 r2["message"], widget.stationDetails, "", []);
           } else {
             /// BALANCE AVAILABLE
-            print("Block Response: ${jsonEncode(r2)}");
+            // print("Block Response: ${jsonEncode(r2)}");
             String campus = widget.stationDetails[0]['campus'].toString();
             String vehicleId = widget.stationDetails[0]['vehicleId'].toString();
             List arg = [
@@ -789,7 +789,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails> {
     _start = difference.inMinutes * 60;
     double percentage = _start * 0.20;
     blockId = widget.stationDetails[0]['data']![0]['blockId'].toString();
-    print("blockId $blockId");
+    // print("blockId $blockId");
     countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         remainingTime = targetDateTime.difference(DateTime.now());

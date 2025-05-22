@@ -215,19 +215,19 @@ class _FileUploadFormState extends State<FileUploadForm> {
     String result1 = file.path.substring(0, lastIndex + 1);
     String docId = widget.documentId.toString().toLowerCase();
     file.rename("$result1$docId$fileExtension").then((_) {
-      print('File renamed successfully.');
+      // print('File renamed successfully.');
     }).catchError((error) {
-      print('Error renaming file: $error');
+      // print('Error renaming file: $error');
     });
     alertServices.showLoading();
     await Future.delayed(const Duration(seconds: 1), () {
       final uploadFile = File("$result1$docId$fileExtension");
-      print("Upload File --> $uploadFile");
+      // print("Upload File --> $uploadFile");
       campusServices
           .uploadImage(mobile.toString(), uploadFile)
           .then((response) async {
         alertServices.hideLoading();
-        print("Page Response: $response");
+        // print("Page Response: $response");
         if (response.toString().toLowerCase() != "null") {
           var res = jsonDecode(response);
           List array = res['url'].toString().split("/");

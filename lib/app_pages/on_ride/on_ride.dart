@@ -466,7 +466,7 @@ class _OnRideState extends State<OnRide> {
                                             .toString(),
                                       }
                                     ];
-                                    print(params);
+                                    // print(params);
                                     Navigator.pushNamed(
                                       context,
                                       "scan_to_end_ride",
@@ -547,7 +547,7 @@ class _OnRideState extends State<OnRide> {
     bookingServices.getWalletBalance(mobile).then((r) {
       alertServices.hideLoading();
       double balance = r['balance'];
-      print("bal -- ${balance.toStringAsFixed(2)}");
+      // print("bal -- ${balance.toStringAsFixed(2)}");
       setState(() {
         availableBalance = balance;
       });
@@ -641,7 +641,7 @@ class _OnRideState extends State<OnRide> {
         const ImageConfiguration(size: Size(5, 15)),
         'assets/img/map_user_icon.png',
       );
-      print("${position.latitude} ${position.longitude}");
+      // print("${position.latitude} ${position.longitude}");
       setState(() async {
         currentLocation = LatLng(position.latitude, position.longitude);
         _markers.add(

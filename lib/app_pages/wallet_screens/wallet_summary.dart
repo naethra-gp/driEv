@@ -259,7 +259,7 @@ class _WalletSummaryState extends State<WalletSummary> {
                     },
                     child: const Text(
                       "See All Transactions",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         decoration: TextDecoration.underline,
                         color: AppColors.transacColor,
@@ -331,7 +331,7 @@ class _WalletSummaryState extends State<WalletSummary> {
       "staging": Constants.isStagingMode,
     };
     walletServices.initiateTransaction(params).then((dynamic res) {
-      print("response --> $res");
+      // print("response --> $res");
       List token = [res];
 
       String mid = token[0]['mid'].toString();

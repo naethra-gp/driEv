@@ -140,7 +140,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
               backButtonClick();
             },
           ),
-          actions: [],
+          actions: const [],
         ),
         body: SingleChildScrollView(
           physics: const ScrollPhysics(),
@@ -253,7 +253,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
                     onPressed: () async {
                       await controller.hideTooltip();
                       FocusScope.of(context).unfocus();
-                      print("User Selected or entered Mins: $reserveMins");
+                      // print("User Selected or entered Mins: $reserveMins");
                       checkCondition();
                       // setState(() {
                       //   isOnCounter = true;
@@ -560,7 +560,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       };
       bookingServices.extendBlocking(params).then((res) {
         alertServices.hideLoading();
-        print("extendBlocking Response -->  $res");
+        // print("extendBlocking Response -->  $res");
         List res2 = [res];
         if (res2[0]['key'].toString() == "WALLET_ISSUE") {
           alertServices.balanceAlert(context, res2[0]['message'].toString(),
@@ -842,21 +842,19 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
   loadTimer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String exp = prefs.getString('exp') ?? "";
-    print("exp $exp");
+    // print("exp $exp");
     if (exp.toString().isNotEmpty) {
       String formattedDate3 =
           DateFormat('hh:mm:ss a').format(DateTime.parse(exp));
-      print(formattedDate3);
+      // print(formattedDate3);
       // setState(() {
       //   expireTime = formattedDate3.toString().padLeft(2, '0');
       // });
       var cd = DateTime.now();
-      print("cd $cd");
+      // print("cd $cd");
       Duration difference = DateTime.parse(exp).difference(cd);
       int mins = difference.inMinutes;
       int sec = difference.inSeconds;
-      print("mins $mins");
-      print("sec $sec");
       setState(() {
         // timerCtrl.text = mins.toString();
         _remainingSeconds = sec;
@@ -925,7 +923,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
     DateTime now = DateTime.now();
     DateTime newTime = now.add(Duration(minutes: mins));
     String format = DateFormat('hh:mm:ss a').format(newTime);
-    print("Format Date -> $format");
+    // print("Format Date -> $format");
     // setState(() {
     //   // expireTime = format.toString().padLeft(2, '0');
     // });

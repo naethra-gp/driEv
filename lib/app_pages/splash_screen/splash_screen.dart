@@ -4,12 +4,8 @@ import 'package:driev/app_utils/app_loading/alert_services.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:location/location.dart' as loc;
-
 import '../../app_services/vehicle_service.dart';
 import '../../app_storages/secure_storage.dart';
-import '../../app_utils/app_provider/location_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

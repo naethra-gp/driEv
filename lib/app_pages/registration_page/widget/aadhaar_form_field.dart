@@ -137,17 +137,14 @@ class _AadhaarFormFieldState extends State<AadhaarFormField> {
   }
 
   sentOtp() {
-    print("--- Sent OTP pressed ---");
+    debugPrint("--- Sent OTP pressed ---");
     AlertServices alertServices = AlertServices();
     OtpServices otpServices = OtpServices();
     alertServices.showLoading();
     String aadhaarNo = widget.controller.text.toString().replaceAll(" ", "");
-    print(aadhaarNo);
     otpServices.aadhaarSentOtp({"id_number": aadhaarNo}).then((response) async {
       alertServices.hideLoading();
-      print("aadhaar 1st response -> $response");
       if (response != null) {
-        print("aadhaar response -> $response");
         alertServices.successToast(response['message']);
         clientId = response['data']['client_id'].toString();
         widget.otpSent(true, clientId);

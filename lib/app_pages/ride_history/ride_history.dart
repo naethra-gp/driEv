@@ -65,7 +65,7 @@ class _RideHistoryState extends State<RideHistory> {
   Widget _buildHeader() {
     return const Column(
       children: [
-        const Text(
+        Text(
           "Ride History",
           style: TextStyle(
             fontSize: 20,
@@ -73,8 +73,8 @@ class _RideHistoryState extends State<RideHistory> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 10),
-        const Text(
+         SizedBox(height: 10),
+         Text(
           "Take a peek at your ride history \n with us.",
           style: TextStyle(
             fontSize: 18,
@@ -83,7 +83,7 @@ class _RideHistoryState extends State<RideHistory> {
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 20),
+         SizedBox(height: 20),
       ],
     );
   }

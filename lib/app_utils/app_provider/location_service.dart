@@ -9,7 +9,6 @@ import 'package:google_polyline_algorithm/google_polyline_algorithm.dart'
     as polyline_algo;
 
 import 'package:driev/app_config/app_config.dart';
-import 'package:driev/app_utils/app_loading/alert_services.dart';
 
 class LocationService {
   final String _apiKey = Constants.googleMapsApiKey;
@@ -216,31 +215,6 @@ class LocationService {
     }
   }
 
-  String _buildDirectionsUrl(LatLng origin, LatLng destination) {
-    return 'https://maps.googleapis.com/maps/api/directions/json'
-        '?origin=${origin.latitude},${origin.longitude}'
-        '&destination=${destination.latitude},${destination.longitude}'
-        '&key=$_apiKey';
-  }
-
-  String _buildDistanceMatrixUrl(
-    double startLat,
-    double startLng,
-    double endLat,
-    double endLng,
-  ) {
-    return 'https://maps.googleapis.com/maps/api/distancematrix/json'
-        '?destinations=$startLat,$startLng'
-        '&origins=$endLat,$endLng'
-        '&key=$_apiKey';
-  }
-
-  bool _isValidCoordinates(LatLng coordinates) {
-    return coordinates.latitude >= -90 &&
-        coordinates.latitude <= 90 &&
-        coordinates.longitude >= -180 &&
-        coordinates.longitude <= 180;
-  }
 
   bool _isValidDirectionsResponse(Map<String, dynamic> data) {
     if (data['status'] != 'OK') {
