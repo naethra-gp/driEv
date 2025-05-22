@@ -59,7 +59,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
 
   // Timer? _timer;
   int _remainingSeconds = 0;
-  bool _isRunning = false;
+  // bool _isRunning = false;
 
   // EXTEND BLOCK
   String blockId = "";
@@ -857,7 +857,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
       setState(() {
         // timerCtrl.text = mins.toString();
         _remainingSeconds = sec;
-        _isRunning = true;
+        // _isRunning = true;
       });
       Timer.periodic(const Duration(seconds: 1), (Timer timer) {
         if (_remainingSeconds > 0) {
@@ -869,7 +869,7 @@ class _BikeFareDetailsState extends State<BikeFareDetails>
           timer.cancel();
           setState(() {
             _remainingSeconds = 0;
-            _isRunning = false;
+            // _isRunning = false;
           });
         }
       });

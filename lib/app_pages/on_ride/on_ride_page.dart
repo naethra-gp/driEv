@@ -42,7 +42,7 @@ class _OnRidePageState extends State<OnRidePage> {
   // TIMER
   // late Timer _timer;
   late DateTime _startTime;
-  Duration _elapsedTime = Duration.zero;
+  // Duration _elapsedTime = Duration.zero;
   bool popShown = false;
   List customer = [];
 
@@ -102,7 +102,7 @@ class _OnRidePageState extends State<OnRidePage> {
 
   void _calculateElapsedTime() {
     DateTime now = DateTime.now();
-    _elapsedTime = now.difference(_startTime);
+    // _elapsedTime = now.difference(_startTime);
   }
 
   getRideDetails1(String id) {
